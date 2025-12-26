@@ -4,13 +4,13 @@ import arrowDown from "/arrow-down.svg";
 export default function Navbar() {
   return (
     <div className="flex flex-row items-center justify-between text-center">
-      <p className="text-[#272727] md:text-[31px] text-[15px] font-bold md:w-1/3 w-1/4 text-center">
+      <p className="text-[#272727] lg:text-[31px] text-[15px] font-bold lg:w-1/3 w-1/4 text-center">
         SHOP<span className="font-extralight">LITE</span>
       </p>
       <div
         className={clsx(
-          "text-[#272727] md:text-[16px] font-extralight md:w-1/3",
-          "flex flex-row items-center justify-center text-center md:gap-10",
+          "text-[#272727] lg:text-[16px] font-extralight lg:w-1/3",
+          "flex flex-row items-center justify-center text-center lg:gap-10",
           "gap-1 text-[8px] w-1/2"
         )}
       >
@@ -30,14 +30,14 @@ export default function Navbar() {
           <Link to="/register" className="hover:text-[#FF6543]">
             PAGES
           </Link>
-          <img src={arrowDown} alt="arrow" />
+          <img className="hover:scale-120 cursor-pointer" src={arrowDown} alt="arrow" />
         </div>
         <Link to="/cart" className="hover:text-[#FF6543]">
           CONTACT
         </Link>
       </div>
 
-      <p className="text-[#272727] md:text-[31px] text-[15px] font-bold md:w-1/3 w-1/4 text-center">
+      <p className="text-[#272727] lg:text-[31px] text-[15px] font-bold lg:w-1/3 w-1/4 text-center">
         SHOP<span className="font-extralight">LITE</span>
       </p>
     </div>
