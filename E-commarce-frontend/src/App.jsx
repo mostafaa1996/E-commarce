@@ -5,6 +5,7 @@ import LimitedSale from "../components/Home/LimitedSale"
 import FeaturesSection from "../components/Home/Features"
 import ReviewsSection from "../components/genericComponents/CustomersReviews"
 import Brands from "../components/genericComponents/Brands"
+import Footer from "../components/genericComponents/footer"
 
 function App() {
   
@@ -17,6 +18,7 @@ function App() {
        <LimitedSale />
        <ReviewsSection /> 
        <Brands/>
+       <Footer/>
        
     </>
   )
