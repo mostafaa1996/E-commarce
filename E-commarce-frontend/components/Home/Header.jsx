@@ -1,6 +1,6 @@
 import CameraImg from "/CameraImg.png";
-import Button from "../Button";
-import ShowProductTemplate from "../showProductTemplate";
+import Button from "../genericComponents/Button";
+import ShowProductTemplate from "../genericComponents/showProductTemplate";
 import clsx from "clsx";
 export default function HomeHeader() {
   return (
@@ -16,9 +16,12 @@ export default function HomeHeader() {
           <Button className="sm:mt-9 mt-5">SHOP COLLECTION</Button>
         </div>
       </div>
-      <div className={clsx(
-        "relative xl:w-[800px] lg:w-[700px] md:w-[600px] sm:w-[500px] w-[250px] overflow-hidden ",
-        "2xl:right-[-8%] lg:right-[2%] md:right-[3%] right-0")}>
+      <div
+        className={clsx(
+          "relative xl:w-[800px] lg:w-[700px] md:w-[600px] sm:w-[500px] w-[250px] overflow-hidden ",
+          "2xl:right-[-8%] lg:right-[2%] md:right-[3%] right-0"
+        )}
+      >
         <div className="absolute w-full aspect-square rounded-full bg-[#EEEEEE] xl:top-[-61px] lg:top-[-51px] top-[-20px]">
           {/* TODO: Add real product photo  */}
           <img
