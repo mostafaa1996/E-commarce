@@ -1,10 +1,10 @@
 import CameraImg from "/CameraImg.png";
 import Button from "../genericComponents/Button";
-import ShowProductTemplate from "../genericComponents/showProductTemplate";
+import ShowItemsTemplate from "../genericComponents/showItemsTemplate";
 import clsx from "clsx";
 export default function HomeHeader() {
   return (
-    <ShowProductTemplate>
+    <ShowItemsTemplate>
       <div className="h-full w-fit flex flex-col sm:items-end justify-center">
         <div className="flex flex-col sm:items-start justify-center ml-2">
           <h1 className="text-[#272727] md:text-[51px] text-[12px] font-extralight text-start">
@@ -31,6 +31,6 @@ export default function HomeHeader() {
           />
         </div>
       </div>
-    </ShowProductTemplate>
+    </ShowItemsTemplate>
   );
 }

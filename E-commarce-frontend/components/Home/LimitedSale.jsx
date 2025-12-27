@@ -1,10 +1,10 @@
-import ShowProductTemplate from "../genericComponents/showProductTemplate";
+import ShowItemsTemplate from "../genericComponents/showItemsTemplate";
 import AppleProduct from "/AppleProductImg.png";
 import LimitedSaleCounter from "../genericComponents/LimitedSaleCounter";
 import Button from "../genericComponents/Button";
 export default function LimitedSale() {
   return (
-    <ShowProductTemplate>
+    <ShowItemsTemplate>
       <div className="flex flex-row items-center justify-between md:gap-50 sm:gap-30 gap-10">
         <div className="lg:w-[676px] sm:w-[576px] w-[276px] lg:h-[504px] sm:h-[404px] h-[204px]">
           <img src={AppleProduct} alt="LimitedSale" />
@@ -27,6 +27,6 @@ export default function LimitedSale() {
           <Button className="sm:mt-9 mt-5">SHOP COLLECTION</Button>
         </div>
       </div>
-    </ShowProductTemplate>
+    </ShowItemsTemplate>
   );
 }

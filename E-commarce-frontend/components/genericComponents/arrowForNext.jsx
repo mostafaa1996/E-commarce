@@ -6,8 +6,8 @@ export default function ArrowForNext({ className = " ", direction }) {
   return (
     <div
       className={clsx(
-        "cursor-pointer bg-[#F5F5F5] border-2 border-zinc-300",
-        `hover:scale-105  rounded-xl   ${customClassName}`,
+        "cursor-pointer border-2 border-zinc-300",
+        `hover:scale-105  rounded-l   ${customClassName}`,
         "lg:w-[40px] lg:h-[40px] md:w-[35px] md:h-[35px] w-[25px] h-[25px]",
         "sm:w-[30px] sm:h-[30px]"
       )}
