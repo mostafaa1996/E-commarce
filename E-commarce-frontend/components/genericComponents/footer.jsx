@@ -3,6 +3,11 @@ import facebook from "/facebookLogo.svg";
 import instagram from "/InstagramLogo.svg";
 import twitter from "/Xlogo.svg";
 import youtube from "/YoutubeLogo.svg";
+import dhl from "/dhl.svg";
+import arcticons from "/arcticons_post.svg";
+import paypal from "/paypal.svg";
+import visa from "/visa.svg";
+import mastercard from "/mastercard.svg";
 import { Link } from "react-router-dom";
 
 export default function Footer() {
@@ -92,21 +97,21 @@ export default function Footer() {
 
       {/* Bottom bar */}
       <div className="border-t border-gray-100">
-        <div className="mx-auto flex max-w-5xl items-center justify-between py-4 text-[10px] text-gray-400">
+        <div className="mx-auto flex w-full items-center justify-evenly py-4 text-[10px] text-gray-400">
           <div className="flex items-center gap-1">
-            <span>We ship with:</span>
-            <span className="h-3 w-10 bg-gray-100" />
-            <span className="h-3 w-10 bg-gray-100" />
+            <span className="text-[21px] text-[#272727] font-extralight">We ship with:</span>
+            <img src={dhl} alt="DHL logo" />
+            <img src={arcticons} alt="Arcticons logo" />
           </div>
 
           <div className="flex items-center gap-1">
-            <span>Payment options:</span>
-            <span className="h-3 w-6 bg-gray-100" />
-            <span className="h-3 w-6 bg-gray-100" />
-            <span className="h-3 w-6 bg-gray-100" />
+            <span className="text-[21px] text-[#272727] font-extralight">Payment options:</span>
+            <img src={visa} alt="Visa logo" />
+            <img src={mastercard} alt="Mastercard logo" />
+            <img src={paypal} alt="Paypal logo" />
           </div>
 
-          <p className="text-center">
+          <p className="text-[21px] text-[#272727] font-extralight">
             © Copyright 2024 ShopLite.All rights reserved
           </p>
         </div>
