@@ -1,4 +1,5 @@
 // Footer.jsx
+import clsx from "clsx";
 import facebook from "/facebookLogo.svg";
 import instagram from "/InstagramLogo.svg";
 import twitter from "/Xlogo.svg";
@@ -13,7 +14,9 @@ import { Link } from "react-router-dom";
 export default function Footer() {
   return (
     <footer className="w-full border-t border-gray-100 bg-white text-[11px] tracking-[0.18em] text-gray-500">
-      <div className="mx-auto flex justify-evenly gap-10 py-10">
+      <div className={clsx(
+        "mx-auto flex md:flex-row flex-col md:items-start items-center",
+        " md:justify-evenly justify-center gap-10 py-10")}>
         <div className="max-w-xs space-y-4">
           <h2 className="text-[31px] uppercase">
             <span className="font-semibold text-[#272727]">SHOP</span>
@@ -40,7 +43,7 @@ export default function Footer() {
         </div>
 
         {/* Quick links */}
-        <div className="space-y-4 max-w-xs">
+        <div className="space-y-4 md:w-fit w-xs">
           <h3 className="text-[22px] font-Extralight uppercase text-[#272727] whitespace-nowrap">
             Quick links
           </h3>
@@ -54,7 +57,7 @@ export default function Footer() {
         </div>
 
         {/* Help & info */}
-        <div className="space-y-4 max-w-xs">
+        <div className="space-y-4 md:w-fit w-xs">
           <h3 className="text-[22px] font-Extralight uppercase text-[#272727] whitespace-nowrap">
             Help & info
           </h3>
@@ -97,7 +100,7 @@ export default function Footer() {
 
       {/* Bottom bar */}
       <div className="border-t border-gray-100">
-        <div className="mx-auto flex w-full items-center justify-evenly py-4 text-[10px] text-gray-400">
+        <div className="mx-auto flex md:flex-row flex-col w-full items-center justify-evenly py-4 text-[10px] text-gray-400">
           <div className="flex items-center gap-1">
             <span className="text-[21px] text-[#272727] font-extralight">We ship with:</span>
             <img src={dhl} alt="DHL logo" />
@@ -111,7 +114,7 @@ export default function Footer() {
             <img src={paypal} alt="Paypal logo" />
           </div>
 
-          <p className="text-[21px] text-[#272727] font-extralight">
+          <p className="text-center text-[21px] text-[#272727] font-extralight">
             © Copyright 2024 ShopLite.All rights reserved
           </p>
         </div>
