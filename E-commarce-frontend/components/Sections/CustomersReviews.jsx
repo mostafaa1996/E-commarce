@@ -1,5 +1,5 @@
-import ReviewCard from "./ReviewCard";
-import ShowItemsTemplate from "./showItemsTemplate";
+import ReviewCard from "../genericComponents/ReviewCard";
+import ShowItemsTemplate from "../genericComponents/showItemsTemplate";
 const reviews = [
   {
     name: "Emma Chamberlin",

@@ -2,7 +2,7 @@ import CameraImg from "/CameraImg.png";
 import Button from "../genericComponents/Button";
 import ShowItemsTemplate from "../genericComponents/showItemsTemplate";
 import clsx from "clsx";
-export default function HomeHeader() {
+export default function HeroProduct() {
   return (
     <ShowItemsTemplate>
       <div className="h-full w-fit flex flex-col sm:items-end justify-center">

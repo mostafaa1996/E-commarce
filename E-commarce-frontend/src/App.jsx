@@ -1,12 +1,13 @@
-import HomeHeader from "../components/Home/Header"
-import Navbar from "../components/Sections/Top layer/Navbar"
-import TapInfo from "../components/Sections/Top layer/tap_Info"
-import LimitedSale from "../components/Home/LimitedSale"
-import FeaturesSection from "../components/Home/Features"
-import ReviewsSection from "../components/genericComponents/CustomersReviews"
+import HeroProduct from "../components/Sections/HeroProduct"
+import Navbar from "../components/Sections/Navbar"
+import TapInfo from "../components/Sections/tap_Info"
+import LimitedSale from "../components/Sections/LimitedSale"
+import FeaturesSection from "../components/Sections/Features"
+import ReviewsSection from "../components/Sections/CustomersReviews"
 import Brands from "../components/Sections/Brands"
 import Footer from "../components/Sections/footer"
 import TitleOfPages from "../components/Sections/TitleOfPages"
+import HomeProducts from "../components/Sections/HomeProducts"
 
 function App() {
   
@@ -15,12 +16,13 @@ function App() {
        <TapInfo/>
        <Navbar />
        <TitleOfPages Title="About us" prevPage="Home" />
-       <HomeHeader />
+       <HeroProduct />
        <FeaturesSection />
        <LimitedSale />
        <ReviewsSection /> 
        <Brands/>
        <Footer/>
+       <HomeProducts/>
        
     </>
   )
