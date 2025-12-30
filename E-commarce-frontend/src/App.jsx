@@ -11,6 +11,7 @@ import HomeProducts from "../components/Sections/HomeProducts"
 import AboutSection from "../components/Sections/AboutSection"
 import StoresSection from "../components/Sections/StoreInfoSection"
 import QAandContactSection from "../components/Sections/QA&ContactSection"
+import CartSection from "../components/Sections/CartSection"
 
 function App() {
   
@@ -18,7 +19,7 @@ function App() {
     <>
        <TapInfo/>
        <Navbar />
-       <TitleOfPages Title="About us" prevPage="Home" />
+       <TitleOfPages Title="About us"/>
        <AboutSection/>
        <HeroProduct />
        <FeaturesSection />
@@ -29,6 +30,7 @@ function App() {
        <QAandContactSection/>
        <Footer/>
        <HomeProducts/>
+       <CartSection/>
        
     </>
   )
