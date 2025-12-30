@@ -13,6 +13,7 @@ import StoresSection from "../components/Sections/StoreInfoSection"
 import QAandContactSection from "../components/Sections/QA&ContactSection"
 import CartSection from "../components/Sections/CartSection"
 import CartTotalsWithPayment from "../components/Sections/CartwithPaymentSection"
+import BillingDetailsSection from "../components/Sections/BillingDetailsSection"
 
 function App() {
   
@@ -33,7 +34,7 @@ function App() {
        <Footer/>
        <HomeProducts/>
        <CartSection/>
-       
+       <BillingDetailsSection/>
     </>
   )
 }
