@@ -12,6 +12,7 @@ import AboutSection from "../components/Sections/AboutSection"
 import StoresSection from "../components/Sections/StoreInfoSection"
 import QAandContactSection from "../components/Sections/QA&ContactSection"
 import CartSection from "../components/Sections/CartSection"
+import CartTotalsWithPayment from "../components/Sections/CartwithPaymentSection"
 
 function App() {
   
@@ -28,6 +29,7 @@ function App() {
        <Brands/>
        <StoresSection/>
        <QAandContactSection/>
+       <CartTotalsWithPayment subtotal={3000} total={3000}/>
        <Footer/>
        <HomeProducts/>
        <CartSection/>
