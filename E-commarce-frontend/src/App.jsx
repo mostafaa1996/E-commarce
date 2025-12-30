@@ -9,6 +9,7 @@ import Footer from "../components/Sections/footer"
 import TitleOfPages from "../components/Sections/TitleOfPages"
 import HomeProducts from "../components/Sections/HomeProducts"
 import AboutSection from "../components/Sections/AboutSection"
+import StoresSection from "../components/Sections/StoreInfoSection"
 
 function App() {
   
@@ -23,6 +24,7 @@ function App() {
        <LimitedSale />
        <ReviewsSection /> 
        <Brands/>
+       <StoresSection/>
        <Footer/>
        <HomeProducts/>
        
