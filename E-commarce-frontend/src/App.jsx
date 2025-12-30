@@ -8,6 +8,7 @@ import Brands from "../components/Sections/Brands"
 import Footer from "../components/Sections/footer"
 import TitleOfPages from "../components/Sections/TitleOfPages"
 import HomeProducts from "../components/Sections/HomeProducts"
+import AboutSection from "../components/Sections/AboutSection"
 
 function App() {
   
@@ -16,6 +17,7 @@ function App() {
        <TapInfo/>
        <Navbar />
        <TitleOfPages Title="About us" prevPage="Home" />
+       <AboutSection/>
        <HeroProduct />
        <FeaturesSection />
        <LimitedSale />
