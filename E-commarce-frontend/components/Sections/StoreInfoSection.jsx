@@ -1,4 +1,4 @@
-import StoreLocation from "../genericComponents/storeInfo";
+import ContactBlock from "../genericComponents/ContactBlock";
 import {storesData} from "../../src/Data/storeInfo";
 export default function StoresSection() {
   return (
@@ -36,7 +36,7 @@ export default function StoresSection() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
               {storesData.locations.map((location) => (
-                <StoreLocation
+                <ContactBlock
                   key={location.country}
                   {...location}
                 />

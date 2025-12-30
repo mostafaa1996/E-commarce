@@ -1,8 +1,8 @@
-export default function StoreLocation({ country, address, phone, email }) {
+export default function ContactBlock({ title= "", country= "", address, phone, email }) {
   return (
     <div className="flex flex-col gap-2">
       <h4 className="text-[21px] font-light text-[#272727] uppercase tracking-wide">
-        {country}
+        {title||country}
       </h4>
 
       <p className="text-[16px] font-light text-zinc-500 leading-relaxed">

@@ -16,7 +16,7 @@ export default function ContentBlock({ title, paragraphs, cta }) {
         </p>
       ))}
 
-      <Button>{cta}</Button>
+      <Button className="w-fit tracking-widest">{cta}</Button>
     </div>
   );
 }

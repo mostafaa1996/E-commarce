@@ -10,6 +10,7 @@ import TitleOfPages from "../components/Sections/TitleOfPages"
 import HomeProducts from "../components/Sections/HomeProducts"
 import AboutSection from "../components/Sections/AboutSection"
 import StoresSection from "../components/Sections/StoreInfoSection"
+import QAandContactSection from "../components/Sections/QA&ContactSection"
 
 function App() {
   
@@ -25,6 +26,7 @@ function App() {
        <ReviewsSection /> 
        <Brands/>
        <StoresSection/>
+       <QAandContactSection/>
        <Footer/>
        <HomeProducts/>
        
