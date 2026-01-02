@@ -14,6 +14,8 @@ import QAandContactSection from "../components/Sections/QA&ContactSection"
 import CartSection from "../components/Sections/CartSection"
 import CartTotalsWithPayment from "../components/Sections/CartwithPaymentSection"
 import BillingDetailsSection from "../components/Sections/BillingDetailsSection"
+import AuthSection from "../components/Sections/AuthSection_ForLogIn"
+import SignUpSection from "../components/Sections/AuthSection_ForSignUp"
 
 function App() {
   
@@ -35,6 +37,8 @@ function App() {
        <HomeProducts/>
        <CartSection/>
        <BillingDetailsSection/>
+       <AuthSection/> 
+       <SignUpSection/>
     </>
   )
 }
