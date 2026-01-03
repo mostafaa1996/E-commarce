@@ -1,4 +1,4 @@
-export default function Card({ image, children, className = "" }) {
+export default function Card({ children, className = "" }) {
   return (
     <div
       className={`
@@ -11,19 +11,7 @@ export default function Card({ image, children, className = "" }) {
         ${className}
       `}
     >
-      {/* Media */}
-      <div className="aspect-[4/3] bg-zinc-100">
-        <img
-          src={image}
-          alt=""
-          className="w-full h-full object-contain"
-        />
-      </div>
-
-      {/* Content */}
-      <div className="p-5">
-        {children}
-      </div>
+      {children}
     </div>
   );
 }

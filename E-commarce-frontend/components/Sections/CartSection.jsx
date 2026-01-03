@@ -19,11 +19,11 @@ export default function CartSection() {
         </div>
 
         <div
-        className="mt-6 mb-2 h-[10px]"
-        style={{
-          backgroundImage:
-            "repeating-linear-gradient(135deg, #D4D4D4 0 2px, transparent 2px 10px)",
-        }}
+          className="mt-6 mb-2 h-[10px]"
+          style={{
+            backgroundImage:
+              "repeating-linear-gradient(135deg, #D4D4D4 0 2px, transparent 2px 10px)",
+          }}
         />
 
         {/* Rows */}
@@ -36,15 +36,9 @@ export default function CartSection() {
 
         {/* Actions */}
         <div className="flex flex-wrap gap-4 mt-10">
-          <Button className="w-fit tracking-widest">
-            UPDATE CART
-          </Button>
-          <Button className="w-fit tracking-widest">
-            CONTINUE SHOPPING
-          </Button>
-          <Button className="w-fit tracking-widest">
-            PROCEED TO CHECKOUT
-          </Button>
+          <Button className="w-fit tracking-widest">UPDATE CART</Button>
+          <Button className="w-fit tracking-widest">CONTINUE SHOPPING</Button>
+          <Button className="w-fit tracking-widest">PROCEED TO CHECKOUT</Button>
         </div>
       </div>
     </section>

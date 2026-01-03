@@ -1,7 +1,7 @@
 import VideoBlock from "../genericComponents/videoBlock";
 import ContentBlock from "../genericComponents/About_content";
 import aboutData from "../../src/Data/AboutData";
-export default function MediaContentSection() {
+export default function AboutSection() {
   return (
     <section className="w-full flex items-center justify-center py-20 bg-white">
       <div className="max-w-7xl">

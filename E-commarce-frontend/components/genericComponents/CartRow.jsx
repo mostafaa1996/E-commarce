@@ -1,5 +1,5 @@
 import QuantityControl from "./QuantityControl";
-import ProductRow from "./ProductRow";
+import ProductRow from "./ProductCard_H";
 export default function CartRow({ item }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-6 gap-6 py-6 ">

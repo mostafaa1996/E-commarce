@@ -1,4 +1,4 @@
-import ProductRow from "./ProductRow";
+import ProductRow from "./ProductCard_H";
 export default function ProductColumn({ title, items }) {
   return (
     <div className="bg-white border border-zinc-200 rounded-xl p-6">

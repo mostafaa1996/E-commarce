@@ -10,7 +10,7 @@ const Data = {
 
 export default function SideBarFilterSection(data = {}) {
   return (
-    <aside className="ml-10 w-full lg:w-[310px] flex flex-col gap-10">
+    <aside className="mt-10 ml-10 w-full lg:w-[310px] flex flex-col gap-10">
       <SearchBar />
       {
         Object.entries(Data).map(([category, items]) => (

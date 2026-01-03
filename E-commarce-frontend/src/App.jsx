@@ -1,31 +1,37 @@
-import HeroProduct from "../components/Sections/HeroProduct"
-import Navbar from "../components/Sections/Navbar"
-import TapInfo from "../components/Sections/tap_Info"
-import LimitedSale from "../components/Sections/LimitedSale"
-import FeaturesSection from "../components/Sections/Features"
-import ReviewsSection from "../components/Sections/CustomersReviews"
-import Brands from "../components/Sections/Brands"
-import Footer from "../components/Sections/footer"
-import TitleOfPages from "../components/Sections/TitleOfPages"
-import HomeProducts from "../components/Sections/HomeProducts"
-import AboutSection from "../components/Sections/AboutSection"
-import StoresSection from "../components/Sections/StoreInfoSection"
-import QAandContactSection from "../components/Sections/QA&ContactSection"
-import CartSection from "../components/Sections/CartSection"
-import CartTotalsWithPayment from "../components/Sections/CartwithPaymentSection"
-import BillingDetailsSection from "../components/Sections/BillingDetailsSection"
-import AuthSection from "../components/Sections/AuthSection_ForLogIn"
-import SignUpSection from "../components/Sections/AuthSection_ForSignUp"
-import SearchBar from "../components/genericComponents/SearchBox"
-import SideBarFilterSection from "../components/Sections/SideBarFilterSection"
+import HeroProduct from "../components/Sections/HeroProduct";
+import Navbar from "../components/Sections/Navbar";
+import TapInfo from "../components/Sections/tap_Info";
+import LimitedSale from "../components/Sections/LimitedSale";
+import FeaturesSection from "../components/Sections/Features";
+import ReviewsSection from "../components/Sections/CustomersReviews";
+import Brands from "../components/Sections/Brands";
+import Footer from "../components/Sections/footer";
+import TitleOfPages from "../components/Sections/TitleOfPages";
+import HomeProducts from "../components/Sections/HomeProducts";
+import AboutSection from "../components/Sections/AboutSection";
+import StoresSection from "../components/Sections/StoreInfoSection";
+import QAandContactSection from "../components/Sections/QA&ContactSection";
+import CartSection from "../components/Sections/CartSection";
+import CartTotalsWithPayment from "../components/Sections/CartwithPaymentSection";
+import BillingDetailsSection from "../components/Sections/BillingDetailsSection";
+import AuthSection from "../components/Sections/AuthSection_ForLogIn";
+import SignUpSection from "../components/Sections/AuthSection_ForSignUp";
+import SearchBar from "../components/genericComponents/SearchBox";
+import SideBarFilterSection from "../components/Sections/SideBarFilterSection";
+import ProductGridSection from "../components/genericComponents/ProductGrid";
+import ShopPage from "../components/Pages/ShopPage";
 
 function App() {
-  
   return (
     <>
-       <TapInfo/>
-       <Navbar />
-       <TitleOfPages Title="About us"/>
+      <ShopPage />
+      {/* <TapInfo />
+      <Navbar />
+      <div className="flex gap-10 mt-10">
+        <SideBarFilterSection />
+        <ProductGridSection />
+      </div> */}
+      {/* <TitleOfPages Title="About us"/>
        <AboutSection/>
        <HeroProduct />
        <FeaturesSection />
@@ -41,9 +47,9 @@ function App() {
        <BillingDetailsSection/>
        <AuthSection/> 
        <SignUpSection/>
-       <SideBarFilterSection/>
+       <SideBarFilterSection/> */}
     </>
-  )
+  );
 }
 
-export default App
+export default App;

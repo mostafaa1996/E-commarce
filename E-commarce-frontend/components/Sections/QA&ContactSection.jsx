@@ -29,10 +29,7 @@ export default function QAandContactSection() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
               {contactData.blocks.map((block) => (
-                <ContactBlock
-                  key={block.title}
-                  {...block}
-                />
+                <ContactBlock key={block.title} {...block} />
               ))}
             </div>
           </div>
@@ -54,15 +51,12 @@ export default function QAandContactSection() {
                 <InputField placeholder="Your full name *" />
                 <InputField placeholder="Phone number" />
               </div>
-              
+
               <InputField placeholder="Write your email here *" type="email" />
               <InputField placeholder="Write your subject here" />
               <TextArea placeholder="Write your message here *" />
 
-              <Button
-                type="submit"
-                className="w-fit tracking-widest"
-              >
+              <Button type="submit" className="w-fit tracking-widest">
                 SUBMIT
               </Button>
             </form>
