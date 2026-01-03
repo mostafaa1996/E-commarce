@@ -16,6 +16,8 @@ import CartTotalsWithPayment from "../components/Sections/CartwithPaymentSection
 import BillingDetailsSection from "../components/Sections/BillingDetailsSection"
 import AuthSection from "../components/Sections/AuthSection_ForLogIn"
 import SignUpSection from "../components/Sections/AuthSection_ForSignUp"
+import SearchBar from "../components/genericComponents/SearchBox"
+import SideBarFilterSection from "../components/Sections/SideBarFilterSection"
 
 function App() {
   
@@ -39,6 +41,7 @@ function App() {
        <BillingDetailsSection/>
        <AuthSection/> 
        <SignUpSection/>
+       <SideBarFilterSection/>
     </>
   )
 }
