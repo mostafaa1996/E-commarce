@@ -72,7 +72,7 @@ async function run() {
     // console.log(Products_title);
 
     console.log("✅ 300 Products seeded successfully");
-    process.exit();
+   
   } catch (err) {
     console.error(err.message);
     process.exit(1);

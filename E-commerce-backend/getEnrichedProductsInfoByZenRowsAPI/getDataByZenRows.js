@@ -1,7 +1,7 @@
 require("dotenv").config();
 const axios = require("axios");
 const mongoose = require("mongoose");
-const Product = require("./models/Product");
+const Product = require("../models/Product");
 const jsonLds_method = require("./JsonLDs_method");
 const HTML_fallback_method = require("./HTML_fallback_method");
 
@@ -10,16 +10,31 @@ mongoose.connect(process.env.MONGO_URI);
 const ZENROWS_API_KEY = process.env.ZENROWS_API_KEY;
 
 async function scrapeProduct(url) {
-  const response = await axios.get("https://api.zenrows.com/v1/", {
-    params: {
-      apikey: ZENROWS_API_KEY,
-      url,
-      js_render: "true",
-      premium_proxy: "true"
-    }
-  });
+  try {
+    const response = await axios.get("https://api.zenrows.com/v1/", {
+      params: {
+        apikey: ZENROWS_API_KEY,
+        url,
+        js_render: "true",
+        premium_proxy: "true",
+        wait_for: "#dp"
+      },
+      timeout: 60000
+    });
 
-  return response.data; // HTML
+    return response.data; // HTML
+  } catch (error) {
+    console.error("ZenRows scrape failed");
+
+    if (error.response) {
+      console.error("Status:", error.response.status);
+      console.error("Data:", error.response.data);
+    } else {
+      console.error(error.message);
+    }
+
+    throw error;
+  }
 }
 
 async function enrichProduct(product) {
@@ -37,7 +52,7 @@ async function enrichProduct(product) {
 }
 
 async function run() {
-  const products = await Product.find({ status: "PARTIAL" }).limit(20);
+  const products = await Product.find({ status: "PARTIAL" }).limit(2);
 
   for (const product of products) {
     await enrichProduct(product);
@@ -55,24 +70,22 @@ function mergeProductData(jsonLdData, htmlData) {
   return {
     ...jsonLdData,
 
-    images: jsonLdData.images?.length
-      ? jsonLdData.images
-      : htmlData.images,
+    images: mergeImages(jsonLdData?.images, htmlData?.images),
 
-    variants: jsonLdData.variants?.length
-      ? jsonLdData.variants
-      : htmlData.variants,
+    variants: jsonLdData?.variants?.length
+      ? jsonLdData?.variants
+      : htmlData?.variants,
 
-    sku: jsonLdData.sku || htmlData.sku,
+    sku: jsonLdData?.sku || htmlData?.sku,
 
-    reviews: jsonLdData.reviews?.length
-      ? jsonLdData.reviews
-      : htmlData.reviews,
+    reviews: jsonLdData?.reviews?.length
+      ? jsonLdData?.reviews
+      : htmlData?.reviews,
 
     reviewsCount:
-      jsonLdData.reviewsCount || htmlData.reviewsCount ,
+      jsonLdData?.reviewsCount || htmlData?.reviewsCount ,
 
-    additionalInfo: mergeAdditionalInfo(jsonLdData.additionalInfo, htmlData.additionalInfo)
+    additionalInfo: mergeAdditionalInfo(jsonLdData?.additionalInfo, htmlData?.additionalInfo)
   };
 }
 
@@ -89,5 +102,29 @@ function mergeAdditionalInfo(jsonLdInfo = [], htmlInfo = []) {
   return [...map.values()];
 }
 
-run();
+function normalizeImages(images = []) {
+  const map = new Map();
+
+  images.forEach(img => {
+    if (!img?.url) return;
+
+    const cleanUrl = img.url.replace(/\._.*?_\./, ".");
+
+    if (!map.has(cleanUrl)) {
+      map.set(cleanUrl, {
+        url: cleanUrl,
+        color: img.color || null
+      });
+    }
+  });
+
+  return [...map.values()];
+}
+
+function mergeImages(jsonLdImages = [], htmlImages = []) {
+  return normalizeImages([...jsonLdImages, ...htmlImages]);
+}
+
+
+exports.run = run;
 

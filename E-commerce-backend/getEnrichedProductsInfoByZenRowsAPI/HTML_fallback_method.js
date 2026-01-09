@@ -33,7 +33,10 @@ function extractGalleryImages($) {
     else if (src) images.add(src);
   });
 
-  return [...images];
+  return [...images].map(url => ({
+    url,
+    color: null
+  }));
 }
 
 function extractColorVariants($) {
@@ -51,7 +54,7 @@ function extractSizeVariants($) {
   const sizes = [];
 
   $("#variation_size_name li").each((_, el) => {
-    const size = $(el).text().trim();
+    const size = $(el).attr("title").trim() ||$(el).text().trim();
     if (size) sizes.push(size);
   });
 
@@ -127,7 +130,11 @@ function extractReviewsCount($) {
   const text = $("#acrCustomerReviewText").text();
   if (!text) return 0;
 
-  return Number(text.replace(/[^\d]/g, ""));
+ 
+  const match = text.match(/([\d,]+)/);
+  if (!match) return 0;
+
+  return Number(match[1].replace(/,/g, ""));
 }
 
 function extractAdditionalInfo($) {
@@ -145,4 +152,4 @@ function extractAdditionalInfo($) {
   return info;
 }
 
-module.exports = extractFromHtml;
+module.exports = {extractFromHtml};

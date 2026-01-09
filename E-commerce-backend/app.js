@@ -1,3 +1,5 @@
-import fetchProducts from "./getRealDataFromStores/fetchProducts.js";
+import fetchProducts from "./getBaseProductsByRapidAPI/fetchProducts.js";
+import getDataByZenRows from "./getEnrichedProductsInfoByZenRowsAPI/getDataByZenRows.js";
 
-fetchProducts.run();
+// fetchProducts.run();
+getDataByZenRows.run();

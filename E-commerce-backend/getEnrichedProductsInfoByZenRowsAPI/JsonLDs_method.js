@@ -49,11 +49,7 @@ function extractFromJsonLd(productJson) {
       : null,
 
     // ===== Images =====
-    images: Array.isArray(productJson.image)
-      ? productJson.image
-      : productJson.image
-        ? [productJson.image]
-        : [],
+    images: extractGalleryImages(productJson),
 
     // ===== SKU =====
     sku: productJson.sku || productJson.mpn || null,
@@ -139,6 +135,19 @@ function extractAdditionalInfo(productJson) {
       key: p.name.trim(),
       value: String(p.value).trim()
     }));
+}
+
+function extractImages(productJson) {
+  const imgs = Array.isArray(productJson.image)
+    ? productJson.image
+    : productJson.image
+      ? [productJson.image]
+      : [];
+
+  return imgs.map(url => ({
+    url,
+    color: null
+  }));
 }
 
 

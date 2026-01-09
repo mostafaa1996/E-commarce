@@ -1,5 +1,46 @@
 const mongoose = require("mongoose");
 
+const ReviewSchema = new mongoose.Schema(
+  {
+    user: {
+      name: String,
+      avatar: String
+    },
+    rating: Number,
+    comment: String,
+    createdAt: Date
+  },
+  { _id: false }
+);
+
+const VariantSchema = new mongoose.Schema(
+  {
+    color: String,
+    size: String,
+    storage: String,
+    price: Number,
+    stock: Number,
+    sku: String
+  },
+  { _id: false }
+);
+
+const ImageSchema = new mongoose.Schema(
+  {
+    url: String,
+    color: String
+  },
+  { _id: false }
+);
+
+const AdditionalInfoSchema = new mongoose.Schema(
+  {
+    key: String,
+    value: String
+  },
+  { _id: false }
+);
+
 const ProductSchema = new mongoose.Schema(
   {
     /* ===== Core ===== */
@@ -53,45 +94,6 @@ const ProductSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const ReviewSchema = new mongoose.Schema(
-  {
-    user: {
-      name: String,
-      avatar: String
-    },
-    rating: Number,
-    comment: String,
-    createdAt: Date
-  },
-  { _id: false }
-);
 
-const VariantSchema = new mongoose.Schema(
-  {
-    color: String,
-    size: String,
-    storage: String,
-    price: Number,
-    stock: Number,
-    sku: String
-  },
-  { _id: false }
-);
-
-const ImageSchema = new mongoose.Schema(
-  {
-    url: String,
-    color: String
-  },
-  { _id: false }
-);
-
-const AdditionalInfoSchema = new mongoose.Schema(
-  {
-    key: String,
-    value: String
-  },
-  { _id: false }
-);
 
 module.exports = mongoose.model("Product", ProductSchema);
