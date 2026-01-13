@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { brands } from "../../src/Data/brands";
+import { brands } from "../../Data/brands";
 export default function Brands() {
   return (
     <div className="w-full border-y-1 border-gray-100 bg-[#fafafa] py-10">

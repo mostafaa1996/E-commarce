@@ -1,4 +1,4 @@
-export default function Pagination({ current, totalPages, onChange }) {
+export default function Pagination({ current, totalPages, RangeOfPagesNumberToShow, onChange }) {
   return (
     <div className="flex items-center justify-center gap-3 text-sm text-zinc-500">
       <button
@@ -9,8 +9,8 @@ export default function Pagination({ current, totalPages, onChange }) {
         Prev
       </button>
 
-      {Array.from({ length: totalPages }).map((_, i) => {
-        const page = i + 1;
+      {Array.from({ length: (RangeOfPagesNumberToShow + 2) }).map((_, i) => {
+        const page = i + current;
         return (
           <button
             key={page}
@@ -21,7 +21,7 @@ export default function Pagination({ current, totalPages, onChange }) {
                 : "hover:text-[#FF6543]"
             }
           >
-            {page}
+            {i==RangeOfPagesNumberToShow? "..." : i==(RangeOfPagesNumberToShow+1)? totalPages : page}
           </button>
         );
       })}

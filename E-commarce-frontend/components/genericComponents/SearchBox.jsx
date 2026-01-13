@@ -1,23 +1,27 @@
+import DropdownMenu from "./DropDownMenu";
 import SearchBtn from "/SearchBtn.svg";
 import clsx from "clsx";
 export default function SearchBar({ placeholder = "Search" }) {
   return (
-    <div className="flex items-center border border-zinc-200 rounded-md w-[310px]">
-      <input
-        type="text"
-        placeholder={placeholder}
-        className={clsx(
-          "flex-1 px-4 py-4 text-sm font-light outline-none",
-          " placeholder:text-zinc-400"
-        )}
-      />
+    <div className="relative">
+      <div className="flex items-center border border-zinc-200 rounded-md w-[310px]">
+        <input
+          type="text"
+          placeholder={placeholder}
+          className={clsx(
+            "flex-1 px-4 py-4 text-sm font-light outline-none",
+            " placeholder:text-zinc-400"
+          )}
+        />
 
-      <button
-        className="w-10 h-10 mx-3 cursor-pointer active:scale-120 transition duration-300 ease-in-out"
-        aria-label="Search"
-      >
-        <img src={SearchBtn} alt="Search" />
-      </button>
+        <button
+          className="w-10 h-10 mx-3 cursor-pointer active:scale-120 transition duration-300 ease-in-out"
+          aria-label="Search"
+        >
+          <img src={SearchBtn} alt="Search" />
+        </button>
+      </div>
+      <DropdownMenu results={[]} onSelect={() => {}} />
     </div>
   );
 }

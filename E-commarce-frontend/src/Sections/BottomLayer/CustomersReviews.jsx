@@ -1,6 +1,6 @@
-import ReviewCard from "../genericComponents/ReviewCard";
-import ShowItemsTemplate from "../genericComponents/showItemsTemplate";
-import { reviews } from "../../src/Data/reviews";
+import ReviewCard from "../../../components/genericComponents/ReviewCard";
+import ShowItemsTemplate from "../../../components/genericComponents/showItemsTemplate";
+import { reviews } from "../../Data/reviews";
 
 export default function ReviewsSection() {
   return (
