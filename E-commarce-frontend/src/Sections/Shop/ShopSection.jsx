@@ -62,7 +62,7 @@ export default function ShopSection() {
           onClickSearch={SearchSubmitEvent}
           onChange={SearchValueChangeEvent}
           placeholder="Search..."
-          results={[]}
+          results={shopSearch.products}
         />
         <SideBarFilterSection />
       </aside>
