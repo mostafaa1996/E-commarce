@@ -1,6 +1,6 @@
 import SideBarFilter from "../../components/genericComponents/SideBarFilter";
 import { useShopQueryStore } from "../ShopQueryStore";
-import { useEffect } from "react";
+// import { useEffect } from "react";
 
 const Data = {
   categories: ["Laptops", "Phones", "Tablets"],
@@ -10,9 +10,9 @@ const Data = {
 
 export default function SideBarFilterSection() {
   const { shopQuery, setShopQuery } = useShopQueryStore();
-  useEffect(() => {
-    console.log(shopQuery);
-  }, [shopQuery]);
+  // useEffect(() => {
+  //   console.log(shopQuery);
+  // }, [shopQuery]);
   function applyFilter(item, Title) {
     if (Array.isArray(shopQuery[Title])) {
       const data = shopQuery[Title];
