@@ -13,7 +13,7 @@ export const useShopQueryStore = create(set => ({
     sort: null
   },
 
-  setQuery: (type, value) =>
+  setShopQuery: (type, value) =>
     set(state => ({
       shopQuery: {
         ...state.shopQuery,

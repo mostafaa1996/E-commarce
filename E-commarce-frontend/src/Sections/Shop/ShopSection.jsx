@@ -4,13 +4,39 @@ import SearchBar from "../../../components/genericComponents/SearchBox";
 import CurrentRangeOfResults from "../../../components/genericComponents/CurrentRangeOfResults";
 import SideBarFilterSection from "../SideBarFilterSection";
 import ProductsSortingOption from "../../../components/genericComponents/ProductsSortingOption";
+import { useShopSearchStore } from "../../shopSearchStore";
+import { useShopQueryStore } from "../../shopQueryStore";
+import {useEffect } from "react";
+import { useState } from "react";
 
 export default function ShopSection() {
-  function ShowFilterMenu() {
-    console.log("ShowFilterMenu");
-  }
+  const { shopSearch,setShopSearchValue } = useShopSearchStore();
+  const { shopQuery , setShopQuery } = useShopQueryStore();
+  /** Search part **/
+  //debouncing for 500 msec...
+  const [searchValue, setSearchValue] = useState("");
+  useEffect(() => {
+    console.log(shopQuery);
+    console.log(shopSearch);
+  }, [shopQuery , shopSearch]);
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setShopSearchValue(searchValue.trim());
+    }, 500);
 
-  function SearchSuggestionsMenu() {
+    return () => clearTimeout(t);
+  }, [searchValue, setShopSearchValue]);
+
+  function SearchValueChangeEvent(currentValue) {
+    setSearchValue(currentValue.trim());
+  }
+  function SearchSubmitEvent() {
+    setShopQuery("search", searchValue.trim());
+    setSearchValue("");
+    setShopSearchValue("");
+  }
+  /** End of Search part **/
+  function ShowFilterMenu() {
     console.log("ShowFilterMenu");
   }
 
@@ -32,7 +58,12 @@ export default function ShopSection() {
         </div>
       </div>
       <aside className="mt-10 ml-10 w-full lg:w-[310px] flex flex-col gap-10">
-        <SearchBar />
+        <SearchBar
+          onClickSearch={SearchSubmitEvent}
+          onChange={SearchValueChangeEvent}
+          placeholder="Search..."
+          results={[]}
+        />
         <SideBarFilterSection />
       </aside>
     </div>

@@ -9,7 +9,7 @@ const Data = {
 };
 
 export default function SideBarFilterSection() {
-  const { shopQuery, setQuery } = useShopQueryStore();
+  const { shopQuery, setShopQuery } = useShopQueryStore();
   useEffect(() => {
     console.log(shopQuery);
   }, [shopQuery]);
@@ -21,16 +21,16 @@ export default function SideBarFilterSection() {
       } else {
         data.splice(data.indexOf(item), 1);
       }
-      setQuery(Title, data);
+      setShopQuery(Title, data);
       return;
     }
     else if (!Array.isArray(shopQuery[Title])) {
       if (shopQuery[Title] === item) {
-        setQuery(Title, null);
+        setShopQuery(Title, null);
         return;
       }
     }
-    setQuery(Title, item);
+    setShopQuery(Title, item);
   }
   return (
     <>
@@ -40,6 +40,7 @@ export default function SideBarFilterSection() {
           title={category}
           items={items}
           applyFilter={applyFilter}
+          MultiChoiceOption = {Array.isArray(shopQuery[category])}
         />
       ))}
     </>
