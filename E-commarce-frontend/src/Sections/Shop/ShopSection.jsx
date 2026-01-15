@@ -4,26 +4,29 @@ import CurrentRangeOfResults from "../../../components/genericComponents/Current
 import SideBarFilterSection from "../SideBarFilterSection";
 import SortingSection from "../SortingSection";
 import SearchSection from "../SearchSection";
+import { useShopQueryStore } from "../../ShopQueryStore";
 
 export default function ShopSection() {
-
-  function ShowFilterMenu() {
-    console.log("ShowFilterMenu");
+  const { shopQuery , setShopQuery } = useShopQueryStore();
+  function setCurrentPageEvent(currentPage){
+    setShopQuery("page", currentPage);
   }
-
   return (
     <div className="my-10 flex gap-10 mt-10 justify-center">
       <div className="mt-10 flex flex-col gap-10">
         <div className="flex items-center justify-between">
-          <CurrentRangeOfResults from={1} to={10} total={100} />
-          <SortingSection/>
+          <CurrentRangeOfResults
+            from={(shopQuery.page * shopQuery.limit) - shopQuery.limit + 1}
+            to={shopQuery.page * shopQuery.limit}
+            total={100}
+          />
+          <SortingSection />
         </div>
         <div className="flex flex-col items-center justify-center gap-10">
           <ProductGrid />
           <Pagination
-            current={1}
-            totalPages={3}
-            onChange={(page) => console.log(page)}
+            totalPages={10}
+            onChange={setCurrentPageEvent}
             RangeOfPagesNumberToShow={4}
           />
         </div>
