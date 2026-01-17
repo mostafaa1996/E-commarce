@@ -1,10 +1,10 @@
 export default function CardMedia({ Image , badge }) {
   return (
-    <div className="relative aspect-[4/3] bg-white">
+    <div className="relative bg-white w-50 h-50 ml-8">
       <img
         src={Image}
         alt=""
-        className="w-full h-full object-cover"
+        className="w-full h-full object-contain"
       />
 
       {badge && (

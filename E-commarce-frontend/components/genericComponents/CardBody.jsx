@@ -31,7 +31,7 @@ export default function CardBody({ variant = "ShowNameOnly", ...props }) {
 }
 
 const CardTitle = ({ children }) => (
-  <h3 className="text-[21px] font-light text-[#272727] text-center">
+  <h3 className="text-[21px] font-light text-[#272727] text-center line-clamp-1">
     {children}
   </h3>
 );

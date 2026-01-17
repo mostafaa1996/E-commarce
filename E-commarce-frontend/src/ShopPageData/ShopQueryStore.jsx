@@ -1,36 +1,34 @@
 import { create } from "zustand";
 
-export const useShopQueryStore = create(set => ({
+export const useShopQueryStore = create((set) => ({
   shopQuery: {
     page: 1,
     limit: 9,
-    search: "",
+    search: null,
     category: null,
-    brands: [],
-    tags: [],
+    brands: null,
+    tags: null,
     minPrice: null,
     maxPrice: null,
-    sort: null
+    sort: null,
   },
 
   setShopQuery: (type, value) =>
-    set(state => ({
+    set((state) => ({
       shopQuery: {
         ...state.shopQuery,
         [type]: value,
-        page: type !== "page" ? 1 : value
-      }
+        page: type !== "page" ? 1 : value,
+      },
     })),
 
-  getBrands : () => {
+  getBrands: () => {
     const state = useShopQueryStore.getState();
     return state.shopQuery.brands;
   },
 
-  getTags : () => {
+  getTags: () => {
     const state = useShopQueryStore.getState();
     return state.shopQuery.tags;
   },
-
 }));
-

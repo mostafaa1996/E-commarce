@@ -2,11 +2,12 @@ import SearchBar from "../../components/genericComponents/SearchBox";
 import DropdownMenu from "../../components/genericComponents/DropDownMenu";
 import { useEffect } from "react";
 import { useState } from "react";
-import { useShopSearchStore } from "../shopSearchStore";
-import { useShopQueryStore } from "../shopQueryStore";
+import { useShopSearchStore } from "../ShopPageData/shopSearchStore";
+import { useShopQueryStore } from "../ShopPageData/ShopQueryStore";
 export default function SearchSection() {
   const [searchValue, setSearchValue] = useState("");
-  const { shopSearch, setShopSearchValue , setShopSearchProducts } = useShopSearchStore();
+  const { shopSearch, setShopSearchValue, setShopSearchProducts } =
+    useShopSearchStore();
   const { shopQuery, setShopQuery } = useShopQueryStore();
   // useEffect(() => {
   //   console.log(shopQuery);
@@ -24,6 +25,10 @@ export default function SearchSection() {
     setSearchValue(currentValue.trim());
   }
   function SearchSubmitEvent(value) {
+    if (value === ""){
+      setShopQuery("search", null);
+      return;
+    }
     setShopQuery("search", value.trim());
     setSearchValue("");
     setShopSearchValue("");

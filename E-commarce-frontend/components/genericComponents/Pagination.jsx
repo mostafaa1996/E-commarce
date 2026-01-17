@@ -29,7 +29,7 @@ export default function Pagination({
 
       {Array.from({ length: RangeOfPagesNumberToShow + 2 }).map((_, i) => {
         const page = i + currentPage;
-        console.log(currentPage, page);
+        // console.log(currentPage, page);
         return (
           <>
             {(page <= totalPages && i !== RangeOfPagesNumberToShow) ||
