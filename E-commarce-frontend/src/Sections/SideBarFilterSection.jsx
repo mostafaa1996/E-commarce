@@ -1,14 +1,7 @@
 import SideBarFilter from "../../components/genericComponents/SideBarFilter";
 import { useShopQueryStore } from "../ShopPageData/ShopQueryStore";
 import { useshopResponseStore } from "../ShopPageData/ShopResponseStore";
-// import { useEffect } from "react";
 
-// const Data = {
-//   categories: ["Laptops", "Phones", "Tablets"],
-//   tags: ["Laptops", "Phones", "Tablets"],
-//   brands: ["Facebook", "Instagram", "Twitter"],
-//   Price: ["Low to High", "High to Low"],
-// };
 
 export default function SideBarFilterSection() {
   const { shopQuery, setShopQuery } = useShopQueryStore();
@@ -19,9 +12,7 @@ export default function SideBarFilterSection() {
     brands: shopResponse.BrandsArray,
     Price: shopResponse.PriceLimitsArray,
   };
-  // useEffect(() => {
-  //   console.log(shopQuery);
-  // }, [shopQuery]);
+
   function applyFilter(item, Title) {
     if (Array.isArray(shopQuery[Title])) {
       const data = shopQuery[Title];
@@ -44,6 +35,7 @@ export default function SideBarFilterSection() {
     }
     setShopQuery(Title, item);
   }
+  
   return (
     <>
       {/* the essential filter is categories */}

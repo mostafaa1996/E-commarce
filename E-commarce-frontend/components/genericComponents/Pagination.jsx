@@ -1,22 +1,21 @@
-import { useState } from "react";
+import {Fragment } from "react";
 export default function Pagination({
   totalPages,
   RangeOfPagesNumberToShow,
+  currentPage,
   onChange,
 }) {
-  const [currentPage, setCurrentPage] = useState(1);
+  
   function NextPage() {
     onChange(currentPage + 1);
-    setCurrentPage(currentPage + 1);
   }
   function PrevPage() {
     onChange(currentPage - 1);
-    setCurrentPage(currentPage - 1);
   }
   function AnyNumberPressed(pageNumber) {
-    setCurrentPage(pageNumber);
     onChange(pageNumber);
   }
+  console.log(currentPage);
   return (
     <div className="flex items-center justify-center gap-3 text-sm text-zinc-500">
       <button
@@ -29,14 +28,13 @@ export default function Pagination({
 
       {Array.from({ length: RangeOfPagesNumberToShow + 2 }).map((_, i) => {
         const page = i + currentPage;
-        // console.log(currentPage, page);
+        
         return (
-          <>
+           <Fragment key={`pagination-fragment-${page}-${i}`}>
             {(page <= totalPages && i !== RangeOfPagesNumberToShow) ||
             (page === totalPages + 1 && i === RangeOfPagesNumberToShow + 1) ? (
               <button
-                key={page}
-                onClick={() => AnyNumberPressed(page)}
+                onClick={() => AnyNumberPressed(i == RangeOfPagesNumberToShow + 1 ? totalPages : page)}
                 className={`
               ${
                 page === currentPage ? "text-[#FF6543]" : "hover:text-[#FF6543]"
@@ -50,7 +48,7 @@ export default function Pagination({
               RangeOfPagesNumberToShow + currentPage < totalPages + 1 &&
               i === RangeOfPagesNumberToShow && <p>...</p>
             )}
-          </>
+           </Fragment>
         );
       })}
 

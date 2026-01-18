@@ -4,6 +4,7 @@ export const useshopResponseStore = create((set) => ({
   shopResponse: {
     currentPage: 0,
     totalPages: 0,
+    totalItems: 0,
     products: [],
     CategoriesArray: [],
     BrandsArray: [],
@@ -16,8 +17,9 @@ export const useshopResponseStore = create((set) => ({
       shopResponse: {
         currentPage: data.pagination.currentPage,
         totalPages: data.pagination.totalPages,
+        totalItems: data.pagination.totalItems,
         products: data.products,
-        CategoriesArray : data.Category,
+        CategoriesArray : data.category,
         BrandsArray: data.brands,
         TagsArray: data.tags,
         PriceLimitsArray: data.price,

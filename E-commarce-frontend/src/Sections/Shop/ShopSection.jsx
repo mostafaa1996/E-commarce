@@ -24,6 +24,7 @@ export default function ShopSection() {
       setshopResponse(data);
     }
   }, [data, setshopResponse]);
+
   function setCurrentPageEvent(currentPage) {
     setShopQuery("page", currentPage);
   }
@@ -39,7 +40,7 @@ export default function ShopSection() {
               shopResponse.currentPage * shopQuery.limit - shopQuery.limit + 1
             }
             to={shopResponse.currentPage * shopQuery.limit}
-            total={shopResponse.totalPages * shopQuery.limit}
+            total={shopResponse.totalItems}
           />
           <SortingSection />
         </div>
@@ -48,6 +49,7 @@ export default function ShopSection() {
           <Pagination
             totalPages={shopResponse.totalPages}
             onChange={setCurrentPageEvent}
+            currentPage={shopResponse.currentPage}
             RangeOfPagesNumberToShow={4}
           />
         </div>
