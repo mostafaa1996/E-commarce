@@ -39,7 +39,7 @@ export default function SidebarFilter({ title, items, applyFilter , MultiChoiceO
                 } else if (MultiChoiceOption && !MultiItemSelected.includes(item)) {
                   setMultiItemSelected(prev=> [...prev, item]);
                 }
-                applyFilter(item, title);
+                applyFilter(item, title.toLowerCase());
               }}
               className="cursor-pointer "
             >

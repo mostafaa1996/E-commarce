@@ -41,7 +41,7 @@ export default function SideBarFilterSection() {
       {/* the essential filter is categories */}
       {FilterationData.categories && <SideBarFilter
         key={FilterationData.categories[0]}
-        title={"Categories"}
+        title={"Category"}
         items={FilterationData.categories}
         applyFilter={applyFilter}
         MultiChoiceOption={false}

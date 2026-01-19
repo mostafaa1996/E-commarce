@@ -15,7 +15,7 @@ export default function Pagination({
   function AnyNumberPressed(pageNumber) {
     onChange(pageNumber);
   }
-  console.log(currentPage);
+  // console.log(currentPage);
   return (
     <div className="flex items-center justify-center gap-3 text-sm text-zinc-500">
       <button

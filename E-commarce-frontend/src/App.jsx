@@ -19,12 +19,15 @@
 // import SearchBar from "../components/genericComponents/SearchBox";
 // import SideBarFilterSection from "../components/Sections/SideBarFilterSection";
 // import ProductGridSection from "../components/genericComponents/ProductGrid";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ShopPage from "./Pages/ShopPage";
+import ProductDetailsPage from "./Pages/ProductDetailsPage";
 
 function App() {
   return (
     <>
-      <ShopPage />
+      {/* <ShopPage /> */}
+      <ProductDetailsPage />
       {/* <TapInfo />
       <Navbar />
       <div className="flex gap-10 mt-10">
