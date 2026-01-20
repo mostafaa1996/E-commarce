@@ -1,16 +1,15 @@
 import SideBarFilter from "../../components/genericComponents/SideBarFilter";
 import { useShopQueryStore } from "../ShopPageData/ShopQueryStore";
-import { useshopResponseStore } from "../ShopPageData/ShopResponseStore";
 
 
-export default function SideBarFilterSection() {
+export default function SideBarFilterSection({products}) {
   const { shopQuery, setShopQuery } = useShopQueryStore();
-  const { shopResponse } = useshopResponseStore();
+ 
   const FilterationData = {
-    categories: shopResponse.CategoriesArray,
-    tags: shopResponse.TagsArray,
-    brands: shopResponse.BrandsArray,
-    Price: shopResponse.PriceLimitsArray,
+    categories: products.category,
+    tags: products.tags,
+    brands: products.brands,
+    Price: products.price,
   };
 
   function applyFilter(item, Title) {

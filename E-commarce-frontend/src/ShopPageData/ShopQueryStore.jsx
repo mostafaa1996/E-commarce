@@ -1,17 +1,8 @@
 import { create } from "zustand";
+import {defaultShopQuery} from "./shopDefaultQuery";
 
 export const useShopQueryStore = create((set) => ({
-  shopQuery: {
-    page: 1,
-    limit: 9,
-    search: null,
-    category: null,
-    brands: null,
-    tags: null,
-    minPrice: null,
-    maxPrice: null,
-    sort: null,
-  },
+  shopQuery: defaultShopQuery,
 
   setShopQuery: (type, value) =>
     set((state) => ({
