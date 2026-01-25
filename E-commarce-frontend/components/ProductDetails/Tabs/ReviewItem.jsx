@@ -23,7 +23,7 @@ export default function ReviewItem({ avatar, name, date, text , rating }) {
           ))}
         </div>
 
-        <p className="text-sm text-zinc-500">{text}</p>
+        <p className="text-sm text-zinc-500 max-w-6xl">{text}</p>
       </div>
     </div>
   );

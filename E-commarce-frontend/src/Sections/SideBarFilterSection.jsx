@@ -1,10 +1,9 @@
 import SideBarFilter from "../../components/genericComponents/SideBarFilter";
-import { useShopQueryStore } from "../ShopPageData/ShopQueryStore";
+import { useShopQueryStore } from "../zustand_ShopPage/ShopQueryStore";
 
-
-export default function SideBarFilterSection({products}) {
+export default function SideBarFilterSection({ products }) {
   const { shopQuery, setShopQuery } = useShopQueryStore();
- 
+
   const FilterationData = {
     categories: products.category,
     tags: products.tags,
@@ -34,20 +33,22 @@ export default function SideBarFilterSection({products}) {
     }
     setShopQuery(Title, item);
   }
-  
+
   return (
     <>
       {/* the essential filter is categories */}
-      {FilterationData.categories && <SideBarFilter
-        key={FilterationData.categories[0]}
-        title={"Category"}
-        items={FilterationData.categories}
-        applyFilter={applyFilter}
-        MultiChoiceOption={false}
-      />}
+      {FilterationData.categories && (
+        <SideBarFilter
+          key={FilterationData.categories[0]}
+          title={"Category"}
+          items={FilterationData.categories}
+          applyFilter={applyFilter}
+          MultiChoiceOption={false}
+        />
+      )}
       {/* the rest of the filters determined by the categories selected */}
       {shopQuery.category &&
-        Object.entries(FilterationData).map(([key , values, index]) => {
+        Object.entries(FilterationData).map(([key, values, index]) => {
           if (index === 0) return;
           return (
             <SideBarFilter

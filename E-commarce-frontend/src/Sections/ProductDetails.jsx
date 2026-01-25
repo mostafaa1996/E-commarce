@@ -12,7 +12,7 @@ export default function ProductDetails({ product }) {
   return (
     <section className="py-20">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 gap-20 lg:grid-cols-2 lg:gap-100">
+        <div className="grid grid-cols-1 gap-20 lg:grid-cols-2 lg:gap-10">
           <ProductGallery
             images={product.images}
             active={activeImage}
@@ -24,7 +24,7 @@ export default function ProductDetails({ product }) {
               title={product.title}
               price={product.price}
               rating={product.rating}
-              description={product.description}
+              description={product.shortDescription}
             />
 
             <div
@@ -35,14 +35,16 @@ export default function ProductDetails({ product }) {
               }}
             />
 
-            <ProductsVariantsShow label="Color" options={product.colors} />
-            <ProductsVariantsShow label="Size" options={product.sizes} />
-
-            <QuantityControl
-              value={product.quantity}
-              onDec={handleDecrement}
-              onInc={handleIncrement}
+            <ProductsVariantsShow
+              label="Color"
+              options={product.variants?.colors || []}
             />
+            <ProductsVariantsShow
+              label="Size"
+              options={product.variants?.sizes || []}
+            />
+
+            <QuantityControl />
 
             <ProductActions />
 

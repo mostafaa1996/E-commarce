@@ -10,7 +10,7 @@ export default function ProductGrid({products}) {
           image={product.images[0].url}
           title={product.title}
           price={product.price}
-          NavigationLink={`/product/${product._id}`}
+          NavigationLink={`/shop/products/${product._id}`}
           // variant={product.variant}
         />
       ))}

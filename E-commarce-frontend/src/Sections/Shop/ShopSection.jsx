@@ -4,9 +4,9 @@ import CurrentRangeOfResults from "../../../components/genericComponents/Current
 import SideBarFilterSection from "../SideBarFilterSection";
 import SortingSection from "../SortingSection";
 import SearchSection from "../SearchSection";
-import { useShopQueryStore } from "../../ShopPageData/ShopQueryStore";
+import { useShopQueryStore } from "../../zustand_ShopPage/ShopQueryStore";
 import { useQuery } from "@tanstack/react-query";
-import { getShopProducts } from "../../Services/shopProductsService";
+import { getShopProducts } from "../../APIs/shopProductsService";
 
 export default function ShopSection() {
   const { shopQuery, setShopQuery } = useShopQueryStore();

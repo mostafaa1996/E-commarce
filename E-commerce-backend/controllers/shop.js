@@ -118,3 +118,16 @@ exports.getProducts = async (req, res, next) => {
     next(err);
   }
 };
+
+
+//
+//  API = /products/:id
+
+exports.getProduct = async (req, res, next) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    res.status(200).json(product);
+  } catch (err) {
+    next(err);
+  }
+};

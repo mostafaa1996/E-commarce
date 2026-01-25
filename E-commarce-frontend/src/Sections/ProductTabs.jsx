@@ -13,7 +13,7 @@ export default function ProductTabs({ product }) {
         {active === "description" && (
           <DescriptionTab
             text={product.description}
-            bullets={product.bullets}
+            bullets={product.bullets||[]}
           />
         )}
 

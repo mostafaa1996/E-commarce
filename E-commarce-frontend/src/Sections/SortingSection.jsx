@@ -1,7 +1,7 @@
 import DropDownMenu from "../../components/genericComponents/DropDownMenu";
 import ProductsSortingOption from "../../components/genericComponents/ProductsSortingOption";
-import { useShopQueryStore } from "../ShopPageData/ShopQueryStore";
-import { useShopSortingStore } from "../ShopPageData/ShopSortingStore";
+import { useShopQueryStore } from "../zustand_ShopPage/ShopQueryStore";
+import { useShopSortingStore } from "../zustand_ShopPage/ShopSortingStore";
 import { useState } from "react";
 // import { useEffect } from "react";
 export default function SortingSection() {
