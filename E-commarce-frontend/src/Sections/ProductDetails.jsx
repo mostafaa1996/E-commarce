@@ -5,10 +5,26 @@ import ProductsVariantsShow from "../../components/ProductDetails/ProductsVarian
 import ProductActions from "../../components/ProductDetails/ProductAction";
 import QuantityControl from "../../components/genericComponents/QuantityControl";
 import { useState } from "react";
+import { useCartStore } from "../zustand_Cart/CartStore";
+import { useNavigate } from "react-router-dom";
+
 export default function ProductDetails({ product }) {
   const [activeImage, setActiveImage] = useState(0);
-  function handleDecrement() {}
-  function handleIncrement() {}
+  const [quantity, setQuantity] = useState(0);
+  const CartStorage = useCartStore();
+  const navigate = useNavigate();
+
+  function handleAddToCart() {
+    CartStorage.addItem(product, quantity);
+  }
+  function handleAddToWishlist() {
+    console.log("Add to wishlist"); // in Backend
+  }
+  function handleOrderNow() {
+    navigate("/checkout");
+  }
+  function handleSelectVariantColor() {}
+  function handleSelectVariantSize() {}
   return (
     <section className="py-20">
       <div className="max-w-7xl mx-auto px-6">
@@ -38,15 +54,21 @@ export default function ProductDetails({ product }) {
             <ProductsVariantsShow
               label="Color"
               options={product.variants?.colors || []}
+              handleChoice={handleSelectVariantColor}
             />
             <ProductsVariantsShow
               label="Size"
               options={product.variants?.sizes || []}
+              handleChoice={handleSelectVariantSize}
             />
 
-            <QuantityControl />
+            <QuantityControl value={quantity} onChange={setQuantity} />
 
-            <ProductActions />
+            <ProductActions
+              OrderHandler={handleOrderNow}
+              AddToCartHandler={handleAddToCart}
+              AddToWishlistHandler={handleAddToWishlist}
+            />
 
             <div
               className="h-[12px]"

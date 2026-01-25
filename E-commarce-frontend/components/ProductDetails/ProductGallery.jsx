@@ -5,7 +5,7 @@ export default function ProductGallery({ images, active, onChange }) {
       <div className="flex flex-col gap-4">
         {images.map((img, index) => (
           <button
-            key={img}
+            key={`Product-Gallery-Thumbnail-${index}`}
             onClick={() => onChange(index)}
             className={`
               w-16 h-16 rounded-lg border

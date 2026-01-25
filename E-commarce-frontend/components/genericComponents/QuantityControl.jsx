@@ -1,10 +1,9 @@
-import { useState } from "react";
-export default function QuantityControl() {
-  const [value, setValue] = useState(0);
+export default function QuantityControl({ value , onChange }) {
   return (
     <div className="flex items-center gap-2">
       <button
-        onClick={()=> setValue(value - 1)}
+        onClick={()=> {onChange(value - 1)}}
+        disabled={value === 0}
         className="w-8 h-8 border border-zinc-200 rounded-md text-sm"
       >
         −
@@ -13,7 +12,7 @@ export default function QuantityControl() {
         {value}
       </span>
       <button
-        onClick={()=> setValue(value + 1)}
+        onClick={()=> {onChange(value + 1)}}
         className="w-8 h-8 border border-zinc-200 rounded-md text-sm"
       >
         +

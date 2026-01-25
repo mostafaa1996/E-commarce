@@ -1,7 +1,7 @@
-import cartItems from "../../src/Data/CartData";
-import CartRow from "../genericComponents/CartRow";
-import CartTotals from "../genericComponents/CartTotals";
-import Button from "../genericComponents/Button";
+import cartItems from "../../Data/CartData";
+import CartRow from "../../../components/genericComponents/CartRow";
+import CartTotals from "../../../components/genericComponents/CartTotals";
+import Button from "../../../components/genericComponents/Button";
 export default function CartSection() {
   const subtotal = cartItems.reduce(
     (sum, item) => sum + item.price * item.qty,
@@ -36,7 +36,7 @@ export default function CartSection() {
 
         {/* Actions */}
         <div className="flex flex-wrap gap-4 mt-10">
-          <Button className="w-fit tracking-widest">UPDATE CART</Button>
+          <Button className="w-fit tracking-widest">CLEAR CART</Button>
           <Button className="w-fit tracking-widest">CONTINUE SHOPPING</Button>
           <Button className="w-fit tracking-widest">PROCEED TO CHECKOUT</Button>
         </div>

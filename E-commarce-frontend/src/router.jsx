@@ -2,8 +2,11 @@ import { createBrowserRouter } from "react-router-dom";
 import { queryClient } from "./queryClient";
 import { getShopProducts, getProductById } from "./APIs/shopProductsService";
 
+
 import ShopPage from "./pages/ShopPage";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
+import CartPage from "./Pages/CartPage";
+
 import { defaultShopQuery } from "./zustand_ShopPage/shopDefaultQuery";
 
 export const router = createBrowserRouter([
@@ -30,7 +33,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/cart",
-    element: <div>Cart</div>,
+    element: <CartPage />,
   },
   {
     path: "/checkout",
