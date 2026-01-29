@@ -6,6 +6,8 @@ import { getShopProducts, getProductById } from "./APIs/shopProductsService";
 import ShopPage from "./pages/ShopPage";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
 import CartPage from "./Pages/CartPage";
+import LoginPage from "./Pages/loginPage";
+import SignupPage from "./Pages/SignupPage";
 
 import { defaultShopQuery } from "./zustand_ShopPage/shopDefaultQuery";
 
@@ -39,4 +41,12 @@ export const router = createBrowserRouter([
     path: "/checkout",
     element: <div>Checkout</div>,
   },
+  {
+    path: "/login",
+    element: <LoginPage />,
+  },
+  {
+    path: "/signup",
+    element: <SignupPage />,  
+  }
 ]);
