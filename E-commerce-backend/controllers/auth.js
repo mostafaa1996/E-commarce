@@ -1,7 +1,12 @@
+require("dotenv").config();
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const Token = require("../models/token");
+const {generateAccessToken, generateRefreshToken} = require("../utils/token");
 const User = require("../models/User");
 
 exports.postSignup = async (req, res) => {
+ try {
   const { name, email, password , confirmPassword } = req.body;
 
   const existing = await User.findOne({ email });
@@ -25,6 +30,10 @@ exports.postSignup = async (req, res) => {
 
   await user.save();
   res.redirect("/login");
+ } catch (err) {
+  console.log("error");
+  next(err);
+ }
 };
 
 exports.postLogin = async (req, res) => {
@@ -35,19 +44,49 @@ exports.postLogin = async (req, res) => {
   
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) return res.send("Wrong password");
+    
+    const accessToken = generateAccessToken(user);
+    const refreshToken = generateRefreshToken(user);
   
-    req.session.user = user;
-    req.session.isLoggedIn = true;
-    req.session.role = user.role;
+    await Token.create({
+      userId: user._id,
+      token: refreshToken,
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
+    });
   
-    return req.session.save(() => {
-      res.redirect("/");
+    res.status(200).json({
+      accessToken,
+      refreshToken,
+      user: { id: user._id, email: user.email, role: user.role }
     });
   };
 
 exports.logout = (req, res) => {
-    req.session.destroy(() => {
-      res.redirect("/");
+    const refreshToken = req.body.refreshToken;
+    if (!refreshToken) return res.sendStatus(401);
+  
+    Token.findOneAndRemove({ token: refreshToken }).exec((err, token) => {
+      if (err) return res.sendStatus(401);
+      if (!token) return res.sendStatus(401);
+      res.sendStatus(204);
     });
-  };
+};
+
+exports.refresh = (req , res) =>{
+    const refreshToken = req.body.refreshToken;
+    if (!refreshToken) return res.sendStatus(401);
+  
+    Token.findOne({ token: refreshToken }).exec((err, token) => {
+      if (err) return res.sendStatus(401);
+      if (!token) return res.sendStatus(401);
+  
+      jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, user) => {
+        if (err) return res.sendStatus(403);
+  
+        const accessToken = generateAccessToken({ id: user.id });
+  
+        res.status(200).json({ accessToken });
+      });
+    });
+}
   
