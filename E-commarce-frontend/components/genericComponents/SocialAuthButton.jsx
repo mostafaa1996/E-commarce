@@ -1,4 +1,4 @@
-export default function SocialAuthButton({ label }) {
+export default function SocialAuthButton({ label , ...props }) {
   return (
     <button
       className="
@@ -13,7 +13,9 @@ export default function SocialAuthButton({ label }) {
         hover:bg-[#FF6543]
         hover:text-white
         transition
+        cursor-pointer
       "
+      {...props}
     >
       {label}
     </button>

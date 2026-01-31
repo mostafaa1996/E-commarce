@@ -1,4 +1,4 @@
-export default function InputField({ placeholder, type = "text" }) {
+export default function InputField({ placeholder, type = "text", ...props }) {
   return (
     <input
       type={type}
@@ -16,6 +16,7 @@ export default function InputField({ placeholder, type = "text" }) {
         focus:outline-none
         focus:border-[#FF6543]
       `}
+      {...props}
     />
   );
 }

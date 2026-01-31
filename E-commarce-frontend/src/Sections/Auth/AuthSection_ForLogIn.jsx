@@ -5,13 +5,13 @@ export default function AuthSection() {
     <section className="min-h-screen flex bg-white">
       <div className="w-full grid grid-cols-1 lg:grid-cols-5">
         {/* Left side */}
-        {/* <div className="hidden lg:block lg:col-span-1">
+        <div className="hidden lg:block lg:col-span-1">
           <AuthAside />
-        </div> */}
+        </div>
 
         {/* Right side */}
-        <div className="lg:col-span-5 flex items-center">
-          <SignIn Form />
+        <div className="lg:col-span-4 flex items-center">
+          <SignInForm />
         </div>
       </div>
     </section>

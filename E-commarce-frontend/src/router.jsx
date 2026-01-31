@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import { queryClient } from "./queryClient";
 import { getShopProducts, getProductById } from "./APIs/shopProductsService";
+import { loginAction , SignupAction } from "./APIs/AuthService";
 
 
 import ShopPage from "./pages/ShopPage";
@@ -44,9 +45,11 @@ export const router = createBrowserRouter([
   {
     path: "/login",
     element: <LoginPage />,
+    action: async ({ request }) => await loginAction({ request }),
   },
   {
     path: "/signup",
-    element: <SignupPage />,  
+    element: <SignupPage />,
+    action: async ({ request }) => await SignupAction({ request }),  
   }
 ]);
