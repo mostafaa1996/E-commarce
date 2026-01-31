@@ -2,7 +2,9 @@ import CartRow from "../CartRow";
 import CartTotals from "../../../components/genericComponents/CartTotals";
 import Button from "../../../components/genericComponents/Button";
 import { useCartStore } from "../../zustand_Cart/CartStore";
+import { useNavigate } from "react-router-dom";
 export default function CartSection() {
+  const navigate = useNavigate();
   const cartStore = useCartStore();
   const cartItems = cartStore.items;
   const TotalItems = cartStore.totalItems;
@@ -35,8 +37,8 @@ export default function CartSection() {
 
         {/* Actions */}
         <div className="flex flex-wrap gap-4 mt-10">
-          <Button className="w-fit tracking-widest">CLEAR CART</Button>
-          <Button className="w-fit tracking-widest">CONTINUE SHOPPING</Button>
+          <Button onClick={cartStore.clearCart} className="w-fit tracking-widest">CLEAR CART</Button>
+          <Button onClick={() => navigate("/shop")} className="w-fit tracking-widest">CONTINUE SHOPPING</Button>
           <Button className="w-fit tracking-widest">PROCEED TO CHECKOUT</Button>
         </div>
       </div>
