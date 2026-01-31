@@ -9,17 +9,21 @@ export const useCartStore = create(
       totalPrice: 0,
 
       addItem(product, quantity = 1) {
+        console.log(product);
         const items = [...get().items];
         const existing = items.find(
           (i) => i._id === product._id
         );
-        
+        console.log(existing);
         if (existing) {
           existing.quantity = quantity;
           existing.subTotal = existing.quantity * existing.price;
         } else {
           items.push({
-            ...product,
+            _id:product._id,
+            title: product.title,
+            price: product.price,
+            image: product.images[0].url,
             quantity,
             subTotal: product.price * quantity,
           });
@@ -31,7 +35,7 @@ export const useCartStore = create(
           totalPrice: items.reduce((s, i) => s + i.subTotal, 0),
         });
 
-        console.log(get().items);
+        // console.log(get().items);
       },
 
       removeItem(productId) {

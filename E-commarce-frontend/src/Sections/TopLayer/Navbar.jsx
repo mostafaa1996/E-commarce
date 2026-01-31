@@ -5,8 +5,10 @@ import userProfile from "/user-profile.svg";
 import cart from "/cart.svg";
 import wishlist from "/wishlist-heart.svg";
 import logout from "/logout.jpg";
+import { useCartStore } from "../../zustand_Cart/CartStore";
 
 export default function Navbar() {
+  const cartStore = useCartStore();
   return (
     <div className="flex flex-row items-center justify-between text-center">
       <p className="text-[#272727] lg:text-[31px] text-[15px] font-bold lg:w-1/3 w-1/4 text-center">
@@ -25,7 +27,7 @@ export default function Navbar() {
         <Link to="/about" className="hover:text-[#FF6543]">
           ABOUT
         </Link>
-        <Link to="/contact" className="hover:text-[#FF6543]">
+        <Link to="/shop" className="hover:text-[#FF6543]">
           SHOP
         </Link>
         <Link to="/login" className="hover:text-[#FF6543]">
@@ -35,7 +37,11 @@ export default function Navbar() {
           <Link to="/register" className="hover:text-[#FF6543]">
             PAGES
           </Link>
-          <img className="hover:scale-120 cursor-pointer" src={arrowDown} alt="arrow" />
+          <img
+            className="hover:scale-120 cursor-pointer"
+            src={arrowDown}
+            alt="arrow"
+          />
         </div>
         <Link to="/cart" className="hover:text-[#FF6543]">
           CONTACT
@@ -43,18 +49,43 @@ export default function Navbar() {
       </div>
 
       <div className="flex flex-row items-center justify-center gap-3 lg:w-1/3 w-1/4">
-        <button className="w-[30px] aspect-square cursor-pointer">
+        <Link
+          to="/logout"
+          className={`w-[30px] aspect-square cursor-pointer
+           hover:scale-110 transition duration-200 ease-in-out
+          `}
+        >
           <img src={logout} alt="logout" />
-        </button>
-        <button className="w-[25px] aspect-square cursor-pointer">
+        </Link>
+        <Link
+          to="/userProfile"
+          className={`w-[30px] aspect-square cursor-pointer
+           hover:scale-110 transition duration-200 ease-in-out
+          `}
+        >
           <img src={userProfile} alt="userProfile" />
-        </button>
-        <button className="w-[25px] aspect-square cursor-pointer">
+        </Link>
+        <Link
+          to="/wishlist"
+          className={`w-[30px] aspect-square cursor-pointer
+           hover:scale-110 transition duration-200 ease-in-out
+          `}
+        >
           <img src={wishlist} alt="wishlist" />
-        </button>
-        <button className="w-[25px] aspect-square cursor-pointer">
+        </Link>
+        <Link
+          to="/cart"
+          className={`relative w-[30px] aspect-square cursor-pointer
+           hover:scale-110 transition duration-200 ease-in-out
+          `}
+        >
           <img src={cart} alt="cart" />
-        </button>
+          <div>
+            <p className="absolute top-0 right-0 text-[10px] bg-[#FF6543] text-white px-1 rounded-full">
+              {cartStore.totalItems || 0}
+            </p>
+          </div>
+        </Link>
       </div>
     </div>
   );

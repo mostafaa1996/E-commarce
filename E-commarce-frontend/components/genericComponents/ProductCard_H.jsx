@@ -2,7 +2,7 @@ export default function ProductRow({ image, title, price, oldPrice }) {
   return (
     <div className="flex items-center gap-4 py-4 border-b border-zinc-200 last:border-b-0">
       {/* Image */}
-      <div className="w-14 h-14">
+      <div className="w-50 h-20">
         <img
           src={image}
           alt={title}
@@ -12,7 +12,7 @@ export default function ProductRow({ image, title, price, oldPrice }) {
 
       {/* Info */}
       <div className="flex flex-col">
-        <p className="text-[21px] font-light text-[#272727] leading-tight whitespace-nowrap">
+        <p className="text-[21px] font-light text-[#272727] leading-tight line-clamp-1 max-w-xl">
           {title}
         </p>
 

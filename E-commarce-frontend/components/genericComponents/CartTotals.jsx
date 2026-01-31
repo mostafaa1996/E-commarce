@@ -1,4 +1,4 @@
-export default function CartTotals({ subtotal, total }) {
+export default function CartTotals({ TotalItems, total }) {
   return (
     <div className="mt-10 pt-6">
       <div>
@@ -8,12 +8,12 @@ export default function CartTotals({ subtotal, total }) {
         <div className="w-full h-[1px] bg-zinc-300" />
       </div>
       <div className="grid grid-cols-2 py-2 border-b border-zinc-300 text-[21px] font-light">
-        <span>Subtotal</span>
-        <span className="text-[#FF6543]">${subtotal.toFixed(2)}</span>
+        <span>Total Items</span>
+        <span className="text-[#FF6543]">{TotalItems}</span>
       </div>
 
       <div className="grid grid-cols-2 py-2 text-[21px] font-light border-b border-zinc-300">
-        <span>Total</span>
+        <span>Total Price</span>
         <span className="text-[#FF6543]">${total.toFixed(2)}</span>
       </div>
     </div>

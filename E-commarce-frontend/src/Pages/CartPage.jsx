@@ -6,7 +6,7 @@ export default function CartPage() {
 
   return (
     <>
-      <TopFixedLayer Title="Product Details" />
+      <TopFixedLayer Title="Cart" />
       <CartSection />
       <BottomLayer />
     </>

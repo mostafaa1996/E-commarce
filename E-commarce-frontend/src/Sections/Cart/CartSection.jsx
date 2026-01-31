@@ -1,13 +1,12 @@
-import cartItems from "../../Data/CartData";
-import CartRow from "../../../components/genericComponents/CartRow";
+import CartRow from "../CartRow";
 import CartTotals from "../../../components/genericComponents/CartTotals";
 import Button from "../../../components/genericComponents/Button";
+import { useCartStore } from "../../zustand_Cart/CartStore";
 export default function CartSection() {
-  const subtotal = cartItems.reduce(
-    (sum, item) => sum + item.price * item.qty,
-    0
-  );
-
+  const cartStore = useCartStore();
+  const cartItems = cartStore.items;
+  const TotalItems = cartStore.totalItems;
+  const total = cartStore.totalPrice;
   return (
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-6">
@@ -28,11 +27,11 @@ export default function CartSection() {
 
         {/* Rows */}
         {cartItems.map((item) => (
-          <CartRow key={item.title} item={item} />
+          <CartRow key={`CartRow - ${item.title}`} item={item} />
         ))}
 
         {/* Totals */}
-        <CartTotals subtotal={subtotal} total={subtotal} />
+        <CartTotals TotalItems={TotalItems} total={total} />
 
         {/* Actions */}
         <div className="flex flex-wrap gap-4 mt-10">
