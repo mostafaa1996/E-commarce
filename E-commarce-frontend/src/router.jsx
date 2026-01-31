@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import { queryClient } from "./queryClient";
 import { getShopProducts, getProductById } from "./APIs/shopProductsService";
-import { loginAction , SignupAction } from "./APIs/AuthService";
+import { loginAction , SignupAction , logoutAction } from "./APIs/AuthService";
 
 
 import ShopPage from "./pages/ShopPage";
@@ -51,5 +51,9 @@ export const router = createBrowserRouter([
     path: "/signup",
     element: <SignupPage />,
     action: async ({ request }) => await SignupAction({ request }),  
+  },
+  {
+    path : "/logout" , 
+    action : async () => await logoutAction()
   }
 ]);

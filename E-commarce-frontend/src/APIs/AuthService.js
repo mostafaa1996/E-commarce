@@ -53,9 +53,32 @@ export async function SignupAction({ request }) {
     });
 
     if (!res.ok) {
-      return "Invalid email or password";
+      return "something went wrong not able to signup, try again";
     }
 
+    // redirect after success
+    return redirect("/login");
+  } catch (error) {
+    console.error(error);
+    return "Something went wrong, try again";
+  }
+}
+
+export async function logoutAction() {
+  try {
+    const res = await fetch(`${DevelopmentURL}/auth/logout`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        refreshToken: localStorage.getItem("refresh-token"),
+      }),
+    });
+
+    if (!res.ok) {
+      return "something went wrong not able to logout, try again";
+    }
+    localStorage.removeItem("access-token");
+    localStorage.removeItem("refresh-token");
     // redirect after success
     return redirect("/login");
   } catch (error) {
