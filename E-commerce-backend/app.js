@@ -9,6 +9,7 @@ const cors = require("cors");
 
 
 const shopRoutes = require("./routes/shop");
+const authRoutes = require("./routes/auth");
 
 const app = express();
 app.use(express.json()); // for parsing application/json
@@ -22,6 +23,7 @@ app.use(
 );
 
 app.use("/shop", shopRoutes);
+app.use("/auth", authRoutes);
 
 
 app.use((error, req, res, next) => {

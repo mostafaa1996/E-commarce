@@ -7,19 +7,14 @@ const User = require("../models/User");
 
 exports.postSignup = async (req, res) => {
  try {
-  const { name, email, password , confirmPassword } = req.body;
-
+  const { name, email, password } = req.body;
+  console.log(name, email, password);
   const existing = await User.findOne({ email });
   if (existing) {
     return res.send("User already exists");
   }
 
   const hashedPassword = await bcrypt.hash(password, 12);
-  const hashedConfirmPassword = await bcrypt.hash(confirmPassword, 12);
-
-  if (hashedPassword !== hashedConfirmPassword) {
-    return res.send("Passwords do not match");
-  }
 
   const user = new User({
     name,
@@ -29,7 +24,7 @@ exports.postSignup = async (req, res) => {
   });
 
   await user.save();
-  res.redirect("/login");
+  res.status(201).send("User created");
  } catch (err) {
   console.log("error");
   next(err);
