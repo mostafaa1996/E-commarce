@@ -2,21 +2,25 @@
 // import getDataByZenRows from "./getEnrichedProductsInfoByZenRowsAPI/getDataByZenRows.js";
 // fetchProducts.run();
 // getDataByZenRows.run();
+
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-
+const cookieParser = require("cookie-parser");
 
 const shopRoutes = require("./routes/shop");
 const authRoutes = require("./routes/auth");
+const cartRoutes = require("./routes/Cart");
 
 const app = express();
 app.use(express.json()); // for parsing application/json
+app.use(cookieParser());
 
 app.use(
   cors({
     origin: "http://localhost:5173",
+    credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
@@ -24,6 +28,7 @@ app.use(
 
 app.use("/shop", shopRoutes);
 app.use("/auth", authRoutes);
+app.use("/cart", cartRoutes);
 
 
 app.use((error, req, res, next) => {
