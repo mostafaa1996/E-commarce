@@ -4,7 +4,7 @@ const CartController = require("../controllers/Cart");
 const isAuth = require("../MiddleWare/isauth");
 
 
-router.post("/", isAuth , CartController.getCart );
+router.post("/", isAuth , CartController.SyncCart);
 router.get("/", isAuth , CartController.getCart );
 
 module.exports = router;
