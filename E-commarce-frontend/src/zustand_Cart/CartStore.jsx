@@ -54,6 +54,13 @@ export const useCartStore = create(
       getItemQuantity(productId) {
         const item = get().items.find(i => i._id === productId);
         return item ? item.quantity : 0;
+      },
+      setCart(cart) {
+        set({
+          items: cart.items,
+          totalItems: cart.totalItems,
+          totalPrice: cart.totalPrice,
+        });
       }
     }),
     {

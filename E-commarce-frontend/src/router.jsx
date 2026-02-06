@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { queryClient } from "./queryClient";
 import { getShopProducts, getProductById } from "./APIs/shopProductsService";
 import { loginAction , SignupAction , logoutAction } from "./APIs/AuthService";
+import { CartService } from "./APIs/CartService";
 
 
 import ShopPage from "./pages/ShopPage";
@@ -37,6 +38,7 @@ export const router = createBrowserRouter([
   {
     path: "/cart",
     element: <CartPage />,
+    loader:  CartService
   },
   {
     path: "/checkout",

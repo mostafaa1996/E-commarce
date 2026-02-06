@@ -1,5 +1,6 @@
 import { redirect } from "react-router-dom";
 const DevelopmentURL = "http://localhost:3000";
+import { setAccessToken } from "./AuthFetch";
 export async function loginAction({ request }) {
   const formData = await request.formData();
   const email = formData.get("email");
@@ -11,6 +12,7 @@ export async function loginAction({ request }) {
   try {
     const res = await fetch(`${DevelopmentURL}/auth/login`, {
       method: "POST",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
@@ -21,9 +23,8 @@ export async function loginAction({ request }) {
 
     const data = await res.json();
 
-    // store token
-    localStorage.setItem("access-token", data.accessToken);
-    localStorage.setItem("refresh-token", data.refreshToken);
+    // store access-token
+    setAccessToken(data.accessToken);
 
     // redirect after success
     return redirect("/shop");
@@ -69,16 +70,12 @@ export async function logoutAction() {
     const res = await fetch(`${DevelopmentURL}/auth/logout`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        refreshToken: localStorage.getItem("refresh-token"),
-      }),
+      body: JSON.stringify({}),
     });
 
     if (!res.ok) {
       return "something went wrong not able to logout, try again";
     }
-    localStorage.removeItem("access-token");
-    localStorage.removeItem("refresh-token");
     // redirect after success
     return redirect("/login");
   } catch (error) {

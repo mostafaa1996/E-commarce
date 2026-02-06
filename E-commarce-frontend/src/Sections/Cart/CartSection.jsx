@@ -3,12 +3,30 @@ import CartTotals from "../../../components/genericComponents/CartTotals";
 import Button from "../../../components/genericComponents/Button";
 import { useCartStore } from "../../zustand_Cart/CartStore";
 import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { syncCart } from "../../APIs/CartService";
 export default function CartSection() {
   const navigate = useNavigate();
   const cartStore = useCartStore();
   const cartItems = cartStore.items;
   const TotalItems = cartStore.totalItems;
   const total = cartStore.totalPrice;
+  
+  const syncCartMutation = useMutation({
+    mutationFn: () => syncCart(),
+  });
+  function handleCheckout() {
+    syncCartMutation.mutate();
+    navigate("/checkout");
+  }
+  function handleClearCart() {
+    cartStore.clearCart();
+    syncCartMutation.mutate();
+  }
+  function handleContinueShopping() {
+    syncCartMutation.mutate();
+    navigate("/shop");
+  }
   return (
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-6">
@@ -37,9 +55,18 @@ export default function CartSection() {
 
         {/* Actions */}
         <div className="flex flex-wrap gap-4 mt-10">
-          <Button onClick={cartStore.clearCart} className="w-fit tracking-widest">CLEAR CART</Button>
-          <Button onClick={() => navigate("/shop")} className="w-fit tracking-widest">CONTINUE SHOPPING</Button>
-          <Button className="w-fit tracking-widest">PROCEED TO CHECKOUT</Button>
+          <Button onClick={handleClearCart} className="w-fit tracking-widest">
+            CLEAR CART
+          </Button>
+          <Button
+            onClick={handleContinueShopping}
+            className="w-fit tracking-widest"
+          >
+            CONTINUE SHOPPING
+          </Button>
+          <Button onClick={handleCheckout} className="w-fit tracking-widest">
+            PROCEED TO CHECKOUT
+          </Button>
         </div>
       </div>
     </section>
