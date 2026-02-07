@@ -1,12 +1,11 @@
 import PaymentMethod from "../../../components/genericComponents/PaymentMethod";
 import CartTotals from "../../../components/genericComponents/CartTotals";
-import Button from "../../../components/genericComponents/Button";
 import React from "react";
 export default function CartwithPaymentSection({ subtotal, total }) {
   const [payment, setPayment] = React.useState("bank");
 
   return (
-    <div className="my-10 w-[65%] justify-self-center">
+    <div className="mr-40 w-[65%] justify-self-center">
       <CartTotals subtotal={subtotal} total={total} />
       {/* Payment methods */}
       <div className="flex flex-col gap-3 mt-6">
@@ -39,8 +38,6 @@ export default function CartwithPaymentSection({ subtotal, total }) {
         />
       </div>
 
-      {/* CTA */}
-      <Button className="mt-8 w-fit tracking-widest">PLACE AN ORDER</Button>
     </div>
   );
 }

@@ -44,6 +44,8 @@ export const router = createBrowserRouter([
   {
     path: "/checkout",
     element: <CheckoutPage />,
+    loader:  () => {return {}},
+    action:  () => {}
   },
   {
     path: "/login",
