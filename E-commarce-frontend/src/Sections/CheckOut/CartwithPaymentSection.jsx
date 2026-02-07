@@ -1,8 +1,8 @@
-import PaymentMethod from "../genericComponents/PaymentMethod";
-import CartTotals from "../genericComponents/CartTotals";
-import Button from "../genericComponents/Button";
+import PaymentMethod from "../../../components/genericComponents/PaymentMethod";
+import CartTotals from "../../../components/genericComponents/CartTotals";
+import Button from "../../../components/genericComponents/Button";
 import React from "react";
-export default function CartTotalsWithPayment({ subtotal, total }) {
+export default function CartwithPaymentSection({ subtotal, total }) {
   const [payment, setPayment] = React.useState("bank");
 
   return (

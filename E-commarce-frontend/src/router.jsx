@@ -10,6 +10,7 @@ import ProductDetailsPage from "./pages/ProductDetailsPage";
 import CartPage from "./Pages/CartPage";
 import LoginPage from "./Pages/loginPage";
 import SignupPage from "./Pages/SignupPage";
+import CheckoutPage from "./Pages/checkoutPage";
 
 import { defaultShopQuery } from "./zustand_ShopPage/shopDefaultQuery";
 
@@ -42,7 +43,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/checkout",
-    element: <div>Checkout</div>,
+    element: <CheckoutPage />,
   },
   {
     path: "/login",

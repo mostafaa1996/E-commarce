@@ -1,18 +1,18 @@
-import InputField from "../genericComponents/InputField";
-import TextArea from "../genericComponents/TextArea";
-import { billingFields } from "../../src/Data/billingFields";
+import InputField from "../../../components/genericComponents/InputField";
+import TextArea from "../../../components/genericComponents/TextArea";
+import { billingFields } from "../../Data/billingFields";
 import React from "react";
 export default function BillingDetailsSection() {
   return (
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-6">
         <div
-          className="
+          className={`
             grid
             grid-cols-1
             lg:grid-cols-2
             gap-16
-          "
+          `}
         >
           {/* Billing details */}
           <div className="flex flex-col gap-6">
@@ -23,7 +23,7 @@ export default function BillingDetailsSection() {
             <div className="flex flex-col gap-4">
               {billingFields.map((field, index) => {
                 return (
-                  <React.Fragment key={field.type + index}>
+                  <React.Fragment key={" checkout Page " + field.type + index}>
                     <label className="text-[21px] font-light text-zinc-500">
                       {field.label}
                     </label>
