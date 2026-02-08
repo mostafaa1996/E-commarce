@@ -7,7 +7,7 @@ exports.getCheckoutData = async (req, res) => {
   
   let checkoutData = {} ;
   checkoutData.cart = user.cart;
-  checkoutData.shippingDetails = user.billingDetails.filter((item)=> item.isDefault === true);
+  checkoutData.shippingDetails = user.billingDetails.filter((item)=> item.isDefault === true)[0];
   checkoutData.paymentDetails = user.paymentMethods;
   res.status(200).json(checkoutData); 
 };
