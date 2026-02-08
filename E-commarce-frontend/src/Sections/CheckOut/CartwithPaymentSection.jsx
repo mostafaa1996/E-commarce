@@ -1,12 +1,13 @@
 import PaymentMethod from "../../../components/genericComponents/PaymentMethod";
 import CartTotals from "../../../components/genericComponents/CartTotals";
 import React from "react";
-export default function CartwithPaymentSection({ subtotal, total }) {
+import { useCheckoutStore } from "../../zustand_checkout/checkoutStore";
+export default function CartwithPaymentSection() {
   const [payment, setPayment] = React.useState("bank");
-
+  const cart = useCheckoutStore().getCartInfo();
   return (
     <div className="mr-40 w-[65%] justify-self-center">
-      <CartTotals subtotal={subtotal} total={total} />
+      <CartTotals TotalItems={cart.totalItems} total={cart.totalPrice}  />
       {/* Payment methods */}
       <div className="flex flex-col gap-3 mt-6">
         <PaymentMethod

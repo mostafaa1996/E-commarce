@@ -29,6 +29,7 @@ export const useCheckoutStore = create(
         isDefault: false,
       },
 
+      clearCheckout: () => set({ CartInfo: {}, PaymentMethod: {} }),
       setCartInfo: (cart) => set({ CartInfo: cart }),
       setShippingDetails: (details) => set({ ShippingDetails: details }),
       setPaymentMethod: (method) => set({ PaymentMethod: method }),
@@ -38,6 +39,9 @@ export const useCheckoutStore = create(
     }),
     {
       name: "checkout-storage", // localStorage key
+      partialize: (state) => ({
+        ShippingDetails: state.ShippingDetails,
+      }),
     },
   ),
 );

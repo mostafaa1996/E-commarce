@@ -3,6 +3,7 @@ import { queryClient } from "./queryClient";
 import { getShopProducts, getProductById } from "./APIs/shopProductsService";
 import { loginAction , SignupAction , logoutAction } from "./APIs/AuthService";
 import { CartService } from "./APIs/CartService";
+import { checkoutLoader } from "./APIs/checkoutService";
 
 
 import ShopPage from "./pages/ShopPage";
@@ -44,7 +45,7 @@ export const router = createBrowserRouter([
   {
     path: "/checkout",
     element: <CheckoutPage />,
-    loader:  () => {return {}},
+    loader: checkoutLoader,
     action:  () => {}
   },
   {
