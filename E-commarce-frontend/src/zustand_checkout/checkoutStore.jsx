@@ -3,7 +3,7 @@ import { persist } from "zustand/middleware";
 
 export const useCheckoutStore = create(
   persist(
-    (set, get) => ({
+    (set) => ({
       CartInfo: { totalItems: 0, totalPrice: 0, items: [] },
       ShippingDetails: {
         firstName: "",
@@ -21,21 +21,12 @@ export const useCheckoutStore = create(
         notes: "",
         isDefault: false,
       },
-      PaymentMethod: {
-        CardBrand: "",
-        last4Digits: "",
-        expMonth: "",
-        expYear: "",
-        isDefault: false,
-      },
+      PaymentMethod: "",
 
       clearCheckout: () => set({ CartInfo: {}, PaymentMethod: {} }),
       setCartInfo: (cart) => set({ CartInfo: cart }),
       setShippingDetails: (details) => set({ ShippingDetails: details }),
       setPaymentMethod: (method) => set({ PaymentMethod: method }),
-      getCartInfo: () => get().CartInfo,
-      getShippingDetails: () => get().ShippingDetails,
-      getPaymentMethod: () => get().PaymentMethod,
     }),
     {
       name: "checkout-storage", // localStorage key

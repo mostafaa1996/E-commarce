@@ -3,20 +3,28 @@ import TextArea from "../../../components/genericComponents/TextArea";
 import React from "react";
 import { useCheckoutStore } from "../../zustand_checkout/checkoutStore";
 export default function BillingDetailsSection() {
-  const ShippingDetails = useCheckoutStore((state) => state.ShippingDetails)[0];
+  const ShippingDetails = useCheckoutStore((state) => state.ShippingDetails);
+  const setShippingDetails = useCheckoutStore((state) => state.setShippingDetails);
   const billingFields = [
-    {label:"First name*" , placeholder: "First name" , type: "text" , value:ShippingDetails.firstName },
-    {label:"Last name*" , placeholder: "Last name"  , type: "text" , value:ShippingDetails.lastName },
-    {label:"Company name (optional)" , placeholder: "Company name" , type: "text" , value:ShippingDetails.companyName },
-    {label:"Country / Region* " , placeholder: "Country / Region *" , type: "text", value:ShippingDetails.country },
-    {label:"House number and street name* " , placeholder: "House number and street name" , type: "text" , value:ShippingDetails.street },
-    {label:"Apartment, suite, etc. (optional)" , placeholder: "Apartment, suite, etc." , type: "text" , value:ShippingDetails.Apartment },
-    {label:"Town / City *" , placeholder: "Town / City" , type: "text" , value:ShippingDetails.city },
-    {label:"State *" , placeholder: "State " , type: "text" , value:ShippingDetails.state },
-    {label:"ZIP Code *" , placeholder: "ZIP Code " , type: "text" , value:ShippingDetails.postalCode },
-    {label:"Phone *" , placeholder: "Phone " , type: "text" , value:ShippingDetails.phone },
-    {label:"Email address *" , placeholder: "Email address ", type: "email" , value:ShippingDetails.email },
+    {label:"First name*" , placeholder: "First name" , type: "text" , value:ShippingDetails.firstName , name :"firstName"},
+    {label:"Last name*" , placeholder: "Last name"  , type: "text" , value:ShippingDetails.lastName , name :"lastName"},
+    {label:"Company name (optional)" , placeholder: "Company name" , type: "text" , value:ShippingDetails.companyName , name :"companyName"},
+    {label:"Country / Region* " , placeholder: "Country / Region *" , type: "text", value:ShippingDetails.country , name :"country"},
+    {label:"House number and street name* " , placeholder: "House number and street name" , type: "text" , value:ShippingDetails.street , name :"street"},
+    {label:"Apartment, suite, etc. (optional)" , placeholder: "Apartment, suite, etc." , type: "text" , value:ShippingDetails.Apartment , name :"Apartment"},
+    {label:"Town / City *" , placeholder: "Town / City" , type: "text" , value:ShippingDetails.city , name :"city"},
+    {label:"State *" , placeholder: "State " , type: "text" , value:ShippingDetails.state , name :"state"},
+    {label:"ZIP Code *" , placeholder: "ZIP Code " , type: "text" , value:ShippingDetails.postalCode , name :"postalCode"},
+    {label:"Phone *" , placeholder: "Phone " , type: "text" , value:ShippingDetails.phone , name :"phone"},
+    {label:"Email address *" , placeholder: "Email address ", type: "email" , value:ShippingDetails.email , name :"email"},
   ];
+  function onChange(e) {
+     const { name, value } = e.target;
+     setShippingDetails({
+         ...ShippingDetails,
+         [name]: value,
+     });
+  }
   return (
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-6">
@@ -45,6 +53,8 @@ export default function BillingDetailsSection() {
                       placeholder={field.placeholder}
                       type={field.type}
                       defaultValue={field.value}
+                      onChange={onChange}
+                      name={field.name}
                     />
                   </React.Fragment>
                 );

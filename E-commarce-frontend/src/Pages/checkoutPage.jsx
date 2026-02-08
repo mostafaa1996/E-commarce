@@ -14,7 +14,7 @@ export default function CheckoutPage() {
         <BillingDetailsSection />
         <CartwithPaymentSection />
         <div className="my-10 mr-40 w-[65%] justify-self-center">
-          <Button className="mt-8 w-fit tracking-widest">PLACE AN ORDER</Button>
+          <Button className="mt-8 w-fit tracking-widest" type = "submit">PLACE AN ORDER</Button>
         </div>
       </Form>
       <BottomLayer />
