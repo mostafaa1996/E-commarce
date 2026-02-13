@@ -5,6 +5,8 @@ import { useCheckoutStore } from "../../zustand_checkout/checkoutStore";
 export default function BillingDetailsSection() {
   const ShippingDetails = useCheckoutStore((state) => state.ShippingDetails);
   const setShippingDetails = useCheckoutStore((state) => state.setShippingDetails);
+  const setOrderNotes = useCheckoutStore((state) => state.setOrderNotes);
+  const setShippingDetailsmodified = useCheckoutStore((state) => state.setShippingDetailsmodified);
   const billingFields = [
     {label:"First name*" , placeholder: "First name" , type: "text" , value:ShippingDetails.firstName , name :"firstName"},
     {label:"Last name*" , placeholder: "Last name"  , type: "text" , value:ShippingDetails.lastName , name :"lastName"},
@@ -24,6 +26,10 @@ export default function BillingDetailsSection() {
          ...ShippingDetails,
          [name]: value,
      });
+     setShippingDetailsmodified(true);
+  }
+  function setNotes(e) {
+    setOrderNotes(e.target.value);
   }
   return (
     <section className="py-20 bg-white">
@@ -68,7 +74,7 @@ export default function BillingDetailsSection() {
               ADDITIONAL INFORMATION
             </h2>
 
-            <TextArea placeholder="Notes about your order. Like special notes for delivery." value={ShippingDetails.notes} />
+            <TextArea placeholder="Notes about your order. Like special notes for delivery." onChange={setNotes} name="notes"/>
           </div>
         </div>
       </div>

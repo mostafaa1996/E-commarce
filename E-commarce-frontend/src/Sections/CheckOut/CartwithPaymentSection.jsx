@@ -1,6 +1,5 @@
 import PaymentMethod from "../../../components/genericComponents/PaymentMethod";
 import CartTotals from "../../../components/genericComponents/CartTotals";
-import React from "react";
 import { useCheckoutStore } from "../../zustand_checkout/checkoutStore";
 export default function CartwithPaymentSection() {
   const cart = useCheckoutStore((state) => state.CartInfo);
