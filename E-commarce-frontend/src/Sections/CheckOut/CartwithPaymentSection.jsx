@@ -8,7 +8,7 @@ export default function CartwithPaymentSection() {
   const payment = useCheckoutStore((state)=>state.PaymentMethod);
   return (
     <div className="w-full flex flex-col gap-10 items-start justify-evenly">
-      <CartTotals TotalItems={cart.totalItems} total={cart.totalPrice} className={"w-full"} />
+      <CartTotals Items={cart.items} TotalItems={cart.totalItems} total={cart.totalPrice} className={"w-full"} />
       {/* Payment methods */}
       <div className="w-full">
         <PaymentMethod />
