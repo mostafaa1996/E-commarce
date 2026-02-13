@@ -1,6 +1,7 @@
-export default function CartTotals({ TotalItems, total }) {
+import clsx from "clsx";
+export default function CartTotals({ TotalItems, total , className }) {
   return (
-    <div className="mt-10 pt-6">
+    <div className={clsx("", className)}>
       <div>
         <h3 className="text-[30px] font-extralight text-[#272727] mb-6 uppercase">
           CART TOTALS

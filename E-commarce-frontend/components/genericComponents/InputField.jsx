@@ -1,9 +1,10 @@
-export default function InputField({ placeholder, type = "text", ...props }) {
+import clsx from "clsx";
+export default function InputField({ placeholder, type = "text" , className , ...props}){
   return (
     <input
       type={type}
       placeholder={placeholder}
-      className={`
+      className={clsx(`
         w-full
         px-4
         py-3
@@ -15,7 +16,7 @@ export default function InputField({ placeholder, type = "text", ...props }) {
         placeholder:text-zinc-400
         focus:outline-none
         focus:border-[#FF6543]
-      `}
+      ` , className)}
       {...props}
     />
   );

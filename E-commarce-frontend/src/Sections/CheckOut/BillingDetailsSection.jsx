@@ -1,11 +1,9 @@
 import InputField from "../../../components/genericComponents/InputField";
-import TextArea from "../../../components/genericComponents/TextArea";
 import React from "react";
 import { useCheckoutStore } from "../../zustand_checkout/checkoutStore";
 export default function BillingDetailsSection() {
   const ShippingDetails = useCheckoutStore((state) => state.ShippingDetails);
   const setShippingDetails = useCheckoutStore((state) => state.setShippingDetails);
-  const setOrderNotes = useCheckoutStore((state) => state.setOrderNotes);
   const setShippingDetailsmodified = useCheckoutStore((state) => state.setShippingDetailsmodified);
   const billingFields = [
     {label:"First name*" , placeholder: "First name" , type: "text" , value:ShippingDetails.firstName , name :"firstName"},
@@ -28,22 +26,12 @@ export default function BillingDetailsSection() {
      });
      setShippingDetailsmodified(true);
   }
-  function setNotes(e) {
-    setOrderNotes(e.target.value);
-  }
+  
   return (
-    <section className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-6">
-        <div
-          className={`
-            grid
-            grid-cols-1
-            lg:grid-cols-2
-            gap-16
-          `}
-        >
-          {/* Billing details */}
+    <section className=" bg-white">
+      <div className="min-w-2xl px-6 ">
           <div className="flex flex-col gap-6">
+          {/* Billing details */}
             <h2 className="text-[30px] font-extralight text-[#272727] tracking-wide">
               BILLING DETAILS
             </h2>
@@ -67,16 +55,6 @@ export default function BillingDetailsSection() {
               })}
             </div>
           </div>
-
-          {/* Additional information */}
-          <div className="flex flex-col gap-6">
-            <h2 className="text-[30px] font-extralight text-[#272727] tracking-wide">
-              ADDITIONAL INFORMATION
-            </h2>
-
-            <TextArea placeholder="Notes about your order. Like special notes for delivery." onChange={setNotes} name="notes"/>
-          </div>
-        </div>
       </div>
     </section>
   );
