@@ -20,7 +20,7 @@ export default function CartTotals({
         <span>Total Items</span>
         <span className="text-[#FF6543]">{TotalItems}</span>
         {Items?.map((item) => (
-          <Fragment key={`checkout Cart Totals title` + item.id} className = "flex flex-row">
+          <Fragment key={`checkout Cart Totals title` + item.id} >
             <p className="ml-4 text-sm text-zinc-500 line-clamp-1">
               {item.title}
             </p>

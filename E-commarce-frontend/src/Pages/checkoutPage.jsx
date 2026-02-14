@@ -9,10 +9,12 @@ import { useCheckoutStore } from "../zustand_checkout/checkoutStore";
 
 export default function CheckoutPage() {
   const setOrderNotes = useCheckoutStore((state) => state.setOrderNotes);
+  const currentState = useCheckoutStore((state) => state.currentState);
+
   function setNotes(e) {
     setOrderNotes(e.target.value);
   }
-  const actionData = useActionData();
+  console.log(currentState);
   return (
     <>
       <TopFixedLayer Title="checkout" />
@@ -35,9 +37,15 @@ export default function CheckoutPage() {
             />
           </div>
           <CartwithPaymentSection />
-          <Button className="w-fit tracking-widest" type="submit">
-            PLACE AN ORDER
-          </Button>
+          {currentState !== "OrderPlaced" && (
+            <Button
+              className="w-fit tracking-widest"
+              type="submit"
+              disabled={currentState === "fillForm"}
+            >
+              PLACE AN ORDER
+            </Button>
+          )}
         </div>
       </Form>
       <BottomLayer />

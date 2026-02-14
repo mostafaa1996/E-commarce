@@ -4,8 +4,7 @@ import CartTotals from "../../../components/genericComponents/CartTotals";
 import { useCheckoutStore } from "../../zustand_checkout/checkoutStore";
 export default function CartwithPaymentSection() {
   const cart = useCheckoutStore((state) => state.CartInfo);
-  const setPayment = useCheckoutStore((state)=>state.setPaymentMethod);
-  const payment = useCheckoutStore((state)=>state.PaymentMethod);
+  
   return (
     <div className="w-full flex flex-col gap-10 items-start justify-evenly">
       <CartTotals Items={cart.items} TotalItems={cart.totalItems} total={cart.totalPrice} className={"w-full"} />

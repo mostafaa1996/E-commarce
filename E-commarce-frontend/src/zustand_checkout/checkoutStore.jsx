@@ -2,13 +2,13 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 const status = Object.freeze({
-    idle: "idle",
-    OrderPlaced: "OrderPlaced",
-    PaymentProcessing: "PaymentProcessing",
-    PaymentFailed: "PaymentFailed",
-    loading: "loading",
-    success: "success",
-    error: "error",
+  idle: "idle",
+  OrderPlaced: "OrderPlaced",
+  PaymentProcessing: "PaymentProcessing",
+  PaymentFailed: "PaymentFailed",
+  loading: "loading",
+  success: "success",
+  error: "error",
 });
 
 export const useCheckoutStore = create(
@@ -31,16 +31,36 @@ export const useCheckoutStore = create(
       },
       PaymentMethod: "",
       orderNotes: "",
-      shippingDetailsmodified : false,
-      currentState : status.idle,
+      shippingDetailsmodified: false,
+      currentState: status.idle,
+      ServerResponse: {},
+      CardForm: {
+        cardNumber: "",
+        expiry: "",
+        cvc: "",
+        cardholderName: "",
+      },
 
-      clearCheckout: () => set({ CartInfo: {}, PaymentMethod: {} }),
+      clearCheckout: () =>
+        set({
+          CartInfo: {},
+          PaymentMethod: {},
+          ShippingDetails: {},
+          orderNotes: "",
+          shippingDetailsmodified: false,
+          currentState: status.idle,
+          ServerResponse: {},
+        }),
       setCartInfo: (cart) => set({ CartInfo: cart }),
       setShippingDetails: (details) => set({ ShippingDetails: details }),
       setPaymentMethod: (method) => set({ PaymentMethod: method }),
       setOrderNotes: (notes) => set({ orderNotes: notes }),
-      setShippingDetailsmodified: (modified) => set({ shippingDetailsmodified: modified }),
+      setShippingDetailsmodified: (modified) =>
+        set({ shippingDetailsmodified: modified }),
       setCurrentState: (state) => set({ currentState: state }),
+      setServerResponse: (response) => set({ ServerResponse: response }),
+      setCardForm: (form) => set({ CardForm: form }),
+      resetCardForm: () => set({ CardForm: { cardNumber: "", expiry: "", cvc: "", cardholderName: "" } }),
     }),
     {
       name: "checkout-storage", // localStorage key

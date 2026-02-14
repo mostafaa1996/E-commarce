@@ -26,6 +26,7 @@ export async function checkoutLoader() {
 }
 
 export async function checkoutAction() {
+  
   const res = await authFetch(
     "http://localhost:3000/order/create",
     {
@@ -48,8 +49,37 @@ export async function checkoutAction() {
   } 
   
   const data = await res.json();
-  console.log(data);
+  if(data.nextAction === "orderPlaced") {
+    useCheckoutStore.getState().setCurrentState("OrderPlaced");
+    useCheckoutStore.getState().setServerResponse(data);
+  }
+  console.log(data.nextAction);
   
   return null;
   
+}
+
+export async function fetchCards() {
+    const res = await authFetch(
+    "http://localhost:3000/order/savedCards",
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  );
+
+  if (!res.ok) {
+    throw new Error("Failed to update shipping details in database");
+  } 
+  
+  const data = await res.json(); 
+
+  //res => {message , nextAction , savedCards}
+  console.log(data);
+  useCheckoutStore.getState().setServerResponse(data);
+  useCheckoutStore.getState().setCurrentState(data.nextAction || "");
+
+  return data;
 }

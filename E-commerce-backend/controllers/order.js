@@ -67,13 +67,37 @@ exports.createOrder = async (req, res) => {
         user.billingDetails.push(cleanedShippingDetails);
         await user.save();
     }
+    if(req.body.paymentMethod === "cod"){
+        user.orders.push(order._id);
+        await user.save();
+        return res
+        .status(201)
+        .json({
+          orderId: order._id,
+          nextAction: "orderPlaced",
+          message: "Order created and placed successfully",
+        });
+    }
     res
       .status(201)
       .json({
         orderId: order._id,
-        nextAction: "payment",
+        savedCards: user.paymentMethods,
+        nextAction: "paymentByCard",
         message: "Order created successfully",
       });
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};
+
+exports.getsavedCards = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await User.findById(userId);
+    if(user.paymentMethods.length === 0) return res.status(200).json({message: "No saved cards" , nextAction: "fillForm"  , savedCards: []});
+    res.status(200).json({message: "Saved cards" , nextAction: "chooseCard"  , savedCards: user.paymentMethods});
   } catch (err) {
     console.log(err);
     next(err);
