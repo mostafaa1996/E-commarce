@@ -78,6 +78,22 @@ exports.createOrder = async (req, res) => {
           message: "Order created and placed successfully",
         });
     }
+    if(req.body.paymentMethod === "card" && req.body.cardForm.saveCard === true){
+        //validate the card 
+        if(!CardIsvalid(cardForm)){
+          return res.status(400).json({message: "Invalid card details"});
+        }
+        //save it to the user
+        user.paymentMethods.push(req.body.cardForm);
+        await user.save();
+        return res
+        .status(201)
+        .json({
+          orderId: order._id,
+          nextAction: "OTP",
+          message: "Order created successfully",
+        })
+    }
     res
       .status(201)
       .json({
@@ -103,3 +119,7 @@ exports.getsavedCards = async (req, res) => {
     next(err);
   }
 };
+
+function CardIsvalid(cardForm){
+
+}

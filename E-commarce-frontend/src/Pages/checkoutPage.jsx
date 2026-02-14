@@ -10,11 +10,23 @@ import { useCheckoutStore } from "../zustand_checkout/checkoutStore";
 export default function CheckoutPage() {
   const setOrderNotes = useCheckoutStore((state) => state.setOrderNotes);
   const currentState = useCheckoutStore((state) => state.currentState);
+  const CardForm = useCheckoutStore((state) => state.CardForm);
+
+  function isCardValid (card){
+    console.log(JSON.stringify(card, null, 2));
+    return (
+      card?.cardNumber?.length === 16 &&
+      card?.expiry?.match(/^\d{2}\/\d{2}$/) &&
+      card?.cvc?.length === 3 &&
+      card?.cardholderName?.trim().length > 0
+    );
+  }
+
+  console.log(isCardValid(CardForm));
 
   function setNotes(e) {
     setOrderNotes(e.target.value);
   }
-  console.log(currentState);
   return (
     <>
       <TopFixedLayer Title="checkout" />
@@ -41,7 +53,7 @@ export default function CheckoutPage() {
             <Button
               className="w-fit tracking-widest"
               type="submit"
-              disabled={currentState === "fillForm"}
+              disabled={currentState === "fillForm" && !isCardValid(CardForm)}
             >
               PLACE AN ORDER
             </Button>

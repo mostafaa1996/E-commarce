@@ -39,6 +39,7 @@ export const useCheckoutStore = create(
         expiry: "",
         cvc: "",
         cardholderName: "",
+        saveCard: false,
       },
 
       clearCheckout: () =>

@@ -12,6 +12,7 @@ import { useCheckoutStore } from "../zustand_checkout/checkoutStore";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCards } from "../APIs/checkoutService";
+import SelectButton from "../../components/genericComponents/SelectButton";
 
 const SAVED_CARDS = [
   { id: "1", last4: "4242", brand: "Visa", expiry: "12/27" },
@@ -47,7 +48,7 @@ const PaymentMethod = () => {
        ...cardForm,
        [name]: value,
      });
-     console.log(cardForm); 
+    //  console.log(cardForm); 
   }
 
   function handleUseSavdCardsButton() {
@@ -234,7 +235,7 @@ const PaymentMethod = () => {
                       Expiry Date
                     </Label>
                     <InputField
-                      type="number"
+                      type="text"
                       maxLength={5}
                       name="expiry"
                       onChange={handleCardForm}
@@ -267,6 +268,16 @@ const PaymentMethod = () => {
                   />
                 </div>
               </div>
+              <SelectButton 
+                type="checkbox"
+                name="saveCard"
+                label={"Save this card"}
+                value={cardForm.saveCard}
+                checked={cardForm.saveCard}
+                onChange={() => {
+                  setCardForm({...cardForm, saveCard: !cardForm.saveCard});
+                }}
+              />
               {SAVED_CARDS.length > 0 && (
                 <button
                   type="button"

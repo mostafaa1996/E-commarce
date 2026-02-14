@@ -39,7 +39,8 @@ export async function checkoutAction() {
         cartInfo : useCheckoutStore.getState().CartInfo,
         orderNotes : useCheckoutStore.getState().OrderNotes,
         paymentMethod : useCheckoutStore.getState().PaymentMethod,
-        shippingDetailsmodified : useCheckoutStore.getState().shippingDetailsmodified
+        shippingDetailsmodified : useCheckoutStore.getState().shippingDetailsmodified,
+        cardForm : useCheckoutStore.getState().CardForm || {},
       }),
     },
   );
