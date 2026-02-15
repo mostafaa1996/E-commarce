@@ -12,6 +12,7 @@ import CartPage from "./Pages/CartPage";
 import LoginPage from "./Pages/loginPage";
 import SignupPage from "./Pages/SignupPage";
 import CheckoutPage from "./Pages/checkoutPage";
+import UserProfilePage from "./Pages/UserProfilePage";
 
 import { defaultShopQuery } from "./zustand_ShopPage/shopDefaultQuery";
 
@@ -61,5 +62,9 @@ export const router = createBrowserRouter([
   {
     path : "/logout" , 
     action : async () => await logoutAction()
-  }
+  },
+  {
+    path: "/profile",
+    element: <UserProfilePage />,
+  },
 ]);
