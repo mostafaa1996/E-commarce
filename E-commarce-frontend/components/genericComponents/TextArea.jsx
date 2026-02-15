@@ -1,8 +1,9 @@
-export default function TextArea({ placeholder }) {
+export default function TextArea({ placeholder , ...props }) {
   return (
     <textarea
       rows={4}
       placeholder={placeholder}
+      {...props}
       className={`
         w-full
         px-4

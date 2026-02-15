@@ -3,6 +3,7 @@ import { queryClient } from "./queryClient";
 import { getShopProducts, getProductById } from "./APIs/shopProductsService";
 import { loginAction , SignupAction , logoutAction } from "./APIs/AuthService";
 import { CartService } from "./APIs/CartService";
+import { checkoutLoader , checkoutAction } from "./APIs/checkoutService";
 
 
 import ShopPage from "./pages/ShopPage";
@@ -10,6 +11,7 @@ import ProductDetailsPage from "./pages/ProductDetailsPage";
 import CartPage from "./Pages/CartPage";
 import LoginPage from "./Pages/loginPage";
 import SignupPage from "./Pages/SignupPage";
+import CheckoutPage from "./Pages/checkoutPage";
 
 import { defaultShopQuery } from "./zustand_ShopPage/shopDefaultQuery";
 
@@ -42,7 +44,9 @@ export const router = createBrowserRouter([
   },
   {
     path: "/checkout",
-    element: <div>Checkout</div>,
+    element: <CheckoutPage />,
+    loader: checkoutLoader,
+    action: checkoutAction
   },
   {
     path: "/login",

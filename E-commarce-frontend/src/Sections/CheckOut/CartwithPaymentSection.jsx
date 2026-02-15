@@ -1,46 +1,17 @@
-import PaymentMethod from "../genericComponents/PaymentMethod";
-import CartTotals from "../genericComponents/CartTotals";
-import Button from "../genericComponents/Button";
-import React from "react";
-export default function CartTotalsWithPayment({ subtotal, total }) {
-  const [payment, setPayment] = React.useState("bank");
-
+// import PaymentMethod from "../../../components/genericComponents/PaymentMethod";
+import PaymentMethod from "../PaymentMethod";
+import CartTotals from "../../../components/genericComponents/CartTotals";
+import { useCheckoutStore } from "../../zustand_checkout/checkoutStore";
+export default function CartwithPaymentSection() {
+  const cart = useCheckoutStore((state) => state.CartInfo);
+  
   return (
-    <div className="my-10 w-[65%] justify-self-center">
-      <CartTotals subtotal={subtotal} total={total} />
+    <div className="w-full flex flex-col gap-10 items-start justify-evenly">
+      <CartTotals Items={cart.items} TotalItems={cart.totalItems} total={cart.totalPrice} className={"w-full"} />
       {/* Payment methods */}
-      <div className="flex flex-col gap-3 mt-6">
-        <PaymentMethod
-          label="Direct bank transfer"
-          value="bank"
-          checked={payment === "bank"}
-          onChange={() => setPayment("bank")}
-        />
-
-        <PaymentMethod
-          label="Check payments"
-          value="check"
-          checked={payment === "check"}
-          onChange={() => setPayment("check")}
-        />
-
-        <PaymentMethod
-          label="Cash on delivery"
-          value="cod"
-          checked={payment === "cod"}
-          onChange={() => setPayment("cod")}
-        />
-
-        <PaymentMethod
-          label="PayPal"
-          value="paypal"
-          checked={payment === "paypal"}
-          onChange={() => setPayment("paypal")}
-        />
+      <div className="w-full">
+        <PaymentMethod />
       </div>
-
-      {/* CTA */}
-      <Button className="mt-8 w-fit tracking-widest">PLACE AN ORDER</Button>
     </div>
   );
 }

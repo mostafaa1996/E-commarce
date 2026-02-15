@@ -9,9 +9,12 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
+
 const shopRoutes = require("./routes/shop");
 const authRoutes = require("./routes/auth");
 const cartRoutes = require("./routes/Cart");
+const checkoutRoutes = require("./routes/checkout");
+const orderRoutes = require("./routes/order");
 
 const app = express();
 app.use(express.json()); // for parsing application/json
@@ -29,6 +32,8 @@ app.use(
 app.use("/shop", shopRoutes);
 app.use("/auth", authRoutes);
 app.use("/cart", cartRoutes);
+app.use("/checkout", checkoutRoutes);
+app.use("/order", orderRoutes);
 
 
 app.use((error, req, res, next) => {
@@ -38,7 +43,7 @@ app.use((error, req, res, next) => {
 });
 
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect("mongodb+srv://mostafahamdy:2201996220Mos@cluster0.uqgen2r.mongodb.net/ShopLite?")
   .then(() => {
     console.log("Connected to database!");
     app.listen(3000);

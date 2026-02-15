@@ -19,15 +19,21 @@ const UserSchema = new mongoose.Schema({
     enum: ["admin", "customer"],
     default: "customer",
   },
-  addresses: [
+  billingDetails: [
     {
-      fullName: String,
+      firstName: String,
+      lastName: String,
+      email: String,
+      companyName: String,
       country: String,
+      state: String,
       city: String,
       street: String,
       building: String,
+      Apartment: String,
       postalCode: String,
       phone: String,
+      notes: String,
       isDefault: Boolean,
     },
   ],

@@ -61,6 +61,13 @@ export const useCartStore = create(
           totalItems: cart.totalItems,
           totalPrice: cart.totalPrice,
         });
+      },
+      getCart() {
+        return {
+          items: get().items,
+          totalItems: get().totalItems,
+          totalPrice: get().totalPrice,
+        };
       }
     }),
     {

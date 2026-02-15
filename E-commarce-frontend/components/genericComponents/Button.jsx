@@ -9,7 +9,7 @@ export default function Button({
   const base = clsx(
     "text-center",
     "flex items-center justify-center rounded-full font-light cursor-pointer",
-    "active:scale-120 transition-all duration-400 ease-in-out focus:outline-none "
+    "active:scale-120 transition-all duration-400 ease-in-out focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
   );
 
   const variants = {
