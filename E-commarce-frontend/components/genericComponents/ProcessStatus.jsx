@@ -4,6 +4,7 @@ export default function ProcessStatus({ status }) {
     transit: "bg-yellow-100 text-yellow-600",
     cancelled: "bg-red-100 text-red-600",
     default: "bg-[#FF6543] text-white",
+    pending_Payment: "bg-red-100 text-red-600",
   };
 
   return (

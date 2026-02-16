@@ -3,6 +3,7 @@ export default function NavItem({ icon, label, active = false, onClick }) {
     <button
       onClick={onClick}
       className={`w-full flex items-center gap-3 px-6 py-4 text-left transition border-r-2
+        cursor-pointer
         ${
           active
             ? "bg-[#FDE9E4] text-[#FF6543] border-r-[#FF6543]"

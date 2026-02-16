@@ -7,6 +7,10 @@ import AddressSection from "../Sections/UserProfile/AddressSection";
 import WishListSection from "../Sections/UserProfile/WishListSection";
 import UserSidebar from "../Sections/UserProfile/UserSideBar";
 import Icon from "../system/icons/Icon";
+import { useQuery } from "@tanstack/react-query";
+import { getUserProfileData } from "../APIs/UserProfileService";
+import { useNavigate } from "react-router-dom";
+
 
 const user = {
   name: "John Doe",
@@ -17,170 +21,90 @@ const user = {
   avatar: "/Man_avatar.png",
 };
 
-const statsData = [
-  {
-    id: "orders",
-    icon: <Icon name="orders" size={24} strokeWidth={1.5} variant="primary" />,
-    value: 24,
-    label: "Total Orders",
-  },
-  {
-    id: "wishlist",
-    icon: (
-      <Icon name="wishlist" size={24} strokeWidth={1.5} variant="primary" />
-    ),
-    value: 4,
-    label: "Wishlist",
-  },
-  {
-    id: "reviews",
-    icon: <Icon name="reviews" size={24} strokeWidth={1.5} variant="primary" />,
-    value: 12,
-    label: "Reviews",
-  },
-  {
-    id: "spent",
-    icon: <Icon name="payment" size={24} strokeWidth={1.5} variant="primary" />,
-    value: "$8,420",
-    label: "Total Spent",
-  },
-];
-
-const orders = [
-  {
-    id: "ORD-7291",
-    status: "delivered",
-    items: "iPhone 15 Pro Max, AirPods Pro",
-    total: 1448,
-    date: "Jan 15, 2025",
-  },
-  {
-    id: "ORD-7185",
-    status: "delivered",
-    items: "MacBook Air M3, USB-C Hub",
-    total: 1348,
-    date: "Dec 28, 2024",
-  },
-  {
-    id: "ORD-7042",
-    status: "transit",
-    items: "GoPro Hero 12 Black",
-    total: 399,
-    date: "Dec 10, 2024",
-  },
-  {
-    id: "ORD-6891",
-    status: "delivered",
-    items: "Apple Watch Ultra 2",
-    total: 799,
-    date: "Nov 22, 2024",
-  },
-];
-
-const addresses = [
-  {
-    id: 1,
-    type: "Home",
-    name: "John Doe",
-    street: "123 Main Street, Apt 4B",
-    city: "New York, NY 10001",
-    isDefault: true,
-  },
-  {
-    id: 2,
-    type: "Office",
-    name: "John Doe",
-    street: "456 Business Ave, Floor 12",
-    city: "New York, NY 10018",
-    isDefault: false,
-  },
-];
-
-const wishlist = [
-  {
-    id: 1,
-    name: "iPhone 15 Pro Max",
-    price: 1099,
-    image: "/iPhone_15_Pro_Max.png",
-  },
-  {
-    id: 2,
-    name: "MacBook Air M3",
-    price: 999,
-    image: "/MacBook_Air_M3.png",
-  },
-  {
-    id: 3,
-    name: "AirPods Pro",
-    price: 599,
-    image: "/AirPods_Pro.png",
-  },
-];
-
-const navItems = [
-  {
-    id: "profile",
-    label: "My Profile",
-    icon: <Icon name="user" size={24} strokeWidth={1.5} variant="primary" />,
-  },
-  {
-    id: "orders",
-    label: "Orders",
-    icon: <Icon name="orders" size={24} strokeWidth={1.5} variant="primary" />,
-  },
-  {
-    id: "wishlist",
-    label: "Wishlist",
-    icon: (
-      <Icon name="wishlist" size={24} strokeWidth={1.5} variant="primary" />
-    ),
-  },
-  {
-    id: "addresses",
-    label: "Addresses",
-    icon: (
-      <Icon name="location" size={24} strokeWidth={1.5} variant="primary" />
-    ),
-  },
-  {
-    id: "payments",
-    label: "Payment Methods",
-    icon: <Icon name="payment" size={24} strokeWidth={1.5} variant="primary" />,
-  },
-  {
-    id: "notifications",
-    label: "Notifications",
-    icon: (
-      <Icon
-        name="notifications"
-        size={24}
-        strokeWidth={1.5}
-        variant="primary"
-      />
-    ),
-  },
-  {
-    id: "settings",
-    label: "Settings",
-    icon: (
-      <Icon name="settings" size={24} strokeWidth={1.5} variant="primary" />
-    ),
-  },
-];
-
 export default function UserProfilePage() {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["profile"],
+    queryFn: getUserProfileData,
+  });
+
+  const navigate = useNavigate();
+  const navItems = [
+    {
+      id: "profile",
+      label: "My Profile",
+      icon: <Icon name="user" size={24} strokeWidth={1.5} variant="primary" />,
+    },
+    {
+      id: "orders",
+      label: "Orders",
+      icon: (
+        <Icon name="orders" size={24} strokeWidth={1.5} variant="primary" />
+      ),
+      Action: () => navigate("/profile/orders"),
+    },
+    {
+      id: "wishlist",
+      label: "Wishlist",
+      icon: (
+        <Icon name="wishlist" size={24} strokeWidth={1.5} variant="primary" />
+      ),
+      Action: () => navigate("/profile/wishlist"),
+    },
+    {
+      id: "addresses",
+      label: "Addresses",
+      icon: (
+        <Icon name="location" size={24} strokeWidth={1.5} variant="primary" />
+      ),
+      Action: () => navigate("/profile/addresses"),
+    },
+    {
+      id: "payments",
+      label: "Payment Methods",
+      icon: (
+        <Icon name="payment" size={24} strokeWidth={1.5} variant="primary" />
+      ),
+      Action: () => navigate("/profile/payments"),
+    },
+    {
+      id: "notifications",
+      label: "Notifications",
+      icon: (
+        <Icon
+          name="notifications"
+          size={24}
+          strokeWidth={1.5}
+          variant="primary"
+        />
+      ),
+      Action: () => navigate("/profile/notifications"),
+    },
+    {
+      id: "settings",
+      label: "Settings",
+      icon: (
+        <Icon name="settings" size={24} strokeWidth={1.5} variant="primary" />
+      ),
+      Action: () => navigate("/profile/settings"),
+    },
+  ];
+
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error loading profile</p>;
+  if (!data) return <p>No profile found</p>;
+
   return (
     <>
       <TopFixedLayer Title="Profile" />
-      <div className="grid lg:grid-cols-6 grid-cols-1 m-10">
+      <div className="grid lg:grid-cols-6 grid-cols-1 m-10 gap-3">
         <div className="hidden lg:block lg:col-span-1"></div>
-        <UserSidebar items={navItems} activeId="profile" />
+        <UserSidebar items={navItems} activeId="profile"/>
         <div className="flex flex-col gap-10 lg:col-span-3">
-          <UserProfileCard user={user} />
-          <StatsGrid stats={statsData} />
-          <OrderHistoryList orders={orders} />
-          <AddressSection addresses={addresses} />
-          <WishListSection WishList={wishlist} />
+          <UserProfileCard user={data?.contacts} />
+          <StatsGrid stats={data?.StatsData} />
+          <OrderHistoryList orders={data?.Orders} />
+          <AddressSection addresses={data?.Addresses} />
+          <WishListSection WishList={data?.wishlist} />
         </div>
       </div>
       <BottomLayer />

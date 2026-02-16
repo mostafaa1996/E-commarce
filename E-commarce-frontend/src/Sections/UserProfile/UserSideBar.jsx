@@ -1,7 +1,9 @@
 import AccountSidebar from "../../../components/AccountSideBar/AccountSidebar";
 import NavItem from "../../../components/AccountSideBar/NavItem";
 import LogoutSection from "../../../components/AccountSideBar/LogoutSection";
-export default function UserSidebar({ items, activeId, onClick, onLogout }) {
+import { useState } from "react";
+export default function UserSidebar({ items, activeId, onLogout }) {
+  const [active, setActive] = useState(activeId);
   return (
     <AccountSidebar>
       <div className="mt-5 ">
@@ -10,8 +12,11 @@ export default function UserSidebar({ items, activeId, onClick, onLogout }) {
             key={item.id}
             icon={item.icon}
             label={item.label}
-            active={activeId === item.id}
-            onClick={onClick}
+            active={active === item.id}
+            onClick={() => {
+              setActive(item.id);
+              item.Action();
+            }}
           />
         ))}
       </div>

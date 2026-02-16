@@ -13,7 +13,9 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  phone: String,
+  phone: {
+    type: String,
+  },
   role: {
     type: String,
     enum: ["admin", "customer"],
@@ -90,11 +92,28 @@ const UserSchema = new mongoose.Schema({
     },
   ],
 
+  reviews: [
+    {
+      rate: { type: Number, default: 0 },
+      comment: { type: String, default: "" },
+      productId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
+        required: true,
+      },
+    },
+  ],
+
   resetPasswordToken: String,
   resetPasswordExpires: Date,
 
   emailVerified: { type: Boolean, default: false },
   emailVerificationToken: String,
+
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 module.exports = mongoose.model("User", UserSchema);

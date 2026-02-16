@@ -4,6 +4,7 @@ import { getShopProducts, getProductById } from "./APIs/shopProductsService";
 import { loginAction , SignupAction , logoutAction } from "./APIs/AuthService";
 import { CartService } from "./APIs/CartService";
 import { checkoutLoader , checkoutAction } from "./APIs/checkoutService";
+import { getUserProfileData } from "./APIs/UserProfileService";
 
 
 import ShopPage from "./pages/ShopPage";
@@ -66,5 +67,11 @@ export const router = createBrowserRouter([
   {
     path: "/profile",
     element: <UserProfilePage />,
+    loader: async () => {
+      return queryClient.ensureQueryData({
+        queryKey: ["profile"],
+        queryFn: getUserProfileData,
+      });
+    },
   },
 ]);

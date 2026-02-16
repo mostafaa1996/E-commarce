@@ -8,13 +8,23 @@ export default function AddressSection({ addresses }) {
       <DashBoardTableHeader
         ButtonAction={() => console.log("View all")}
         HeaderText="Addresses"
-        HeaderIcon={<Icon name="location" size={24} strokeWidth={1.5} variant="primary" />}
+        HeaderIcon={
+          <Icon name="location" size={24} strokeWidth={1.5} variant="primary" />
+        }
         ButtonContent={{ position: "left", text: "Add address", icon: "+" }}
       />
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 p-6">
-        {addresses.map((address) => (
-          <AddressCard key={address.id} {...address} />
-        ))}
+        {addresses &&
+          addresses.length > 0 &&
+          addresses.map((address) => (
+            <AddressCard
+              key={address._id}
+              type={""}
+              street={address.street}
+              city={address.city}
+              isDefault={address.isDefault}
+            />
+          ))}
       </div>
     </DashBoardTable>
   );
