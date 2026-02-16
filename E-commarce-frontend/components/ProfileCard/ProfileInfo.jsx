@@ -11,9 +11,9 @@ export default function ProfileInfo({
       <h2 className="text-[21px] font-light text-[#272727]">{name}</h2>
       <span className="text-sm text-zinc-500">Member since {memberSince}</span>
       <div className="flex flex-wrap gap-6 mt-2">
-        <ContactItem icon="✉️">{email}</ContactItem>
-        <ContactItem icon="📞">{phone}</ContactItem>
-        <ContactItem icon="📍">{location}</ContactItem>
+        <ContactItem iconName="mail">{email}</ContactItem>
+        <ContactItem iconName="phone">{phone}</ContactItem>
+        <ContactItem iconName="location">{location}</ContactItem>
       </div>
     </div>
   );

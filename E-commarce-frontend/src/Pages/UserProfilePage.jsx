@@ -6,6 +6,7 @@ import OrderHistoryList from "../Sections/UserProfile/OrderList";
 import AddressSection from "../Sections/UserProfile/AddressSection";
 import WishListSection from "../Sections/UserProfile/WishListSection";
 import UserSidebar from "../Sections/UserProfile/UserSideBar";
+import Icon from "../system/icons/Icon";
 
 const user = {
   name: "John Doe",
@@ -19,25 +20,27 @@ const user = {
 const statsData = [
   {
     id: "orders",
-    icon: "🛍",
+    icon: <Icon name="orders" size={24} strokeWidth={1.5} variant="primary" />,
     value: 24,
     label: "Total Orders",
   },
   {
     id: "wishlist",
-    icon: "❤️",
+    icon: (
+      <Icon name="wishlist" size={24} strokeWidth={1.5} variant="primary" />
+    ),
     value: 4,
     label: "Wishlist",
   },
   {
     id: "reviews",
-    icon: "⭐",
+    icon: <Icon name="reviews" size={24} strokeWidth={1.5} variant="primary" />,
     value: 12,
     label: "Reviews",
   },
   {
     id: "spent",
-    icon: "💳",
+    icon: <Icon name="payment" size={24} strokeWidth={1.5} variant="primary" />,
     value: "$8,420",
     label: "Total Spent",
   },
@@ -114,15 +117,56 @@ const wishlist = [
   },
 ];
 
-  const navItems = [
-    { id: "profile", label: "My Profile", icon: "👤" },
-    { id: "orders", label: "Orders", icon: "📦" },
-    { id: "wishlist", label: "Wishlist", icon: "❤️" },
-    { id: "addresses", label: "Addresses", icon: "📍" },
-    { id: "payments", label: "Payment Methods", icon: "💳" },
-    { id: "notifications", label: "Notifications", icon: "🔔" },
-    { id: "settings", label: "Settings", icon: "⚙️" },
-  ];
+const navItems = [
+  {
+    id: "profile",
+    label: "My Profile",
+    icon: <Icon name="user" size={24} strokeWidth={1.5} variant="primary" />,
+  },
+  {
+    id: "orders",
+    label: "Orders",
+    icon: <Icon name="orders" size={24} strokeWidth={1.5} variant="primary" />,
+  },
+  {
+    id: "wishlist",
+    label: "Wishlist",
+    icon: (
+      <Icon name="wishlist" size={24} strokeWidth={1.5} variant="primary" />
+    ),
+  },
+  {
+    id: "addresses",
+    label: "Addresses",
+    icon: (
+      <Icon name="location" size={24} strokeWidth={1.5} variant="primary" />
+    ),
+  },
+  {
+    id: "payments",
+    label: "Payment Methods",
+    icon: <Icon name="payment" size={24} strokeWidth={1.5} variant="primary" />,
+  },
+  {
+    id: "notifications",
+    label: "Notifications",
+    icon: (
+      <Icon
+        name="notifications"
+        size={24}
+        strokeWidth={1.5}
+        variant="primary"
+      />
+    ),
+  },
+  {
+    id: "settings",
+    label: "Settings",
+    icon: (
+      <Icon name="settings" size={24} strokeWidth={1.5} variant="primary" />
+    ),
+  },
+];
 
 export default function UserProfilePage() {
   return (
