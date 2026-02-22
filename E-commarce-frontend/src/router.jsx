@@ -14,8 +14,15 @@ import LoginPage from "./Pages/loginPage";
 import SignupPage from "./Pages/SignupPage";
 import CheckoutPage from "./Pages/checkoutPage";
 import UserProfilePage from "./Pages/UserProfilePage";
+import EditUserProfilePage from "./Pages/EditUserProfilePage";
+import UserOrdersPage from "./Pages/UserOrdersPage";
+import WishListPage from "./Pages/wishlistPage";
+import UserAddressesPage from "./Pages/UserAddressesPage";
+import UserPaymentPage from "./Pages/UserPaymentPage";
+import UserSettingsPage from "./Pages/UserSettingsPage";
 
 import { defaultShopQuery } from "./zustand_ShopPage/shopDefaultQuery";
+
 
 export const router = createBrowserRouter([
   {
@@ -74,4 +81,64 @@ export const router = createBrowserRouter([
       });
     },
   },
+  {
+    path: "/profile/orders",
+    element: <UserOrdersPage />,
+    loader: async () => {
+      return queryClient.ensureQueryData({
+        queryKey: ["profile"],
+        queryFn: getUserProfileData,
+      });
+    },
+  },
+  {
+    path: "/profile/wishlist",
+    element: <WishListPage />,
+    loader: async () => {
+      return queryClient.ensureQueryData({
+        queryKey: ["profile"],
+        queryFn: getUserProfileData,
+      });
+    },
+  },
+  {
+    path: "/profile/addresses",
+    element: <UserAddressesPage />,
+    loader: async () => {
+      return queryClient.ensureQueryData({
+        queryKey: ["profile"],
+        queryFn: getUserProfileData,
+      });
+    },
+  },
+  {
+    path: "/profile/payments",
+    element: <UserPaymentPage />,
+    loader: async () => {
+      return queryClient.ensureQueryData({
+        queryKey: ["profile"],
+        queryFn: getUserProfileData,
+      });
+    },
+  },
+  {
+    path: "/profile/settings",
+    element: <UserSettingsPage />,
+    loader: async () => {
+      return queryClient.ensureQueryData({
+        queryKey: ["profile"],
+        queryFn: getUserProfileData,
+      });
+    },
+  },
+  {
+    path: "/profile/edit-profile",
+    element: <EditUserProfilePage />,
+    loader: async () => {
+      return queryClient.ensureQueryData({
+        queryKey: ["profile"],
+        queryFn: getUserProfileData,
+      });
+    },
+  }
 ]);

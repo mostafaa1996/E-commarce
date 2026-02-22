@@ -11,6 +11,14 @@ import {
   Camera,
   Settings,
   Bell,
+  Save,
+  Trash,
+  Edit,
+  Check,
+  Plus,
+  Lock,
+  Sun,
+  Moon,
 } from "lucide-react";
 
 export const iconMap = {
@@ -26,4 +34,12 @@ export const iconMap = {
   camera: Camera,
   settings: Settings,
   notifications: Bell,
+  save: Save,
+  trash: Trash,
+  edit: Edit,
+  check: Check,
+  plus: Plus,
+  password: Lock,
+  sun: Sun,
+  moon: Moon,
 };

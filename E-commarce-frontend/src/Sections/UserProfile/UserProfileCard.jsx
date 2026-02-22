@@ -2,9 +2,13 @@ import ProfileCard from "../../../components/ProfileCard/profileCard";
 import Avatar from "../../../components/ProfileCard/Avatar";
 import ProfileInfo from "../../../components/ProfileCard/ProfileInfo";
 import {shortenText} from "../../utils/utils";
+import { useNavigate } from "react-router-dom";
 export default function UserProfileCard({ user }) {
-
-  function onEdit() {}
+  
+  const navigate = useNavigate();
+  function onEdit() {
+     navigate("/profile/edit-profile");
+  }
   return (
     <ProfileCard className={`max-w-5xl`}>
       {/* Left side */}

@@ -19,9 +19,11 @@ export default function AddressSection({ addresses }) {
           addresses.map((address) => (
             <AddressCard
               key={address._id}
-              type={""}
+              type={"Home"}
+              name={address.name}
               street={address.street}
               city={address.city}
+              country={address.country}
               isDefault={address.isDefault}
             />
           ))}

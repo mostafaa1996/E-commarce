@@ -1,14 +1,23 @@
 import SearchBtn from "/SearchBtn.svg";
 import clsx from "clsx";
+import { twMerge } from "tailwind-merge";
 import { useRef } from "react";
 export default function SearchBar({
   placeholder = "Search",
   onChange,
   onClickSearch,
+  className,
 }) {
   const inputRef = useRef(null);
   return (
-    <div className="flex items-center border border-zinc-200 rounded-md w-[310px]">
+    <div
+      className={twMerge(
+        clsx(
+          `flex items-center border border-zinc-200 rounded-md w-[310px]`,
+          className,
+        ),
+      )}
+    >
       <input
         type="text"
         placeholder={placeholder}
@@ -16,7 +25,7 @@ export default function SearchBar({
         onChange={() => onChange(inputRef.current.value)}
         className={clsx(
           "flex-1 px-4 py-4 text-sm font-light outline-none",
-          " placeholder:text-zinc-400"
+          " placeholder:text-zinc-400",
         )}
       />
 
