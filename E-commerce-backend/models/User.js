@@ -21,6 +21,28 @@ const UserSchema = new mongoose.Schema({
     enum: ["admin", "customer"],
     default: "customer",
   },
+  PersonalInfo: {
+    firstName: String,
+    lastName: String,
+    email: String,
+    phone: String,
+    DateOfBirth: Date,
+    gender: String,
+    location: String,
+    Bio: String,
+    avatar: {
+      url: String,
+      publicId : String,
+    },
+    createdAt : {
+      type: Date,
+      default: Date.now,
+    },
+    updatedAt : {
+      type: Date,
+      default: Date.now,
+    },
+  },
   billingDetails: [
     {
       firstName: String,
@@ -109,11 +131,6 @@ const UserSchema = new mongoose.Schema({
 
   emailVerified: { type: Boolean, default: false },
   emailVerificationToken: String,
-
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
 });
 
 module.exports = mongoose.model("User", UserSchema);

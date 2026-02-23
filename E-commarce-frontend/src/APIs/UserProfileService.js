@@ -20,3 +20,33 @@ export async function getUserProfileData() {
   const data = await res.json();
   return data;  
 }
+
+export async function getPersonalInfo() {
+  const res = await authFetch(`${DevelopmentURL}/user/profile/personalInfo` , 
+  {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }
+  );
+  if(!res.ok) {
+    throw new Error("Failed to fetch user personal data");
+  }
+  const data = await res.json();
+  return data;
+}
+
+export async function UploadProfileImage(formData){
+  const res = await authFetch(`${DevelopmentURL}/user/profile/uploadProfilePic` , 
+  {
+    method: "POST",
+    body: formData
+  }
+  );
+  if(!res.ok) {
+    throw new Error("Failed to upload user Image");
+  }
+  const data = await res.json();
+  return data;
+}

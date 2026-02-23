@@ -1,11 +1,11 @@
-const { join } = require("../getBaseProductsByRapidAPI/categories");
 const User = require("../models/User");
+const cloudinary = require("../config/cloudinary");
 exports.getUserProfile = async (req, res) => {
   try {
     const userId = req.user.id;
     if (!userId) return res.sendStatus(401);
     const user = await User.findById(userId).populate({
-      path: "orders", 
+      path: "orders",
       select: "orderItems Status totalPrice createdAt",
     });
     if (!user) return res.sendStatus(401);
@@ -25,15 +25,76 @@ exports.getUserProfile = async (req, res) => {
     const paymentMethods = user.paymentMethods;
     const StatsData = {
       totalOrders: user.orders?.length,
-      totalSpent: user.orders?.reduce((total, order) => total + order.totalPrice, 0),
+      totalSpent: user.orders?.reduce(
+        (total, order) => total + order.totalPrice,
+        0,
+      ),
       totalWishlist: user.wishlist?.length,
       totalReviews: user.reviews?.length,
     };
-    res
-      .status(200)
-      .json({ contacts, Addresses, Orders, wishlist, notifications , paymentMethods , StatsData });
+    res.status(200).json({
+      contacts,
+      Addresses,
+      Orders,
+      wishlist,
+      notifications,
+      paymentMethods,
+      StatsData,
+    });
   } catch (err) {
     console.log(err);
     next(err);
   }
 };
+
+exports.getPersonalInfo = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    if (!userId) return res.sendStatus(401);
+    const user = await User.findById(userId);
+    if (!user) return res.sendStatus(401);
+    res.status(200).json(user?.PersonalInfo || {});
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};
+
+exports.uploadProfilePic = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    if (!userId) return res.sendStatus(401);
+    const user = await User.findById(userId);
+    if (!user) return res.sendStatus(401);
+    if (!req.file)
+      return res.sendStatus(400).json({ message: "No file uploaded" });
+    const result = await UploadToCloudinary(req.file.buffer, userId);
+    user.PersonalInfo.avatar.url = result.secure_url;
+    await user.save();
+    res.status(200).json({
+      message: "Profile picture uploaded successfully",
+      avatar: result.secure_url,
+    });
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};
+
+function UploadToCloudinary(fileBuffer, userId) {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      {
+        folder: "E-commerce/Users",
+        public_id: `user_${userId}`,
+        overwrite: true,
+      },
+      (error, result) => {
+        if (result) resolve(result);
+        else reject(error);
+      },
+    );
+
+    stream.end(fileBuffer);
+  });
+}
