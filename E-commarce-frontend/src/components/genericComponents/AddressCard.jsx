@@ -1,7 +1,7 @@
 import Card from "./Card";
 import CardBadge from "./CardBadge";
 import CardTag from "./CardTag";
-import Icon from "../../src/system/icons/Icon";
+import Icon from "@/system/icons/Icon";
 export default function AddressCard({
   type,
   name,

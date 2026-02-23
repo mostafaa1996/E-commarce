@@ -1,7 +1,7 @@
-import BaseSection from "../Sections/UserProfile/BaseSectionForUserProfile";
-import UserNestedRoutesHeader from "../Sections/UserProfile/UserNestedRoutesHeader";
-import ResetPasswordForm from "../Sections/UserProfile/ResetPasswordForm";
-import PreferencesSection from "../Sections/UserProfile/PreferencesSection";
+import BaseSection from "@/Sections/UserProfile/BaseSectionForUserProfile";
+import UserNestedRoutesHeader from "@/Sections/UserProfile/UserNestedRoutesHeader";
+import ResetPasswordForm from "@/Sections/UserProfile/ResetPasswordForm";
+import PreferencesSection from "@/Sections/UserProfile/PreferencesSection";
 import { useState } from "react";
 export default function UserSettingsPage({}) {
     const [isEditing, setIsEditing] = useState(false);

@@ -1,15 +1,15 @@
-import TopFixedLayer from "../Sections/TopLayer/TopFixedLayer";
-import BottomLayer from "../Sections/BottomLayer/BottomLayer";
-import ProfileCard from "../../components/ProfileCard/profileCard";
-import UserSidebar from "../Sections/UserProfile/UserSideBar";
+import TopFixedLayer from "@/Sections/TopLayer/TopFixedLayer";
+import BottomLayer from "@/Sections/BottomLayer/BottomLayer";
+import ProfileCard from "@/components/ProfileCard/profileCard";
+import UserSidebar from "@/Sections/UserProfile/UserSideBar";
 import { useQuery } from "@tanstack/react-query";
-import { getUserProfileData } from "../APIs/UserProfileService";
-import { UserSideBarItems } from "../system/Data/UserSideBarData";
-import Avatar from "../../components/ProfileCard/Avatar";
-import Button from "../../components/genericComponents/Button";
-import ProfileForm from "../Sections/UserProfile/EditProfileForm";
+import { getUserProfileData } from "@/APIs/UserProfileService";
+import { UserSideBarItems } from "@/system/Data/UserSideBarData";
+import Avatar from "@/components/ProfileCard/Avatar";
+import Button from "@/components/genericComponents/Button";
+import ProfileForm from "@/Sections/UserProfile/EditProfileForm";
 import Man_avatar from "/Man_avatar.png";
-import Icon from "../system/icons/Icon";
+import Icon from "@/system/icons/Icon";
 
 export default function EditUserProfilePage() {
   const { data, isLoading, error } = useQuery({
@@ -57,7 +57,12 @@ export default function EditUserProfilePage() {
           <div className="flex flex-row items-center justify-end gap-5">
             <Button className="lg:text-[14px]">Cancel</Button>
             <Button className="lg:text-[14px]">
-              <Icon name="save" variant="surrounded" size={18} className="mr-2" />
+              <Icon
+                name="save"
+                variant="surrounded"
+                size={18}
+                className="mr-2"
+              />
               Save Changes
             </Button>
           </div>

@@ -1,5 +1,5 @@
-import {columns} from "../../src/Data/HomeProducts";
-import ProductColumn from "../genericComponents/ProductsColumn";
+import {columns} from "@/Data/HomeProducts";
+import ProductColumn from "@/components/genericComponents/ProductsColumn";
 
 export default function HomeProducts() {
   return (

@@ -1,4 +1,4 @@
-import Button from "../genericComponents/Button";
+import Button from "@/components/genericComponents/Button";
 import HeartOutline from "/heart-outline.svg";
 
 export default function ProductActions({OrderHandler , AddToCartHandler , AddToWishlistHandler}) {

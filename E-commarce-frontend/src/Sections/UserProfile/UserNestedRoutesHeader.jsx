@@ -1,7 +1,7 @@
-import Icon from "../../system/icons/Icon";
+import Icon from "@/system/icons/Icon";
 import clsx from "clsx";
 import { twMerge } from "tailwind-merge";
-import Button from "../../../components/genericComponents/Button";
+import Button from "@/components/genericComponents/Button";
 export default function UserNestedRoutesHeader({
   className,
   iconName,

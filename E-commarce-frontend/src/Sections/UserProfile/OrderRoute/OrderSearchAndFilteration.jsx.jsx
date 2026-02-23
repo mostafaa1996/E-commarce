@@ -1,16 +1,23 @@
-import SearchBox from "../../../../components/genericComponents/SearchBox";
+import SearchBox from "../../../components/genericComponents/SearchBox";
 import { useState } from "react";
 import clsx from "clsx";
 import { twMerge } from "tailwind-merge";
-export default function OrderSearchAndFilteration({className }) {
+export default function OrderSearchAndFilteration({ className }) {
   const tabs = ["All", "Delivered", "In Transit", "Cancelled", "Returned"];
   const [active, setActive] = useState("All");
   function onChange(tab) {
     setActive(tab);
   }
   return (
-    <div className={twMerge(clsx(`border border-zinc-200 rounded-xl bg-white p-6 mt-6`,className))}>
-      <SearchBox placeholder="Search by order ID or item..." className="w-full"/>
+    <div
+      className={twMerge(
+        clsx(`border border-zinc-200 rounded-xl bg-white p-6 mt-6`, className),
+      )}
+    >
+      <SearchBox
+        placeholder="Search by order ID or item..."
+        className="w-full"
+      />
       <div className="flex flex-wrap gap-3 mt-4">
         {tabs.map((tab) => (
           <button

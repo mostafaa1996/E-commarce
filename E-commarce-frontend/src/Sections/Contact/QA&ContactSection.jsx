@@ -1,4 +1,4 @@
-import { contactData } from "../../src/Data/ContactData";
+import { contactData } from "@/Data/ContactData";
 import ContactBlock from "../genericComponents/ContactBlock";
 import InputField from "../genericComponents/InputField";
 import TextArea from "../genericComponents/TextArea";

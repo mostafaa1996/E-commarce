@@ -1,7 +1,7 @@
-import DashBoardItem from "../../../components/genericComponents/DashBoardItem";
-import DashBoardTable from "../../../components/genericComponents/DashBoardTable";
-import DashBoardTableHeader from "../../../components/genericComponents/DashBoardTableHeader";
-import Icon from "../../system/icons/Icon";
+import DashBoardItem from "@/components/genericComponents/DashBoardItem";
+import DashBoardTable from "@/components/genericComponents/DashBoardTable";
+import DashBoardTableHeader from "@/components/genericComponents/DashBoardTableHeader";
+import Icon from "@/system/icons/Icon";
 
 export default function OrderHistoryList({ orders }) {
   console.log(orders);

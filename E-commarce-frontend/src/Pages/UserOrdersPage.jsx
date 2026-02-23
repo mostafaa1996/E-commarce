@@ -1,6 +1,6 @@
-import OrderSearchAndFilteration from "../Sections/UserProfile/OrderRoute/OrderSearchAndFilteration.jsx";
-import UserNestedRoutesHeader from "../Sections/UserProfile/UserNestedRoutesHeader";
-import BaseSection from "../Sections/UserProfile/BaseSectionForUserProfile";
+import OrderSearchAndFilteration from "@/Sections/UserProfile/OrderRoute/OrderSearchAndFilteration.jsx";
+import UserNestedRoutesHeader from "@/Sections/UserProfile/UserNestedRoutesHeader";
+import BaseSection from "@/Sections/UserProfile/BaseSectionForUserProfile";
 export default function UserOrdersPage({ orders, NumberOfOrders }) {
   return (
     <BaseSection>

@@ -1,4 +1,4 @@
-import Icon from "../../src/system/icons/Icon";
+import Icon from "@/system/icons/Icon";
 export default function LogoutSection({ onLogout }) {
   return (
     <div className="border-t border-zinc-200">

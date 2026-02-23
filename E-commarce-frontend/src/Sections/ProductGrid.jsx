@@ -1,6 +1,6 @@
-import ProductCard from "../../components/genericComponents/ProductCard_V";
+import ProductCard from "@/components/genericComponents/ProductCard_V";
 
-export default function ProductGrid({products}) {
+export default function ProductGrid({ products }) {
   const MainProducts = products.map((product) => product);
   return (
     <div className="max-w-6xl grid grid-cols-2 sm:grid-cols-3 gap-6">

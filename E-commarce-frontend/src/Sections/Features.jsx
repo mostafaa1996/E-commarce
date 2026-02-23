@@ -1,5 +1,5 @@
-import FeatureItem from "../genericComponents/featureItem";
-import { features } from "../../src/Data/features";
+import FeatureItem from "@/components/genericComponents/featureItem";
+import { features } from "@/Data/features";
 
 export default function FeaturesSection() {
   return (

@@ -1,11 +1,11 @@
-import ProductGallery from "../../components/ProductDetails/ProductGallery";
-import ProductHeader from "../../components/ProductDetails/ProductHeader";
-import ProductMeta from "../../components/ProductDetails/ProductMeta";
-import ProductsVariantsShow from "../../components/ProductDetails/ProductsVariantsShow";
-import ProductActions from "../../components/ProductDetails/ProductAction";
-import QuantityControl from "../../components/genericComponents/QuantityControl";
+import ProductGallery from "@/components/ProductDetails/ProductGallery";
+import ProductHeader from "@/components/ProductDetails/ProductHeader";
+import ProductMeta from "@/components/ProductDetails/ProductMeta";
+import ProductsVariantsShow from "@/components/ProductDetails/ProductsVariantsShow";
+import ProductActions from "@/components/ProductDetails/ProductAction";
+import QuantityControl from "@/components/genericComponents/QuantityControl";
 import { useState } from "react";
-import { useCartStore } from "../zustand_Cart/CartStore";
+import { useCartStore } from "@/zustand_Cart/CartStore";
 import { useNavigate } from "react-router-dom";
 
 export default function ProductDetails({ product }) {

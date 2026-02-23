@@ -1,6 +1,6 @@
-import InputField from "../../../Components/genericComponents/InputField";
-import Button from "../../../Components/genericComponents/Button";
-import Icon from "../../system/icons/Icon";
+import InputField from "@/components/genericComponents/InputField";
+import Button from "@/components/genericComponents/Button";
+import Icon from "@/system/icons/Icon";
 export default function ResetPasswordForm({ title }) {
   return (
     <div className="border border-zinc-200 rounded-xl bg-white p-6">

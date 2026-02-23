@@ -1,10 +1,10 @@
-import ProductDetails from "../Sections/ProductDetails";
-import ProductTabs from "../Sections/ProductTabs";
-import TopFixedLayer from "../Sections/TopLayer/TopFixedLayer";
-import BottomLayer from "../Sections/BottomLayer/BottomLayer";
+import ProductDetails from "@/Sections/ProductDetails";
+import ProductTabs from "@/Sections/ProductTabs";
+import TopFixedLayer from "@/Sections/TopLayer/TopFixedLayer";
+import BottomLayer from "@/Sections/BottomLayer/BottomLayer";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { getProductById } from "../APIs/shopProductsService";
+import { getProductById } from "@/APIs/shopProductsService";
 export default function ProductDetailsPage() {
   const { id } = useParams();
   const { data, isLoading, error } = useQuery({

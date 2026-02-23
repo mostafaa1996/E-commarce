@@ -1,10 +1,12 @@
-import TextArea from "../../../components/genericComponents/TextArea";
-import InputField from "../../../components/genericComponents/InputField";
-import SelectField from "../../../components/genericComponents/SelectField";
+import TextArea from "@/components/genericComponents/TextArea";
+import InputField from "@/components/genericComponents/InputField";
+import SelectField from "@/components/genericComponents/SelectField";
 export default function ProfileForm() {
   return (
     <form className="flex flex-col gap-6 border border-zinc-200 rounded-xl bg-white p-6">
-      <h3 className="text-[21px] font-light text-[#272727] mb-6">Personal Form</h3>
+      <h3 className="text-[21px] font-light text-[#272727] mb-6">
+        Personal Form
+      </h3>
 
       {/* Row 1 */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">

@@ -1,5 +1,5 @@
-import SideBarFilter from "../../components/genericComponents/SideBarFilter";
-import { useShopQueryStore } from "../zustand_ShopPage/ShopQueryStore";
+import SideBarFilter from "@/components/genericComponents/SideBarFilter";
+import { useShopQueryStore } from "@/zustand_ShopPage/ShopQueryStore";
 
 export default function SideBarFilterSection({ products }) {
   const { shopQuery, setShopQuery } = useShopQueryStore();

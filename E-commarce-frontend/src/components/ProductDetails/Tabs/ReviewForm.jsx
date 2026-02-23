@@ -1,6 +1,6 @@
-import Button from "../../genericComponents/Button";
-import InputField from "../../genericComponents/InputField";
-import TextArea from "../../genericComponents/TextArea";
+import Button from "@/components/genericComponents/Button";
+import InputField from "@/components/genericComponents/InputField";
+import TextArea from "@/components/genericComponents/TextArea";
 import lightstar from "/star.svg";
 import dimmedStar from "/dimmedStar.svg";
 import { useRef, useState } from "react";

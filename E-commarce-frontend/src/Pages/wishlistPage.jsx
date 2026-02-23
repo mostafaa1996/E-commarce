@@ -1,5 +1,5 @@
-import BaseSection from "../Sections/UserProfile/BaseSectionForUserProfile";
-import UserNestedRoutesHeader from "../Sections/UserProfile/UserNestedRoutesHeader";
+import BaseSection from "@/Sections/UserProfile/BaseSectionForUserProfile";
+import UserNestedRoutesHeader from "@/Sections/UserProfile/UserNestedRoutesHeader";
 export default function WishListPage() {
   return (
     <>

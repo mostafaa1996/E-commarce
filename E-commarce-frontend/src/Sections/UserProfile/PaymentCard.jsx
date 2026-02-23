@@ -1,14 +1,20 @@
-import Card from "../../../components/genericComponents/Card";
-import CardBadge from "../../../components/genericComponents/CardBadge";
-import CardTag from "../../../components/genericComponents/CardTag";
-import Icon from "../../system/icons/Icon";
-export default function PaymentCard({ type, isDefault = false, name, cardNumber, expires }) {
+import Card from "@/components/genericComponents/Card";
+import CardBadge from "@/components/genericComponents/CardBadge";
+import CardTag from "@/components/genericComponents/CardTag";
+import Icon from "@/system/icons/Icon";
+export default function PaymentCard({
+  type,
+  isDefault = false,
+  name,
+  cardNumber,
+  expires,
+}) {
   return (
     <>
       <Card className="cursor-pointer p-4 relative">
         {isDefault && <CardBadge>Default</CardBadge>}
 
-        <CardTag >{type}</CardTag>
+        <CardTag>{type}</CardTag>
 
         <div className="flex flex-col">
           <h4 className="font-light text-[21px] tracking-widest">

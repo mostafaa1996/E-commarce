@@ -1,5 +1,5 @@
-import Icon from "../../system/icons/Icon";
-import InputField from "../../../components/genericComponents/InputField";
+import Icon from "@/system/icons/Icon";
+import InputField from "@/components/genericComponents/InputField";
 
 export default function FormSection({ title }) {
   return (

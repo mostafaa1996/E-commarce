@@ -1,6 +1,6 @@
-import TopFixedLayer from "../Sections/TopLayer/TopFixedLayer";
-import BottomLayer from "../Sections/BottomLayer/BottomLayer";
-import ShopSection from "../Sections/Shop/ShopSection";
+import TopFixedLayer from "@/Sections/TopLayer/TopFixedLayer";
+import BottomLayer from "@/Sections/BottomLayer/BottomLayer";
+import ShopSection from "@/Sections/Shop/ShopSection";
 export default function ShopPage() {
   return (
     <>

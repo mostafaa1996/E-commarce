@@ -1,7 +1,7 @@
-import ProductCard from "../../../components/genericComponents/ProductCard_V";
-import DashBoardTableHeader from "../../../components/genericComponents/DashBoardTableHeader";
-import DashBoardTable from "../../../components/genericComponents/DashBoardTable";
-import Icon from "../../system/icons/Icon";
+import ProductCard from "@/components/genericComponents/ProductCard_V";
+import DashBoardTableHeader from "@/components/genericComponents/DashBoardTableHeader";
+import DashBoardTable from "@/components/genericComponents/DashBoardTable";
+import Icon from "@/system/icons/Icon";
 export default function WishListSection({ WishList }) {
   return (
     <DashBoardTable className={`max-w-5xl`}>

@@ -1,13 +1,12 @@
-import ProfileCard from "../../../components/ProfileCard/profileCard";
-import Avatar from "../../../components/ProfileCard/Avatar";
-import ProfileInfo from "../../../components/ProfileCard/ProfileInfo";
-import {shortenText} from "../../utils/utils";
+import ProfileCard from "@/components/ProfileCard/profileCard";
+import Avatar from "@/components/ProfileCard/Avatar";
+import ProfileInfo from "@/components/ProfileCard/ProfileInfo";
+import { shortenText } from "@/utils/utils";
 import { useNavigate } from "react-router-dom";
 export default function UserProfileCard({ user }) {
-  
   const navigate = useNavigate();
   function onEdit() {
-     navigate("/profile/edit-profile");
+    navigate("/profile/edit-profile");
   }
   return (
     <ProfileCard className={`max-w-5xl`}>
@@ -17,7 +16,7 @@ export default function UserProfileCard({ user }) {
         <ProfileInfo
           name={user.name}
           memberSince={user.memberSince || "--/--/--"}
-          email={shortenText(user.email , 19)}
+          email={shortenText(user.email, 19)}
           phone={user.phone}
           location={user.city + ", " + user.country}
         />

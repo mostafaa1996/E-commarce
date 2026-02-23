@@ -1,5 +1,5 @@
-import AuthAside from "../../../components/genericComponents/AuthAside";
-import SignUpForm from "../../../components/genericComponents/SignUpForm";
+import AuthAside from "@/components/genericComponents/AuthAside";
+import SignUpForm from "@/components/genericComponents/SignUpForm";
 export default function SignUpSection() {
   return (
     <section className="min-h-screen flex bg-white">

@@ -1,7 +1,7 @@
-import ShowItemsTemplate from "../genericComponents/showItemsTemplate";
+import ShowItemsTemplate from "@/components/genericComponents/showItemsTemplate";
 import AppleProduct from "/AppleProductImg.png";
-import LimitedSaleCounter from "../genericComponents/LimitedSaleCounter";
-import Button from "../genericComponents/Button";
+import LimitedSaleCounter from "@/components/genericComponents/LimitedSaleCounter";
+import Button from "@/components/genericComponents/Button";
 export default function LimitedSale() {
   return (
     <ShowItemsTemplate>

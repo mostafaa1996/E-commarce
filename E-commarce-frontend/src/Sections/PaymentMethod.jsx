@@ -2,17 +2,17 @@ import { useEffect, useState } from "react";
 import {
   RadioGroup,
   RadioGroupItem,
-} from "../../components/genericComponents/RadioGroup";
-import { Label } from "../../components/genericComponents/label";
-import InputField from "../../components/genericComponents/InputField";
-import Button from "../../components/genericComponents/Button";
+} from "@/components/genericComponents/RadioGroup";
+import { Label } from "@/components/genericComponents/label";
+import InputField from "@/components/genericComponents/InputField";
+import Button from "@/components/genericComponents/Button";
 import { CreditCard, Banknote, Truck, CheckCircle2, Plus } from "lucide-react";
 import { toast } from "sonner";
-import { useCheckoutStore } from "../zustand_checkout/checkoutStore";
+import { useCheckoutStore } from "@/zustand_checkout/checkoutStore";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { fetchCards } from "../APIs/checkoutService";
-import SelectButton from "../../components/genericComponents/SelectButton";
+import { fetchCards } from "@/APIs/checkoutService";
+import SelectButton from "@/components/genericComponents/SelectButton";
 
 const SAVED_CARDS = [
   { id: "1", last4: "4242", brand: "Visa", expiry: "12/27" },
@@ -30,7 +30,7 @@ const PaymentMethod = () => {
   const cardForm = useCheckoutStore((state) => state.CardForm);
   const resetCardForm = useCheckoutStore((state) => state.resetCardForm);
 
-  const { data, isLoading ,  refetch } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ["savedCards"],
     queryFn: fetchCards,
     enabled: paymentType === "card",
@@ -38,22 +38,24 @@ const PaymentMethod = () => {
 
   useEffect(() => {
     setPayment(paymentType);
-  }, [setPayment, paymentType , refetch]);
+  }, [setPayment, paymentType, refetch]);
 
-  const [selectedCard, setSelectedCard] = useState(data?.savedCards[0]?._id || "");
+  const [selectedCard, setSelectedCard] = useState(
+    data?.savedCards[0]?._id || "",
+  );
 
   function handleCardForm(e) {
-     const { name, value } = e.target;
-     setCardForm({
-       ...cardForm,
-       [name]: value,
-     });
-    //  console.log(cardForm); 
+    const { name, value } = e.target;
+    setCardForm({
+      ...cardForm,
+      [name]: value,
+    });
+    //  console.log(cardForm);
   }
 
   function handleUseSavdCardsButton() {
     resetCardForm();
-    setUseNewCard(false); 
+    setUseNewCard(false);
   }
   const handlePlaceOrder = () => {
     if (paymentType === "cod") {
@@ -268,14 +270,14 @@ const PaymentMethod = () => {
                   />
                 </div>
               </div>
-              <SelectButton 
+              <SelectButton
                 type="checkbox"
                 name="saveCard"
                 label={"Save this card"}
                 value={cardForm.saveCard}
                 checked={cardForm.saveCard}
                 onChange={() => {
-                  setCardForm({...cardForm, saveCard: !cardForm.saveCard});
+                  setCardForm({ ...cardForm, saveCard: !cardForm.saveCard });
                 }}
               />
               {SAVED_CARDS.length > 0 && (
@@ -288,9 +290,9 @@ const PaymentMethod = () => {
                 </button>
               )}
             </div>
-          ):(
+          ) : (
             <div className="space-y-4">
-                <p>loading ... </p>
+              <p>loading ... </p>
             </div>
           )}
         </div>

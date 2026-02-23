@@ -1,4 +1,4 @@
-import Icon from "../../src/system/icons/Icon";
+import Icon from "@/system/icons/Icon";
 export default function Avatar({ src, alt }) {
   return (
     <div className="relative group">

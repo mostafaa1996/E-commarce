@@ -1,5 +1,5 @@
-import InputField from "../../../Components/genericComponents/InputField";
-export default function EditAddressForm({ title}) {
+import InputField from "@/components/genericComponents/InputField";
+export default function EditAddressForm({ title }) {
   return (
     <div className="border border-zinc-200 rounded-xl bg-white p-6">
       <h3 className="text-[21px] font-light text-[#272727] mb-6">{title}</h3>

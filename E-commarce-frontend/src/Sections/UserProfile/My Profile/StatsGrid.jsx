@@ -1,5 +1,5 @@
-import StatCard from "../../../components/StatsCard/StatCard";
-import Icon from "../../system/icons/Icon";
+import StatCard from "@/components/StatsCard/StatCard";
+import Icon from "@/system/icons/Icon";
 export default function StatsGrid({ stats }) {
   const statsData = [
     {

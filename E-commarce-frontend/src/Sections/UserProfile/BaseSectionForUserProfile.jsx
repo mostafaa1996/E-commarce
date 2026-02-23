@@ -1,7 +1,7 @@
 import TopFixedLayer from "../TopLayer/TopFixedLayer";
 import BottomLayer from "../BottomLayer/BottomLayer";
 import UserSidebar from "./UserSideBar";
-import { UserSideBarItems } from "../../system/Data/UserSideBarData";
+import { UserSideBarItems } from "@/system/Data/UserSideBarData";
 
 export default function BaseSection({ children }) {
   return (

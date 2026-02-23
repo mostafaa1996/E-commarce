@@ -1,7 +1,7 @@
-import SelectField from "../../../components/genericComponents/SelectField";
-import SegmentedToggle from "../../../components/genericComponents/SegmentedToggle";
-import SwitchToggle from "../../../components/genericComponents/SwitchToggle";
-import Icon from "../../system/icons/Icon";
+import SelectField from "@/components/genericComponents/SelectField";
+import SegmentedToggle from "@/components/genericComponents/SegmentedToggle";
+import SwitchToggle from "@/components/genericComponents/SwitchToggle";
+import Icon from "@/system/icons/Icon";
 export default function PreferencesSection() {
   return (
     <div className="border border-zinc-200 rounded-xl bg-white p-6">

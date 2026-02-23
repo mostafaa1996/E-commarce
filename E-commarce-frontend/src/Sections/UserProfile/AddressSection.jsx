@@ -1,7 +1,7 @@
-import AddressCard from "../../../components/genericComponents/AddressCard";
-import DashBoardTableHeader from "../../../components/genericComponents/DashBoardTableHeader";
-import DashBoardTable from "../../../components/genericComponents/DashBoardTable";
-import Icon from "../../system/icons/Icon";
+import AddressCard from "@/components/genericComponents/AddressCard";
+import DashBoardTableHeader from "@/components/genericComponents/DashBoardTableHeader";
+import DashBoardTable from "@/components/genericComponents/DashBoardTable";
+import Icon from "@/system/icons/Icon";
 export default function AddressSection({ addresses }) {
   return (
     <DashBoardTable className={`max-w-5xl`}>

@@ -1,12 +1,12 @@
 import ProductGrid from "../ProductGrid";
-import Pagination from "../../../components/genericComponents/Pagination";
-import CurrentRangeOfResults from "../../../components/genericComponents/CurrentRangeOfResults";
+import Pagination from "@/components/genericComponents/Pagination";
+import CurrentRangeOfResults from "@/components/genericComponents/CurrentRangeOfResults";
 import SideBarFilterSection from "../SideBarFilterSection";
 import SortingSection from "../SortingSection";
 import SearchSection from "../SearchSection";
-import { useShopQueryStore } from "../../zustand_ShopPage/ShopQueryStore";
+import { useShopQueryStore } from "@/zustand_ShopPage/ShopQueryStore";
 import { useQuery } from "@tanstack/react-query";
-import { getShopProducts } from "../../APIs/shopProductsService";
+import { getShopProducts } from "@/APIs/shopProductsService";
 
 export default function ShopSection() {
   const { shopQuery, setShopQuery } = useShopQueryStore();

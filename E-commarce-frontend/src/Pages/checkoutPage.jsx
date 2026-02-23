@@ -1,18 +1,18 @@
-import TopFixedLayer from "../Sections/TopLayer/TopFixedLayer";
-import BottomLayer from "../Sections/BottomLayer/BottomLayer";
-import BillingDetailsSection from "../Sections/CheckOut/BillingDetailsSection";
-import CartwithPaymentSection from "../Sections/CheckOut/CartwithPaymentSection";
-import Button from "../../components/genericComponents/Button";
+import TopFixedLayer from "@/Sections/TopLayer/TopFixedLayer";
+import BottomLayer from "@/Sections/BottomLayer/BottomLayer";
+import BillingDetailsSection from "@/Sections/CheckOut/BillingDetailsSection";
+import CartwithPaymentSection from "@/Sections/CheckOut/CartwithPaymentSection";
+import Button from "@/components/genericComponents/Button";
 import { Form, useActionData } from "react-router-dom";
-import TextArea from "../../components/genericComponents/TextArea";
-import { useCheckoutStore } from "../zustand_checkout/checkoutStore";
+import TextArea from "@/components/genericComponents/TextArea";
+import { useCheckoutStore } from "@/zustand_checkout/checkoutStore";
 
 export default function CheckoutPage() {
   const setOrderNotes = useCheckoutStore((state) => state.setOrderNotes);
   const currentState = useCheckoutStore((state) => state.currentState);
   const CardForm = useCheckoutStore((state) => state.CardForm);
 
-  function isCardValid (card){
+  function isCardValid(card) {
     console.log(JSON.stringify(card, null, 2));
     return (
       card?.cardNumber?.length === 16 &&

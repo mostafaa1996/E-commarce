@@ -1,16 +1,20 @@
-import BaseSection from "../Sections/UserProfile/BaseSectionForUserProfile";
-import AddressCard from "../../components/genericComponents/AddressCard";
-import UserNestedRoutesHeader from "../Sections/UserProfile/UserNestedRoutesHeader";
-import EditAddressForm from "../Sections/UserProfile/EditAddressForm";
+import BaseSection from "@/Sections/UserProfile/BaseSectionForUserProfile";
+import AddressCard from "@/components/genericComponents/AddressCard";
+import UserNestedRoutesHeader from "@/Sections/UserProfile/UserNestedRoutesHeader";
+import EditAddressForm from "@/Sections/UserProfile/EditAddressForm";
 import { useState } from "react";
 export default function UserAddressesPage({}) {
-    const [isEditing, setIsEditing] = useState(false);
-    function handleEdit() {
-        setIsEditing(true);
-    }
+  const [isEditing, setIsEditing] = useState(false);
+  function handleEdit() {
+    setIsEditing(true);
+  }
   return (
     <BaseSection>
-      <UserNestedRoutesHeader iconName="location" title="My Addresses" info="1 addresses" />
+      <UserNestedRoutesHeader
+        iconName="location"
+        title="My Addresses"
+        info="1 addresses"
+      />
       {isEditing && <EditAddressForm title="Edit Address" />}
       <AddressCard
         type="Home"
