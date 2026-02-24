@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const cloudinary = require("../config/cloudinary");
+const { validationResult } = require("express-validator");
 exports.getUserProfile = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -51,7 +52,8 @@ exports.getPersonalInfo = async (req, res) => {
   try {
     const userId = req.user.id;
     if (!userId) return res.sendStatus(401);
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).select("PersonalInfo");
+    console.log(user);
     if (!user) return res.sendStatus(401);
     res.status(200).json(user?.PersonalInfo || {});
   } catch (err) {
@@ -83,11 +85,23 @@ exports.uploadProfilePic = async (req, res) => {
 
 exports.UpdatePersonalInfo = async (req, res) => {
   try {
+    console.log("Valid data");
     const userId = req.user.id;
     if (!userId) return res.sendStatus(401);
     const user = await User.findById(userId);
     if (!user) return res.sendStatus(401);
-    user.PersonalInfo = { ...user.PersonalInfo, ...req.body };
+    await User.findByIdAndUpdate(userId, {
+      $set: {
+        "PersonalInfo.firstName": req.body.firstName,
+        "PersonalInfo.lastName": req.body.lastName,
+        "PersonalInfo.email": req.body.email,
+        "PersonalInfo.phone": req.body.phone,
+        "PersonalInfo.dateOfBirth": req.body.dateOfBirth,
+        "PersonalInfo.gender": req.body.gender,
+        "PersonalInfo.location": req.body.location,
+        "PersonalInfo.Bio": req.body.Bio,
+      },
+    });
     await user.save();
     res.status(200).json({ message: "Personal info updated successfully" });
   } catch (err) {

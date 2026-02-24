@@ -51,7 +51,7 @@ export default function EditUserProfilePage() {
     <>
       <BaseSection>
         <ProfileCard
-          className={`max-w-5xl lg:flex-col lg:items-start justify-center gap-0 h-fit`}
+          className={`max-w-7xl lg:flex-col lg:items-start justify-center gap-0 h-fit`}
         >
           <h1 className="text-2xl font-bold mb-4">Edit Profile</h1>
           <p className="text-zinc-400 text-sm">
@@ -59,13 +59,13 @@ export default function EditUserProfilePage() {
           </p>
         </ProfileCard>
         <ProfileCard
-          className={`max-w-5xl lg:flex-col lg:items-start justify-center gap-0 h-fit`}
+          className={`max-w-7xl lg:flex-col lg:items-start justify-center gap-0 h-fit`}
         >
           <div className="flex flex-row items-end gap-5">
             <div className="flex flex-col items-start justify-center">
               <h1 className="text-md mb-4">Profile Photo</h1>
               <Avatar
-                src={Man_avatar}
+                src={data.avatar.url ||Man_avatar}
                 alt="Man"
                 onClick={handleOpenFileDialog}
               />
@@ -91,7 +91,7 @@ export default function EditUserProfilePage() {
             />
           </div>
         </ProfileCard>
-        <ProfileForm />
+        <ProfileForm className="max-w-7xl" data={data}/>
         <div className="flex flex-row items-center justify-end gap-5">
           <Button className="rounded-md" type="button" onClick={() => navigate(-1)}>
             Cancel

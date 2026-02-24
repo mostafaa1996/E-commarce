@@ -34,6 +34,7 @@ export async function getPersonalInfo() {
     throw new Error("Failed to fetch user personal data");
   }
   const data = await res.json();
+  console.log(data);
   return data;
 }
 
@@ -77,6 +78,6 @@ export async function UpdatePersonalInfo(request){
     throw new Error("Failed to update user personal info");
   }
   const data = await res.json();
-  console.log(data);
+  // console.log(data);
   return data;
 }

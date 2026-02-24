@@ -2,12 +2,19 @@ import TextArea from "@/components/genericComponents/TextArea";
 import InputField from "@/components/genericComponents/InputField";
 import SelectField from "@/components/genericComponents/SelectField";
 import { Form } from "react-router-dom";
-export default function ProfileForm() {
+import clsx from "clsx";
+import { twMerge } from "tailwind-merge";
+export default function ProfileForm({ data, className }) {
   return (
     <Form
       id="profile-form"
       method="post"
-      className="flex flex-col gap-6 border border-zinc-200 rounded-xl bg-white p-6"
+      className={twMerge(
+        clsx(
+          `flex flex-col gap-6 border border-zinc-200 rounded-xl bg-white p-6`,
+          className,
+        ),
+      )}
     >
       <h3 className="text-[21px] font-light text-[#272727] mb-6">
         Personal Form
@@ -19,8 +26,14 @@ export default function ProfileForm() {
           label="First Name"
           placeholder="First name"
           name="firstName"
+          defaultValue={data.firstName}
         />
-        <InputField label="Last Name" placeholder="Last name" name="lastName" />
+        <InputField
+          label="Last Name"
+          placeholder="Last name"
+          name="lastName"
+          defaultValue={data.lastName}
+        />
       </div>
 
       {/* Row 2 */}
@@ -29,11 +42,13 @@ export default function ProfileForm() {
           label="Email Address"
           placeholder="...@email.com"
           name="email"
+          defaultValue={data.email}
         />
         <InputField
           label="Phone Number"
           placeholder="+1 234 567 890"
           name="phone"
+          defaultValue={data.phone}
         />
       </div>
 
@@ -44,11 +59,12 @@ export default function ProfileForm() {
           type="date"
           placeholder="1990-05-15"
           name="dateOfBirth"
+          defaultValue={data.dateOfBirth}
         />
 
         <SelectField
           label="Gender"
-          defaultValue="Male"
+          defaultValue={data.gender || "Male"}
           options={["Male", "Female", "Other"]}
           name="gender"
         />
@@ -59,6 +75,7 @@ export default function ProfileForm() {
         label="Location"
         placeholder="city, country"
         name="location"
+        defaultValue={data.location}
       />
 
       {/* Bio */}
@@ -67,6 +84,7 @@ export default function ProfileForm() {
         rows={4}
         placeholder="write something about yourself..."
         name="bio"
+        defaultValue={data.Bio}
       />
     </Form>
   );
