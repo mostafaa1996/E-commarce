@@ -4,7 +4,7 @@ import { getShopProducts, getProductById } from "./APIs/shopProductsService";
 import { loginAction , SignupAction , logoutAction } from "./APIs/AuthService";
 import { CartService } from "./APIs/CartService";
 import { checkoutLoader , checkoutAction } from "./APIs/checkoutService";
-import { getUserProfileData , getPersonalInfo } from "./APIs/UserProfileService";
+import { getUserProfileData , getPersonalInfo , UpdatePersonalInfo } from "./APIs/UserProfileService";
 
 
 import ShopPage from "./pages/ShopPage";
@@ -140,5 +140,6 @@ export const router = createBrowserRouter([
         queryFn: getPersonalInfo,
       });
     },
+    action: async ({request}) => await UpdatePersonalInfo(request),
   }
 ]);

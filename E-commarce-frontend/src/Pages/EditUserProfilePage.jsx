@@ -9,6 +9,8 @@ import Man_avatar from "/Man_avatar.png";
 import Icon from "@/system/icons/Icon";
 
 import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
+
 
 export default function EditUserProfilePage() {
   const { data, isLoading, error } = useQuery({
@@ -18,14 +20,15 @@ export default function EditUserProfilePage() {
 
   const queryClient = useQueryClient();
 
-const { mutate } = useMutation({
-  mutationFn: UploadProfileImage,
-  onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ["profile"] });
-  },
-});
+  const { mutate } = useMutation({
+    mutationFn: UploadProfileImage,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+    },
+  });
 
   const fileInputRef = useRef(null);
+  const navigate = useNavigate();
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading profile</p>;
@@ -90,8 +93,10 @@ const { mutate } = useMutation({
         </ProfileCard>
         <ProfileForm />
         <div className="flex flex-row items-center justify-end gap-5">
-          <Button className="rounded-md">Cancel</Button>
-          <Button className="rounded-md">
+          <Button className="rounded-md" type="button" onClick={() => navigate(-1)}>
+            Cancel
+          </Button>
+          <Button className="rounded-md" type="submit" form="profile-form">
             <Icon name="save" variant="surrounded" size={18} className="mr-2" />
             Save Changes
           </Button>

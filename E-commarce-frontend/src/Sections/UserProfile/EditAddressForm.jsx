@@ -1,9 +1,10 @@
 import InputField from "@/components/genericComponents/InputField";
+import { Form } from "react-router-dom";
 export default function EditAddressForm({ title }) {
   return (
     <div className="border border-zinc-200 rounded-xl bg-white p-6">
       <h3 className="text-[21px] font-light text-[#272727] mb-6">{title}</h3>
-      <form className="flex flex-col gap-6">
+      <Form className="flex flex-col gap-6">
         {/* Row 1 */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <InputField label="Label (e.g. Home)" placeholder="Home" />
@@ -59,7 +60,7 @@ export default function EditAddressForm({ title }) {
             Update Address
           </button>
         </div>
-      </form>
+      </Form>
     </div>
   );
 }

@@ -50,3 +50,33 @@ export async function UploadProfileImage(formData){
   const data = await res.json();
   return data;
 }
+
+export async function UpdatePersonalInfo(request){
+  const formData = await request.formData();
+  const personalInfo = {
+    firstName: formData.get("firstName"),
+    lastName: formData.get("lastName"),
+    email: formData.get("email"),
+    phone: formData.get("phone"),
+    dateOfBirth: formData.get("dateOfBirth"),
+    gender: formData.get("gender"),
+    location: formData.get("location"),
+    Bio : formData.get("bio")
+  }
+  console.log(personalInfo);
+  const res = await authFetch(`${DevelopmentURL}/user/profile/updatePersonalInfo` , 
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(personalInfo),
+  }
+  );
+  if(!res.ok) {
+    throw new Error("Failed to update user personal info");
+  }
+  const data = await res.json();
+  console.log(data);
+  return data;
+}

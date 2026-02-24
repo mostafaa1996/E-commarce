@@ -7,6 +7,6 @@ const upload = require("../middleware/upload");
 router.get("/", isAuth , UserProfileController.getUserProfile );
 router.get("/personalInfo", isAuth , UserProfileController.getUserProfile );
 router.post("/uploadProfilePic", isAuth , upload.single("image"), UserProfileController.uploadProfilePic);
-
+router.post("/updatePersonalInfo" , isAuth , UserProfileController.UpdatePersonalInfo);  
 
 module.exports = router;

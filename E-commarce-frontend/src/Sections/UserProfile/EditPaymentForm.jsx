@@ -1,5 +1,6 @@
 import Icon from "@/system/icons/Icon";
 import InputField from "@/components/genericComponents/InputField";
+import { Form } from "react-router-dom";
 
 export default function FormSection({ title }) {
   return (
@@ -11,7 +12,7 @@ export default function FormSection({ title }) {
         </h3>
         <span className="text-sm text-zinc-500">SSL Encrypted</span>
       </div>
-      <form className="flex flex-col gap-6">
+      <Form className="flex flex-col gap-6">
         {/* Cardholder */}
         <InputField label="Cardholder Name" placeholder="John Doe" />
 
@@ -43,7 +44,7 @@ export default function FormSection({ title }) {
             Add Card
           </button>
         </div>
-      </form>
+      </Form>
     </div>
   );
 }

@@ -2,6 +2,7 @@ import SelectField from "@/components/genericComponents/SelectField";
 import SegmentedToggle from "@/components/genericComponents/SegmentedToggle";
 import SwitchToggle from "@/components/genericComponents/SwitchToggle";
 import Icon from "@/system/icons/Icon";
+import { Form } from "react-router-dom";
 export default function PreferencesSection() {
   return (
     <div className="border border-zinc-200 rounded-xl bg-white p-6">
@@ -9,7 +10,7 @@ export default function PreferencesSection() {
         <Icon name="" size={24} strokeWidth={1.5} variant="primary" />
         preferences
       </h3>
-      <form className="flex flex-col gap-6">
+      <Form className="flex flex-col gap-6">
         <div className="flex lg:flex-row flex-col gap-4">
           <SelectField
             label="Language"
@@ -53,7 +54,7 @@ export default function PreferencesSection() {
           </div>
           <SwitchToggle />
         </div>
-      </form>
+      </Form>
     </div>
   );
 }

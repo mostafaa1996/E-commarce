@@ -9,7 +9,7 @@ exports.getUserProfile = async (req, res) => {
       select: "orderItems Status totalPrice createdAt",
     });
     if (!user) return res.sendStatus(401);
-    console.log(user);
+    // console.log(user);
     const contacts = {
       name: user.name,
       email: user.email,
@@ -75,6 +75,21 @@ exports.uploadProfilePic = async (req, res) => {
       message: "Profile picture uploaded successfully",
       avatar: result.secure_url,
     });
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};
+
+exports.UpdatePersonalInfo = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    if (!userId) return res.sendStatus(401);
+    const user = await User.findById(userId);
+    if (!user) return res.sendStatus(401);
+    user.PersonalInfo = { ...user.PersonalInfo, ...req.body };
+    await user.save();
+    res.status(200).json({ message: "Personal info updated successfully" });
   } catch (err) {
     console.log(err);
     next(err);

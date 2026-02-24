@@ -43,7 +43,7 @@ exports.postLogin = async (req, res) => {
   const accessToken = generateAccessToken(user);
   const refreshToken = generateRefreshToken(user);
 
-  console.log(user);
+  // console.log(user);
 
   await Token.create({
     userId: user._id,

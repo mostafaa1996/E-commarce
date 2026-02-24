@@ -1,6 +1,7 @@
 import InputField from "@/components/genericComponents/InputField";
 import Button from "@/components/genericComponents/Button";
 import Icon from "@/system/icons/Icon";
+import { Form } from "react-router-dom";
 export default function ResetPasswordForm({ title }) {
   return (
     <div className="border border-zinc-200 rounded-xl bg-white p-6">
@@ -8,7 +9,7 @@ export default function ResetPasswordForm({ title }) {
         <Icon name="password" size={24} strokeWidth={1.5} variant="primary" />
         {title}
       </h3>
-      <form className="flex flex-col gap-6">
+      <Form className="flex flex-col gap-6">
         {/* Row 1 */}
         <div className="flex flex-col gap-4">
           <InputField
@@ -36,7 +37,7 @@ export default function ResetPasswordForm({ title }) {
         >
           Update Password
         </Button>
-      </form>
+      </Form>
     </div>
   );
 }
