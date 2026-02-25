@@ -4,7 +4,7 @@ import { getShopProducts, getProductById } from "./APIs/shopProductsService";
 import { loginAction , SignupAction , logoutAction } from "./APIs/AuthService";
 import { CartService } from "./APIs/CartService";
 import { checkoutLoader , checkoutAction } from "./APIs/checkoutService";
-import { getUserProfileData , getPersonalInfo , UpdatePersonalInfo } from "./APIs/UserProfileService";
+import { getUserProfileData , getPersonalInfo , UpdatePersonalInfo , getUserPaginatedOrders} from "./APIs/UserProfileService";
 
 
 import ShopPage from "./pages/ShopPage";
@@ -78,6 +78,7 @@ export const router = createBrowserRouter([
       return queryClient.ensureQueryData({
         queryKey: ["profile"],
         queryFn: getUserProfileData,
+        staleTime: 1000 * 60 * 5,
       });
     },
   },
@@ -86,8 +87,9 @@ export const router = createBrowserRouter([
     element: <UserOrdersPage />,
     loader: async () => {
       return queryClient.ensureQueryData({
-        queryKey: ["profile"],
-        queryFn: getUserProfileData,
+        queryKey: ["profile-orders"],
+        queryFn: () => getUserPaginatedOrders(1 , 5),
+        staleTime: 1000 * 60 * 5,
       });
     },
   },
@@ -98,6 +100,7 @@ export const router = createBrowserRouter([
       return queryClient.ensureQueryData({
         queryKey: ["profile"],
         queryFn: getUserProfileData,
+        staleTime: 1000 * 60 * 5,
       });
     },
   },
@@ -108,6 +111,7 @@ export const router = createBrowserRouter([
       return queryClient.ensureQueryData({
         queryKey: ["profile"],
         queryFn: getUserProfileData,
+        staleTime: 1000 * 60 * 5,
       });
     },
   },
@@ -118,6 +122,7 @@ export const router = createBrowserRouter([
       return queryClient.ensureQueryData({
         queryKey: ["profile"],
         queryFn: getUserProfileData,
+        staleTime: 1000 * 60 * 5,
       });
     },
   },
@@ -128,6 +133,7 @@ export const router = createBrowserRouter([
       return queryClient.ensureQueryData({
         queryKey: ["profile"],
         queryFn: getUserProfileData,
+        staleTime: 1000 * 60 * 5,
       });
     },
   },
@@ -136,8 +142,9 @@ export const router = createBrowserRouter([
     element: <EditUserProfilePage />,
     loader: async () => {
       return queryClient.ensureQueryData({
-        queryKey: ["profile"],
+        queryKey: ["profile-edit"],
         queryFn: getPersonalInfo,
+        staleTime: 1000 * 60 * 5,
       });
     },
     action: async ({request}) => await UpdatePersonalInfo(request),

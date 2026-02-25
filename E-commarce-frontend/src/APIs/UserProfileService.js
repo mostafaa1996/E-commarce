@@ -34,7 +34,7 @@ export async function getPersonalInfo() {
     throw new Error("Failed to fetch user personal data");
   }
   const data = await res.json();
-  console.log(data);
+  // console.log(data);
   return data;
 }
 
@@ -79,5 +79,23 @@ export async function UpdatePersonalInfo(request){
   }
   const data = await res.json();
   // console.log(data);
+  return data;
+}
+
+export async function getUserPaginatedOrders(page , limit) {
+  console.log(`${DevelopmentURL}/user/profile/orders?page=${page}&limit=${limit}`);
+  const res = await authFetch(`${DevelopmentURL}/user/profile/orders?page=${page}&limit=${limit}`, 
+  {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }
+  );
+  if(!res.ok) {
+    throw new Error("Failed to fetch user orders");
+  }
+  const data = await res.json();
+  console.log(data);
   return data;
 }

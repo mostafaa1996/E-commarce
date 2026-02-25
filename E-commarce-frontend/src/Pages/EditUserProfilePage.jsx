@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function EditUserProfilePage() {
   const { data, isLoading, error } = useQuery({
-    queryKey: ["profile"],
+    queryKey: ["profile-edit"],
     queryFn: getPersonalInfo,
   });
 
@@ -23,7 +23,7 @@ export default function EditUserProfilePage() {
   const { mutate } = useMutation({
     mutationFn: UploadProfileImage,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["profile"] });
+      queryClient.invalidateQueries({ queryKey: ["profile-edit"] });
     },
   });
 

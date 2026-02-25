@@ -1,6 +1,24 @@
 const User = require("../models/User");
 const cloudinary = require("../config/cloudinary");
 const { validationResult } = require("express-validator");
+
+function UploadToCloudinary(fileBuffer, userId) {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      {
+        folder: "E-commerce/Users",
+        public_id: `user_${userId}`,
+        overwrite: true,
+      },
+      (error, result) => {
+        if (result) resolve(result);
+        else reject(error);
+      },
+    );
+
+    stream.end(fileBuffer);
+  });
+}
 exports.getUserProfile = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -110,20 +128,20 @@ exports.UpdatePersonalInfo = async (req, res) => {
   }
 };
 
-function UploadToCloudinary(fileBuffer, userId) {
-  return new Promise((resolve, reject) => {
-    const stream = cloudinary.uploader.upload_stream(
-      {
-        folder: "E-commerce/Users",
-        public_id: `user_${userId}`,
-        overwrite: true,
-      },
-      (error, result) => {
-        if (result) resolve(result);
-        else reject(error);
-      },
-    );
-
-    stream.end(fileBuffer);
-  });
+exports.getUserPaginatedOrders = async (req, res) => {
+  try {
+    const {page , limit} = req.query;
+    const userId = req.user.id;
+    if (!userId) return res.sendStatus(401);
+    const user = await User.findById(userId).populate({
+      path: "orders",
+      select: "orderItems Status totalPrice createdAt",
+    }).skip((page-1)* limit).limit(limit);
+    if (!user) return res.sendStatus(401);
+    const orders = user.orders;
+    res.status(200).json({ orders });
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
 }

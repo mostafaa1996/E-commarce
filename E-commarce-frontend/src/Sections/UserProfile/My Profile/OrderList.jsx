@@ -2,9 +2,10 @@ import DashBoardItem from "@/components/genericComponents/DashBoardItem";
 import DashBoardTable from "@/components/genericComponents/DashBoardTable";
 import DashBoardTableHeader from "@/components/genericComponents/DashBoardTableHeader";
 import Icon from "@/system/icons/Icon";
+import { useNavigate } from "react-router-dom";
 
 export default function OrderHistoryList({ orders }) {
-  console.log(orders);
+  const navigate = useNavigate();
   return (
     <DashBoardTable className={`max-w-5xl`}>
       <DashBoardTableHeader
@@ -12,7 +13,7 @@ export default function OrderHistoryList({ orders }) {
         HeaderIcon={
           <Icon name="orders" size={24} strokeWidth={1.5} variant="primary" />
         }
-        ButtonAction={() => console.log("View all")}
+        ButtonAction={() => navigate("/profile/orders")}
         ButtonContent={{ position: "right", text: "View all", icon: ">" }}
       />
       {orders &&

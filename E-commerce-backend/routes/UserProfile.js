@@ -22,4 +22,6 @@ router.post(
   UserProfileController.UpdatePersonalInfo,
 );
 
+router.get("/orders", isAuth, UserProfileController.getUserPaginatedOrders);
+
 module.exports = router;
