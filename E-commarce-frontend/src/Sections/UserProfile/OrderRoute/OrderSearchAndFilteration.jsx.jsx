@@ -1,10 +1,14 @@
 import SearchBox from "../../../components/genericComponents/SearchBox";
-import { useState } from "react";
 import clsx from "clsx";
 import { twMerge } from "tailwind-merge";
-export default function OrderSearchAndFilteration({ className }) {
-  const tabs = ["All", "Delivered", "In Transit", "Cancelled", "Returned"];
-  const [active, setActive] = useState("All");
+export default function OrderSearchAndFilteration({
+  tabs,
+  className,
+  active,
+  setSearchValue,
+  setActive,
+  SearchSubmitEvent,
+}) {
   function onChange(tab) {
     setActive(tab);
   }
@@ -17,6 +21,8 @@ export default function OrderSearchAndFilteration({ className }) {
       <SearchBox
         placeholder="Search by order ID or item..."
         className="w-full"
+        onChange={setSearchValue}
+        onClickSearch={SearchSubmitEvent}
       />
       <div className="flex flex-wrap gap-3 mt-4">
         {tabs.map((tab) => (

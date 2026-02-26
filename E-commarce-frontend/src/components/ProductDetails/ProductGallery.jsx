@@ -1,4 +1,6 @@
-export default function ProductGallery({ images, active, onChange }) {
+import clsx from "clsx";
+import { twMerge } from "tailwind-merge";
+export default function ProductGallery({ images, active, onChange , MainImage_className }) {
   return (
     <div className="flex gap-6">
       {/* Thumbnails */}
@@ -13,17 +15,21 @@ export default function ProductGallery({ images, active, onChange }) {
               ${active === index ? "border-[#FF6543]" : "border-zinc-200"}
             `}
           >
-            <img src={img.url} className="w-12 object-contain" />
+            <img src={img.url} className="w-12 aspect-square object-contain" />
           </button>
         ))}
       </div>
 
       {/* Main image */}
-      <div className="flex-1 aspect-square border border-zinc-200 rounded-xl flex items-center justify-center bg-white">
-        <img
-          src={images[active].url}
-          className="w-full object-contain"
-        />
+      <div
+        className={twMerge(
+          clsx(
+            `aspect-square border border-zinc-200 rounded-xl flex bg-white p-4`,
+            MainImage_className,
+          ),
+        )}
+      >
+        <img src={images[active].url} className="w-full object-contain" />
       </div>
     </div>
   );

@@ -87,7 +87,7 @@ export const router = createBrowserRouter([
     element: <UserOrdersPage />,
     loader: async () => {
       return queryClient.ensureQueryData({
-        queryKey: ["profile-orders"],
+        queryKey: ["profile-orders" , 1],
         queryFn: () => getUserPaginatedOrders(1 , 5),
         staleTime: 1000 * 60 * 5,
       });

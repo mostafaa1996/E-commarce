@@ -28,7 +28,7 @@ export default function ProductDetails({ product }) {
   return (
     <section className="py-20">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 gap-20 lg:grid-cols-2 lg:gap-10">
+        <div className="grid grid-cols-1 gap-20 lg:grid-cols-2 lg:gap-40">
           <ProductGallery
             images={product.images}
             active={activeImage}

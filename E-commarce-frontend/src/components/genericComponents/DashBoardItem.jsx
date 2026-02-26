@@ -1,5 +1,5 @@
 import ProcessStatus from "./ProcessStatus";
-function DashBoardItem({ items , orderId , status ,  createdAt , totalPrice }) {
+function DashBoardItem({ items , orderId , status , statusColor ,  createdAt , totalPrice }) {
   return (
     <div
       className={`flex items-start justify-between px-6 py-5 
@@ -13,7 +13,7 @@ function DashBoardItem({ items , orderId , status ,  createdAt , totalPrice }) {
             #{orderId}
           </span>
 
-          <ProcessStatus status={status} />
+          <ProcessStatus status={status} statusColor={statusColor} />
         </div>
 
         {items &&
