@@ -25,7 +25,7 @@ export default function UserNestedRoutesHeader({
         </div>
         {button && (
           <Button
-            className="mx-4 lg:text-[12px] tracking-widest"
+            className="tracking-wide"
             onClick={onClick}
           >
             <Icon

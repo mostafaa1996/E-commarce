@@ -7,18 +7,32 @@ import QuantityControl from "@/components/genericComponents/QuantityControl";
 import { useState } from "react";
 import { useCartStore } from "@/zustand_Cart/CartStore";
 import { useNavigate } from "react-router-dom";
+import { useMutation , useQueryClient } from "@tanstack/react-query";
+import { updateUserWishlist } from "@/APIs/UserProfileService";
 
-export default function ProductDetails({ product }) {
+export default function ProductDetails({ product, initialValueFromUserWishlist }) {
+  console.log(initialValueFromUserWishlist);
+  
   const [activeImage, setActiveImage] = useState(0);
   const [quantity, setQuantity] = useState(0);
   const CartStorage = useCartStore();
   const navigate = useNavigate();
 
+  const queryClient = useQueryClient(); 
+
+  const updateWishlist = useMutation({
+    mutationKey: ["profile-wishlist"],
+    mutationFn: (arrOfIds) => updateUserWishlist(arrOfIds),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["profile-wishlist"] });
+    },
+  });
+
   function handleAddToCart() {
     CartStorage.addItem(product, quantity);
   }
   function handleAddToWishlist() {
-    console.log("Add to wishlist"); // in Backend
+    updateWishlist.mutate([product._id]);
   }
   function handleOrderNow() {
     navigate("/checkout");
@@ -68,6 +82,7 @@ export default function ProductDetails({ product }) {
               OrderHandler={handleOrderNow}
               AddToCartHandler={handleAddToCart}
               AddToWishlistHandler={handleAddToWishlist}
+              AddedToWishlistBefore={initialValueFromUserWishlist}
             />
 
             <div

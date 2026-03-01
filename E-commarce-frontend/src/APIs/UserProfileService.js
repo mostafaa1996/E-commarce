@@ -6,31 +6,27 @@ const DevelopmentURL = "http://localhost:3000";
 // get user wishlist
 // get user addresses
 export async function getUserProfileData() {
-  const res = await authFetch(`${DevelopmentURL}/user/profile` , 
-  {
+  const res = await authFetch(`${DevelopmentURL}/user/profile`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
-  }
-  );
-  if(!res.ok) {
+  });
+  if (!res.ok) {
     throw new Error("Failed to fetch user profile data");
   }
   const data = await res.json();
-  return data;  
+  return data;
 }
 
 export async function getPersonalInfo() {
-  const res = await authFetch(`${DevelopmentURL}/user/profile/personalInfo` , 
-  {
+  const res = await authFetch(`${DevelopmentURL}/user/profile/personalInfo`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
-  }
-  );
-  if(!res.ok) {
+  });
+  if (!res.ok) {
     throw new Error("Failed to fetch user personal data");
   }
   const data = await res.json();
@@ -38,21 +34,22 @@ export async function getPersonalInfo() {
   return data;
 }
 
-export async function UploadProfileImage(formData){
-  const res = await authFetch(`${DevelopmentURL}/user/profile/uploadProfilePic` , 
-  {
-    method: "POST",
-    body: formData
-  }
+export async function UploadProfileImage(formData) {
+  const res = await authFetch(
+    `${DevelopmentURL}/user/profile/uploadProfilePic`,
+    {
+      method: "POST",
+      body: formData,
+    },
   );
-  if(!res.ok) {
+  if (!res.ok) {
     throw new Error("Failed to upload user Image");
   }
   const data = await res.json();
   return data;
 }
 
-export async function UpdatePersonalInfo(request){
+export async function UpdatePersonalInfo(request) {
   const formData = await request.formData();
   const personalInfo = {
     firstName: formData.get("firstName"),
@@ -62,19 +59,20 @@ export async function UpdatePersonalInfo(request){
     dateOfBirth: formData.get("dateOfBirth"),
     gender: formData.get("gender"),
     location: formData.get("location"),
-    Bio : formData.get("bio")
-  }
+    Bio: formData.get("bio"),
+  };
   console.log(personalInfo);
-  const res = await authFetch(`${DevelopmentURL}/user/profile/updatePersonalInfo` , 
-  {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+  const res = await authFetch(
+    `${DevelopmentURL}/user/profile/updatePersonalInfo`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(personalInfo),
     },
-    body: JSON.stringify(personalInfo),
-  }
   );
-  if(!res.ok) {
+  if (!res.ok) {
     throw new Error("Failed to update user personal info");
   }
   const data = await res.json();
@@ -82,20 +80,67 @@ export async function UpdatePersonalInfo(request){
   return data;
 }
 
-export async function getUserPaginatedOrders(page , limit) {
-  console.log(`${DevelopmentURL}/user/profile/orders?page=${page}&limit=${limit}`);
-  const res = await authFetch(`${DevelopmentURL}/user/profile/orders?page=${page}&limit=${limit}`, 
-  {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }
+export async function getUserPaginatedOrders(page, limit) {
+  console.log(
+    `${DevelopmentURL}/user/profile/orders?page=${page}&limit=${limit}`,
   );
-  if(!res.ok) {
+  const res = await authFetch(
+    `${DevelopmentURL}/user/profile/orders?page=${page}&limit=${limit}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  );
+  if (!res.ok) {
     throw new Error("Failed to fetch user orders");
   }
   const data = await res.json();
-  console.log(data);
+  // console.log(data);
+  return data;
+}
+
+export async function updateUserWishlist(arrOfIds) {
+  console.log(
+    `${DevelopmentURL}/user/profile/UpdateWishlist`,
+     arrOfIds,
+  );
+  const res = await authFetch(
+    `${DevelopmentURL}/user/profile/UpdateWishlist`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ arrOfIds }),
+    },
+  );
+  if (!res.ok) {
+    throw new Error("Failed to update user wishlist");
+  }
+  const data = await res.json();
+  // console.log(data);
+  return data;
+}
+
+export async function getUserWishlist() {
+  console.log(
+    `${DevelopmentURL}/user/profile/GetWishlist`,
+  );
+  const res = await authFetch(
+    `${DevelopmentURL}/user/profile/GetWishlist`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  );
+  if (!res.ok) {
+    throw new Error("Failed to fetch user wishlist");
+  }
+  const data = await res.json();
+  // console.log(data);
   return data;
 }

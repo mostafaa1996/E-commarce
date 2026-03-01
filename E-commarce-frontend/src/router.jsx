@@ -4,7 +4,7 @@ import { getShopProducts, getProductById } from "./APIs/shopProductsService";
 import { loginAction , SignupAction , logoutAction } from "./APIs/AuthService";
 import { CartService } from "./APIs/CartService";
 import { checkoutLoader , checkoutAction } from "./APIs/checkoutService";
-import { getUserProfileData , getPersonalInfo , UpdatePersonalInfo , getUserPaginatedOrders} from "./APIs/UserProfileService";
+import { getUserProfileData , getPersonalInfo , UpdatePersonalInfo , getUserPaginatedOrders, getUserWishlist} from "./APIs/UserProfileService";
 
 
 import ShopPage from "./pages/ShopPage";
@@ -98,8 +98,8 @@ export const router = createBrowserRouter([
     element: <WishListPage />,
     loader: async () => {
       return queryClient.ensureQueryData({
-        queryKey: ["profile"],
-        queryFn: getUserProfileData,
+        queryKey: ["profile-wishlist"],
+        queryFn: getUserWishlist,
         staleTime: 1000 * 60 * 5,
       });
     },

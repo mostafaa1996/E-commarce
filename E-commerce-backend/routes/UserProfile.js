@@ -23,5 +23,7 @@ router.post(
 );
 
 router.get("/orders", isAuth, UserProfileController.getUserPaginatedOrders);
+router.get("/GetWishlist", isAuth, UserProfileController.getUserWishlist);
+router.post("/UpdateWishlist", isAuth, UserProfileController.updateUserWishlist);
 
 module.exports = router;

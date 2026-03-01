@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Product = require("../models/Product");
 const cloudinary = require("../config/cloudinary");
 const { validationResult } = require("express-validator");
 
@@ -19,7 +20,7 @@ function UploadToCloudinary(fileBuffer, userId) {
     stream.end(fileBuffer);
   });
 }
-exports.getUserProfile = async (req, res) => {
+exports.getUserProfile = async (req, res, next) => {
   try {
     const userId = req.user.id;
     if (!userId) return res.sendStatus(401);
@@ -66,7 +67,7 @@ exports.getUserProfile = async (req, res) => {
   }
 };
 
-exports.getPersonalInfo = async (req, res) => {
+exports.getPersonalInfo = async (req, res, next) => {
   try {
     const userId = req.user.id;
     if (!userId) return res.sendStatus(401);
@@ -80,7 +81,7 @@ exports.getPersonalInfo = async (req, res) => {
   }
 };
 
-exports.uploadProfilePic = async (req, res) => {
+exports.uploadProfilePic = async (req, res, next) => {
   try {
     const userId = req.user.id;
     if (!userId) return res.sendStatus(401);
@@ -101,7 +102,7 @@ exports.uploadProfilePic = async (req, res) => {
   }
 };
 
-exports.UpdatePersonalInfo = async (req, res) => {
+exports.UpdatePersonalInfo = async (req, res, next) => {
   try {
     console.log("Valid data");
     const userId = req.user.id;
@@ -128,15 +129,18 @@ exports.UpdatePersonalInfo = async (req, res) => {
   }
 };
 
-exports.getUserPaginatedOrders = async (req, res) => {
+exports.getUserPaginatedOrders = async (req, res, next) => {
   try {
-    const {page , limit} = req.query;
+    const { page, limit } = req.query;
     const userId = req.user.id;
     if (!userId) return res.sendStatus(401);
-    const user = await User.findById(userId).populate({
-      path: "orders",
-      select: "orderItems Status totalPrice createdAt",
-    }).skip((page-1)* limit).limit(limit);
+    const user = await User.findById(userId)
+      .populate({
+        path: "orders",
+        select: "orderItems Status totalPrice createdAt",
+      })
+      .skip((page - 1) * limit)
+      .limit(limit);
     if (!user) return res.sendStatus(401);
     const orders = user.orders;
     res.status(200).json({ orders });
@@ -144,4 +148,79 @@ exports.getUserPaginatedOrders = async (req, res) => {
     console.log(err);
     next(err);
   }
-}
+};
+
+exports.getUserWishlist = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    if (!userId) return res.sendStatus(401);
+    const user = await User.findById(userId).populate({
+      path: "wishlist",
+      select: "title price images originalPrice category _id",
+    });
+    if (!user) return res.sendStatus(401);
+    const wishlist = user.wishlist;
+    res.status(200).json({ wishlist });
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};
+
+exports.updateUserWishlist = async (req, res, next) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+    const addedItems = req.body.arrOfIds;
+    if (!addedItems || !Array.isArray(addedItems) || addedItems.length === 0)
+      return res.status(400).json({ message: "addedItemsIds is required" });
+    const user = await User.findById(userId);
+    if (!user) return res.status(401).json({ message: "Unauthorized" });
+    const productsCount = await Product.countDocuments({
+      _id: { $in: addedItems },
+    });
+    if (productsCount !== addedItems.length)
+      return res
+        .status(404)
+        .json({ message: "One or more products not found" });
+
+    const wishlistSet = new Set(user.wishlist.map((id) => id.toString()));
+
+    const toRemove = [];
+    const toAdd = [];
+
+    for (const addedId of addedItems) {
+      if (!wishlistSet.has(addedId.toString())) {
+        toAdd.push(addedId);
+      } else {
+        toRemove.push(addedId);
+      }
+    }
+
+    if (toRemove.length > 0) {
+      await User.updateOne(
+        { _id: userId },
+        { $pull: { wishlist: { $in: toRemove } } },
+      );
+      return res.status(200).json({
+        message: "Product removed from wishlist",
+        added: toAdd,
+        removed: toRemove,
+      });
+    }
+    if (toAdd.length > 0) {
+      await User.updateOne(
+        { _id: userId },
+        { $addToSet: { wishlist: { $each: toAdd } } },
+      );
+      return res.status(200).json({
+        message: "Product added to wishlist",
+        added: toAdd,
+        removed: toRemove,
+      });
+    }
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};

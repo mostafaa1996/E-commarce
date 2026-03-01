@@ -2,14 +2,13 @@ import Card from "./Card";
 import CardBody from "./CardBody";
 import CardMedia from "./CardMedia";
 
-export default function ProductCard({ image, title, price, NavigationLink , variant}) {
+export default function ProductCard({ NavigationLink , variant , ...props}) {
   return (
     <Card
-      NavigationLink={NavigationLink}
-      className="w-[272.5px] h-[393px] flex flex-col justify-center"
+      className="w-[272.5px] h-[393px] flex flex-col justify-center relative group"
     >
-      <CardMedia Image={image} />
-      <CardBody variant={variant || "ShowNameAndPrice"} Name={title} Price={price} />
+      <CardMedia Image={props.image} NavigationLink={NavigationLink} />
+      <CardBody variant={variant || "ShowNameAndPrice"} {...props} />
     </Card>
   );
 }

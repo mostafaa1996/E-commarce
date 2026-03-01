@@ -1,11 +1,6 @@
-import { useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import { twMerge } from "tailwind-merge";
-export default function Card({ children, className = "" , NavigationLink}) {
-  const navigate = useNavigate();
-  function handleClick() {
-    navigate(NavigationLink);
-  } 
+export default function Card({ children, className = ""}) {
   return (
     <div
       className={twMerge(clsx(
@@ -15,16 +10,12 @@ export default function Card({ children, className = "" , NavigationLink}) {
         rounded-xl
         overflow-hidden
         hover:shadow-lg
-        hover:scale-102
         hover:border-[#FF6543]
-        active:scale-100
+        active:scale-95
         transition
-        cursor-pointer
       `,
         className
       ))}
-      role="button"
-      onClick={handleClick}     
     >
       {children}
     </div>

@@ -24,7 +24,7 @@ export default function UserProfilePage() {
         <StatsGrid stats={data?.StatsData} />
         <OrderHistoryList orders={data?.Orders} />
         <AddressSection addresses={data?.Addresses} />
-        <WishListSection WishList={data?.wishlist} />
+        {/* <WishListSection WishList={data?.wishlist} /> */}
       </BaseSection>
     </>
   );

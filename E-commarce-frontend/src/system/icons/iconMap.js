@@ -19,6 +19,7 @@ import {
   Lock,
   Sun,
   Moon,
+  ShoppingCart,
 } from "lucide-react";
 
 export const iconMap = {
@@ -27,6 +28,7 @@ export const iconMap = {
   location: MapPin,
   user: User,
   orders: ShoppingBag,
+  cart: ShoppingCart,
   wishlist: Heart,
   reviews: Star,
   payment: CreditCard,
