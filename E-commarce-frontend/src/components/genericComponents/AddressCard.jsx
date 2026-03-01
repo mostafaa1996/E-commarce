@@ -2,12 +2,16 @@ import Card from "./Card";
 import CardBadge from "./CardBadge";
 import CardTag from "./CardTag";
 import Icon from "@/system/icons/Icon";
+import {shortenText} from "@/utils/utils";
 export default function AddressCard({
   type,
   name,
   street,
   city,
   country,
+  state,
+  email,
+  phone,
   isDefault = false,
   onEdit,
   onSetDefault,
@@ -25,10 +29,12 @@ export default function AddressCard({
         <CardTag color="bg-white text-zinc-500">{type}</CardTag>
 
         <div className="flex flex-col">
-          <h4 className="font-light text-[21px]">{name}</h4>
-          <p className="text-sm text-zinc-500">{street}</p>
-          <p className="text-sm text-zinc-500">{city}</p>
-          <p className="text-sm text-zinc-500">{country}</p>
+          <h4 className="font-light text-[21px]">{shortenText(name,20)}</h4>
+          <p className="text-sm text-zinc-500">{shortenText(street,20)}</p>
+          <p className="text-sm text-zinc-500">{shortenText(`${city},${state}`, 20)}</p>
+          <p className="text-sm text-zinc-500">{shortenText(country,10)}</p>
+          <p className="text-sm text-zinc-500 line-clamp-1">{shortenText(email,10)}</p>
+          <p className="text-sm text-zinc-500 line-clamp-1">{shortenText(phone,10)}</p>
         </div>
 
         <div className="border-t border-zinc-200 mt-6 pt-4 text-sm flex items-center justify-between">

@@ -2,11 +2,110 @@ import BaseSection from "@/Sections/UserProfile/BaseSectionForUserProfile";
 import AddressCard from "@/components/genericComponents/AddressCard";
 import UserNestedRoutesHeader from "@/Sections/UserProfile/UserNestedRoutesHeader";
 import EditAddressForm from "@/Sections/UserProfile/EditAddressForm";
-import { useState } from "react";
-export default function UserAddressesPage({}) {
-  const [isEditing, setIsEditing] = useState(false);
-  function handleEdit() {
-    setIsEditing(true);
+import { Fragment, useState , useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getUserAddresses } from "@/APIs/UserProfileService";
+import { useFetcher } from "react-router-dom";
+export default function UserAddressesPage() {
+  let content = null;
+  const [currentState, setCurrentState] = useState("");
+  const fetcher = useFetcher();
+  const {
+    data: addressesObj,
+    isLoading: isLoadingAddresses,
+    error,
+  } = useQuery({
+    queryKey: ["profile-addresses"],
+    queryFn: getUserAddresses,
+  });
+
+  function handleEdit(addressId) {
+    setCurrentState(`edit-${addressId}`);
+  }
+
+  function handleAdd() {
+    setCurrentState("add");
+  }
+
+  function handleDelete(addressId) {
+    setCurrentState(`delete-${addressId}`);
+    fetcher.submit(
+      { intent: "delete", id: addressId },
+      { method: "post", action: `/profile/addresses` },
+    );
+  }
+
+  useEffect(() => {
+    if (fetcher.data?.ok) setCurrentState("");
+  }, [fetcher.data]);
+
+  // useEffect(() => {
+  //  console.log(currentState);
+  // }, [currentState]);
+
+  if (isLoadingAddresses) {
+    content = <p className="text-center text-2xl font-bold">Loading...</p>;
+  }
+  if (error) {
+    content = (
+      <p className="text-center text-2xl font-bold">Error loading profile</p>
+    );
+  }
+  if (!addressesObj || addressesObj?.addresses?.length === 0) {
+    content = (
+      <h1 className="text-center text-2xl font-bold">No addresses found</h1>
+    );
+  }
+  if (addressesObj) {
+    console.log(addressesObj?.addresses, addressesObj?.addresses?.length);
+    content = (
+      <>
+        {currentState.includes("edit") && (
+          <EditAddressForm
+            title="Edit Address"
+            buttonText="Save"
+            buttonIconName="save"
+            onCancel={() => setCurrentState("")}
+            InitialFormData={addressesObj?.addresses?.find(
+              (address) => address._id === currentState.split("-")[1],
+            )}
+          />
+        )}
+        {currentState === "add" && (
+          <EditAddressForm
+            title="Add Address"
+            buttonText="Add"
+            buttonIconName="plus"
+            onCancel={() => setCurrentState("")}
+          />
+        )}
+        {addressesObj?.addresses?.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
+            {addressesObj?.addresses.map((address) => (
+              <Fragment key={address._id}>
+                <AddressCard
+                  type={address.label}
+                  isDefault={address.isDefault}
+                  name={address.name}
+                  street={address.street}
+                  city={address.city}
+                  state={address.state}
+                  zip={address.zipCode}
+                  phone={address.phone}
+                  email={address.email}
+                  country={address.country}
+                  onEdit={() => handleEdit(address._id)}
+                  onSetDefault={() => {}}
+                  onRemove={() => {
+                    handleDelete(address._id);
+                  }}
+                />
+              </Fragment>
+            ))}
+          </div>
+        )}
+      </>
+    );
   }
   return (
     <BaseSection>
@@ -14,19 +113,11 @@ export default function UserAddressesPage({}) {
         iconName="location"
         title="My Addresses"
         info="1 addresses"
+        buttonIconName="plus"
+        buttonText="Add Address"
+        onClick={handleAdd}
       />
-      {isEditing && <EditAddressForm title="Edit Address" />}
-      <AddressCard
-        type="Home"
-        isDefault={true}
-        name="John Doe"
-        street="123 Main Street, Apt 4B"
-        city="New York, NY 10001"
-        country="United States"
-        onEdit={handleEdit}
-        onSetDefault={() => {}}
-        onRemove={() => {}}
-      />
+      {content}
     </BaseSection>
   );
 }

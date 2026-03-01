@@ -1,3 +1,4 @@
+import { redirect } from "react-router-dom";
 import { authFetch } from "./AuthFetch";
 
 const DevelopmentURL = "http://localhost:3000";
@@ -102,20 +103,14 @@ export async function getUserPaginatedOrders(page, limit) {
 }
 
 export async function updateUserWishlist(arrOfIds) {
-  console.log(
-    `${DevelopmentURL}/user/profile/UpdateWishlist`,
-     arrOfIds,
-  );
-  const res = await authFetch(
-    `${DevelopmentURL}/user/profile/UpdateWishlist`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ arrOfIds }),
+  console.log(`${DevelopmentURL}/user/profile/UpdateWishlist`, arrOfIds);
+  const res = await authFetch(`${DevelopmentURL}/user/profile/UpdateWishlist`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
     },
-  );
+    body: JSON.stringify({ arrOfIds }),
+  });
   if (!res.ok) {
     throw new Error("Failed to update user wishlist");
   }
@@ -125,22 +120,99 @@ export async function updateUserWishlist(arrOfIds) {
 }
 
 export async function getUserWishlist() {
-  console.log(
-    `${DevelopmentURL}/user/profile/GetWishlist`,
-  );
-  const res = await authFetch(
-    `${DevelopmentURL}/user/profile/GetWishlist`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+  console.log(`${DevelopmentURL}/user/profile/GetWishlist`);
+  const res = await authFetch(`${DevelopmentURL}/user/profile/GetWishlist`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
     },
-  );
+  });
   if (!res.ok) {
     throw new Error("Failed to fetch user wishlist");
   }
   const data = await res.json();
   // console.log(data);
   return data;
+}
+
+export async function getUserAddresses() {
+  const res = await authFetch(`${DevelopmentURL}/user/profile/addresses`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!res.ok) {
+    throw new Error("Failed to fetch user addresses");
+  }
+  const data = await res.json();
+  // console.log(data);
+  return data;
+}
+
+export async function updateUserAddresses(request) {
+  const formData = await request.formData();
+  const address = {
+    label: formData?.get("label"),
+    name: formData?.get("name"),
+    phone: formData?.get("phone"),
+    email: formData?.get("email"),
+    street: formData?.get("street"),
+    city: formData?.get("city")?.split(",")[0],
+    state: formData?.get("city")?.split(",")[1],
+    country: formData?.get("country"),
+    zipCode: formData?.get("zip"),
+  };
+  const intent = formData.get("intent");
+  const id = formData.get("id");
+  console.log(address, intent);
+  let res = null;
+  switch (intent) {
+    case "Add":
+      res = await authFetch(`${DevelopmentURL}/user/profile/updateAddress`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(address),
+      });
+      if (!res.ok) {
+        throw new Error("Failed to add user address");
+      }
+      break;
+    case "Save":
+      res = await authFetch(
+        `${DevelopmentURL}/user/profile/updateAddress/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(address),
+        },
+      );
+      if (!res.ok) {
+        throw new Error("Failed to update user address");
+      }
+      break;
+    case "delete":
+      res = await authFetch(
+        `${DevelopmentURL}/user/profile/deleteAddress/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      if (!res.ok) {
+        throw new Error("Failed to delete user address");
+      }
+      break;
+    default:
+      break;
+  }
+  const data = await res.json();
+  console.log(data);
+  return redirect("/profile/addresses");
 }

@@ -114,6 +114,12 @@ const UserSchema = new mongoose.Schema({
     },
   ],
 
+  Addresses : {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Address",
+    default: [],
+  },
+
   reviews: [
     {
       rate: { type: Number, default: 0 },
@@ -125,6 +131,8 @@ const UserSchema = new mongoose.Schema({
       },
     },
   ],
+
+
 
   resetPasswordToken: String,
   resetPasswordExpires: Date,

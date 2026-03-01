@@ -16,7 +16,7 @@ export default function UserPaymentPage({}) {
         title="My Payments"
         info="1 payment"
         buttonIconName="plus"
-        button="Add Payment"
+        buttonText="Add Payment"
         onClick={handleAdd}
       />
       {isAdding && <EditPaymentForm />}

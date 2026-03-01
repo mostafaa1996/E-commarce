@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 export default function OrderHistoryList({ orders }) {
   const navigate = useNavigate();
   return (
-    <DashBoardTable className={`max-w-5xl`}>
+    <DashBoardTable className={`w-full`}>
       <DashBoardTableHeader
         HeaderText="Order History"
         HeaderIcon={

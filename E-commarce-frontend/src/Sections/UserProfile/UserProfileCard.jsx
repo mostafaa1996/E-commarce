@@ -9,7 +9,7 @@ export default function UserProfileCard({ user }) {
     navigate("/profile/edit-profile");
   }
   return (
-    <ProfileCard className={`max-w-5xl`}>
+    <ProfileCard className={`w-full`}>
       {/* Left side */}
       <div className="flex items-start gap-6">
         <Avatar src={user.avatar || "/Man_avatar.png"} alt={user.name} />

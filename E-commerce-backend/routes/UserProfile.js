@@ -3,7 +3,10 @@ const router = express.Router();
 const UserProfileController = require("../controllers/UserProfileController");
 const isAuth = require("../MiddleWare/isauth");
 const upload = require("../middleware/upload");
-const {ValidatePersonalInfo} = require("../Validation/UpdatePersonalInfoValidator");
+const {
+  ValidatePersonalInfo,
+} = require("../Validation/UpdatePersonalInfoValidator");
+const { ValidateUserAddress } = require("../Validation/UpdateUserAddress");
 const isValid = require("../MiddleWare/isValid");
 
 router.get("/", isAuth, UserProfileController.getUserProfile);
@@ -24,6 +27,30 @@ router.post(
 
 router.get("/orders", isAuth, UserProfileController.getUserPaginatedOrders);
 router.get("/GetWishlist", isAuth, UserProfileController.getUserWishlist);
-router.post("/UpdateWishlist", isAuth, UserProfileController.updateUserWishlist);
+router.post(
+  "/UpdateWishlist",
+  isAuth,
+  UserProfileController.updateUserWishlist,
+);
+router.post(
+  "/updateAddress",
+  isAuth,
+  ValidateUserAddress,
+  isValid,
+  UserProfileController.updateUserAddress,
+);
+router.put(
+  "/updateAddress/:id",
+  isAuth,
+  ValidateUserAddress,
+  isValid,
+  UserProfileController.updateUserAddress,
+);
+router.delete(
+  "/deleteAddress/:id",
+  isAuth,
+  UserProfileController.deleteUserAddress,
+);
+router.get("/addresses", isAuth, UserProfileController.getUserAddresses);
 
 module.exports = router;

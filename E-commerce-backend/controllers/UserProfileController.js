@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Product = require("../models/Product");
+const Address = require("../models/Address");
 const cloudinary = require("../config/cloudinary");
 const { validationResult } = require("express-validator");
 
@@ -224,3 +225,89 @@ exports.updateUserWishlist = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.updateUserAddress = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    if (!userId) return res.sendStatus(401);
+    const user = await User.findById(userId);
+    if (!user) return res.sendStatus(401);
+    const { label, name, phone, email, street, city, state, country, zipCode } =
+      req.body;
+    const Id = req.params.id;
+    if (Id) {
+      // Update address
+      const ownsAddress = (Id) =>
+        user.Addresses.some((a) => a.toString() === Id);
+      if (!ownsAddress(Id))
+        return res.sendStatus(401).json({ message: "Unauthorized" });
+      const updatedAddress = await Address.findByIdAndUpdate(Id, {
+        label,
+        name,
+        phone,
+        email,
+        street,
+        city,
+        state,
+        country,
+        zipCode,
+      });
+      if (!updatedAddress)
+        return res.status(404).json({ message: "Address not found" });
+      res.status(200).json({ message: "Address updated successfully" });
+    } else {
+      // Add new address
+      const newAddress = await Address.create({
+        label,
+        name,
+        phone,
+        email,
+        street,
+        city,
+        state,
+        country,
+        zipCode,
+      });
+      user.Addresses.push(newAddress._id);
+      await user.save();
+      res.status(200).json({ message: "Address added successfully" });
+    }
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};
+
+exports.deleteUserAddress = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    if (!userId) return res.status(401);
+    const user = await User.findById(userId);
+    if (!user) return res.status(401);
+    const Id = req.params.id;
+    const ownsAddress = (Id) => user.Addresses.some((a) => a.toString() === Id);
+    if (!ownsAddress(Id))
+      return res.status(401).json({ message: "Unauthorized" });
+    await Address.findByIdAndDelete(Id);
+    user.Addresses.pull(Id);
+    await user.save();
+    res.status(200).json({ message: "Address deleted successfully" });
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};
+
+exports.getUserAddresses = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    if (!userId) return res.sendStatus(401).json({ message: "Unauthorized" });
+    const user = await User.findById(userId).populate("Addresses");
+    if (!user) return res.sendStatus(401).json({ message: "User not found" });
+    const addresses = user.Addresses;
+    res.status(200).json({ addresses });
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+}

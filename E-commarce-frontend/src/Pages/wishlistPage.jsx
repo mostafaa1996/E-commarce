@@ -51,7 +51,7 @@ export default function WishListPage() {
             iconName="wishlist"
             title="My WishList"
             info= {`${wishList.wishlist?.length || 0} products`}
-            button="Clear WishList"
+            buttonText="Clear WishList"
             onClick={() => handleClearWishList(wishListIds)}
           />
 

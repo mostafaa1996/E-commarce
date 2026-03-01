@@ -4,7 +4,7 @@ import DashBoardTable from "@/components/genericComponents/DashBoardTable";
 import Icon from "@/system/icons/Icon";
 export default function AddressSection({ addresses }) {
   return (
-    <DashBoardTable className={`max-w-5xl`}>
+    <DashBoardTable className={`w-full`}>
       <DashBoardTableHeader
         ButtonAction={() => console.log("View all")}
         HeaderText="Addresses"

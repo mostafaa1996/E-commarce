@@ -7,7 +7,7 @@ export default function UserNestedRoutesHeader({
   iconName,
   title,
   info,
-  button,
+  buttonText,
   buttonIconName,
   onClick,
 }) {
@@ -23,9 +23,9 @@ export default function UserNestedRoutesHeader({
           <h2 className="text-[21px] font-light text-[#272727]">{title}</h2>
           <span className="text-sm text-zinc-500">({info})</span>
         </div>
-        {button && (
+        {buttonText && (
           <Button
-            className="tracking-wide"
+            className="tracking-wide text-xl"
             onClick={onClick}
           >
             <Icon
@@ -34,7 +34,7 @@ export default function UserNestedRoutesHeader({
               strokeWidth={1.5}
               variant="sourrounded"
             />
-            {button}
+            {buttonText}
           </Button>
         )}
       </div>

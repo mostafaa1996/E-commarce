@@ -1,11 +1,18 @@
 import { createBrowserRouter } from "react-router-dom";
 import { queryClient } from "./queryClient";
 import { getShopProducts, getProductById } from "./APIs/shopProductsService";
-import { loginAction , SignupAction , logoutAction } from "./APIs/AuthService";
+import { loginAction, SignupAction, logoutAction } from "./APIs/AuthService";
 import { CartService } from "./APIs/CartService";
-import { checkoutLoader , checkoutAction } from "./APIs/checkoutService";
-import { getUserProfileData , getPersonalInfo , UpdatePersonalInfo , getUserPaginatedOrders, getUserWishlist} from "./APIs/UserProfileService";
-
+import { checkoutLoader, checkoutAction } from "./APIs/checkoutService";
+import {
+  getUserProfileData,
+  getPersonalInfo,
+  UpdatePersonalInfo,
+  getUserPaginatedOrders,
+  getUserWishlist,
+  getUserAddresses,
+  updateUserAddresses,
+} from "./APIs/UserProfileService";
 
 import ShopPage from "./pages/ShopPage";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
@@ -22,7 +29,6 @@ import UserPaymentPage from "./Pages/UserPaymentPage";
 import UserSettingsPage from "./Pages/UserSettingsPage";
 
 import { defaultShopQuery } from "./zustand_ShopPage/shopDefaultQuery";
-
 
 export const router = createBrowserRouter([
   {
@@ -49,13 +55,13 @@ export const router = createBrowserRouter([
   {
     path: "/cart",
     element: <CartPage />,
-    loader:  CartService
+    loader: CartService,
   },
   {
     path: "/checkout",
     element: <CheckoutPage />,
     loader: checkoutLoader,
-    action: checkoutAction
+    action: checkoutAction,
   },
   {
     path: "/login",
@@ -65,11 +71,11 @@ export const router = createBrowserRouter([
   {
     path: "/signup",
     element: <SignupPage />,
-    action: async ({ request }) => await SignupAction({ request }),  
+    action: async ({ request }) => await SignupAction({ request }),
   },
   {
-    path : "/logout" , 
-    action : async () => await logoutAction()
+    path: "/logout",
+    action: async () => await logoutAction(),
   },
   {
     path: "/profile",
@@ -87,8 +93,8 @@ export const router = createBrowserRouter([
     element: <UserOrdersPage />,
     loader: async () => {
       return queryClient.ensureQueryData({
-        queryKey: ["profile-orders" , 1],
-        queryFn: () => getUserPaginatedOrders(1 , 5),
+        queryKey: ["profile-orders", 1],
+        queryFn: () => getUserPaginatedOrders(1, 5),
         staleTime: 1000 * 60 * 5,
       });
     },
@@ -109,11 +115,12 @@ export const router = createBrowserRouter([
     element: <UserAddressesPage />,
     loader: async () => {
       return queryClient.ensureQueryData({
-        queryKey: ["profile"],
-        queryFn: getUserProfileData,
+        queryKey: ["profile-addresses"],
+        queryFn: getUserAddresses,
         staleTime: 1000 * 60 * 5,
       });
     },
+    action: async ({ request }) => await updateUserAddresses(request),
   },
   {
     path: "/profile/payments",
@@ -147,6 +154,6 @@ export const router = createBrowserRouter([
         staleTime: 1000 * 60 * 5,
       });
     },
-    action: async ({request}) => await UpdatePersonalInfo(request),
-  }
+    action: async ({ request }) => await UpdatePersonalInfo(request),
+  },
 ]);
