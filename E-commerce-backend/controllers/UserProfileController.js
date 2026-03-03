@@ -240,7 +240,7 @@ exports.updateUserAddress = async (req, res, next) => {
       const ownsAddress = (Id) =>
         user.Addresses.some((a) => a.toString() === Id);
       if (!ownsAddress(Id))
-        return res.sendStatus(401).json({ message: "Unauthorized" });
+        return res.sendStatus(401).json({ message: "Unauthorized", ok: false });
       const updatedAddress = await Address.findByIdAndUpdate(Id, {
         label,
         name,
@@ -251,10 +251,15 @@ exports.updateUserAddress = async (req, res, next) => {
         state,
         country,
         zipCode,
+        user: userId,
       });
       if (!updatedAddress)
-        return res.status(404).json({ message: "Address not found" });
-      res.status(200).json({ message: "Address updated successfully" });
+        return res
+          .status(404)
+          .json({ message: "Address not found", ok: false });
+      res
+        .status(200)
+        .json({ message: "Address updated successfully", ok: true });
     } else {
       // Add new address
       const newAddress = await Address.create({
@@ -267,10 +272,11 @@ exports.updateUserAddress = async (req, res, next) => {
         state,
         country,
         zipCode,
+        user: userId,
       });
       user.Addresses.push(newAddress._id);
       await user.save();
-      res.status(200).json({ message: "Address added successfully" });
+      res.status(200).json({ message: "Address added successfully", ok: true });
     }
   } catch (err) {
     console.log(err);
@@ -287,11 +293,11 @@ exports.deleteUserAddress = async (req, res, next) => {
     const Id = req.params.id;
     const ownsAddress = (Id) => user.Addresses.some((a) => a.toString() === Id);
     if (!ownsAddress(Id))
-      return res.status(401).json({ message: "Unauthorized" });
+      return res.status(401).json({ message: "Unauthorized", ok: false });
     await Address.findByIdAndDelete(Id);
     user.Addresses.pull(Id);
     await user.save();
-    res.status(200).json({ message: "Address deleted successfully" });
+    res.status(200).json({ message: "Address deleted successfully", ok: true });
   } catch (err) {
     console.log(err);
     next(err);
@@ -305,9 +311,58 @@ exports.getUserAddresses = async (req, res, next) => {
     const user = await User.findById(userId).populate("Addresses");
     if (!user) return res.sendStatus(401).json({ message: "User not found" });
     const addresses = user.Addresses;
+    // console.log(addresses);
     res.status(200).json({ addresses });
   } catch (err) {
     console.log(err);
     next(err);
   }
-}
+};
+
+exports.setAddressToDefault = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+    const user = await User.findById(userId).populate("Addresses");
+    if (!user) return res.status(401).json({ message: "User not found" });
+    const Id = req.params.id;
+    const ownsAddress = (Id) => user.Addresses.some((a) => a._id.toString() === Id);
+    console.log(ownsAddress(Id) , "trying to set default");
+    if (!ownsAddress(Id))
+      return res.status(401).json({ message: "Unauthorized" });
+    await Address.updateMany(
+      { _id: { $in: user.Addresses } },
+      { $set: { isDefault: false } },
+    );
+    await Address.findByIdAndUpdate(Id, { $set: { isDefault: true } });
+    const UpdatedAddress = await Address.findById(Id);
+    if (!UpdatedAddress)
+      return res.status(404).json({ message: "Address not found" });
+    const billingDetails = {
+      firstName: UpdatedAddress?.name?.split(" ")[0],
+      lastName: UpdatedAddress?.name?.split(" ")[1],
+      email: UpdatedAddress?.email || user.email || "",
+      phone: UpdatedAddress?.phone || user.phone || "",
+      companyName: UpdatedAddress?.label || "",
+      country: UpdatedAddress?.country || "",
+      state: UpdatedAddress?.state || "",
+      city: UpdatedAddress?.city || "",
+      street: UpdatedAddress?.street?.split(",")[2] || "",
+      building: UpdatedAddress?.street?.split(",")[1] || "",
+      Apartment: UpdatedAddress?.street?.split(",")[0] || "",
+      postalCode: UpdatedAddress?.zipCode || "",
+      isDefault: UpdatedAddress?.isDefault || false,
+      notes: "",
+      AddressId: Id,
+    };
+    await User.findByIdAndUpdate(userId, {
+      $set: { billingDetails: billingDetails },
+    });
+    res
+      .status(200)
+      .json({ message: "Address set as default successfully", ok: true });
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};

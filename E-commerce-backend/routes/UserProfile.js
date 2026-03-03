@@ -52,5 +52,6 @@ router.delete(
   UserProfileController.deleteUserAddress,
 );
 router.get("/addresses", isAuth, UserProfileController.getUserAddresses);
+router.put("/SetAddressToDefault/:id", isAuth, UserProfileController.setAddressToDefault);
 
 module.exports = router;

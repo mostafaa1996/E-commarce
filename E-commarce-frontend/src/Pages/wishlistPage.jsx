@@ -1,14 +1,14 @@
 import BaseSection from "@/Sections/UserProfile/BaseSectionForUserProfile";
 import UserNestedRoutesHeader from "@/Sections/UserProfile/UserNestedRoutesHeader";
 import ProductCard from "@/components/genericComponents/ProductCard_V";
-import { useQuery , useMutation , useQueryClient } from "@tanstack/react-query";
+import { useQuery , useMutation } from "@tanstack/react-query";
 import { getUserWishlist } from "@/APIs/UserProfileService";
 import {useCartStore} from "@/zustand_Cart/CartStore";
 import { Fragment } from "react";
 import { updateUserWishlist } from "@/APIs/UserProfileService";
+import { queryClient } from "@/queryClient";
 export default function WishListPage() {
   let content = null;
-  const queryClient = useQueryClient();
   const CartStorage = useCartStore();
   const {
     data: wishList,

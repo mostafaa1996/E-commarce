@@ -26,7 +26,7 @@ export default function AddressCard({
       >
         {isDefault && <CardBadge>Default</CardBadge>}
 
-        <CardTag color="bg-white text-zinc-500">{type}</CardTag>
+        <CardTag color="bg-zinc-200 text-zinc-600">{type}</CardTag>
 
         <div className="flex flex-col">
           <h4 className="font-light text-[21px]">{shortenText(name,20)}</h4>
@@ -47,7 +47,10 @@ export default function AddressCard({
               Edit
             </button>
             <button
-              className="text-zinc-600 hover:text-[#FF6543] flex items-center gap-2"
+              className={`text-zinc-600 hover:text-[#FF6543] flex items-center gap-2 ${
+                isDefault && "hidden"
+              }`}
+              type="button"
               onClick={onSetDefault}
             >
               <Icon

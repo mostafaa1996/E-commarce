@@ -9,7 +9,7 @@ export default function EditAddressForm({
   onCancel,
 }) {
   return (
-    <div className="border border-zinc-200 rounded-xl bg-white p-6">
+    <div className="border border-zinc-200 rounded-xl bg-white p-6 transform ease-in-out duration-300">
       <h3 className="text-[21px] font-light text-[#272727] mb-6">{title}</h3>
       <Form className="flex flex-col gap-6" method="post">
         {/* Row 1 */}
@@ -33,7 +33,7 @@ export default function EditAddressForm({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <InputField
             label="Street Address"
-            placeholder="123 Main Street, Apt 4B"
+            placeholder="Apart.num,Building, Main Street"
             name="street"
             defaultValue={InitialFormData?.street}
           />

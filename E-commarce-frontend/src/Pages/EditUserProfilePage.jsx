@@ -1,5 +1,5 @@
 import ProfileCard from "@/components/ProfileCard/profileCard";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { getPersonalInfo, UploadProfileImage } from "@/APIs/UserProfileService";
 import BaseSection from "@/Sections/UserProfile/BaseSectionForUserProfile";
 import Avatar from "@/components/ProfileCard/Avatar";
@@ -7,6 +7,7 @@ import Button from "@/components/genericComponents/Button";
 import ProfileForm from "@/Sections/UserProfile/EditProfileForm";
 import Man_avatar from "/Man_avatar.png";
 import Icon from "@/system/icons/Icon";
+import { queryClient } from "../queryClient";
 
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
@@ -18,8 +19,7 @@ export default function EditUserProfilePage() {
     queryFn: getPersonalInfo,
   });
 
-  const queryClient = useQueryClient();
-
+  
   const { mutate } = useMutation({
     mutationFn: UploadProfileImage,
     onSuccess: () => {

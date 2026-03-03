@@ -7,9 +7,9 @@ import QuantityControl from "@/components/genericComponents/QuantityControl";
 import { useState } from "react";
 import { useCartStore } from "@/zustand_Cart/CartStore";
 import { useNavigate } from "react-router-dom";
-import { useMutation , useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { updateUserWishlist } from "@/APIs/UserProfileService";
-
+import { queryClient } from "../queryClient";
 export default function ProductDetails({ product, initialValueFromUserWishlist }) {
   console.log(initialValueFromUserWishlist);
   
@@ -18,7 +18,7 @@ export default function ProductDetails({ product, initialValueFromUserWishlist }
   const CartStorage = useCartStore();
   const navigate = useNavigate();
 
-  const queryClient = useQueryClient(); 
+  
 
   const updateWishlist = useMutation({
     mutationKey: ["profile-wishlist"],

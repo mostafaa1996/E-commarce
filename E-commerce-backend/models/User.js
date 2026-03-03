@@ -43,7 +43,7 @@ const UserSchema = new mongoose.Schema({
       default: Date.now,
     },
   },
-  billingDetails: [
+  billingDetails: 
     {
       firstName: String,
       lastName: String,
@@ -58,9 +58,12 @@ const UserSchema = new mongoose.Schema({
       postalCode: String,
       phone: String,
       notes: String,
+      AddressId : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Address",
+      },
       isDefault: Boolean,
     },
-  ],
   cart: {
     items: [
       {
@@ -114,11 +117,11 @@ const UserSchema = new mongoose.Schema({
     },
   ],
 
-  Addresses : {
-    type: [mongoose.Schema.Types.ObjectId],
+  Addresses : [{
+    type: mongoose.Schema.Types.ObjectId,
     ref: "Address",
     default: [],
-  },
+  }],
 
   reviews: [
     {

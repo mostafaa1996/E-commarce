@@ -2,14 +2,18 @@ import BaseSection from "@/Sections/UserProfile/BaseSectionForUserProfile";
 import AddressCard from "@/components/genericComponents/AddressCard";
 import UserNestedRoutesHeader from "@/Sections/UserProfile/UserNestedRoutesHeader";
 import EditAddressForm from "@/Sections/UserProfile/EditAddressForm";
-import { Fragment, useState , useEffect } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getUserAddresses } from "@/APIs/UserProfileService";
-import { useFetcher } from "react-router-dom";
+import { useFetcher, useActionData, useLoaderData } from "react-router-dom";
 export default function UserAddressesPage() {
   let content = null;
-  const [currentState, setCurrentState] = useState("");
+  const { addresses } = useLoaderData();
   const fetcher = useFetcher();
+  const actionData = useActionData();
+  const DefaultAddressId = addresses?.find((address) => address.isDefault)?._id;
+  const [currentState, setCurrentState] = useState("");
+  const [DefaultAddress, setDefaultAddress] = useState(DefaultAddressId);
   const {
     data: addressesObj,
     isLoading: isLoadingAddresses,
@@ -35,13 +39,17 @@ export default function UserAddressesPage() {
     );
   }
 
-  useEffect(() => {
-    if (fetcher.data?.ok) setCurrentState("");
-  }, [fetcher.data]);
+  function setAsDefault(addressId) {
+    setDefaultAddress(addressId);
+    fetcher.submit(
+      { intent: "setAsDefault", id: addressId },
+      { method: "post", action: `/profile/addresses` },
+    );
+  }
 
-  // useEffect(() => {
-  //  console.log(currentState);
-  // }, [currentState]);
+  useEffect(() => {
+    if (actionData?.ok) setCurrentState("");
+  }, [actionData]);
 
   if (isLoadingAddresses) {
     content = <p className="text-center text-2xl font-bold">Loading...</p>;
@@ -57,7 +65,7 @@ export default function UserAddressesPage() {
     );
   }
   if (addressesObj) {
-    console.log(addressesObj?.addresses, addressesObj?.addresses?.length);
+    // console.log(addressesObj?.addresses, addressesObj?.addresses?.length);
     content = (
       <>
         {currentState.includes("edit") && (
@@ -85,7 +93,7 @@ export default function UserAddressesPage() {
               <Fragment key={address._id}>
                 <AddressCard
                   type={address.label}
-                  isDefault={address.isDefault}
+                  isDefault={address._id === DefaultAddress}
                   name={address.name}
                   street={address.street}
                   city={address.city}
@@ -95,7 +103,9 @@ export default function UserAddressesPage() {
                   email={address.email}
                   country={address.country}
                   onEdit={() => handleEdit(address._id)}
-                  onSetDefault={() => {}}
+                  onSetDefault={() => {
+                    setAsDefault(address._id);
+                  }}
                   onRemove={() => {
                     handleDelete(address._id);
                   }}
@@ -112,7 +122,7 @@ export default function UserAddressesPage() {
       <UserNestedRoutesHeader
         iconName="location"
         title="My Addresses"
-        info="1 addresses"
+        info={`${addressesObj?.addresses?.length} addresses`}
         buttonIconName="plus"
         buttonText="Add Address"
         onClick={handleAdd}

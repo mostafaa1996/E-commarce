@@ -117,7 +117,6 @@ export const router = createBrowserRouter([
       return queryClient.ensureQueryData({
         queryKey: ["profile-addresses"],
         queryFn: getUserAddresses,
-        staleTime: 1000 * 60 * 5,
       });
     },
     action: async ({ request }) => await updateUserAddresses(request),

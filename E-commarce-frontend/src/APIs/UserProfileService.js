@@ -1,5 +1,5 @@
-import { redirect } from "react-router-dom";
 import { authFetch } from "./AuthFetch";
+import { queryClient } from "../queryClient";
 
 const DevelopmentURL = "http://localhost:3000";
 // get user contact details
@@ -165,7 +165,7 @@ export async function updateUserAddresses(request) {
   };
   const intent = formData.get("intent");
   const id = formData.get("id");
-  console.log(address, intent);
+  // console.log(address, intent);
   let res = null;
   switch (intent) {
     case "Add":
@@ -209,10 +209,29 @@ export async function updateUserAddresses(request) {
         throw new Error("Failed to delete user address");
       }
       break;
+    case "setAsDefault":
+      res = await authFetch(
+        `${DevelopmentURL}/user/profile/SetAddressToDefault/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      if (!res.ok) {
+        throw new Error("Failed to set user address as default");
+      }
+      break;
     default:
       break;
   }
   const data = await res.json();
-  console.log(data);
-  return redirect("/profile/addresses");
+  // console.log(data);
+  await queryClient.invalidateQueries({ queryKey: ["profile-addresses"] });
+  await queryClient.refetchQueries({
+    queryKey: ["profile-addresses"],
+    type: "active",
+  });
+  return data;
 }
