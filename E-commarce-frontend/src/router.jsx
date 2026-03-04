@@ -12,6 +12,7 @@ import {
   getUserWishlist,
   getUserAddresses,
   updateUserAddresses,
+  getUserPaymentMethods,
 } from "./APIs/UserProfileService";
 
 import ShopPage from "./pages/ShopPage";
@@ -126,8 +127,8 @@ export const router = createBrowserRouter([
     element: <UserPaymentPage />,
     loader: async () => {
       return queryClient.ensureQueryData({
-        queryKey: ["profile"],
-        queryFn: getUserProfileData,
+        queryKey: ["profile-payments"],
+        queryFn: getUserPaymentMethods,
         staleTime: 1000 * 60 * 5,
       });
     },

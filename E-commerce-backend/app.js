@@ -17,6 +17,7 @@ const cartRoutes = require("./routes/Cart");
 const checkoutRoutes = require("./routes/checkout");
 const orderRoutes = require("./routes/order");
 const userProfileRoutes = require("./routes/UserProfile");
+const userProfilePaymentsRoutes = require("./routes/UserProfilePayments");
 
 const app = express();
 app.use(express.json()); // for parsing application/json
@@ -31,12 +32,13 @@ app.use(
   })
 );
 
+
 app.use("/shop", shopRoutes);
 app.use("/auth", authRoutes);
 app.use("/cart", cartRoutes);
 app.use("/checkout", checkoutRoutes);
 app.use("/order", orderRoutes);
-app.use("/user/profile", userProfileRoutes);
+app.use("/user/profile", userProfileRoutes , userProfilePaymentsRoutes);
 
 
 app.use((error, req, res, next) => {

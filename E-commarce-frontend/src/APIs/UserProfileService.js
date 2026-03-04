@@ -235,3 +235,26 @@ export async function updateUserAddresses(request) {
   });
   return data;
 }
+
+export async function getUserPaymentMethods() {
+  
+  return [];
+}
+
+export async function SetUpPaymentMethods() {
+  const res = await authFetch(
+    `${DevelopmentURL}/user/profile/setUpPaymentMethods`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  )
+  if (!res.ok) {
+    throw new Error("Failed to set up payment methods");
+  }
+  const data = await res.json();
+  // console.log(data);
+  return data;
+}

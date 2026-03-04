@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { default: Stripe } = require("stripe");
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -135,7 +136,7 @@ const UserSchema = new mongoose.Schema({
     },
   ],
 
-
+  stripeCustomerId: { type: String , default: null },
 
   resetPasswordToken: String,
   resetPasswordExpires: Date,
