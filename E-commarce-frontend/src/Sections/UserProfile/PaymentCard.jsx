@@ -8,17 +8,19 @@ export default function PaymentCard({
   name,
   cardNumber,
   expires,
+  setDefault,
+  deleteCard,
 }) {
   return (
     <>
-      <Card className="cursor-pointer p-4 relative">
+      <Card className="p-4 relative active:scale-100">
         {isDefault && <CardBadge>Default</CardBadge>}
 
         <CardTag>{type}</CardTag>
 
         <div className="flex flex-col">
           <h4 className="font-light text-[21px] tracking-widest">
-            •••• •••• •••• 4242
+            {`•••• •••• •••• ${cardNumber}`}
           </h4>
           <div className="flex gap-10 mt-4 text-sm text-zinc-500">
             <div>
@@ -28,18 +30,24 @@ export default function PaymentCard({
 
             <div>
               <span className="block text-xs">EXPIRES</span>
-              08/27
+              {expires}
             </div>
           </div>
         </div>
 
-        <div className="border-t border-zinc-200 mt-6 pt-4 text-sm flex items-center justify-between">
-          <button className="text-zinc-600 hover:text-[#FF6543] flex items-center gap-2">
+        <div className={`border-t border-zinc-200 mt-6 pt-4 text-sm flex items-center  ${isDefault ? "justify-end" : "justify-between"}`}>
+          <button
+            className={`text-zinc-600 hover:text-[#FF6543] flex items-center gap-2 active:scale-95 ${isDefault ? "hidden" : ""}`}
+            onClick={setDefault}
+          >
             <Icon name="edit" size={18} strokeWidth={1.5} variant="primary" />
             Set Default
           </button>
 
-          <button className="text-red-500 hover:text-red-600 flex items-center gap-2">
+          <button
+            className="text-red-500 hover:text-red-600 flex items-center gap-2 active:scale-95"
+            onClick={deleteCard}
+          >
             <Icon name="trash" size={18} strokeWidth={1.5} variant="primary" />
             Remove
           </button>

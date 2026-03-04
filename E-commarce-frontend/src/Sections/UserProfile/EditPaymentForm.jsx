@@ -6,12 +6,18 @@ import {
   useStripe,
 } from "@stripe/react-stripe-js";
 import { useState } from "react";
+import { queryClient } from "@/queryClient";
+import { useRef } from "react";
 
-export default function FormSection({ title, clientSecret }) {
+export default function FormSection({ title, clientSecret , onCancel }) {
   const stripe = useStripe();
   const elements = useElements();
   const [loading, setLoading] = useState(false);
-  const [msg, setMsg] = useState(null);
+  const [msg, setMsg] = useState({
+    text: null,
+    type: null,
+  });
+  const CancelButtonRef = useRef(null);
 
   // Handle form submission
   async function handleSubmit(e) {
@@ -24,6 +30,14 @@ export default function FormSection({ title, clientSecret }) {
     if (!stripe || !elements) return;
 
     try {
+      const { error: submitError } = await elements.submit();
+      if (submitError) {
+        setMsg({
+          text: submitError.message || "Please check your payment details",
+          type: "error",
+        });
+        return;
+      }
       const result = await stripe.confirmSetup({
         elements,
         clientSecret,
@@ -33,10 +47,18 @@ export default function FormSection({ title, clientSecret }) {
         redirect: "if_required",
       });
 
-      if (result.error) setMsg(result.error.message || "Something went wrong");
-      else setMsg("Card saved successfully");
+      if (result.error) {
+        setMsg({
+          text: result.error.message || "Something went wrong",
+          type: "error",
+        });
+      } else {
+        setMsg({ text: "Card saved successfully", type: "success" });
+      }
     } finally {
       setLoading(false);
+      await queryClient.invalidateQueries(["profile-payments"]);
+      CancelButtonRef.current.click();
     }
   }
   if (!clientSecret)
@@ -58,24 +80,35 @@ export default function FormSection({ title, clientSecret }) {
       <Form className="flex flex-col gap-6" onSubmit={handleSubmit}>
         <PaymentElement />
         {/* Actions */}
-        <div className="flex justify-end gap-4 pt-4 border-t border-zinc-200">
-          <button
-            type="button"
-            className="px-5 py-2 rounded-lg border border-zinc-200 text-xl
-              hover:bg-zinc-100 transition "
-          >
-            Cancel
-          </button>
-
-          <button
-            type="submit"
-            className=" px-6 py-2 rounded-lg bg-[#FF6543] text-white text-xl
-              hover:bg-[#e05535] transition "
-            disabled={!stripe || !elements || loading}
-          >
-            {loading ? "Saving..." : "Save"}
-          </button>
-          {msg && <div className="text-red-500 text-md">{msg}</div>}
+        <div className="flex flex-col">
+          <div className="flex justify-end gap-4 pt-4 border-t border-zinc-200">
+            <button
+              type="button"
+              className="px-5 py-2 rounded-lg border border-zinc-200 text-xl
+                hover:bg-zinc-100 transition "
+              onClick={() => onCancel()}
+              ref={CancelButtonRef}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className=" px-6 py-2 rounded-lg bg-[#FF6543] text-white text-xl
+                hover:bg-[#e05535] transition "
+              disabled={!stripe || !elements || loading}
+            >
+              {loading ? "Saving..." : "Save"}
+            </button>
+          </div>
+          {msg && (
+              <div 
+                className={`text-md text-end  ${
+                  msg.type === "error" ? "text-red-500" : "text-green-500"
+                }`}
+              >
+                {msg.text}
+              </div>
+            )}
         </div>
       </Form>
     </div>

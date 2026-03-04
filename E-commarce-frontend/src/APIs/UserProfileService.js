@@ -237,8 +237,22 @@ export async function updateUserAddresses(request) {
 }
 
 export async function getUserPaymentMethods() {
-  
-  return [];
+  const res = await authFetch(
+    `${DevelopmentURL}/user/profile/getPaymentMethods`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  )
+  if (!res.ok) {
+    throw new Error("Failed to fetch user payment methods");
+  }
+  const data = await res.json();
+  const {cards} = data;
+  // console.log(data);
+  return cards;
 }
 
 export async function SetUpPaymentMethods() {
@@ -258,3 +272,40 @@ export async function SetUpPaymentMethods() {
   // console.log(data);
   return data;
 }
+
+export async function setCardAsDefault(id) {
+  const res = await authFetch(
+    `${DevelopmentURL}/user/profile/setDefaultPaymentMethod/${id}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  )
+  if (!res.ok) {
+    throw new Error("Failed to set card as default");
+  }
+  const data = await res.json();
+  // console.log(data);
+  return data;
+}
+
+export async function deletePaymentMethod(id){
+  const res = await authFetch(
+    `${DevelopmentURL}/user/profile/deletePaymentMethod/${id}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  )
+  if (!res.ok) {
+    throw new Error("Failed to delete payment method");
+  }
+  const data = await res.json();
+  // console.log(data);
+  return data;
+}
+
