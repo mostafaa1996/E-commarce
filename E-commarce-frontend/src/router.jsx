@@ -12,6 +12,7 @@ import {
   getUserWishlist,
   getUserAddresses,
   updateUserAddresses,
+  changePassword,
 } from "./APIs/UserProfileService";
 
 import ShopPage from "./pages/ShopPage";
@@ -130,11 +131,12 @@ export const router = createBrowserRouter([
     element: <UserSettingsPage />,
     loader: async () => {
       return queryClient.ensureQueryData({
-        queryKey: ["profile"],
-        queryFn: getUserProfileData,
+        queryKey: ["profile-settings"],
+        queryFn: () => {return null;},
         staleTime: 1000 * 60 * 5,
       });
     },
+    action: async ({ request }) => await changePassword(request),
   },
   {
     path: "/profile/edit-profile",

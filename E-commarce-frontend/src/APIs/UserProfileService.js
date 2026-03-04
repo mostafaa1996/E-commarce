@@ -309,3 +309,27 @@ export async function deletePaymentMethod(id){
   return data;
 }
 
+export async function changePassword(request){
+  const formData = await request.formData();
+  const newPassword = formData.get("newPassword");
+  const currentPassword = formData.get("currentPassword");
+  const confirmPassword = formData.get("confirmPassword");
+  if (newPassword !== confirmPassword) return {message: "Passwords do not match" , ok: false};
+  const res = await authFetch(
+    `${DevelopmentURL}/user/profile/changePassword`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ newPassword, currentPassword }),
+    },
+  )
+  if (!res.ok) {
+    throw new Error("Failed to change password");
+  }
+  const data = await res.json();
+  console.log(data);
+  return data;
+}
+

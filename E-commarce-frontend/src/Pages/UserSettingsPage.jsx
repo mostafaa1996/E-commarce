@@ -3,7 +3,7 @@ import UserNestedRoutesHeader from "@/Sections/UserProfile/UserNestedRoutesHeade
 import ResetPasswordForm from "@/Sections/UserProfile/ResetPasswordForm";
 import PreferencesSection from "@/Sections/UserProfile/PreferencesSection";
 import { useState } from "react";
-export default function UserSettingsPage({}) {
+export default function UserSettingsPage() {
     const [isEditing, setIsEditing] = useState(false);
     function handleEdit() {
         setIsEditing(true);
