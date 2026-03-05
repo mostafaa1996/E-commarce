@@ -3,8 +3,10 @@ import ProductRow from "@/components/genericComponents/ProductCard_H";
 import RemoveCart from "/RemoveCart.svg";
 import RemoveCartHover from "/RemoveCartHover.svg";
 import { useCartStore } from "@/zustand_Cart/CartStore";
+import useCurrency from "@/hooks/CurrencyChange";
 export default function CartRow({ item }) {
   const CartStorage = useCartStore();
+  const format = useCurrency("USD", "en-US");
 
   function handleRemove() {
     CartStorage.removeItem(item._id);

@@ -9,7 +9,7 @@ export default function ResetPasswordForm({ title }) {
   const actionData = useActionData();
   useEffect(() => {
     setInterval(() => {
-      if (actionData.ok) {
+      if (actionData?.ok) {
         window.location.reload();
       }
     }, 3000);

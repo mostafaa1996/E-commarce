@@ -7,8 +7,10 @@ import {useCartStore} from "@/zustand_Cart/CartStore";
 import { Fragment } from "react";
 import { updateUserWishlist } from "@/APIs/UserProfileService";
 import { queryClient } from "@/queryClient";
+import useCurrency from "@/hooks/CurrencyChange";
 export default function WishListPage() {
   let content = null;
+  const format = useCurrency("USD", "en-US");
   const CartStorage = useCartStore();
   const {
     data: wishList,

@@ -2,7 +2,9 @@ import ProductCard from "@/components/genericComponents/ProductCard_V";
 import DashBoardTableHeader from "@/components/genericComponents/DashBoardTableHeader";
 import DashBoardTable from "@/components/genericComponents/DashBoardTable";
 import Icon from "@/system/icons/Icon";
+import useCurrency from "@/hooks/CurrencyChange";
 export default function WishListSection({ WishList }) {
+  const format = useCurrency("USD", "en-US");
   return (
     <DashBoardTable className={`max-w-5xl`}>
       <DashBoardTableHeader

@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { updateUserWishlist } from "@/APIs/UserProfileService";
 import { queryClient } from "../queryClient";
+import useCurrency from "@/hooks/CurrencyChange";
 export default function ProductDetails({ product, initialValueFromUserWishlist }) {
   console.log(initialValueFromUserWishlist);
   
@@ -18,7 +19,7 @@ export default function ProductDetails({ product, initialValueFromUserWishlist }
   const CartStorage = useCartStore();
   const navigate = useNavigate();
 
-  
+  const format = useCurrency("USD", "en-US");
 
   const updateWishlist = useMutation({
     mutationKey: ["profile-wishlist"],

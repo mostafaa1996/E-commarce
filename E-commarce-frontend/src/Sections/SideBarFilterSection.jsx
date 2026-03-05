@@ -1,8 +1,10 @@
 import SideBarFilter from "@/components/genericComponents/SideBarFilter";
 import { useShopQueryStore } from "@/zustand_ShopPage/ShopQueryStore";
+import useCurrency from "@/hooks/CurrencyChange";
 
 export default function SideBarFilterSection({ products }) {
   const { shopQuery, setShopQuery } = useShopQueryStore();
+  const format = useCurrency("USD", "en-US");
 
   const FilterationData = {
     categories: products.category,

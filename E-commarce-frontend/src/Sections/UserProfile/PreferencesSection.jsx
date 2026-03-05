@@ -3,7 +3,16 @@ import SegmentedToggle from "@/components/genericComponents/SegmentedToggle";
 import SwitchToggle from "@/components/genericComponents/SwitchToggle";
 import Icon from "@/system/icons/Icon";
 import { Form } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 export default function PreferencesSection() {
+  const { t, i18n } = useTranslation();
+  function handleLanguageChange(lang) {
+    console.log(lang);
+    i18n.changeLanguage(lang);
+  }
+  function handleCurrencyChange(currency) {
+    console.log(currency);
+  }
   return (
     <div className="border border-zinc-200 rounded-xl bg-white p-6">
       <h3 className="text-[21px] font-light text-[#272727] mb-6 flex items-center gap-2">
@@ -15,13 +24,21 @@ export default function PreferencesSection() {
           <SelectField
             label="Language"
             defaultValue="English"
-            options={["English", "Spanish", "Arabic", "French", "German"]}
+            options={[
+              { text: "English", value: "en" },
+              { text: "Spanish", value: "es" },
+              { text: "Arabic", value: "ar" },
+              { text: "French", value: "fr" },
+              { text: "German", value: "de" },
+            ]}
+            onChange={handleLanguageChange}
           />
 
           <SelectField
             label="Currency"
             defaultValue="USD"
             options={["", "USD", "EUR", "EGYP", "GBP"]}
+            onChange={handleCurrencyChange}
           />
         </div>
 
