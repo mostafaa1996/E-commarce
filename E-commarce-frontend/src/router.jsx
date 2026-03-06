@@ -31,6 +31,7 @@ import UserSettingsPage from "./Pages/UserSettingsPage";
 import MainLayout from "./layouts/MainLayout";
 
 import { defaultShopQuery } from "./zustand_ShopPage/shopDefaultQuery";
+import ShopPageLayout from "./layouts/shopPageLayout";
 
 export const router = createBrowserRouter([
   {
@@ -38,14 +39,20 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/shop",
-        element: <ShopPage />,
-        handle: { title: "Shop" },
-        loader: async () => {
-          return queryClient.ensureQueryData({
-            queryKey: ["products", defaultShopQuery],
-            queryFn: () => getShopProducts(defaultShopQuery),
-          });
-        },
+        element: <ShopPageLayout />,
+        children: [
+          {
+            index: true,
+            element: <ShopPage />,
+            handle: { title: "Shop" },
+            loader: async () => {
+              return queryClient.ensureQueryData({
+                queryKey: ["products", defaultShopQuery],
+                queryFn: () => getShopProducts(defaultShopQuery),
+              });
+            },
+          },
+        ],
       },
       {
         path: "/shop/products/:id",
