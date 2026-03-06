@@ -11,14 +11,14 @@ export default function ProductDetailsPage() {
   let content = null;
   const {
     data: product,
-    isLoading : isLoadingProduct,
+    isLoading: isLoadingProduct,
     error,
   } = useQuery({
     queryKey: ["product", id],
     queryFn: () => getProductById({ id }),
     enabled: !!id,
   });
-  const { data: wishlist , isLoading: isLoadingWishlist } = useQuery({
+  const { data: wishlist, isLoading: isLoadingWishlist } = useQuery({
     queryKey: ["profile-wishlist"],
     queryFn: getUserWishlist,
   });
@@ -33,13 +33,11 @@ export default function ProductDetailsPage() {
       ) ?? false;
     content = (
       <>
-        <TopFixedLayer Title="Product Details" />
         <ProductDetails
           product={product}
           initialValueFromUserWishlist={isInWishlist}
         />
         <ProductTabs product={product} />
-        <BottomLayer />
       </>
     );
   }
