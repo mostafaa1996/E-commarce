@@ -1,3 +1,4 @@
+const URL = import.meta.env.VITE_API_URL;
 let accessToken = null;
 
 export function setAccessToken(token) {
@@ -16,7 +17,7 @@ export async function authFetch(url, options = {}) {
   });
 
   if (res.status === 401) {
-    const refreshRes = await fetch("http://localhost:3000/auth/refresh", {
+    const refreshRes = await fetch(`${URL}/auth/refresh`, {
       method: "POST",
       credentials: "include",
     });

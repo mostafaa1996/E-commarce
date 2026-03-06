@@ -20,7 +20,7 @@ function DashBoardItem({ items , orderId , status , statusColor ,  createdAt , t
           items.map((item) => (
             <span key={item._id} className="flex text-sm text-zinc-500 gap-1">
               <p className="line-clamp-1 max-w-xs">{item.name}</p>
-              <p className="line-clamp-1">X ${item.price}</p>
+              <p className="line-clamp-1">X {item.price}</p>
               <p className="line-clamp-1">X {item.quantity}</p>
             </span>
           ))}
@@ -29,7 +29,7 @@ function DashBoardItem({ items , orderId , status , statusColor ,  createdAt , t
       {/* Right */}
       <div className="text-right">
         <div className="text-[#272727] font-light">
-          ${totalPrice.toLocaleString()}
+          {totalPrice.toLocaleString()}
         </div>
 
         <div className="text-sm text-zinc-500">{createdAt}</div>

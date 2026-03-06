@@ -14,7 +14,7 @@ exports.postSignup = async (req, res) => {
       return res.send("User already exists");
     }
 
-    const hashedPassword = await bcrypt.hash(password, 12);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = new User({
       name,

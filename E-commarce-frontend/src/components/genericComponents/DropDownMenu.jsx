@@ -23,7 +23,7 @@ export default function DropdownMenu({ results = [], onSelect }) {
             </span>
 
             {item.price && (
-              <span className="text-xs text-[#FF6543]">${item.price}</span>
+              <span className="text-xs text-[#FF6543]">{item.price}</span>
             )}
           </div>
         </button>

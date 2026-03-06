@@ -6,7 +6,7 @@ export default function ProductHeader({ title, price, rating, description }) {
         {title}
       </h1>
 
-      <span className="text-[#FF6543] text-[21px] font-light">${price}</span>
+      <span className="text-[#FF6543] text-[21px] font-light">{price}</span>
       <div className="flex flex-row items-center gap-1">
         {Array.from({ length: rating }).map((_, i) => (
           <img key={i} src={ratingStar} alt="star" />

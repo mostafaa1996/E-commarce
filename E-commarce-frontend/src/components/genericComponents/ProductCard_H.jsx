@@ -19,11 +19,11 @@ export default function ProductRow({ image, title, price, oldPrice }) {
         <div className="flex items-center gap-2">
           {oldPrice && (
             <span className="text-sm text-zinc-400 line-through">
-              ${oldPrice}
+              {oldPrice}
             </span>
           )}
           <span className="text-[#FF6543] font-light text-[18px]">
-            ${price}
+            {price}
           </span>
         </div>
       </div>

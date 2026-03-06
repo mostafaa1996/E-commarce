@@ -4,13 +4,13 @@ export default function SegmentedToggle({ value, onChange, options }) {
   return (
     <div className="flex bg-zinc-100 rounded-full p-1 w-fit h-fit">
       {options.map((option) => (
-        <Fragment key={`option-${option}`}>
+        <Fragment key={`option-${option.name}`}>
           <button
             onClick={() => onChange(option)}
             className={`
               px-4 py-1.5 text-sm rounded-full transition flex items-center gap-2
               ${
-                value === option
+                value === option.name
                   ? "bg-white shadow text-[#272727]"
                   : "text-zinc-500"
               }

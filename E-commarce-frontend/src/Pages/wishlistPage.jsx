@@ -8,9 +8,11 @@ import { Fragment } from "react";
 import { updateUserWishlist } from "@/APIs/UserProfileService";
 import { queryClient } from "@/queryClient";
 import useCurrency from "@/hooks/CurrencyChange";
+import { useCurrencyStore } from "@/zustand_preferences/currency";
 export default function WishListPage() {
   let content = null;
-  const format = useCurrency("USD", "en-US");
+  const {currency , locale} = useCurrencyStore();
+  const format = useCurrency(currency, locale);
   const CartStorage = useCartStore();
   const {
     data: wishList,
@@ -64,7 +66,7 @@ export default function WishListPage() {
                   <ProductCard
                     image={product.images[0].url}
                     title={product.title}
-                    price={product.price}
+                    price={format(product.price)}
                     oldPrice={product.originalPrice}
                     category={product.category}
                     onAdd = {() => handleAddToCart( product)}

@@ -4,9 +4,12 @@ import RemoveCart from "/RemoveCart.svg";
 import RemoveCartHover from "/RemoveCartHover.svg";
 import { useCartStore } from "@/zustand_Cart/CartStore";
 import useCurrency from "@/hooks/CurrencyChange";
+import { useCurrencyStore } from "@/zustand_preferences/currency";
 export default function CartRow({ item }) {
   const CartStorage = useCartStore();
-  const format = useCurrency("USD", "en-US");
+  const { currency, locale , conversion_rate } = useCurrencyStore();
+  const format = useCurrency(currency, locale);
+  const rate = conversion_rate[currency] ?? 1 ;
 
   function handleRemove() {
     CartStorage.removeItem(item._id);
@@ -18,7 +21,7 @@ export default function CartRow({ item }) {
     <div className="grid grid-cols-1 sm:grid-cols-6 gap-6 py-6 ">
       {/* Product */}
       <div className="col-span-2">
-        <ProductRow image={item.image} title={item.title} price={item.price} />
+        <ProductRow image={item.image} title={item.title} price={format(item.price * rate)} />
       </div>
 
       {/* Quantity */}
@@ -27,7 +30,7 @@ export default function CartRow({ item }) {
       </div>
       {/* Subtotal */}
       <p className="col-span-2  text-[#FF6543] text-right font-light text-[18px] flex justify-end items-center">
-        ${(item.price * item.quantity).toFixed(2)}
+        {(format(item.price * item.quantity * rate).toFixed(2))}
       </p>
       {/* Remove */}
       <button

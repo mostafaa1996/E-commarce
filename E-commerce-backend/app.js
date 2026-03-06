@@ -4,6 +4,7 @@
 // getDataByZenRows.run();
 
 require("dotenv").config();
+require("./utils/exchangeRateRequest");
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -17,6 +18,7 @@ const orderRoutes = require("./routes/order");
 const userProfileRoutes = require("./routes/UserProfile");
 const userProfilePaymentsRoutes = require("./routes/UserProfilePayments");
 const UserProfileSettingsRoutes = require("./routes/UserProfileSettings");
+const exchangeRateRoutes = require("./routes/exchangeRate");
 
 const app = express();
 app.use(express.json()); // for parsing application/json
@@ -42,6 +44,7 @@ app.use(
   userProfilePaymentsRoutes,
   UserProfileSettingsRoutes,
 );
+app.use("/exchangeRate", exchangeRateRoutes);
 
 app.use((error, req, res, next) => {
   console.log(error);

@@ -1,5 +1,6 @@
 import { authFetch } from "./AuthFetch";
 import { useCartStore } from "../zustand_Cart/CartStore";
+const URL = import.meta.env.VITE_API_URL;
 export async function CartService() {
   
   const guestCart = localStorage.getItem("cart-storage");
@@ -7,7 +8,7 @@ export async function CartService() {
 
   if (!parsed || parsed.state.items.length === 0) {
     // get database cart
-    const res = await authFetch("http://localhost:3000/cart/", {
+    const res = await authFetch(`${URL}/cart/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -26,7 +27,7 @@ export async function CartService() {
   } else {
     // Update database cart
     console.log("Update database cart with guest cart");
-    await authFetch("http://localhost:3000/cart/", {
+    await authFetch(`${URL}/cart/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -45,7 +46,7 @@ export async function syncCart() {
   if (parsed) {
     // Update database cart
     console.log("Update database cart with guest cart");
-    await authFetch("http://localhost:3000/cart/", {
+    await authFetch(`${URL}/cart/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

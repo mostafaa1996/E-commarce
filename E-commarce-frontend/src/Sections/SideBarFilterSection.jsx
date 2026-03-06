@@ -1,16 +1,19 @@
 import SideBarFilter from "@/components/genericComponents/SideBarFilter";
 import { useShopQueryStore } from "@/zustand_ShopPage/ShopQueryStore";
 import useCurrency from "@/hooks/CurrencyChange";
+import { useCurrencyStore } from "@/zustand_preferences/currency";
 
 export default function SideBarFilterSection({ products }) {
   const { shopQuery, setShopQuery } = useShopQueryStore();
-  const format = useCurrency("USD", "en-US");
+  const { currency, locale , conversion_rate } = useCurrencyStore();
+  const format = useCurrency(currency, locale);
+  const rate = conversion_rate[currency] ?? 1 ;
 
   const FilterationData = {
     categories: products.category,
     tags: products.tags,
     brands: products.brands,
-    Price: products.price,
+    Price: format(products.price * rate),
   };
 
   function applyFilter(item, Title) {

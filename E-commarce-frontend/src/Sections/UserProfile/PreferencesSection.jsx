@@ -4,15 +4,21 @@ import SwitchToggle from "@/components/genericComponents/SwitchToggle";
 import Icon from "@/system/icons/Icon";
 import { Form } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useCurrencyStore } from "@/zustand_preferences/currency";
 export default function PreferencesSection() {
   const { t, i18n } = useTranslation();
+  const { setCurrency, setLocale , currency } = useCurrencyStore();
   function handleLanguageChange(lang) {
     console.log(lang);
     i18n.changeLanguage(lang);
   }
-  function handleCurrencyChange(currency) {
-    console.log(currency);
-  }
+  function handleCurrencyChange(value) {
+  setCurrency(value);
+
+  if (value === "USD") setLocale("en-US");
+  else if (value === "EGP") setLocale("ar-EG");
+  else if (value === "EUR") setLocale("en-EU");
+}
   return (
     <div className="border border-zinc-200 rounded-xl bg-white p-6">
       <h3 className="text-[21px] font-light text-[#272727] mb-6 flex items-center gap-2">
@@ -26,18 +32,20 @@ export default function PreferencesSection() {
             defaultValue="English"
             options={[
               { text: "English", value: "en" },
-              { text: "Spanish", value: "es" },
               { text: "Arabic", value: "ar" },
               { text: "French", value: "fr" },
-              { text: "German", value: "de" },
             ]}
             onChange={handleLanguageChange}
           />
 
           <SelectField
             label="Currency"
-            defaultValue="USD"
-            options={["", "USD", "EUR", "EGYP", "GBP"]}
+            value={`${currency}`}
+            options={[
+              "USD",
+              "EGP",
+              "EUR",
+            ]}
             onChange={handleCurrencyChange}
           />
         </div>

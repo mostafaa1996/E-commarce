@@ -3,8 +3,10 @@ import DashBoardTableHeader from "@/components/genericComponents/DashBoardTableH
 import DashBoardTable from "@/components/genericComponents/DashBoardTable";
 import Icon from "@/system/icons/Icon";
 import useCurrency from "@/hooks/CurrencyChange";
+import { useCurrencyStore } from "@/zustand_preferences/currency";
 export default function WishListSection({ WishList }) {
-  const format = useCurrency("USD", "en-US");
+  const { currency, locale } = useCurrencyStore();
+  const format = useCurrency(currency, locale);
   return (
     <DashBoardTable className={`max-w-5xl`}>
       <DashBoardTableHeader
@@ -23,7 +25,7 @@ export default function WishListSection({ WishList }) {
               key={product._id}
               image={product.images[0].url}
               title={product.title}
-              price={product.price}
+              price={format(product.price)}
               NavigationLink={`/shop/products/${product._id}`}
               variant={"ShowNameAndPrice"}
             />

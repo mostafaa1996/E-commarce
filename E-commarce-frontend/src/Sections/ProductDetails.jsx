@@ -11,6 +11,7 @@ import { useMutation } from "@tanstack/react-query";
 import { updateUserWishlist } from "@/APIs/UserProfileService";
 import { queryClient } from "../queryClient";
 import useCurrency from "@/hooks/CurrencyChange";
+import { useCurrencyStore } from "@/zustand_preferences/currency";
 export default function ProductDetails({ product, initialValueFromUserWishlist }) {
   console.log(initialValueFromUserWishlist);
   
@@ -18,8 +19,9 @@ export default function ProductDetails({ product, initialValueFromUserWishlist }
   const [quantity, setQuantity] = useState(0);
   const CartStorage = useCartStore();
   const navigate = useNavigate();
-
-  const format = useCurrency("USD", "en-US");
+  const { currency, locale , conversion_rate } = useCurrencyStore();
+  const format = useCurrency(currency, locale);
+  const rate = conversion_rate[currency] ?? 1 ;
 
   const updateWishlist = useMutation({
     mutationKey: ["profile-wishlist"],
@@ -53,7 +55,7 @@ export default function ProductDetails({ product, initialValueFromUserWishlist }
           <div className="flex flex-col gap-6">
             <ProductHeader
               title={product.title}
-              price={product.price}
+              price={format(product.price * rate)}
               rating={product.rating}
               description={product.shortDescription}
             />

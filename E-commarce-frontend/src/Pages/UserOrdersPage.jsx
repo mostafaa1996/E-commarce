@@ -7,6 +7,8 @@ import Pagination from "@/components/genericComponents/Pagination";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { getUserPaginatedOrders } from "@/APIs/UserProfileService";
+import useCurrency from "@/hooks/CurrencyChange";
+import { useCurrencyStore } from "@/zustand_preferences/currency";
 
 const styles = {
   delivered: "bg-green-100 text-green-600",
@@ -37,6 +39,10 @@ export default function UserOrdersPage() {
     queryKey: ["profile-orders" , page],
     queryFn: () => getUserPaginatedOrders(page, 5),
   });
+
+  const { currency , locale, conversion_rate } = useCurrencyStore();
+  const format = useCurrency(currency, locale);
+  const rate = conversion_rate[currency] ?? 1 ;
 
   filteredOrders = data?.orders
     ?.filter(
@@ -84,7 +90,7 @@ export default function UserOrdersPage() {
         status={order.Status.status}
         statusColor={styles[order.Status.status] || styles.default}
         createdAt={order.createdAt}
-        totalPrice={order.totalPrice}
+        totalPrice={format(order.totalPrice * rate)}
       />
     ));
 

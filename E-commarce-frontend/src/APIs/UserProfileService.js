@@ -1,13 +1,14 @@
 import { authFetch } from "./AuthFetch";
 import { queryClient } from "../queryClient";
 
-const DevelopmentURL = "http://localhost:3000";
+const URL = import.meta.env.VITE_API_URL;
+
 // get user contact details
 // get user order history
 // get user wishlist
 // get user addresses
 export async function getUserProfileData() {
-  const res = await authFetch(`${DevelopmentURL}/user/profile`, {
+  const res = await authFetch(`${URL}/user/profile`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -21,7 +22,7 @@ export async function getUserProfileData() {
 }
 
 export async function getPersonalInfo() {
-  const res = await authFetch(`${DevelopmentURL}/user/profile/personalInfo`, {
+  const res = await authFetch(`${URL}/user/profile/personalInfo`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -37,7 +38,7 @@ export async function getPersonalInfo() {
 
 export async function UploadProfileImage(formData) {
   const res = await authFetch(
-    `${DevelopmentURL}/user/profile/uploadProfilePic`,
+    `${URL}/user/profile/uploadProfilePic`,
     {
       method: "POST",
       body: formData,
@@ -64,7 +65,7 @@ export async function UpdatePersonalInfo(request) {
   };
   console.log(personalInfo);
   const res = await authFetch(
-    `${DevelopmentURL}/user/profile/updatePersonalInfo`,
+    `${URL}/user/profile/updatePersonalInfo`,
     {
       method: "POST",
       headers: {
@@ -83,10 +84,10 @@ export async function UpdatePersonalInfo(request) {
 
 export async function getUserPaginatedOrders(page, limit) {
   console.log(
-    `${DevelopmentURL}/user/profile/orders?page=${page}&limit=${limit}`,
+    `${URL}/user/profile/orders?page=${page}&limit=${limit}`,
   );
   const res = await authFetch(
-    `${DevelopmentURL}/user/profile/orders?page=${page}&limit=${limit}`,
+    `${URL}/user/profile/orders?page=${page}&limit=${limit}`,
     {
       method: "GET",
       headers: {
@@ -103,8 +104,8 @@ export async function getUserPaginatedOrders(page, limit) {
 }
 
 export async function updateUserWishlist(arrOfIds) {
-  console.log(`${DevelopmentURL}/user/profile/UpdateWishlist`, arrOfIds);
-  const res = await authFetch(`${DevelopmentURL}/user/profile/UpdateWishlist`, {
+  console.log(`${URL}/user/profile/UpdateWishlist`, arrOfIds);
+  const res = await authFetch(`${URL}/user/profile/UpdateWishlist`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -120,8 +121,8 @@ export async function updateUserWishlist(arrOfIds) {
 }
 
 export async function getUserWishlist() {
-  console.log(`${DevelopmentURL}/user/profile/GetWishlist`);
-  const res = await authFetch(`${DevelopmentURL}/user/profile/GetWishlist`, {
+  console.log(`${URL}/user/profile/GetWishlist`);
+  const res = await authFetch(`${URL}/user/profile/GetWishlist`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -136,7 +137,7 @@ export async function getUserWishlist() {
 }
 
 export async function getUserAddresses() {
-  const res = await authFetch(`${DevelopmentURL}/user/profile/addresses`, {
+  const res = await authFetch(`${URL}/user/profile/addresses`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -169,7 +170,7 @@ export async function updateUserAddresses(request) {
   let res = null;
   switch (intent) {
     case "Add":
-      res = await authFetch(`${DevelopmentURL}/user/profile/updateAddress`, {
+      res = await authFetch(`${URL}/user/profile/updateAddress`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -182,7 +183,7 @@ export async function updateUserAddresses(request) {
       break;
     case "Save":
       res = await authFetch(
-        `${DevelopmentURL}/user/profile/updateAddress/${id}`,
+        `${URL}/user/profile/updateAddress/${id}`,
         {
           method: "PUT",
           headers: {
@@ -197,7 +198,7 @@ export async function updateUserAddresses(request) {
       break;
     case "delete":
       res = await authFetch(
-        `${DevelopmentURL}/user/profile/deleteAddress/${id}`,
+        `${URL}/user/profile/deleteAddress/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -211,7 +212,7 @@ export async function updateUserAddresses(request) {
       break;
     case "setAsDefault":
       res = await authFetch(
-        `${DevelopmentURL}/user/profile/SetAddressToDefault/${id}`,
+        `${URL}/user/profile/SetAddressToDefault/${id}`,
         {
           method: "PUT",
           headers: {
@@ -238,7 +239,7 @@ export async function updateUserAddresses(request) {
 
 export async function getUserPaymentMethods() {
   const res = await authFetch(
-    `${DevelopmentURL}/user/profile/getPaymentMethods`,
+    `${URL}/user/profile/getPaymentMethods`,
     {
       method: "GET",
       headers: {
@@ -257,7 +258,7 @@ export async function getUserPaymentMethods() {
 
 export async function SetUpPaymentMethods() {
   const res = await authFetch(
-    `${DevelopmentURL}/user/profile/setUpPaymentMethods`,
+    `${URL}/user/profile/setUpPaymentMethods`,
     {
       method: "POST",
       headers: {
@@ -275,7 +276,7 @@ export async function SetUpPaymentMethods() {
 
 export async function setCardAsDefault(id) {
   const res = await authFetch(
-    `${DevelopmentURL}/user/profile/setDefaultPaymentMethod/${id}`,
+    `${URL}/user/profile/setDefaultPaymentMethod/${id}`,
     {
       method: "PUT",
       headers: {
@@ -293,7 +294,7 @@ export async function setCardAsDefault(id) {
 
 export async function deletePaymentMethod(id){
   const res = await authFetch(
-    `${DevelopmentURL}/user/profile/deletePaymentMethod/${id}`,
+    `${URL}/user/profile/deletePaymentMethod/${id}`,
     {
       method: "DELETE",
       headers: {
@@ -316,7 +317,7 @@ export async function changePassword(request){
   const confirmPassword = formData.get("confirmPassword");
   if (newPassword !== confirmPassword) return {message: "Passwords do not match" , ok: false};
   const res = await authFetch(
-    `${DevelopmentURL}/user/profile/changePassword`,
+    `${URL}/user/profile/changePassword`,
     {
       method: "PUT",
       headers: {
@@ -332,4 +333,5 @@ export async function changePassword(request){
   console.log(data);
   return data;
 }
+
 
