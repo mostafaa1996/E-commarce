@@ -1,5 +1,5 @@
 import { redirect } from "react-router-dom";
-const DevelopmentURL = "http://localhost:3000";
+const URL = import.meta.env.VITE_API_URL;
 import { setAccessToken } from "./AuthFetch";
 export async function loginAction({ request }) {
   const formData = await request.formData();
@@ -10,7 +10,7 @@ export async function loginAction({ request }) {
   if (!password) return "password is required";
 
   try {
-    const res = await fetch(`${DevelopmentURL}/auth/login`, {
+    const res = await fetch(`${URL}/auth/login`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
@@ -47,7 +47,7 @@ export async function SignupAction({ request }) {
   if (password !== confirmPassword) return "Passwords do not match";
 
   try {
-    const res = await fetch(`${DevelopmentURL}/auth/signup`, {
+    const res = await fetch(`${URL}/auth/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, password }),
@@ -67,7 +67,7 @@ export async function SignupAction({ request }) {
 
 export async function logoutAction() {
   try {
-    const res = await fetch(`${DevelopmentURL}/auth/logout`, {
+    const res = await fetch(`${URL}/auth/logout`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({}),

@@ -14,7 +14,7 @@ exports.postSignup = async (req, res) => {
       return res.send("User already exists");
     }
 
-    const hashedPassword = await bcrypt.hash(password, 12);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = new User({
       name,
@@ -43,7 +43,7 @@ exports.postLogin = async (req, res) => {
   const accessToken = generateAccessToken(user);
   const refreshToken = generateRefreshToken(user);
 
-  console.log(user);
+  // console.log(user);
 
   await Token.create({
     userId: user._id,

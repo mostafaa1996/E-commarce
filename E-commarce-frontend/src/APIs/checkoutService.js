@@ -1,9 +1,10 @@
 import { useCartStore } from "../zustand_Cart/CartStore";
 import { useCheckoutStore } from "../zustand_checkout/checkoutStore";
 import { authFetch } from "./AuthFetch";
+const URL = import.meta.env.VITE_API_URL;
 
 export async function checkoutLoader() {
-  const res = await authFetch("http://localhost:3000/checkout/", {
+  const res = await authFetch(`${URL}/checkout/`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -28,7 +29,7 @@ export async function checkoutLoader() {
 export async function checkoutAction() {
   
   const res = await authFetch(
-    "http://localhost:3000/order/create",
+    `${URL}/order/create`,
     {
       method: "POST",
       headers: {
@@ -62,7 +63,7 @@ export async function checkoutAction() {
 
 export async function fetchCards() {
     const res = await authFetch(
-    "http://localhost:3000/order/savedCards",
+    `${URL}/order/savedCards`,
     {
       method: "GET",
       headers: {

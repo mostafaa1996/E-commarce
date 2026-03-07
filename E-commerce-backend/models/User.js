@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { default: Stripe } = require("stripe");
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -13,13 +14,37 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  phone: String,
+  phone: {
+    type: String,
+  },
   role: {
     type: String,
     enum: ["admin", "customer"],
     default: "customer",
   },
-  billingDetails: [
+  PersonalInfo: {
+    firstName: String,
+    lastName: String,
+    email: String,
+    phone: String,
+    DateOfBirth: Date,
+    gender: String,
+    location: String,
+    Bio: String,
+    avatar: {
+      url: String,
+      publicId : String,
+    },
+    createdAt : {
+      type: Date,
+      default: Date.now,
+    },
+    updatedAt : {
+      type: Date,
+      default: Date.now,
+    },
+  },
+  billingDetails: 
     {
       firstName: String,
       lastName: String,
@@ -34,9 +59,12 @@ const UserSchema = new mongoose.Schema({
       postalCode: String,
       phone: String,
       notes: String,
+      AddressId : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Address",
+      },
       isDefault: Boolean,
     },
-  ],
   cart: {
     items: [
       {
@@ -89,6 +117,26 @@ const UserSchema = new mongoose.Schema({
       expiryYear: Number,
     },
   ],
+
+  Addresses : [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Address",
+    default: [],
+  }],
+
+  reviews: [
+    {
+      rate: { type: Number, default: 0 },
+      comment: { type: String, default: "" },
+      productId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
+        required: true,
+      },
+    },
+  ],
+
+  stripeCustomerId: { type: String , default: null },
 
   resetPasswordToken: String,
   resetPasswordExpires: Date,

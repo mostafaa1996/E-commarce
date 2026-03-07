@@ -1,24 +1,41 @@
-import ProductGallery from "../../components/ProductDetails/ProductGallery";
-import ProductHeader from "../../components/ProductDetails/ProductHeader";
-import ProductMeta from "../../components/ProductDetails/ProductMeta";
-import ProductsVariantsShow from "../../components/ProductDetails/ProductsVariantsShow";
-import ProductActions from "../../components/ProductDetails/ProductAction";
-import QuantityControl from "../../components/genericComponents/QuantityControl";
+import ProductGallery from "@/components/ProductDetails/ProductGallery";
+import ProductHeader from "@/components/ProductDetails/ProductHeader";
+import ProductMeta from "@/components/ProductDetails/ProductMeta";
+import ProductsVariantsShow from "@/components/ProductDetails/ProductsVariantsShow";
+import ProductActions from "@/components/ProductDetails/ProductAction";
+import QuantityControl from "@/components/genericComponents/QuantityControl";
 import { useState } from "react";
-import { useCartStore } from "../zustand_Cart/CartStore";
+import { useCartStore } from "@/zustand_Cart/CartStore";
 import { useNavigate } from "react-router-dom";
-
-export default function ProductDetails({ product }) {
+import { useMutation } from "@tanstack/react-query";
+import { updateUserWishlist } from "@/APIs/UserProfileService";
+import { queryClient } from "../queryClient";
+import useCurrency from "@/hooks/CurrencyChange";
+import { useCurrencyStore } from "@/zustand_preferences/currency";
+export default function ProductDetails({ product, initialValueFromUserWishlist }) {
+  console.log(initialValueFromUserWishlist);
+  
   const [activeImage, setActiveImage] = useState(0);
   const [quantity, setQuantity] = useState(0);
   const CartStorage = useCartStore();
   const navigate = useNavigate();
+  const { currency, locale , conversion_rate } = useCurrencyStore();
+  const format = useCurrency(currency, locale);
+  const rate = conversion_rate[currency] ?? 1 ;
+
+  const updateWishlist = useMutation({
+    mutationKey: ["profile-wishlist"],
+    mutationFn: (arrOfIds) => updateUserWishlist(arrOfIds),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["profile-wishlist"] });
+    },
+  });
 
   function handleAddToCart() {
     CartStorage.addItem(product, quantity);
   }
   function handleAddToWishlist() {
-    console.log("Add to wishlist"); // in Backend
+    updateWishlist.mutate([product._id]);
   }
   function handleOrderNow() {
     navigate("/checkout");
@@ -28,7 +45,7 @@ export default function ProductDetails({ product }) {
   return (
     <section className="py-20">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 gap-20 lg:grid-cols-2 lg:gap-10">
+        <div className="grid grid-cols-1 gap-20 lg:grid-cols-2 lg:gap-40">
           <ProductGallery
             images={product.images}
             active={activeImage}
@@ -38,7 +55,7 @@ export default function ProductDetails({ product }) {
           <div className="flex flex-col gap-6">
             <ProductHeader
               title={product.title}
-              price={product.price}
+              price={format(product.price * rate)}
               rating={product.rating}
               description={product.shortDescription}
             />
@@ -68,6 +85,7 @@ export default function ProductDetails({ product }) {
               OrderHandler={handleOrderNow}
               AddToCartHandler={handleAddToCart}
               AddToWishlistHandler={handleAddToWishlist}
+              AddedToWishlistBefore={initialValueFromUserWishlist}
             />
 
             <div

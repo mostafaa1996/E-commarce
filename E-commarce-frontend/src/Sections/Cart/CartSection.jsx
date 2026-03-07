@@ -1,17 +1,17 @@
 import CartRow from "../CartRow";
-import CartTotals from "../../../components/genericComponents/CartTotals";
-import Button from "../../../components/genericComponents/Button";
-import { useCartStore } from "../../zustand_Cart/CartStore";
+import CartTotals from "@/components/genericComponents/CartTotals";
+import Button from "@/components/genericComponents/Button";
+import { useCartStore } from "@/zustand_Cart/CartStore";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import { syncCart } from "../../APIs/CartService";
+import { syncCart } from "@/APIs/CartService";
 export default function CartSection() {
   const navigate = useNavigate();
   const cartStore = useCartStore();
   const cartItems = cartStore.items;
   const TotalItems = cartStore.totalItems;
   const total = cartStore.totalPrice;
-  
+
   const syncCartMutation = useMutation({
     mutationFn: () => syncCart(),
   });

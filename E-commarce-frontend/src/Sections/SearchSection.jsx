@@ -1,9 +1,9 @@
-import SearchBar from "../../components/genericComponents/SearchBox";
-import DropdownMenu from "../../components/genericComponents/DropDownMenu";
+import SearchBar from "@/components/genericComponents/SearchBox";
+import DropdownMenu from "@/components/genericComponents/DropDownMenu";
 import { useEffect } from "react";
 import { useState } from "react";
-import { useShopSearchStore } from "../zustand_ShopPage/shopSearchStore";
-import { useShopQueryStore } from "../zustand_ShopPage/ShopQueryStore";
+import { useShopSearchStore } from "@/zustand_ShopPage/shopSearchStore";
+import { useShopQueryStore } from "@/zustand_ShopPage/ShopQueryStore";
 export default function SearchSection() {
   const [searchValue, setSearchValue] = useState("");
   const { shopSearch, setShopSearchValue, setShopSearchProducts } =

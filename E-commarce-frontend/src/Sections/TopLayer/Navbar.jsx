@@ -5,7 +5,7 @@ import userProfile from "/user-profile.svg";
 import cart from "/cart.svg";
 import wishlist from "/wishlist-heart.svg";
 import logout from "/logout.jpg";
-import { useCartStore } from "../../zustand_Cart/CartStore";
+import { useCartStore } from "@/zustand_Cart/CartStore";
 
 export default function Navbar() {
   const cartStore = useCartStore();

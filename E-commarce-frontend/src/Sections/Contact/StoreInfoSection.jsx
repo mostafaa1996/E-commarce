@@ -1,5 +1,5 @@
-import ContactBlock from "../genericComponents/ContactBlock";
-import { storesData } from "../../src/Data/storeInfo";
+import ContactBlock from "@/components/genericComponents/ContactBlock";
+import { storesData } from "@/Data/storeInfo";
 export default function StoresSection() {
   return (
     <section className="py-20 bg-white">

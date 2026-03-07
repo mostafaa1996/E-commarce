@@ -1,6 +1,6 @@
 import CameraImg from "/CameraImg.png";
-import Button from "../genericComponents/Button";
-import ShowItemsTemplate from "../genericComponents/showItemsTemplate";
+import Button from " @/components/genericComponents/Button";
+import ShowItemsTemplate from "@/components/genericComponents/showItemsTemplate";
 import clsx from "clsx";
 export default function HeroProduct() {
   return (

@@ -1,6 +1,6 @@
-const DevelopmentURL = "http://localhost:3000";
+const URL = import.meta.env.VITE_API_URL;
 export async function getShopProducts(shopQuery) {
-  const API_Link =`${DevelopmentURL}/shop/products?${new URLSearchParams(shopQuery).toString()}`;
+  const API_Link =`${URL}/shop/products?${new URLSearchParams(shopQuery).toString()}`;
   console.log(API_Link);
   const response = await fetch(API_Link, {
     method: "GET",
@@ -17,7 +17,7 @@ export async function getShopProducts(shopQuery) {
 
 
 export async function getProductById(id) {
-  const API_Link = `${DevelopmentURL}/shop/products/${id}` ;
+  const API_Link = `${URL}/shop/products/${id}` ;
   console.log(API_Link);
   const response = await fetch(API_Link, {
     method: "GET",

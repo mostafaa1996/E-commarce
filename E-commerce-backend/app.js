@@ -4,17 +4,21 @@
 // getDataByZenRows.run();
 
 require("dotenv").config();
+require("./utils/exchangeRateRequest");
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-
 
 const shopRoutes = require("./routes/shop");
 const authRoutes = require("./routes/auth");
 const cartRoutes = require("./routes/Cart");
 const checkoutRoutes = require("./routes/checkout");
 const orderRoutes = require("./routes/order");
+const userProfileRoutes = require("./routes/UserProfile");
+const userProfilePaymentsRoutes = require("./routes/UserProfilePayments");
+const UserProfileSettingsRoutes = require("./routes/UserProfileSettings");
+const exchangeRateRoutes = require("./routes/exchangeRate");
 
 const app = express();
 app.use(express.json()); // for parsing application/json
@@ -26,7 +30,7 @@ app.use(
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
-  })
+  }),
 );
 
 app.use("/shop", shopRoutes);
@@ -34,16 +38,24 @@ app.use("/auth", authRoutes);
 app.use("/cart", cartRoutes);
 app.use("/checkout", checkoutRoutes);
 app.use("/order", orderRoutes);
-
+app.use(
+  "/user/profile",
+  userProfileRoutes,
+  userProfilePaymentsRoutes,
+  UserProfileSettingsRoutes,
+);
+app.use("/exchangeRate", exchangeRateRoutes);
 
 app.use((error, req, res, next) => {
-    console.log(error);
-    const status = error.statusCode || 500;
-    res.status(status).json({ message: error.message , data: error.data});
+  console.log(error);
+  const status = error.statusCode || 500;
+  res.status(status).json({ message: error.message, data: error.data });
 });
 
 mongoose
-  .connect("mongodb+srv://mostafahamdy:2201996220Mos@cluster0.uqgen2r.mongodb.net/ShopLite?")
+  .connect(
+    "mongodb+srv://mostafahamdy:2201996220Mos@cluster0.uqgen2r.mongodb.net/ShopLite?",
+  )
   .then(() => {
     console.log("Connected to database!");
     app.listen(3000);

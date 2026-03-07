@@ -1,6 +1,6 @@
-import VideoBlock from "../genericComponents/videoBlock";
-import ContentBlock from "../genericComponents/About_content";
-import aboutData from "../../src/Data/AboutData";
+import VideoBlock from "@/components/genericComponents/videoBlock";
+import ContentBlock from "@/components/genericComponents/About_content";
+import aboutData from "@/Data/AboutData";
 export default function AboutSection() {
   return (
     <section className="w-full flex items-center justify-center py-20 bg-white">
