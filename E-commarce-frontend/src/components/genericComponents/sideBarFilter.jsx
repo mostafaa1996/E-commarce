@@ -14,7 +14,7 @@ export default function SidebarFilter({
       </h3>
 
       <div
-        className="mt-2 mb-6 h-[10px]"
+        className="mt-2 mb-6 h-[10px] w-[60%]"
         style={{
           backgroundImage:
             "repeating-linear-gradient(135deg, #D4D4D4 0 1px, transparent 1px 10px)",

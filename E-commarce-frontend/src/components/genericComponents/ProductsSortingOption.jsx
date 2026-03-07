@@ -3,7 +3,7 @@ import { useState } from "react";
 export default function ProductsSortingOption({ sort, ShowFilterMenu }) {
   const [clicked, setClicked] = useState(false);
   return (
-    <div className="flex items-center gap-2 text-sm text-zinc-500 hover:text-[#FF6543]">
+    <div className="flex items-center gap-2 text-xl text-zinc-500 hover:text-[#FF6543]">
       <p>{sort}</p>
       <button
         onClick={() => {

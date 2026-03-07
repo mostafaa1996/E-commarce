@@ -14,7 +14,7 @@ export default function SearchBar({
     <div
       className={twMerge(
         clsx(
-          `flex items-center border border-zinc-200 rounded-md w-[310px]`,
+          `flex items-center border border-zinc-200 rounded-md w-full`,
           className,
         ),
       )}

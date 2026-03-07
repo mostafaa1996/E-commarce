@@ -16,8 +16,8 @@ export default function ShopSection({children}) {
 
   return (
     <div className="my-10 flex gap-10 mt-10 justify-center">
-      <div className="mt-10 flex flex-col gap-10">
-        <div className="flex items-center justify-between">
+      <div className="w-[60%] mt-10 flex flex-col justify-center gap-10">
+        <div className="max-w-8xl flex items-center justify-between">
           <CurrentRangeOfResults
             from={
               data?.pagination?.currentPage * shopQuery.limit -
@@ -31,7 +31,7 @@ export default function ShopSection({children}) {
         </div>
         {children}
       </div>
-      <aside className="mt-10 ml-10 w-full lg:w-[310px] flex flex-col gap-10">
+      <aside className="w-[25%] mt-10 ml-10 flex flex-col gap-10">
         <SearchSection />
         <SideBarFilterSection products={data} />
       </aside>

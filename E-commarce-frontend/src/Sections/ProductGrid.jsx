@@ -8,7 +8,7 @@ export default function ProductGrid({ products }) {
   const format = useCurrency(currency, locale);
   const rate = conversion_rate[currency] ?? 1 ;
   return (
-    <div className="max-w-6xl grid grid-cols-2 sm:grid-cols-3 gap-6">
+    <div className="max-w-8xl grid grid-cols-1 lg:grid-cols-3 gap-6">
       {MainProducts.map((product) => (
         <ProductCard
           key={product._id}
