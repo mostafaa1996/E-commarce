@@ -4,8 +4,8 @@ import { persist } from "zustand/middleware";
 export const useCurrencyStore = create(
     persist(
         (set, get) => ({
-            currency: "",
-            locale : "",
+            currency: "USD",
+            locale : "en-US",
             conversion_rate: {
                 USD: 1,
                 EUR: 1,

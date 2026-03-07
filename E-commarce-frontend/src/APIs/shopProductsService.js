@@ -31,3 +31,37 @@ export async function getProductById(id) {
   }
   return data;
 };
+
+export async function getLimitedSearchedProducts(searchQuery) {
+  const API_Link =`${URL}/shop/products/search/limited?${new URLSearchParams(searchQuery).toString()}` ;
+  console.log(API_Link);
+  const response = await fetch(API_Link, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!response.ok) {
+    throw new Error(data.message || "Failed to load products");
+  }
+  const data = await response.json();
+  console.log(data);
+  return data;
+}
+
+export async function getSearchedProducts(searchQuery) {
+  const API_Link =`${URL}/shop/products/search?${new URLSearchParams(searchQuery).toString()}` ;
+  console.log(API_Link);
+  const response = await fetch(API_Link, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!response.ok) {
+    throw new Error(data.message || "Failed to load products");
+  }
+  const data = await response.json();
+  console.log(data);
+  return data;
+}

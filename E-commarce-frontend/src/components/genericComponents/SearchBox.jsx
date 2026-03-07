@@ -6,6 +6,7 @@ export default function SearchBar({
   placeholder = "Search",
   onChange,
   onClickSearch,
+  onFocus,
   className,
 }) {
   const inputRef = useRef(null);
@@ -23,6 +24,7 @@ export default function SearchBar({
         placeholder={placeholder}
         ref={inputRef}
         onChange={() => onChange(inputRef.current.value)}
+        onFocus={() => onFocus()}
         className={clsx(
           "flex-1 px-4 py-4 text-sm font-light outline-none",
           " placeholder:text-zinc-400",

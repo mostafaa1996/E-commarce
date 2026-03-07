@@ -3,7 +3,8 @@ const ShopController = require("../controllers/shop");
 
 const router = express.Router();
 
-router.get("/products", ShopController.getProducts);
-router.get("/products/:id", ShopController.getProduct);
+router.get("/", ShopController.getProducts);
+router.get("/:id", ShopController.getProduct);
+router.get("/search/limited" , ShopController.getLimitedSearchProducts);
 
 module.exports = router;

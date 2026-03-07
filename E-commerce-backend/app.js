@@ -33,7 +33,7 @@ app.use(
   }),
 );
 
-app.use("/shop", shopRoutes);
+app.use("/shop/products", shopRoutes);
 app.use("/auth", authRoutes);
 app.use("/cart", cartRoutes);
 app.use("/checkout", checkoutRoutes);

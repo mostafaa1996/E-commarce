@@ -131,3 +131,23 @@ exports.getProduct = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.getLimitedSearchProducts = async (req, res, next) => {
+  try {
+    const {search} = req?.query ;
+    console.log(search);
+    const Query = {};
+    if (search) {
+      Query.$or = [
+        { title: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+        { category: { $regex: search, $options: "i" } },
+        { brand: { $regex: search, $options: "i" } },
+      ];
+    }
+    const products = await Product.find(Query).limit(5).select("_id title price images");
+    res.status(200).json(products);
+  } catch (err) {
+    next(err);
+  }
+}
