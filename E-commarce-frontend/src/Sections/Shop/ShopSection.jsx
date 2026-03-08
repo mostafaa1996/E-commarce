@@ -27,7 +27,7 @@ export default function ShopSection({children}) {
             to={data?.pagination?.currentPage * shopQuery.limit}
             total={data?.pagination?.totalItems}
           />
-          <SortingSection />
+          {shopQuery.category && <SortingSection />}
         </div>
         {children}
       </div>
