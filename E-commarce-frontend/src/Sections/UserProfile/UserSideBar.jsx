@@ -1,12 +1,13 @@
 import AccountSidebar from "@/components/AccountSideBar/AccountSidebar";
 import NavItem from "@/components/AccountSideBar/NavItem";
 import LogoutSection from "@/components/AccountSideBar/LogoutSection";
-import { useState } from "react";
+import useProfileRoutingStates from "@/zustand_ProfileRoutesStates/ProfileRoutesStates";
+
 import { useNavigate } from "react-router-dom";
 import Icon from "@/system/icons/Icon";
-export default function UserSidebar({ items, activeId, onLogout }) {
-  const [active, setActive] = useState(activeId);
-  const navigate = useNavigate();
+export default function UserSidebar({ items,onLogout }) {
+  const { setCurrentRouteState , currentRouteState } = useProfileRoutingStates();
+  const navigate = useNavigate(); 
   return (
     <AccountSidebar>
       <div className="mt-5 ">
@@ -22,9 +23,9 @@ export default function UserSidebar({ items, activeId, onLogout }) {
               />
             }
             label={item.label}
-            active={active === item.id}
+            active={currentRouteState.currentRoute === item.id}
             onClick={() => {
-              setActive(item.id);
+              setCurrentRouteState({...currentRouteState , currentRoute : item.id});
               navigate(item.path);
             }}
           />

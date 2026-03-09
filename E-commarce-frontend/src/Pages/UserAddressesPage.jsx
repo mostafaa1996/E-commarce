@@ -6,6 +6,7 @@ import { Fragment, useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getUserAddresses } from "@/APIs/UserProfileService";
 import { useFetcher, useActionData, useLoaderData } from "react-router-dom";
+import useProfileRoutingStates from "@/zustand_ProfileRoutesStates/ProfileRoutesStates";
 export default function UserAddressesPage() {
   let content = null;
   const { addresses } = useLoaderData();
@@ -22,12 +23,14 @@ export default function UserAddressesPage() {
     queryKey: ["profile-addresses"],
     queryFn: getUserAddresses,
   });
+  const {currentRouteState , setCurrentRouteState} = useProfileRoutingStates();
 
   function handleEdit(addressId) {
     setCurrentState(`edit-${addressId}`);
   }
 
   function handleAdd() {
+    console.log("add");
     setCurrentState("add");
   }
 
@@ -37,6 +40,14 @@ export default function UserAddressesPage() {
       { intent: "delete", id: addressId },
       { method: "post", action: `/profile/addresses` },
     );
+  }
+
+  function handleCancel() {
+    setCurrentState("");
+    setCurrentRouteState({
+      ...currentRouteState,
+      previousAction: "Cancel",
+    });
   }
 
   function setAsDefault(addressId) {
@@ -73,18 +84,18 @@ export default function UserAddressesPage() {
             title="Edit Address"
             buttonText="Save"
             buttonIconName="save"
-            onCancel={() => setCurrentState("")}
+            onCancel={handleCancel}
             InitialFormData={addressesObj?.addresses?.find(
               (address) => address._id === currentState.split("-")[1],
             )}
           />
         )}
-        {currentState === "add" && (
+        {(currentState === "add" || (currentRouteState.previousAction === "Add address"))  && (
           <EditAddressForm
             title="Add Address"
             buttonText="Add"
             buttonIconName="plus"
-            onCancel={() => setCurrentState("")}
+            onCancel={handleCancel}
           />
         )}
         {addressesObj?.addresses?.length > 0 && (

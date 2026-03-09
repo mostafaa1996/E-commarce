@@ -29,12 +29,12 @@ export const UserSideBarItems = [
     icon:"payment",
     path: "/profile/payments",
   },
-  {
-    id: "notifications",
-    label: "Notifications",
-    icon:"notifications",
-    path: "/profile/notifications",
-  },
+  // {
+  //   id: "notifications",
+  //   label: "Notifications",
+  //   icon:"notifications",
+  //   path: "/profile/notifications",
+  // },
   {
     id: "settings",
     label: "Settings",

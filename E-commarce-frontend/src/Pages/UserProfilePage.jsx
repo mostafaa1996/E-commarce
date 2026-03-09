@@ -6,7 +6,6 @@ import WishListSection from "@/Sections/UserProfile/WishListSection";
 import { useQuery } from "@tanstack/react-query";
 import { getUserProfileData } from "@/APIs/UserProfileService";
 import BaseSection from "@/Sections/UserProfile/BaseSectionForUserProfile";
-import useProfileRoutingStates from "@/zustand_ProfileRoutesStates/ProfileRoutingStates";
 
 export default function UserProfilePage() {
   const { data, isLoading, error } = useQuery({
