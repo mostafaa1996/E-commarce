@@ -8,7 +8,7 @@ export default function WishListSection({ WishList }) {
   const { currency, locale } = useCurrencyStore();
   const format = useCurrency(currency, locale);
   return (
-    <DashBoardTable className={`max-w-5xl`}>
+    <DashBoardTable >
       <DashBoardTableHeader
         ButtonAction={() => console.log("View all")}
         HeaderText="WishList"
