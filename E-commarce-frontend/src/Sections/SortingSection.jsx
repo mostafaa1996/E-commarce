@@ -1,7 +1,7 @@
 import DropDownMenu from "@/components/genericComponents/DropDownMenu";
 import ProductsSortingOption from "@/components/genericComponents/ProductsSortingOption";
-import { useShopQueryStore } from "@/zustand_ShopPage/ShopQueryStore";
 import { useState , useRef , useEffect } from "react";
+import useShopQuery from "@/hooks/shopPageQuery";
 
 const sortingArray = [
   "price-asc",
@@ -15,7 +15,7 @@ const sortingArray = [
 ];
 export default function SortingSection() {
   const [showMenu, setShowMenu] = useState(false);
-  const { shopQuery, setShopQuery } = useShopQueryStore();
+  const { updateShopQuery , shopQuery } = useShopQuery();
   const MenuRef = useRef(null);
 
   useEffect(() => {
@@ -34,7 +34,7 @@ export default function SortingSection() {
     setShowMenu(!showMenu);
   }
   function onSelect(value) {
-    setShopQuery("sort", value);
+    updateShopQuery({ sort: value });
     setShowMenu(false);
   }
   return (

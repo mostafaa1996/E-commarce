@@ -3,19 +3,18 @@ import CurrentRangeOfResults from "@/components/genericComponents/CurrentRangeOf
 import SideBarFilterSection from "../SideBarFilterSection";
 import SortingSection from "../SortingSection";
 import SearchSection from "../SearchSection";
-import { useShopQueryStore } from "@/zustand_ShopPage/ShopQueryStore";
 import { useQuery } from "@tanstack/react-query";
 import { getShopProducts } from "@/APIs/shopProductsService";
 import Button from "@/components/genericComponents/Button";
+import useShopQuery from "@/hooks/shopPageQuery";
 
 export default function ShopSection({children}) {
-  const { shopQuery , SelectedFilterArray , resetAll} = useShopQueryStore();
+  const {resetShopQuery , shopQuery } = useShopQuery();
   const { data , error } = useQuery({
     queryKey: ["products", shopQuery],
     queryFn: () => getShopProducts(shopQuery),
     placeholderData: (previousData) => previousData,
   });
-
 
   if (error) return <p>Error loading products</p>;
 
@@ -33,7 +32,7 @@ export default function ShopSection({children}) {
               to={data?.pagination?.currentPage * shopQuery.limit}
               total={data?.pagination?.totalItems}
             />
-            {SelectedFilterArray.length > 0 && <Button onClick={resetAll}>Clear filter</Button>}
+            {shopQuery.category && <Button onClick={resetShopQuery}>Clear filter</Button>}
           </div>
           {shopQuery.category && <SortingSection />}
         </div>
@@ -41,7 +40,7 @@ export default function ShopSection({children}) {
       </div>
       <aside className="w-[25%] mt-10 ml-10 flex flex-col gap-10">
         <SearchSection />
-        <SideBarFilterSection products={data} />
+        <SideBarFilterSection data={data} />
       </aside>
     </div>
   );

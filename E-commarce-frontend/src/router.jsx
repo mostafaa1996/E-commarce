@@ -29,9 +29,8 @@ import UserAddressesPage from "./Pages/UserAddressesPage";
 import UserPaymentPage from "./Pages/UserPaymentPage";
 import UserSettingsPage from "./Pages/UserSettingsPage";
 import MainLayout from "./layouts/MainLayout";
-
-import { defaultShopQuery } from "./zustand_ShopPage/shopDefaultQuery";
 import ShopPageLayout from "./layouts/shopPageLayout";
+import { parseShopQueryFromUrl } from "./utils/ParseShopQuery";
 
 export const router = createBrowserRouter([
   {
@@ -45,10 +44,11 @@ export const router = createBrowserRouter([
             index: true,
             element: <ShopPage />,
             handle: { title: "Shop" },
-            loader: async () => {
+            loader: async ({ request }) => {
+              const InitialQuery = parseShopQueryFromUrl(request.url);
               return queryClient.ensureQueryData({
-                queryKey: ["products", defaultShopQuery],
-                queryFn: () => getShopProducts(defaultShopQuery),
+                queryKey: ["products", InitialQuery ],
+                queryFn: () => getShopProducts(InitialQuery),
               });
             },
           },
@@ -59,7 +59,7 @@ export const router = createBrowserRouter([
         element: <ProductDetailsPage />,
         handle: { title: "Product Details" },
         loader: async ({ params }) => {
-          console.log(params.id);
+          // console.log(params.id);
           return queryClient.ensureQueryData({
             queryKey: ["product", params.id],
             queryFn: () => getProductById(params.id),

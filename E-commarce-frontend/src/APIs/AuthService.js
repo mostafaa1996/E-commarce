@@ -41,7 +41,7 @@ export async function SignupAction({ request }) {
   const password = formData.get("password");
   const confirmPassword = formData.get("confirmPassword");
 
-  console.log(name, email, password, confirmPassword);
+  // console.log(name, email, password, confirmPassword);
   if (!email) return "Please enter your email";
   if (!password) return "password is required";
   if (password !== confirmPassword) return "Passwords do not match";

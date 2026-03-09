@@ -1,6 +1,6 @@
 const URL = import.meta.env.VITE_API_URL;
 export async function getShopProducts(shopQuery) {
-  console.log(shopQuery);
+  // console.log(shopQuery);
 
   const params = new URLSearchParams();
 
@@ -13,7 +13,7 @@ export async function getShopProducts(shopQuery) {
   });
 
   const API_Link = `${URL}/shop/products?${params.toString()}`;
-  console.log(API_Link);
+  // console.log(API_Link);
   const response = await fetch(API_Link, {
     method: "GET",
     headers: {
@@ -24,6 +24,7 @@ export async function getShopProducts(shopQuery) {
   if (!response.ok) {
     throw new Error(data.message || "Failed to load products");
   }
+  // console.log(data);
   return data;
 }
 
@@ -58,7 +59,7 @@ export async function getLimitedSearchedProducts(searchQuery) {
     throw new Error(data.message || "Failed to load products");
   }
   const data = await response.json();
-  console.log(data);
+  // console.log(data);
   return data;
 }
 
@@ -77,6 +78,6 @@ export async function getSearchedProducts(searchQuery) {
     throw new Error(data.message || "Failed to load products");
   }
   const data = await response.json();
-  console.log(data);
+  // console.log(data);
   return data;
 }

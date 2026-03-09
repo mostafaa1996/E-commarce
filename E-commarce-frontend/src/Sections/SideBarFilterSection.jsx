@@ -1,23 +1,24 @@
 import SideBarFilter from "@/components/genericComponents/SideBarFilter";
-import { useShopQueryStore } from "@/zustand_ShopPage/ShopQueryStore";
 import useCurrency from "@/hooks/CurrencyChange";
 import { useCurrencyStore } from "@/zustand_preferences/currency";
+import useShopQuery from "@/hooks/shopPageQuery";
+import { Fragment } from "react";
+import { parseShopQueryFromUrl } from "@/utils/ParseShopQuery";
+import { useLocation } from "react-router-dom";
 
-
-export default function SideBarFilterSection({ products }) {
-  const { shopQuery, setShopQuery , resetAll } = useShopQueryStore();
+export default function SideBarFilterSection({ data }) {
+  const { updateShopQuery, shopQuery, resetShopQuery } = useShopQuery();
   const { currency, locale, conversion_rate } = useCurrencyStore();
   const format = useCurrency(currency, locale);
   const rate = conversion_rate[currency] ?? 1;
+  const location = useLocation();
+  const fullUrl = window.location.origin + location.pathname + location.search;
+  const parsedQuery = parseShopQueryFromUrl(fullUrl);
 
   const HandleMaxMinPrice = () => {
-    if (
-      products.price &&
-      Array.isArray(products.price) &&
-      products.price.length > 0
-    ) {
+    if (data.price && Array.isArray(data.price) && data.price.length > 0) {
       //sort the array
-      const sortedArray = products.price.sort((a, b) => a - b);
+      const sortedArray = data.price.sort((a, b) => a - b);
       //Max and Min array
       const max = sortedArray[sortedArray.length - 1];
       const min = sortedArray[0];
@@ -44,14 +45,29 @@ export default function SideBarFilterSection({ products }) {
     };
   });
 
+  function PrepareActivatedFilters() {
+    const query = {
+      category: parsedQuery.category,
+      tags: parsedQuery.tags,
+      brands: parsedQuery.brands,
+      price: PriceArr?.find(
+        (item) =>
+          item.value.min === parsedQuery.minPrice &&
+          item.value.max === parsedQuery.maxPrice,
+      )?.label,
+    };
+    console.log(query);
+    return query;
+  }
+
   const FilterationData = {
-    categories: products?.category,
-    tags: products?.tags,
-    brands: products?.brands,
+    categories: data?.category,
+    tags: data?.tags,
+    brands: data?.brands,
     Price: PriceArr?.map((item) => item.label),
   };
 
-  function applyFilter(item, Title) {
+  function applyFilter(Title, item) {
     if (Array.isArray(shopQuery[Title])) {
       const data = shopQuery[Title];
       // check if the item is already in the array
@@ -61,18 +77,18 @@ export default function SideBarFilterSection({ products }) {
         data.splice(data.indexOf(item), 1); // remove the item
       }
       if (data.length === 0) {
-        setShopQuery(Title, null); // if the array is empty, set the value to null
+        updateShopQuery({ [Title]: [] }); // if the array is empty, set the value to empty array
         return;
       }
-      setShopQuery(Title, data); //set the data to the title
+      updateShopQuery({ [Title]: data }); //set the data to the title
       return;
     } else if (!Array.isArray(shopQuery[Title])) {
       if (shopQuery[Title] === item) {
-        if(Title === "category" ) {
-          resetAll();
+        if (Title === "category") {
+          resetShopQuery();
           return;
         }
-        setShopQuery(Title, null);
+        updateShopQuery({ [Title]: null });
         return;
       }
       if (Title === "price") {
@@ -85,16 +101,14 @@ export default function SideBarFilterSection({ products }) {
           shopQuery["minPrice"] === minPrice &&
           shopQuery["maxPrice"] === maxPrice
         ) {
-          setShopQuery("minPrice", null);
-          setShopQuery("maxPrice", null);
+          updateShopQuery({ minPrice: null, maxPrice: null });
           return;
         }
-        setShopQuery("minPrice", minPrice);
-        setShopQuery("maxPrice", maxPrice);
+        updateShopQuery({ minPrice: minPrice, maxPrice: maxPrice });
         return;
       }
     }
-    setShopQuery(Title, item);
+    updateShopQuery({ [Title]: item });
   }
 
   return (
@@ -102,11 +116,10 @@ export default function SideBarFilterSection({ products }) {
       {/* the essential filter is categories */}
       {FilterationData.categories && (
         <SideBarFilter
-          key={FilterationData.categories[0]}
           title={"Category"}
           items={FilterationData.categories || []}
-          applyFilter={applyFilter}
-          MultiChoiceOption={false}
+          onSelectFilter={applyFilter}
+          activeFilter={PrepareActivatedFilters()}
         />
       )}
       {/* the rest of the filters determined by the categories selected */}
@@ -114,12 +127,14 @@ export default function SideBarFilterSection({ products }) {
         Object.entries(FilterationData).map(([key, values]) => {
           if (key === "categories") return;
           return (
-            <SideBarFilter
-              key={key}
-              title={key}
-              items={values || []}
-              applyFilter={applyFilter}
-            />
+            <Fragment key={key}>
+              <SideBarFilter
+                title={key}
+                items={values || []}
+                onSelectFilter={applyFilter}
+                activeFilter={PrepareActivatedFilters()}
+              />
+            </Fragment>
           );
         })}
     </>

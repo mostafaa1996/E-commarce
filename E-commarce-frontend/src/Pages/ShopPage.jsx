@@ -1,17 +1,17 @@
 import ProductGrid from "@/Sections/ProductGrid";
 import Pagination from "@/components/genericComponents/Pagination";
-import { useShopQueryStore } from "@/zustand_ShopPage/ShopQueryStore";
 import { useQuery } from "@tanstack/react-query";
 import { getShopProducts } from "@/APIs/shopProductsService";
+import useShopQuery from "@/hooks/shopPageQuery";
 export default function ShopPage() {
-  const { shopQuery, setShopQuery } = useShopQueryStore();
+  const { shopQuery , updateShopQuery } = useShopQuery();
   const { data, isLoading, isFetching, error } = useQuery({
     queryKey: ["products", shopQuery],
     queryFn: () => getShopProducts(shopQuery),
     placeholderData: (previousData) => previousData,
   });
   function setCurrentPageEvent(currentPage) {
-    setShopQuery("page", currentPage);
+    updateShopQuery({ page: currentPage });
   }
   if (isLoading) {
     return (

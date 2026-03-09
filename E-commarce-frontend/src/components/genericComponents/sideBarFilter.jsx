@@ -1,12 +1,9 @@
-import { useShopQueryStore } from "@/zustand_ShopPage/ShopQueryStore";
 export default function SidebarFilter({
   title,
   items,
-  applyFilter,
+  onSelectFilter,
+  activeFilter,
 }) {
-  const { SelectedFilterArray, pushSelectedFilter, removeSelectedFilter } =
-    useShopQueryStore();
-  console.log(SelectedFilterArray);
   return (
     <div>
       <h3 className="text-[30px] font-extralight uppercase tracking-wide">
@@ -31,19 +28,12 @@ export default function SidebarFilter({
               key={item}
               className={` 
               hover:text-[#FF6543] active:scale-110 transition duration-300 ease-in
-              ${SelectedFilterArray?.some((i)=> i.item === item) ? "text-[#FF6543] underline" : ""}`}
+              ${activeFilter[title.toLowerCase()]?.includes(item)? "text-[#FF6543] underline" : ""}`}
             >
               <button
                 onClick={() => {
-                  // toggle the selected state
-                  if (SelectedFilterArray?.some((i)=> i.item === item)){
-                    removeSelectedFilter(item , title.toLowerCase());
-                  }else{
-                    pushSelectedFilter(item , title.toLowerCase());
-                  }
-                  applyFilter(item, title.toLowerCase());
+                  onSelectFilter(title.toLowerCase(), item);
                 }}
-                className="cursor-pointer "
               >
                 {item}
               </button>
