@@ -13,14 +13,21 @@ export const useShopQueryStore = create((set) => ({
       },
     })),
   //push value to SelectedFilterArray
-  pushSelectedFilter: (value) =>
-    set((state) => ({
-      SelectedFilterArray: [...state.SelectedFilterArray, value],
-    })),
+  pushSelectedFilter: (item , title) =>{
+    if(title === "price" || title === "category"){
+      set((state) => ({
+      SelectedFilterArray: state.SelectedFilterArray.filter((i) => i.title !== title),
+      }));
+    }
+    return set((state) => ({
+      SelectedFilterArray: [...state.SelectedFilterArray, {item , title}],
+    }));
+  },
+    
   //remove value from SelectedFilterArray
-  removeSelectedFilter: (value) =>
+  removeSelectedFilter: (item , title) =>
     set((state) => ({
-      SelectedFilterArray: state.SelectedFilterArray.filter((item) => item !== value),
+      SelectedFilterArray: state.SelectedFilterArray.filter((i) => i.item !== item && i.title !== title),
     })),
   
   //reset shopQuery and SelectedFilterArray

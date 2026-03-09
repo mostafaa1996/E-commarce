@@ -6,30 +6,35 @@ import SearchSection from "../SearchSection";
 import { useShopQueryStore } from "@/zustand_ShopPage/ShopQueryStore";
 import { useQuery } from "@tanstack/react-query";
 import { getShopProducts } from "@/APIs/shopProductsService";
+import Button from "@/components/genericComponents/Button";
 
 export default function ShopSection({children}) {
-  const { shopQuery} = useShopQueryStore();
-  const { data , isLoading , error } = useQuery({
+  const { shopQuery , SelectedFilterArray , resetAll} = useShopQueryStore();
+  const { data , error } = useQuery({
     queryKey: ["products", shopQuery],
     queryFn: () => getShopProducts(shopQuery),
+    placeholderData: (previousData) => previousData,
   });
 
-  if (isLoading) return <p>Loading...</p>;
+
   if (error) return <p>Error loading products</p>;
 
   return (
     <div className="my-10 flex gap-10 mt-10 justify-center">
       <div className="w-[60%] mt-10 flex flex-col justify-start gap-10">
         <div className="max-w-8xl flex items-center justify-between">
-          <CurrentRangeOfResults
-            from={
-              data?.pagination?.currentPage * shopQuery.limit -
-              shopQuery.limit +
-              1
-            }
-            to={data?.pagination?.currentPage * shopQuery.limit}
-            total={data?.pagination?.totalItems}
-          />
+          <div className="flex items-center gap-5">
+            <CurrentRangeOfResults
+              from={
+                data?.pagination?.currentPage * shopQuery.limit -
+                shopQuery.limit +
+                1
+              }
+              to={data?.pagination?.currentPage * shopQuery.limit}
+              total={data?.pagination?.totalItems}
+            />
+            {SelectedFilterArray.length > 0 && <Button onClick={resetAll}>Clear filter</Button>}
+          </div>
           {shopQuery.category && <SortingSection />}
         </div>
         {children}

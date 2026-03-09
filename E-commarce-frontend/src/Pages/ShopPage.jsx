@@ -5,25 +5,41 @@ import { useQuery } from "@tanstack/react-query";
 import { getShopProducts } from "@/APIs/shopProductsService";
 export default function ShopPage() {
   const { shopQuery, setShopQuery } = useShopQueryStore();
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, isFetching, error } = useQuery({
     queryKey: ["products", shopQuery],
     queryFn: () => getShopProducts(shopQuery),
+    placeholderData: (previousData) => previousData,
   });
   function setCurrentPageEvent(currentPage) {
     setShopQuery("page", currentPage);
   }
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center py-20">
+        <div className="w-10 h-10 border-4 border-gray-300 border-t-orange-500 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
   if (error) return <p>Error loading products</p>;
-  if (!data) return <p>No products found</p>;
   return (
-    <div className="flex flex-col items-center justify-center gap-10">
+    <div className="flex flex-col items-center justify-center gap-10 min-h-[80vh]">
       <ProductGrid products={data.products} />
-      <Pagination
-        totalPages={data.pagination.totalPages}
-        onChange={setCurrentPageEvent}
-        currentPage={data.pagination.currentPage}
-        RangeOfPagesNumberToShow={4}
-      />
+      {data && data?.products?.length > 0 && (
+        <Pagination
+          totalPages={data.pagination.totalPages}
+          onChange={setCurrentPageEvent}
+          currentPage={data.pagination.currentPage}
+          RangeOfPagesNumberToShow={4}
+        />
+      )}
+      {(!data ||(data && data?.products?.length === 0)) && (
+        <p className="text-2xl text-center font-semibold">No products found</p>
+      )}
+      {isFetching && (
+        <div className="absolute inset-0 flex items-center justify-center bg-white/60 z-10">
+          <div className="w-10 h-10 border-4 border-gray-300 border-t-orange-500 rounded-full animate-spin"></div>
+        </div>
+      )}
     </div>
   );
 }

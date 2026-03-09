@@ -4,13 +4,16 @@ import DashBoardTable from "@/components/genericComponents/DashBoardTable";
 import Icon from "@/system/icons/Icon";
 import useCurrency from "@/hooks/CurrencyChange";
 import { useCurrencyStore } from "@/zustand_preferences/currency";
+import { useNavigate } from "react-router-dom";
+
 export default function WishListSection({ WishList }) {
   const { currency, locale } = useCurrencyStore();
   const format = useCurrency(currency, locale);
+  const navigate = useNavigate();
   return (
     <DashBoardTable >
       <DashBoardTableHeader
-        ButtonAction={() => console.log("View all")}
+        ButtonAction={() => navigate("/profile/wishlist")}
         HeaderText="WishList"
         HeaderIcon={
           <Icon name="wishlist" size={24} strokeWidth={1.5} variant="primary" />

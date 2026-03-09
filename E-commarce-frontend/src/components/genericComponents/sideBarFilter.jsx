@@ -31,16 +31,15 @@ export default function SidebarFilter({
               key={item}
               className={` 
               hover:text-[#FF6543] active:scale-110 transition duration-300 ease-in
-              ${SelectedFilterArray?.includes(item) ? "text-[#FF6543] underline" : ""}`}
+              ${SelectedFilterArray?.some((i)=> i.item === item) ? "text-[#FF6543] underline" : ""}`}
             >
               <button
                 onClick={() => {
                   // toggle the selected state
-                  if (SelectedFilterArray?.includes(item)) {
-                    removeSelectedFilter(item);
+                  if (SelectedFilterArray?.some((i)=> i.item === item)){
+                    removeSelectedFilter(item , title.toLowerCase());
                   }else{
-                    console.log("pushing......" , item);
-                    pushSelectedFilter(item);
+                    pushSelectedFilter(item , title.toLowerCase());
                   }
                   applyFilter(item, title.toLowerCase());
                 }}

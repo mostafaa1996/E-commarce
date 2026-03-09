@@ -58,7 +58,7 @@ export default function Navbar() {
           <img src={logout} alt="logout" />
         </Link>
         <Link
-          to="/userProfile"
+          to="/profile"
           className={`w-[30px] aspect-square cursor-pointer
            hover:scale-110 transition duration-200 ease-in-out
           `}
@@ -66,7 +66,7 @@ export default function Navbar() {
           <img src={userProfile} alt="userProfile" />
         </Link>
         <Link
-          to="/wishlist"
+          to="/profile/wishlist"
           className={`w-[30px] aspect-square cursor-pointer
            hover:scale-110 transition duration-200 ease-in-out
           `}
