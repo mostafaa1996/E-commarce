@@ -3,17 +3,52 @@ import { useShopQueryStore } from "@/zustand_ShopPage/ShopQueryStore";
 import useCurrency from "@/hooks/CurrencyChange";
 import { useCurrencyStore } from "@/zustand_preferences/currency";
 
+
 export default function SideBarFilterSection({ products }) {
-  const { shopQuery, setShopQuery } = useShopQueryStore();
-  const { currency, locale , conversion_rate } = useCurrencyStore();
+  const { shopQuery, setShopQuery , resetAll } = useShopQueryStore();
+  const { currency, locale, conversion_rate } = useCurrencyStore();
   const format = useCurrency(currency, locale);
-  const rate = conversion_rate[currency] ?? 1 ;
+  const rate = conversion_rate[currency] ?? 1;
+
+  const HandleMaxMinPrice = () => {
+    if (
+      products.price &&
+      Array.isArray(products.price) &&
+      products.price.length > 0
+    ) {
+      //sort the array
+      const sortedArray = products.price.sort((a, b) => a - b);
+      //Max and Min array
+      const max = sortedArray[sortedArray.length - 1];
+      const min = sortedArray[0];
+      const range = max - min;
+      const step = Math.ceil(range / 5);
+      const RangePriceArr = [];
+      for (let i = 0; i < 5; i++) {
+        const start = min + i * step;
+        const end = Math.min(max, start + step - 1);
+        RangePriceArr.push({
+          min: start,
+          max: end,
+        });
+      }
+      return RangePriceArr;
+    }
+  };
+
+  let PriceArr = HandleMaxMinPrice();
+  PriceArr = PriceArr?.map((item) => {
+    return {
+      label: `${format(item.min * rate)}-${format(item.max * rate)}`,
+      value: { min: item.min, max: item.max },
+    };
+  });
 
   const FilterationData = {
     categories: products?.category,
     tags: products?.tags,
     brands: products?.brands,
-    Price: products?.price.map((price) => format(price * rate)),
+    Price: PriceArr?.map((item) => item.label),
   };
 
   function applyFilter(item, Title) {
@@ -29,11 +64,33 @@ export default function SideBarFilterSection({ products }) {
         setShopQuery(Title, null); // if the array is empty, set the value to null
         return;
       }
-      setShopQuery(Title, data); // if the array is not empty, set the value to the array
+      setShopQuery(Title, data); //set the data to the title
       return;
     } else if (!Array.isArray(shopQuery[Title])) {
       if (shopQuery[Title] === item) {
+        if(Title === "category" ) {
+          resetAll();
+          return;
+        }
         setShopQuery(Title, null);
+        return;
+      }
+      if (Title === "price") {
+        const maxPrice = PriceArr.find((price) => price.label === item).value
+          .max;
+        const minPrice = PriceArr.find((price) => price.label === item).value
+          .min;
+        // toggle the filter
+        if (
+          shopQuery["minPrice"] === minPrice &&
+          shopQuery["maxPrice"] === maxPrice
+        ) {
+          setShopQuery("minPrice", null);
+          setShopQuery("maxPrice", null);
+          return;
+        }
+        setShopQuery("minPrice", minPrice);
+        setShopQuery("maxPrice", maxPrice);
         return;
       }
     }
@@ -62,7 +119,6 @@ export default function SideBarFilterSection({ products }) {
               title={key}
               items={values || []}
               applyFilter={applyFilter}
-              MultiChoiceOption={Array.isArray(shopQuery[key])}
             />
           );
         })}

@@ -1,14 +1,14 @@
-import { useState } from "react";
+import { useShopQueryStore } from "@/zustand_ShopPage/ShopQueryStore";
 export default function SidebarFilter({
   title,
   items,
   applyFilter,
-  MultiChoiceOption,
 }) {
-  const [MultiItemSelected, setMultiItemSelected] = useState([]);
-  const [singleItemSelected, setsingleItemSelected] = useState("");
+  const { SelectedFilterArray, pushSelectedFilter, removeSelectedFilter } =
+    useShopQueryStore();
+  console.log(SelectedFilterArray);
   return (
-    <div >
+    <div>
       <h3 className="text-[30px] font-extralight uppercase tracking-wide">
         {title}
       </h3>
@@ -31,33 +31,16 @@ export default function SidebarFilter({
               key={item}
               className={` 
               hover:text-[#FF6543] active:scale-110 transition duration-300 ease-in
-              ${
-                (MultiChoiceOption && MultiItemSelected.includes(item)) ||
-                (!MultiChoiceOption && singleItemSelected === item)
-                  ? "text-[#FF6543]"
-                  : ""
-              }`}
+              ${SelectedFilterArray?.includes(item) ? "text-[#FF6543] underline" : ""}`}
             >
               <button
                 onClick={() => {
                   // toggle the selected state
-                  if (!MultiChoiceOption && singleItemSelected === item) {
-                    setsingleItemSelected("");
-                  } else if (
-                    !MultiChoiceOption &&
-                    singleItemSelected !== item
-                  ) {
-                    setsingleItemSelected(item);
-                  }
-                  if (MultiChoiceOption && MultiItemSelected.includes(item)) {
-                    setMultiItemSelected(
-                      MultiItemSelected.filter((i) => i !== item),
-                    );
-                  } else if (
-                    MultiChoiceOption &&
-                    !MultiItemSelected.includes(item)
-                  ) {
-                    setMultiItemSelected((prev) => [...prev, item]);
+                  if (SelectedFilterArray?.includes(item)) {
+                    removeSelectedFilter(item);
+                  }else{
+                    console.log("pushing......" , item);
+                    pushSelectedFilter(item);
                   }
                   applyFilter(item, title.toLowerCase());
                 }}

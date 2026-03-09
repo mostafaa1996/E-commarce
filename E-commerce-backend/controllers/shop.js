@@ -5,7 +5,6 @@ const categories = require("../getBaseProductsByRapidAPI/categories");
 //  API = /shop/products?
 //   page=...&
 //   limit=...&
-//   search=...&
 //   category=...&
 //   brand=...&
 //   minPrice=...&
@@ -17,7 +16,6 @@ exports.getProducts = async (req, res, next) => {
   const {
     page = 1,
     limit = 9,
-    search,
     category,
     brands,
     minPrice,
@@ -25,32 +23,35 @@ exports.getProducts = async (req, res, next) => {
     sort,
     tags,
   } = req.query;
-
+  console.log(req.query);
   pageNumber = Number(page);
   limitNumber = Number(limit);
   const api_params = {};
   let sortOptions = {};
-  if (search && search !== "null" && search !== "") {
-    api_params.title = { $regex: search, $options: "i" };
-  }
+  
   if (category && category !== "null" && category !== "") {
     api_params.category = { $regex: category, $options: "i" };
   }
-  if (brands && brands !== "null" && brands !== "") {
+  if (brands && Array.isArray(brands) && brands.length > 0) {
+    api_params.brand = { $in : brands.map(brand => new RegExp(brand, "i")) };
+  }
+  if(brands && !Array.isArray(brands)){
     api_params.brand = { $regex: brands, $options: "i" };
   }
   if (
-    (minPrice && minPrice !== "null" && minPrice !== "") ||
-    (maxPrice && maxPrice !== "null" && maxPrice !== "")
+    (minPrice && minPrice !== "null" && minPrice !== "") &&
+    (maxPrice && maxPrice !== "null" && maxPrice !== "" && maxPrice !== "0")
   ) {
     api_params.price = {};
-    if (minPrice) api_params.price.$gte = Number(minPrice);
-    if (maxPrice) api_params.price.$lte = Number(maxPrice);
+    api_params.price.$gte = Number(minPrice);
+    api_params.price.$lte = Number(maxPrice);
   }
-  if (tags && tags !== "null" && tags !== "") {
+  if (tags && Array.isArray(tags) && tags.length > 0) {
+    api_params.tags = { $in : tags.map(tag => new RegExp(tag, "i")) };
+  }
+  if(tags && !Array.isArray(tags)){
     api_params.tags = { $regex: tags, $options: "i" };
   }
-
   if (sort && sort !== "null" && sort !== "") {
     if (sort === "price-asc") sortOptions.price = 1;
     if (sort === "price-desc") sortOptions.price = -1;
@@ -119,9 +120,6 @@ exports.getProducts = async (req, res, next) => {
   }
 };
 
-
-//
-//  API = /products/:id
 
 exports.getProduct = async (req, res, next) => {
   try {

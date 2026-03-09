@@ -14,9 +14,12 @@ export default function ShopSection({children}) {
     queryFn: () => getShopProducts(shopQuery),
   });
 
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error loading products</p>;
+
   return (
     <div className="my-10 flex gap-10 mt-10 justify-center">
-      <div className="w-[60%] mt-10 flex flex-col justify-center gap-10">
+      <div className="w-[60%] mt-10 flex flex-col justify-start gap-10">
         <div className="max-w-8xl flex items-center justify-between">
           <CurrentRangeOfResults
             from={

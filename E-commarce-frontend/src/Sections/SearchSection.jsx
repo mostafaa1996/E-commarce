@@ -35,7 +35,6 @@ export default function SearchSection() {
         setOpenMenu(false);
       }
     }
-    console.log(openMenu);
 
     document.addEventListener("mousedown", handleMouseDown);
 
