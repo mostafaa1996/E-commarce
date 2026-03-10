@@ -3,18 +3,12 @@ import useCurrency from "@/hooks/CurrencyChange";
 import { useCurrencyStore } from "@/zustand_preferences/currency";
 import useShopQuery from "@/hooks/shopPageQuery";
 import { Fragment } from "react";
-import { parseShopQueryFromUrl } from "@/utils/ParseShopQuery";
-import { useLocation } from "react-router-dom";
 
 export default function SideBarFilterSection({ data }) {
   const { updateShopQuery, shopQuery, resetShopQuery } = useShopQuery();
   const { currency, locale, conversion_rate } = useCurrencyStore();
   const format = useCurrency(currency, locale);
   const rate = conversion_rate[currency] ?? 1;
-  const location = useLocation();
-  const fullUrl = window.location.origin + location.pathname + location.search;
-  const parsedQuery = parseShopQueryFromUrl(fullUrl);
-
   const HandleMaxMinPrice = () => {
     if (data.price && Array.isArray(data.price) && data.price.length > 0) {
       //sort the array
@@ -47,13 +41,13 @@ export default function SideBarFilterSection({ data }) {
 
   function PrepareActivatedFilters() {
     const query = {
-      category: parsedQuery.category,
-      tags: parsedQuery.tags,
-      brands: parsedQuery.brands,
+      category: shopQuery.category,
+      tags: shopQuery.tags,
+      brands: shopQuery.brands,
       price: PriceArr?.find(
         (item) =>
-          item.value.min === parsedQuery.minPrice &&
-          item.value.max === parsedQuery.maxPrice,
+          item.value.min === shopQuery.minPrice &&
+          item.value.max === shopQuery.maxPrice,
       )?.label,
     };
     console.log(query);
