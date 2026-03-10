@@ -3,13 +3,23 @@ import Pagination from "@/components/genericComponents/Pagination";
 import { useQuery } from "@tanstack/react-query";
 import { getShopProducts } from "@/APIs/shopProductsService";
 import useShopQuery from "@/hooks/shopPageQuery";
+import { usePaginationStore } from "@/zustand_pagination/pagination";
+import { useEffect } from "react";
+
+const RangeOfPagesNumberToShow = 4;
 export default function ShopPage() {
-  const { shopQuery , updateShopQuery } = useShopQuery();
+  const { shopQuery, updateShopQuery } = useShopQuery();
+  const { setPaginationSet, PaginationSet } = usePaginationStore();
   const { data, isLoading, isFetching, error } = useQuery({
     queryKey: ["products", shopQuery],
     queryFn: () => getShopProducts(shopQuery),
     placeholderData: (previousData) => previousData,
   });
+
+  useEffect(() => {
+    if (data) setPaginationSet(data.pagination.currentPage, data.pagination.totalPages, RangeOfPagesNumberToShow);
+  }, [data , setPaginationSet]);
+  
   function setCurrentPageEvent(currentPage) {
     updateShopQuery({ page: currentPage });
   }
@@ -28,11 +38,12 @@ export default function ShopPage() {
         <Pagination
           totalPages={data.pagination.totalPages}
           onChange={setCurrentPageEvent}
-          currentPage={data.pagination.currentPage}
-          RangeOfPagesNumberToShow={4}
+          startPage={PaginationSet[0]}
+          currentPage={shopQuery.page}
+          RangeOfPagesNumberToShow={RangeOfPagesNumberToShow}
         />
       )}
-      {(!data ||(data && data?.products?.length === 0)) && (
+      {(!data || (data && data?.products?.length === 0)) && (
         <p className="text-2xl text-center font-semibold">No products found</p>
       )}
       {isFetching && (

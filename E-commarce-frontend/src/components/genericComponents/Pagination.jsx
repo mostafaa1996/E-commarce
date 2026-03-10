@@ -2,6 +2,7 @@ import {Fragment } from "react";
 export default function Pagination({
   totalPages,
   RangeOfPagesNumberToShow,
+  startPage,
   currentPage,
   onChange,
 }) {
@@ -27,7 +28,7 @@ export default function Pagination({
       </button>
 
       {Array.from({ length: RangeOfPagesNumberToShow + 2 }).map((_, i) => {
-        const page = i + currentPage;
+        const page = i + startPage;
         
         return (
            <Fragment key={`pagination-fragment-${page}-${i}`}>
