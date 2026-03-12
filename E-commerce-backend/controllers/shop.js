@@ -1,6 +1,7 @@
 const Product = require("../models/Product");
 const categories = require("../getBaseProductsByRapidAPI/categories");
-
+const Review = require("../models/Review");
+const User = require("../models/User");
 //
 //  API = /shop/products?
 //   page=...&
@@ -28,28 +29,33 @@ exports.getProducts = async (req, res, next) => {
   limitNumber = Number(limit);
   const api_params = {};
   let sortOptions = {};
-  
+
   if (category && category !== "null" && category !== "") {
     api_params.category = { $regex: category, $options: "i" };
   }
   if (brands && Array.isArray(brands) && brands.length > 0) {
-    api_params.brand = { $in : brands.map(brand => new RegExp(brand, "i")) };
+    api_params.brand = { $in: brands.map((brand) => new RegExp(brand, "i")) };
   }
-  if(brands && !Array.isArray(brands)){
+  if (brands && !Array.isArray(brands)) {
     api_params.brand = { $regex: brands, $options: "i" };
   }
   if (
-    (minPrice && minPrice !== "null" && minPrice !== "") &&
-    (maxPrice && maxPrice !== "null" && maxPrice !== "" && maxPrice !== "0")
+    minPrice &&
+    minPrice !== "null" &&
+    minPrice !== "" &&
+    maxPrice &&
+    maxPrice !== "null" &&
+    maxPrice !== "" &&
+    maxPrice !== "0"
   ) {
     api_params.price = {};
     api_params.price.$gte = Number(minPrice);
     api_params.price.$lte = Number(maxPrice);
   }
   if (tags && Array.isArray(tags) && tags.length > 0) {
-    api_params.tags = { $in : tags.map(tag => new RegExp(tag, "i")) };
+    api_params.tags = { $in: tags.map((tag) => new RegExp(tag, "i")) };
   }
-  if(tags && !Array.isArray(tags)){
+  if (tags && !Array.isArray(tags)) {
     api_params.tags = { $regex: tags, $options: "i" };
   }
   if (sort && sort !== "null" && sort !== "") {
@@ -77,7 +83,7 @@ exports.getProducts = async (req, res, next) => {
       { ...api_params },
       {
         isActive: true,
-      }
+      },
     );
     if (category && category !== "null" && category !== "") {
       const Brands = await Product.find({
@@ -120,11 +126,87 @@ exports.getProducts = async (req, res, next) => {
   }
 };
 
-
 exports.getProduct = async (req, res, next) => {
   try {
     const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ message: "Product not found" });
     res.status(200).json(product);
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.postReview = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const user = await User.findById(userId);
+    if (!user) return res.status(401).json({ message: "Unauthorized" });
+    const productId = req.params.id;
+    const review = req.body;
+    if (!review.rating || !review.comment)
+      return res.status(400).json({ message: "Missing required fields" });
+    const existedReview = await Review.findOne({
+      "user.id": userId,
+      productId: productId,
+    });
+    if (existedReview) {
+      const updatedReview = await Review.findOneAndUpdate(
+        { "user.id": userId, productId: productId },
+        { rating: review.rating, comment: review.comment },
+      );
+      if (!updatedReview)
+        return res.status(500).json({ message: "Failed to update review" });
+      const product = await Product.findById(productId);
+      if (!product)
+        return res.status(404).json({ message: "Product not found" });
+      const updatedProduct = await Product.findOneAndUpdate(
+        { _id: productId, "reviews._id": updatedReview._id },
+        {
+          $set: {
+            "reviews.$.rating": updatedReview.rating,
+            "reviews.$.comment": updatedReview.comment,
+            "reviews.$.createdAt": updatedReview.createdAt,
+            "reviews.$.user.name": updatedReview.user.name,
+            "reviews.$.user.avatar": updatedReview.user.avatar,
+            "reviews.$.user.id": updatedReview.user.id, 
+            "reviews.$.productId": updatedReview.productId,
+            "reviews.$._id": updatedReview._id
+          },
+        },
+      );
+      console.log(updatedProduct);
+      if (!updatedProduct)
+        return res.status(500).json({ message: "Failed to update product" });
+      return res
+        .status(200)
+        .json({ message: "Review updated successfully", ok: true });
+    }
+    const newReview = await Review.create({
+      user: {
+        id: userId,
+        name: user.name,
+        avatar: user.PersonalInfo.avatar.url,
+      },
+      productId: productId,
+      rating: review.rating,
+      comment: review.comment,
+      createdAt: new Date(),
+    });
+    if (!newReview)
+      return res.status(500).json({ message: "Failed to create review" });
+    const product = await Product.findById(productId);
+    if (!product) return res.status(404).json({ message: "Product not found" });
+    product.reviews.push(newReview);
+    const updatedProduct = await product.save();
+    if (!updatedProduct)
+      return res
+        .status(500)
+        .json({ message: "Failed to add review to product" });
+    user.reviews.push(newReview._id);
+    const updatedUser = await user.save();
+    if (!updatedUser)
+      return res.status(500).json({ message: "Failed to add review to user" });
+    res.status(200).json({ message: "Review added successfully", ok: true });
   } catch (err) {
     next(err);
   }
@@ -132,7 +214,7 @@ exports.getProduct = async (req, res, next) => {
 
 exports.getLimitedSearchProducts = async (req, res, next) => {
   try {
-    const {search} = req?.query ;
+    const { search } = req?.query;
     console.log(search);
     const Query = {};
     if (search) {
@@ -143,9 +225,11 @@ exports.getLimitedSearchProducts = async (req, res, next) => {
         { brand: { $regex: search, $options: "i" } },
       ];
     }
-    const products = await Product.find(Query).limit(5).select("_id title price images");
+    const products = await Product.find(Query)
+      .limit(5)
+      .select("_id title price images");
     res.status(200).json(products);
   } catch (err) {
     next(err);
   }
-}
+};

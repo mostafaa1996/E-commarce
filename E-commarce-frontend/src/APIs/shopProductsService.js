@@ -1,3 +1,5 @@
+import { authFetch } from "./AuthFetch";
+
 const URL = import.meta.env.VITE_API_URL;
 export async function getShopProducts(shopQuery) {
   // console.log(shopQuery);
@@ -41,6 +43,24 @@ export async function getProductById(id) {
   if (!response.ok) {
     throw new Error(data.message || "Failed to load product");
   }
+  return data;
+}
+
+export async function addProductReview({ id, rating, comment }) {
+  const API_Link = `${URL}/shop/products/${id}/reviews`;
+  console.log(API_Link);
+  const response = await authFetch(API_Link, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ rating, comment }),
+  });
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || "Failed to add review");
+  }
+  console.log(data);
   return data;
 }
 

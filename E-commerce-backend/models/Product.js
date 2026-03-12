@@ -1,17 +1,5 @@
 const mongoose = require("mongoose");
-
-const ReviewSchema = new mongoose.Schema(
-  {
-    user: {
-      name: String,
-      avatar: String
-    },
-    rating: Number,
-    comment: String,
-    createdAt: Date
-  },
-  { _id: false }
-);
+const Review = require("./Review");
 
 const VariantSchema = new mongoose.Schema(
   {
@@ -22,7 +10,6 @@ const VariantSchema = new mongoose.Schema(
     stock: Number,
     sku: String
   },
-  { _id: false }
 );
 
 const ImageSchema = new mongoose.Schema(
@@ -30,7 +17,6 @@ const ImageSchema = new mongoose.Schema(
     url: String,
     color: String
   },
-  { _id: false }
 );
 
 const AdditionalInfoSchema = new mongoose.Schema(
@@ -38,7 +24,6 @@ const AdditionalInfoSchema = new mongoose.Schema(
     key: String,
     value: String
   },
-  { _id: false }
 );
 
 const ProductSchema = new mongoose.Schema(
@@ -73,7 +58,7 @@ const ProductSchema = new mongoose.Schema(
     additionalInfo: [AdditionalInfoSchema],
 
     /* ===== Reviews ===== */
-    reviews: [ReviewSchema],
+    reviews: [typeof Review],
     reviewsCount: { type: Number, default: 0 },
     rating: Number,
 

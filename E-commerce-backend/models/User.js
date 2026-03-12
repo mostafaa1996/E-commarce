@@ -126,13 +126,9 @@ const UserSchema = new mongoose.Schema({
 
   reviews: [
     {
-      rate: { type: Number, default: 0 },
-      comment: { type: String, default: "" },
-      productId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Product",
-        required: true,
-      },
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Review",
+      default: [],
     },
   ],
 
