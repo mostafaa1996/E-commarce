@@ -1,77 +1,48 @@
 const User = require("../models/User");
 const Product = require("../models/Product");
+const Cart = require("../models/Cart");
 exports.getCart = async (req, res) => {
   const userId = req.user.id;
 
-  if (!userId) return res.sendStatus(401);
+  if (!userId) return res.status(401).json({ message: "Unauthorized" });
   const user = await User.findById(userId);
+  let CartId = user.cart;
 
-  if (!user.cart) {
-    user.cart = { items: [], totalItems: 0, total: 0, updatedAt: new Date() };
+  if (!CartId) {
+    return res.status(200).json({ items: [], totalItems: 0, totalPrice: 0 });
   }
 
-  let Cart = {};
-  const CartItems = await Promise.all(
-    user.cart.items.map(async (item) => {
-      const product = await Product.findById(item.productId);
-      return {
-        _id: item.productId,
-        quantity: item.quantity,
-        price: product.price,
-        image: product.images[0].url,
-        title: product.title,
-        subTotal: item.quantity * product.price,
-      };
-    })
-  );
-  const totalItems = CartItems.reduce(
-    (total, item) => total + item.quantity,
-    0
-  );
-  const totalPrice = CartItems.reduce(
-    (total, item) => total + item.quantity * item.price,
-    0
-  );
-  Cart = {
-    items: CartItems,
-    totalItems,
-    totalPrice,
-  };
-  return res.status(200).json(Cart);
+  let cart = await Cart.findById(CartId);
+  if (!cart) {
+    return res.status(200).json({ items: [], totalItems: 0, totalPrice: 0 });
+  }
+
+  return res.status(200).json(cart);
 };
 
 exports.SyncCart = async (req, res) => {
   const userId = req.user.id;
-  const guestCart = req.body.state?.items || [];
+  const guestCart = req.body || [];
 
-  if (!userId) return res.sendStatus(401);
+  if (!userId) return res.status(401);
   const user = await User.findById(userId);
 
-  user.cart = { items: [], totalItems: 0, total: 0, updatedAt: new Date() };
-  if (guestCart.length > 0) {
-    
-    guestCart.forEach((item) => {
-      user.cart.items.push({ productId: item._id, quantity: item.quantity });
+  if (guestCart?.items?.length > 0 && user.cart === null) {
+    const cart = await Cart.create({
+      userId: userId,
+      products: guestCart.items,
+      totalItems: guestCart.totalItems,
+      totalPrice: guestCart.totalPrice,
+      createdAt: Date.now(),
     });
+    if (!cart)
+      return res.status(500).json({ message: "Failed to create cart" });
+    user.cart = cart._id;
+    const updatedUser = await user.save();
+    if (!updatedUser)
+      return res.status(500).json({ message: "Failed to update user" });
 
-    user.cart.updatedAt = new Date();
-    user.cart.totalItems = user.cart.items.reduce(
-      (total, item) => total + item.quantity,
-      0
-    );
-    const items = await Promise.all(
-      user.cart.items.map(async (item) => {
-        const product = await Product.findById(item.productId);
-        return { ...item, price: product.price };
-      })
-    );
-
-    user.cart.totalPrice = items.reduce(
-      (total, item) => total + item._doc.quantity * item.price,
-      0
-    );
-  } 
-  await user.save();
-
-  return res.status(200).json(user.cart);
+    return res.status(200).json({ message: "Cart synced successfully" });
+  }
+  return res.status(200).json({ message: "Clear cart first" });
 };

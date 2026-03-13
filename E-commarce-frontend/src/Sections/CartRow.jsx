@@ -30,7 +30,7 @@ export default function CartRow({ item }) {
       </div>
       {/* Subtotal */}
       <p className="col-span-2  text-[#FF6543] text-right font-light text-[18px] flex justify-end items-center">
-        {(format(item.price * item.quantity * rate).toFixed(2))}
+        {format(item.price * item.quantity * rate)}
       </p>
       {/* Remove */}
       <button

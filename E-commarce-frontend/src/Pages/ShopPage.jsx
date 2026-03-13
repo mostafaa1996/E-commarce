@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getShopProducts } from "@/APIs/shopProductsService";
 import useShopQuery from "@/hooks/shopPageQuery";
 import SetPaginationStart from "@/utils/SetPagination";
+import Loading from "@/components/genericComponents/Loading";
 
 const RangeOfPagesNumberToShow = 4;
 export default function ShopPage() {
@@ -24,11 +25,9 @@ export default function ShopPage() {
     updateShopQuery({ page: currentPage });
   }
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center py-20">
-        <div className="w-10 h-10 border-4 border-gray-300 border-t-orange-500 rounded-full animate-spin"></div>
-      </div>
-    );
+    <div className="flex justify-center items-center py-20">
+      <Loading />;
+    </div>;
   }
   if (error) return <p>Error loading products</p>;
   return (
@@ -48,7 +47,7 @@ export default function ShopPage() {
       )}
       {isFetching && (
         <div className="absolute inset-0 flex items-center justify-center bg-white/60 z-10">
-          <div className="w-10 h-10 border-4 border-gray-300 border-t-orange-500 rounded-full animate-spin"></div>
+          <Loading />
         </div>
       )}
     </div>

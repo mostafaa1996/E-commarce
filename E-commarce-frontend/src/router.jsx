@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { queryClient } from "./queryClient";
 import { getShopProducts, getProductById } from "./APIs/shopProductsService";
 import { loginAction, SignupAction, logoutAction } from "./APIs/AuthService";
-import { CartService } from "./APIs/CartService";
+import { getCart } from "@/APIs/CartService";
 import { checkoutLoader, checkoutAction } from "./APIs/checkoutService";
 import {
   getUserProfileData,
@@ -47,7 +47,7 @@ export const router = createBrowserRouter([
             loader: async ({ request }) => {
               const InitialQuery = parseShopQueryFromUrl(request.url);
               return queryClient.ensureQueryData({
-                queryKey: ["products", InitialQuery ],
+                queryKey: ["products", InitialQuery],
                 queryFn: () => getShopProducts(InitialQuery),
               });
             },
@@ -70,7 +70,13 @@ export const router = createBrowserRouter([
         path: "/cart",
         element: <CartPage />,
         handle: { title: "Cart" },
-        loader: CartService,
+        loader: async () => {
+          return queryClient.ensureQueryData({
+            queryKey: ["cart"],
+            queryFn: getCart,
+            staleTime: 1000 * 60 * 5,
+          });
+        },
       },
       {
         path: "/checkout",
