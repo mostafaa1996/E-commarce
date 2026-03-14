@@ -1,4 +1,3 @@
-import { useCartStore } from "../zustand_Cart/CartStore";
 import { useCheckoutStore } from "../zustand_checkout/checkoutStore";
 import { authFetch } from "./AuthFetch";
 const URL = import.meta.env.VITE_API_URL;

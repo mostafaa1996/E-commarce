@@ -2,13 +2,19 @@ import { Link } from "react-router-dom";
 import clsx from "clsx";
 import arrowDown from "/arrow-down.svg";
 import userProfile from "/user-profile.svg";
-import cart from "/cart.svg";
+import cartImg from "/cart.svg";
 import wishlist from "/wishlist-heart.svg";
 import logout from "/logout.jpg";
-import { useCartStore } from "@/zustand_Cart/CartStore";
+import { useQuery } from "@tanstack/react-query";
+import { getCart } from "@/APIs/CartService";
 
 export default function Navbar() {
-  const cartStore = useCartStore();
+  let CartTotal = 0;
+  const { data: cart } = useQuery({
+    queryKey: ["cart"],
+    queryFn: getCart,
+  });
+  if (cart) CartTotal = cart?.totalItems;
   return (
     <div className="flex flex-row items-center justify-between text-center">
       <p className="text-[#272727] lg:text-[31px] text-[15px] font-bold lg:w-1/3 w-1/4 text-center">
@@ -18,7 +24,7 @@ export default function Navbar() {
         className={clsx(
           "text-[#272727] lg:text-[16px] font-extralight lg:w-1/3",
           "flex flex-row items-center justify-center text-center lg:gap-10",
-          "gap-1 text-[8px] w-1/2"
+          "gap-1 text-[8px] w-1/2",
         )}
       >
         <Link to="/" className="hover:text-[#FF6543]">
@@ -79,12 +85,12 @@ export default function Navbar() {
            hover:scale-110 transition duration-200 ease-in-out
           `}
         >
-          <img src={cart} alt="cart" />
-          <div>
+          <img src={cartImg} alt="cart" />
+          {cart && <div>
             <p className="absolute top-0 right-0 text-[10px] bg-[#FF6543] text-white px-1 rounded-full">
-              {cartStore.totalItems || 0}
+              {CartTotal || 0}
             </p>
-          </div>
+          </div>}
         </Link>
       </div>
     </div>

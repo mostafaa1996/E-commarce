@@ -1,19 +1,18 @@
 import BaseSection from "@/Sections/UserProfile/BaseSectionForUserProfile";
 import UserNestedRoutesHeader from "@/Sections/UserProfile/UserNestedRoutesHeader";
 import ProductCard from "@/components/genericComponents/ProductCard_V";
-import { useQuery , useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { getUserWishlist } from "@/APIs/UserProfileService";
-import {useCartStore} from "@/zustand_Cart/CartStore";
 import { Fragment } from "react";
 import { updateUserWishlist } from "@/APIs/UserProfileService";
 import { queryClient } from "@/queryClient";
 import useCurrency from "@/hooks/CurrencyChange";
 import { useCurrencyStore } from "@/zustand_preferences/currency";
+import { syncCart } from "@/APIs/CartService";
 export default function WishListPage() {
   let content = null;
-  const {currency , locale} = useCurrencyStore();
+  const { currency, locale } = useCurrencyStore();
   const format = useCurrency(currency, locale);
-  const CartStorage = useCartStore();
   const {
     data: wishList,
     isLoading,
@@ -31,15 +30,19 @@ export default function WishListPage() {
       queryClient.invalidateQueries({ queryKey: ["profile-wishlist"] });
     },
   });
-  
+
+  const syncCartMutation = useMutation({
+    mutationFn: ({ ActionType , id, quantity }) => syncCart({ ActionType , id , quantity }),
+  });
+
   function handleAddToCart(product) {
-    CartStorage.addItem(product, 1);
+    syncCartMutation.mutate({ ActionType: "add", id: product._id , quantity: 1 });
   }
-  function handleOnRemove(productId){
+  function handleOnRemove(productId) {
     const arrOfIds = [productId];
     wishListMutation.mutate(arrOfIds);
   }
-  function handleClearWishList(arrOfIds){
+  function handleClearWishList(arrOfIds) {
     wishListMutation.mutate(arrOfIds);
   }
   if (isLoading) content = <p>Loading...</p>;
@@ -54,7 +57,7 @@ export default function WishListPage() {
             className="w-full"
             iconName="wishlist"
             title="My WishList"
-            info= {`${wishList.wishlist?.length || 0} products`}
+            info={`${wishList.wishlist?.length || 0} products`}
             buttonText="Clear WishList"
             onClick={() => handleClearWishList(wishListIds)}
           />
@@ -69,8 +72,8 @@ export default function WishListPage() {
                     price={format(product.price)}
                     oldPrice={product.originalPrice}
                     category={product.category}
-                    onAdd = {() => handleAddToCart( product)}
-                    onRemove = {() => handleOnRemove(product._id)}
+                    onAdd={() => handleAddToCart(product)}
+                    onRemove={() => handleOnRemove(product._id)}
                     NavigationLink={`/shop/products/${product._id}`}
                     variant={"ShowWishlistStyle"}
                   />

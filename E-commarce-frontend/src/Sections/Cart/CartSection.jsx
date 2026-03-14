@@ -1,53 +1,67 @@
-import CartRow from "../CartRow";
+import CartRow from "../../components/genericComponents/CartRow";
 import CartTotals from "@/components/genericComponents/CartTotals";
 import Button from "@/components/genericComponents/Button";
-import { useCartStore } from "@/zustand_Cart/CartStore";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { syncCart, getCart } from "@/APIs/CartService";
-import Loading from "@/components/genericComponents/Loading";
-import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useCurrencyStore } from "@/zustand_preferences/currency"; 
+import useCurrency from "@/hooks/CurrencyChange";
+import { queryClient } from "@/queryClient";
+
+
 export default function CartSection() {
   const navigate = useNavigate();
-  const cartStore = useCartStore();
-  const location = useLocation();
   let content = null;
+  const { currency , locale , conversion_rate } = useCurrencyStore();
+  const format = useCurrency(currency, locale);
+  const rate = conversion_rate[currency]??1;
 
-  const {
+  const { //update cartStore from database
     data: cart,
-    isLoading,
-    isFetching,
   } = useQuery({
     queryKey: ["cart"],
     queryFn: () => getCart(),
+    placeholderData: (previousData) => previousData,
   });
 
   const syncCartMutation = useMutation({
-    mutationFn: ({ActionType}) => syncCart({ActionType}),
+    mutationFn: ({ ActionType, id, quantity }) =>
+      syncCart({ ActionType, id, quantity }),
+    onMutate: ({ ActionType, id, quantity }) => {
+      //optimistic update
+      queryClient.cancelQueries({ queryKey: ["cart"] });
+      const previousCart = queryClient.getQueryData(["cart"]);
+      if (ActionType === "clear") {
+        queryClient.setQueryData(["cart"], (oldCart) => {
+          if (!oldCart) return null;
+          return {
+            ...oldCart,
+            items: [],
+            totalItems: 0,
+            totalPrice: 0,
+            updatedAt: new Date(),
+          };
+        });
+      }
+      return { previousCart };
+    },
+    onError: (context) => {
+      if (context.previousCart)
+        queryClient.setQueryData(["cart"], context.previousCart);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+    },
   });
-
-  useEffect(() => {
-    syncCartMutation.mutate({ActionType: "update"});
-  }, [location, syncCartMutation]);
 
   function handleCheckout() {
     navigate("/checkout");
   }
   function handleClearCart() {
-    cartStore.clearCart();
-    syncCartMutation.mutate({ActionType: "clear"});
+    syncCartMutation.mutate({ ActionType: "clear" , id: null , quantity: 0 });
   }
   function handleContinueShopping() {
     navigate("/shop");
-  }
-
-  if (isLoading) {
-    content = (
-      <div className="flex items-center justify-center py-20">
-        <Loading />
-      </div>
-    );
   }
 
   if (cart?.items?.length === 0) {
@@ -78,7 +92,12 @@ export default function CartSection() {
 
         {/* Rows */}
         {cart.items.map((item) => (
-          <CartRow key={`CartRow - ${item.title}`} item={item} />
+          <CartRow
+            key={`CartRow - ${item.title}`}
+            item={item}
+            format={format}
+            rate={rate}
+          />
         ))}
 
         {/* Totals */}
@@ -87,6 +106,8 @@ export default function CartSection() {
           total={cart.totalPrice}
           VAT={0.14 * cart.totalPrice}
           shipping={0.1 * cart.totalPrice}
+          format={format}
+          rate={rate}
         />
 
         {/* Actions */}
@@ -111,11 +132,6 @@ export default function CartSection() {
   return (
     <section className="py-20 bg-white">
       {content}
-      {isFetching && (
-        <div className="absolute inset-0 flex items-center justify-center bg-white/60 z-10">
-          <Loading />
-        </div>
-      )}
     </section>
   );
 }

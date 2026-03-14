@@ -60,10 +60,17 @@ export const router = createBrowserRouter([
         handle: { title: "Product Details" },
         loader: async ({ params }) => {
           // console.log(params.id);
-          return queryClient.ensureQueryData({
+          const product = await queryClient.ensureQueryData({
             queryKey: ["product", params.id],
             queryFn: () => getProductById(params.id),
           });
+
+          const cart = await queryClient.ensureQueryData({
+            queryKey: ["cart"],
+            queryFn: getCart,
+          });
+
+          return { product, cart };
         },
       },
       {

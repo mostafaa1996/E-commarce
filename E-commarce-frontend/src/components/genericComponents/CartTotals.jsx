@@ -1,18 +1,17 @@
 import clsx from "clsx";
 import { Fragment } from "react";
-import { useCurrencyStore } from "@/zustand_preferences/currency"; 
-import useCurrency from "@/hooks/CurrencyChange";
+
 export default function CartTotals({
   TotalItems,
   Items,
   total,
   VAT = 0,
   shipping = 0,
+  format = (n) => n,
+  rate = 1,
   className,
 }) {
-  const { currency , locale , conversion_rate } = useCurrencyStore();
-  const format = useCurrency(currency, locale);
-  const rate = conversion_rate[currency]??1;
+  
   return (
     <div className={clsx("", className)}>
       <div>
