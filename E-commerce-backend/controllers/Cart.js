@@ -166,6 +166,11 @@ exports.deleteCartItem = async (req, res, next) => {
     if (cart.totalItems < 0) cart.totalItems = 0;
     if (cart.totalPrice < 0) cart.totalPrice = 0;
     await cart.save();
+    if(cart.products.length === 0){ 
+      await Cart.findByIdAndDelete(user.cart);
+      user.cart = null;
+      await user.save();
+    }
     res.status(200).json({ message: "Product deleted from cart successfully" });
   } catch (err) {
     console.log(err);

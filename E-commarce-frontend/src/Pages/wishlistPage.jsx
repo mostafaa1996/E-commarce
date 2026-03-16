@@ -33,6 +33,10 @@ export default function WishListPage() {
 
   const syncCartMutation = useMutation({
     mutationFn: ({ ActionType , id, quantity }) => syncCart({ ActionType , id , quantity }),
+    onSettled: () =>{ 
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+      queryClient.invalidateQueries({ queryKey: ["checkout"] });
+    },
   });
 
   function handleAddToCart(product) {

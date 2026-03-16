@@ -12,7 +12,7 @@ export async function getCartData() {
   const checkout = await res.json();
 
   if (!res.ok) {
-    throw new Error(checkout.message || "Failed to fetch checkout");
+    console.error(checkout.message || "Failed to fetch checkout");
   }
 
   return checkout;
@@ -34,7 +34,7 @@ export async function placeOrder({
   const data = await res.json();
   
   if (!res.ok) {
-    throw new Error(data.message || "Request failed");
+    console.error(data.message || "Request failed");
   }
 
   console.log(data.nextAction);
@@ -50,10 +50,12 @@ export async function getShippingDetails() {
     },
   });
 
+  const shippingDetails = await res.json();
+
   if (!res.ok) {
-    throw new Error("Failed to fetch checkout");
+    console.error( shippingDetails.message ||  "Failed to fetch checkout");
   }
 
-  const shippingDetails = await res.json();
+  
   return shippingDetails;
 }

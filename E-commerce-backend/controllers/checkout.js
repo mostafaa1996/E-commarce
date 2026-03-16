@@ -31,7 +31,7 @@ exports.getShippingDetails = async (req, res) => {
   if (!user) return res.status(401).json({ message: "User not found" });
   const reqAddress = await Address.findOne({ user: userId, isDefault: true });
   if (!reqAddress)
-    return res.status(401).json({ message: "Address not found", Address: [] });
+    return res.status(401).json({ message: "Address not found", shippingDetails: {} });
   const shippingDetails = {
     firstName: reqAddress.name.split(" ")[0] || "",
     lastName: reqAddress.name.split(" ")[1] || "",
@@ -46,5 +46,5 @@ exports.getShippingDetails = async (req, res) => {
     Apartment: reqAddress.street.split(",")[0] || "",
     building: reqAddress.street.split(",")[1] || "",
   };
-  res.status(200).json(shippingDetails);
+  res.status(200).json({shippingDetails: shippingDetails , message: "Shipping details found"});
 };

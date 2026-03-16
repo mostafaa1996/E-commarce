@@ -51,6 +51,7 @@ export default function CartSection() {
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["cart"] });
+      queryClient.invalidateQueries({ queryKey: ["checkout"] });
     },
   });
 

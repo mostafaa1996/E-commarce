@@ -61,6 +61,7 @@ export default function CartRow({ item, format = (n) => n, rate = 1 }) {
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["cart"] });
+      queryClient.invalidateQueries({ queryKey: ["checkout"] });
     },
   });
 

@@ -97,10 +97,9 @@ export const router = createBrowserRouter([
           return queryClient.ensureQueryData({
             queryKey: ["checkout"],
             queryFn: async () => {
-              const { cart , VAT_shipping , message } = await getCartData();
-              const shippingDetails = await getShippingDetails();
-              if (message == "Cart not found") return { cart: [], shippingDetails , VAT_shipping };
-              return { cart, shippingDetails , VAT_shipping };
+              const { cart , VAT_shipping , message: cartMessage } = await getCartData();
+              const {shippingDetails , message: shippingDetailsMessage} = await getShippingDetails();
+              return { cart, shippingDetails , VAT_shipping , cartMessage , shippingDetailsMessage };
             },
           });
         },
