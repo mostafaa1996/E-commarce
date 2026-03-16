@@ -1,34 +1,21 @@
 import BaseSection from "@/Sections/UserProfile/BaseSectionForUserProfile";
 import PaymentCard from "@/Sections/UserProfile/PaymentCard";
 import UserNestedRoutesHeader from "@/Sections/UserProfile/UserNestedRoutesHeader";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import EditPaymentForm from "@/Sections/UserProfile/EditPaymentForm";
+import StripeElementsWrapper from "@/components/genericComponents/stripeElementWrapper";
 import {
   getUserPaymentMethods,
   SetUpPaymentMethods,
   setCardAsDefault,
   deletePaymentMethod,
 } from "@/APIs/UserProfileService";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
 import { Fragment } from "react";
 import { queryClient } from "../queryClient";
 
-const stripePromise = loadStripe(
-  "pk_test_51T71BH1fhq7FW9lm2LAqDDRqVTuhpseVzeliLcmZ4xkJ13m1wCcz1DZeIN16v3wkVbUEtem9KlZU5FUDNJpyzMbm00bRki0ZqO",
-);
 export default function UserPaymentPage() {
   const [isAdding, setIsAdding] = useState(false);
-  const [clientSecret, setClientSecret] = useState("");
-
-  useEffect(() => {
-    if (isAdding) {
-      SetUpPaymentMethods().then((data) => {
-        setClientSecret(data.clientSecret);
-      });
-    }
-  }, [isAdding, setClientSecret]);
 
   const {
     data: loadedCards,
@@ -63,8 +50,7 @@ export default function UserPaymentPage() {
             return { ...card, isDefault: false };
           });
           return cards;
-        }
-        else if (data.intent === "delete") {
+        } else if (data.intent === "delete") {
           const cards = old.filter((card) => card.id !== data.cardId);
           return cards;
         }
@@ -91,11 +77,11 @@ export default function UserPaymentPage() {
   }
 
   function handleSetAsDefault(id) {
-    Modification.mutate({cardId : id , intent : "setAsDefault"});
+    Modification.mutate({ cardId: id, intent: "setAsDefault" });
   }
 
   function handleDelete(id) {
-    Modification.mutate({cardId : id , intent : "delete"});
+    Modification.mutate({ cardId: id, intent: "delete" });
   }
 
   if (isLoading) {
@@ -148,19 +134,18 @@ export default function UserPaymentPage() {
         buttonText="Add Payment"
         onClick={handleAdd}
       />
-      {isAdding && clientSecret && (
-        <Elements
-          stripe={stripePromise}
-          options={{ clientSecret }}
-          key={clientSecret}
-        >
+      <StripeElementsWrapper
+        open={isAdding}
+        getClientSecret={SetUpPaymentMethods}
+      >
+        {(clientSecret) => (
           <EditPaymentForm
             title="Add Payment Method"
             clientSecret={clientSecret}
             onCancel={handleCancel}
           />
-        </Elements>
-      )}
+        )}
+      </StripeElementsWrapper>
       <div
         className={`${
           isLoading || error

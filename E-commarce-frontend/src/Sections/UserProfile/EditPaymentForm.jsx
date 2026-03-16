@@ -1,5 +1,4 @@
 import Icon from "@/system/icons/Icon";
-import { Form } from "react-router-dom";
 import {
   PaymentElement,
   useElements,
@@ -28,7 +27,6 @@ export default function FormSection({ title, clientSecret , onCancel }) {
     // Stripe.js has not yet loaded.
     // Make sure to disable form submission until Stripe.js has loaded.
     if (!stripe || !elements) return;
-
     try {
       const { error: submitError } = await elements.submit();
       if (submitError) {
@@ -52,13 +50,15 @@ export default function FormSection({ title, clientSecret , onCancel }) {
           text: result.error.message || "Something went wrong",
           type: "error",
         });
+      } else if (result.setupIntent?.status === "succeeded") {
+        setMsg({ text: "Card saved successfully", type: "success" });
+        await queryClient.invalidateQueries(["profile-payments"]);
+        CancelButtonRef.current.click();
       } else {
         setMsg({ text: "Card saved successfully", type: "success" });
       }
     } finally {
       setLoading(false);
-      await queryClient.invalidateQueries(["profile-payments"]);
-      CancelButtonRef.current.click();
     }
   }
   if (!clientSecret)
@@ -77,7 +77,7 @@ export default function FormSection({ title, clientSecret , onCancel }) {
         <span className="text-sm text-zinc-500">powered by Stripe</span>
       </div>
 
-      <Form className="flex flex-col gap-6" onSubmit={handleSubmit}>
+      <div className="flex flex-col gap-6">
         <PaymentElement />
         {/* Actions */}
         <div className="flex flex-col">
@@ -92,25 +92,26 @@ export default function FormSection({ title, clientSecret , onCancel }) {
               Cancel
             </button>
             <button
-              type="submit"
+              type="button"
               className=" px-6 py-2 rounded-lg bg-[#FF6543] text-white text-xl
                 hover:bg-[#e05535] transition "
               disabled={!stripe || !elements || loading}
+              onClick={handleSubmit}
             >
               {loading ? "Saving..." : "Save"}
             </button>
           </div>
           {msg && (
-              <div 
-                className={`text-md text-end  ${
-                  msg.type === "error" ? "text-red-500" : "text-green-500"
-                }`}
-              >
-                {msg.text}
-              </div>
-            )}
+            <div
+              className={`text-md text-end  ${
+                msg.type === "error" ? "text-red-500" : "text-green-500"
+              }`}
+            >
+              {msg.text}
+            </div>
+          )}
         </div>
-      </Form>
+      </div>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import DescriptionTab from "@/components/ProductDetails/Tabs/DescriptionTab";
-import ReviewsTab from "@/components/ProductDetails/Tabs/ReviewTab";
+import ReviewsTab from "@/Sections/Reviews/ReviewTab";
 import TabsHeader from "@/components/ProductDetails/Tabs/TabsHeader";
 export default function ProductTabs({ product }) {
   const [active, setActive] = useState("description");

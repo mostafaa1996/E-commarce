@@ -6,7 +6,7 @@ export default function CardMedia({ Image, badge , NavigationLink}) {
   }
   return (
     <div
-      className="relative bg-white w-50 h-50 ml-8 cursor-pointer hover:scale-105 transition border-b border-zinc-200"
+      className="relative bg-white w-50 h-50 cursor-pointer hover:scale-105 transition border-b border-zinc-200"
       onClick={handleClick}
       role="button"
     >

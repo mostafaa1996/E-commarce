@@ -104,7 +104,7 @@ export async function getUserPaginatedOrders(page, limit) {
 }
 
 export async function updateUserWishlist(arrOfIds) {
-  console.log(`${URL}/user/profile/UpdateWishlist`, arrOfIds);
+  // console.log(`${URL}/user/profile/UpdateWishlist`, arrOfIds);
   const res = await authFetch(`${URL}/user/profile/UpdateWishlist`, {
     method: "POST",
     headers: {

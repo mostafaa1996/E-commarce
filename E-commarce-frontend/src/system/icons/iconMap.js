@@ -20,6 +20,16 @@ import {
   Sun,
   Moon,
   ShoppingCart,
+  CheckCircle2,
+  Banknote,
+  Truck,
+  PackageCheck,
+  Clock,
+  BadgeCheck,
+  CircleX,
+  Ban,
+  Loader2,
+  TriangleAlert,
 } from "lucide-react";
 
 export const iconMap = {
@@ -44,4 +54,15 @@ export const iconMap = {
   password: Lock,
   sun: Sun,
   moon: Moon,
+  checkCircle: CheckCircle2,
+  creditCard: CreditCard,
+  banknote: Banknote,
+  truck: Truck,
+  packageCheck: PackageCheck,
+  clock: Clock,
+  badgeCheck: BadgeCheck,
+  circleX: CircleX,
+  ban: Ban,
+  loader: Loader2,
+  triangleAlert: TriangleAlert,
 };

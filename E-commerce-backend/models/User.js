@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { default: Stripe } = require("stripe");
+const Cart = require("./Cart");
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -44,53 +45,10 @@ const UserSchema = new mongoose.Schema({
       default: Date.now,
     },
   },
-  billingDetails: 
-    {
-      firstName: String,
-      lastName: String,
-      email: String,
-      companyName: String,
-      country: String,
-      state: String,
-      city: String,
-      street: String,
-      building: String,
-      Apartment: String,
-      postalCode: String,
-      phone: String,
-      notes: String,
-      AddressId : {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Address",
-      },
-      isDefault: Boolean,
-    },
   cart: {
-    items: [
-      {
-        productId: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Product",
-          required: true,
-        },
-        quantity: {
-          type: Number,
-          required: true,
-        },
-      },
-    ],
-    totalItems: {
-      type: Number,
-      default: 0,
-    },
-    totalPrice: {
-      type: Number,
-      default: 0,
-    },
-    updatedAt: {
-      type: Date,
-      default: Date.now,
-    },
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Cart",
+    default: null,
   },
   wishlist: {
     type: [mongoose.Schema.Types.ObjectId],
@@ -126,13 +84,9 @@ const UserSchema = new mongoose.Schema({
 
   reviews: [
     {
-      rate: { type: Number, default: 0 },
-      comment: { type: String, default: "" },
-      productId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Product",
-        required: true,
-      },
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Review",
+      default: [],
     },
   ],
 

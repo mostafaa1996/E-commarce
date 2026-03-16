@@ -1,99 +1,46 @@
-import { useEffect, useState } from "react";
 import {
   RadioGroup,
   RadioGroupItem,
 } from "@/components/genericComponents/RadioGroup";
 import { Label } from "@/components/genericComponents/label";
-import InputField from "@/components/genericComponents/InputField";
-import Button from "@/components/genericComponents/Button";
-import { CreditCard, Banknote, Truck, CheckCircle2, Plus } from "lucide-react";
-import { toast } from "sonner";
-import { useCheckoutStore } from "@/zustand_checkout/checkoutStore";
-import { useNavigate } from "react-router-dom";
+import Icon from "@/system/icons/Icon";
 import { useQuery } from "@tanstack/react-query";
-import { fetchCards } from "@/APIs/checkoutService";
+import { getUserPaymentMethods } from "@/APIs/UserProfileService";
 import SelectButton from "@/components/genericComponents/SelectButton";
-
-const SAVED_CARDS = [
-  { id: "1", last4: "4242", brand: "Visa", expiry: "12/27" },
-  { id: "2", last4: "8888", brand: "Mastercard", expiry: "06/26" },
-];
+import Loading from "@/components/genericComponents/Loading";
+import { SetUpPaymentMethods } from "@/APIs/UserProfileService";
+import EditPaymentForm from "@/Sections/UserProfile/EditPaymentForm";
+import useCheckoutStore from "@/zustand_checkout/checkoutStore";
+import StripeElementsWrapper from "@/components/genericComponents/stripeElementWrapper";
+import { useEffect } from "react";
 
 const PaymentMethod = () => {
-  const [paymentType, setPaymentType] = useState("cod");
-  const [useNewCard, setUseNewCard] = useState(false);
-  const navigate = useNavigate();
-  const setPayment = useCheckoutStore((state) => state.setPaymentMethod);
-  const currentState = useCheckoutStore((state) => state.currentState);
-  const response = useCheckoutStore((state) => state.ServerResponse);
-  const setCardForm = useCheckoutStore((state) => state.setCardForm);
-  const cardForm = useCheckoutStore((state) => state.CardForm);
-  const resetCardForm = useCheckoutStore((state) => state.resetCardForm);
+  const {
+    paymentType,
+    useNewCard,
+    selectedCard,
+    setPaymentType,
+    setPaymentMethodState,
+    setSelectedCard,
+    setUseNewCard,
+  } = useCheckoutStore();
 
-  const { data, isLoading, refetch } = useQuery({
-    queryKey: ["savedCards"],
-    queryFn: fetchCards,
+  const { data: cards, isLoading } = useQuery({
+    queryKey: ["profile-payments"],
+    queryFn: getUserPaymentMethods,
     enabled: paymentType === "card",
   });
 
+  if(cards){
+    console.log(cards);
+  }
+
   useEffect(() => {
-    setPayment(paymentType);
-  }, [setPayment, paymentType, refetch]);
-
-  const [selectedCard, setSelectedCard] = useState(
-    data?.savedCards[0]?._id || "",
-  );
-
-  function handleCardForm(e) {
-    const { name, value } = e.target;
-    setCardForm({
-      ...cardForm,
-      [name]: value,
-    });
-    //  console.log(cardForm);
+  if (cards?.length > 0 && !selectedCard) {
+    const defaultCard = cards.find((card) => card.isDefault);
+    setSelectedCard(defaultCard?.id || cards[0].id);
   }
-
-  function handleUseSavdCardsButton() {
-    resetCardForm();
-    setUseNewCard(false);
-  }
-  const handlePlaceOrder = () => {
-    if (paymentType === "cod") {
-      toast.success("Order placed! Pay on delivery.");
-    } else {
-      toast.success("Payment successful! Order confirmed.");
-    }
-  };
-
-  if (currentState === "OrderPlaced") {
-    handlePlaceOrder();
-    return (
-      <div className="flex flex-col items-center justify-center py-12 space-y-4 animate-in fade-in-0 zoom-in-95 duration-500">
-        <div className="w-20 h-20 rounded-full bg-[#E5E5E5] flex items-center justify-center">
-          <CheckCircle2 className="w-10 h-10 text-accent-foreground" />
-        </div>
-        <h3 className="text-2xl font-bold text-foreground">Order Confirmed!</h3>
-        <p className="text-muted-foreground text-center max-w-sm">
-          {paymentType === "cod"
-            ? "Your order has been placed. Please have the payment ready upon delivery."
-            : "Your payment was processed successfully. Your order is on its way!"}
-        </p>
-        <p className="text-sm text-muted-foreground">
-          Order #ORD-{response?.orderId}
-        </p>
-        <Button
-          type="button"
-          className="w-fit tracking-widest"
-          onClick={() => {
-            useCheckoutStore.getState().clearCheckout();
-            navigate("/shop");
-          }}
-        >
-          OK
-        </Button>
-      </div>
-    );
-  }
+}, [cards, selectedCard , setSelectedCard]);
 
   return (
     <div className="space-y-5">
@@ -106,6 +53,9 @@ const PaymentMethod = () => {
         onValueChange={(val) => {
           setPaymentType(val);
           setUseNewCard(false);
+          val === "card"
+            ? setPaymentMethodState("CardSelected")
+            : setPaymentMethodState("CashOnDelivery");
         }}
         className="space-y-3"
       >
@@ -119,7 +69,7 @@ const PaymentMethod = () => {
           }`}
         >
           <RadioGroupItem value="cod" id="cod" />
-          <Truck className="w-5 h-5 text-muted-foreground" />
+          <Icon name="truck" size={20} strokeWidth={1.5} variant="primary" />
           <div>
             <span className="font-medium text-foreground">
               Cash on Delivery
@@ -140,7 +90,7 @@ const PaymentMethod = () => {
           }`}
         >
           <RadioGroupItem value="card" id="card" />
-          <CreditCard className="w-5 h-5 text-muted-foreground" />
+          <Icon name="payment" size={20} strokeWidth={1.5} variant="primary" />
           <div>
             <span className="font-medium text-foreground">
               Credit / Debit Card
@@ -156,7 +106,14 @@ const PaymentMethod = () => {
       {paymentType === "cod" && (
         <div className="p-4 rounded-lg bg-accent/30 border border-border animate-in fade-in-0 slide-in-from-top-2 duration-300">
           <div className="flex items-start gap-3">
-            <Banknote className="w-5 h-5 text-accent-foreground mt-0.5 shrink-0" />
+            <Icon
+              name="banknote"
+              size={20}
+              strokeWidth={1.5}
+              variant="primary"
+              className="w-5 h-5 text-accent-foreground mt-0.5 shrink-0"
+            />
+
             <div className="space-y-1 text-sm text-muted-foreground">
               <p className="font-medium text-foreground">
                 Cash on Delivery Information
@@ -173,117 +130,98 @@ const PaymentMethod = () => {
       {/* Card Details */}
       {paymentType === "card" && (
         <div className="space-y-4 animate-in fade-in-0 slide-in-from-top-2 duration-300">
-          {data && !useNewCard && data.savedCards.length > 0 ? (
+          {cards && !useNewCard && cards.length > 0 ? (
             <div className="space-y-3">
               <p className="text-sm font-medium text-foreground">Saved Cards</p>
               <RadioGroup
                 value={selectedCard}
-                onValueChange={setSelectedCard}
+                onValueChange={(value) => setSelectedCard(value)}
                 className="space-y-2"
               >
-                {data.savedCards.map((card) => (
+                {cards.map((card) => (
                   <Label
-                    key={card._id}
-                    htmlFor={`card-${card._id}`}
+                    key={card.id}
+                    htmlFor={`card-${card.id}`}
                     className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all ${
-                      selectedCard === card._id
+                      selectedCard === card.id
                         ? "border-[#FF6543] bg-[#F5F5F5] shadow-sm"
                         : "border-[#F5F5F5] bg-card hover:border-[#FF6543]/30"
                     }`}
                   >
-                    <RadioGroupItem value={card._id} id={`card-${card._id}`} />
-                    <CreditCard className="w-5 h-5 text-muted-foreground" />
+                    <RadioGroupItem value={card.id} id={`card-${card.id}`} />
+                    <Icon
+                      name="payment"
+                      size={20}
+                      strokeWidth={1.5}
+                      variant="primary"
+                    />
                     <div className="flex-1">
                       <span className="font-medium text-foreground text-sm">
                         {card.brand} •••• {card.last4}
                       </span>
                       <p className="text-xs text-muted-foreground">
-                        Expires {card.expiry}
+                        Expires {card.exp_month}/{card.exp_year}
                       </p>
+                      <span className="font-medium text-foreground text-sm">
+                        {card.name}
+                      </span>
                     </div>
                   </Label>
                 ))}
               </RadioGroup>
               <button
                 type="button"
-                onClick={() => setUseNewCard(true)}
+                onClick={() => {
+                  setUseNewCard(true);
+                  setPaymentMethodState("AddingNewCard");
+                }}
                 className="flex items-center gap-2 text-sm text-primary hover:underline cursor-pointer font-medium"
               >
-                <Plus className="w-4 h-4" /> Use a different card
+                <Icon
+                  name="plus"
+                  size={20}
+                  strokeWidth={1.5}
+                  variant="primary"
+                />{" "}
+                Use a different card
               </button>
             </div>
           ) : !isLoading ? (
+            //use new card
             <div className="space-y-4">
-              <p className="text-sm font-medium text-foreground">
-                Card Details
-              </p>
+              <p className="text-sm font-medium text-foreground">Card Form</p>
               <div className="space-y-3">
-                <div className="space-y-1.5">
-                  <Label className="text-xs text-muted-foreground">
-                    Card Number
-                  </Label>
-                  <InputField
-                    type="number"
-                    maxLength={16}
-                    name="cardNumber"
-                    onChange={handleCardForm}
-                    placeholder="1234 5678 9012 3456"
-                    className="bg-card border-border"
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1.5">
-                    <Label className="text-xs text-muted-foreground">
-                      Expiry Date
-                    </Label>
-                    <InputField
-                      type="text"
-                      maxLength={5}
-                      name="expiry"
-                      onChange={handleCardForm}
-                      placeholder="MM/YY"
-                      className="bg-card border-border"
+                <StripeElementsWrapper
+                  open={useNewCard}
+                  getClientSecret={SetUpPaymentMethods}
+                >
+                  {(clientSecret) => (
+                    <EditPaymentForm
+                      title="Add Payment Method"
+                      clientSecret={clientSecret}
+                      onCancel={() => {
+                        setUseNewCard(false);
+                        setPaymentMethodState("CardSelected");
+                      }}
                     />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs text-muted-foreground">CVV</Label>
-                    <InputField
-                      name="cvc"
-                      onChange={handleCardForm}
-                      placeholder="•••"
-                      type="password"
-                      maxLength={4}
-                      className="bg-card border-border"
-                    />
-                  </div>
-                </div>
-                <div className="space-y-1.5">
-                  <Label className="text-xs text-muted-foreground">
-                    Cardholder Name
-                  </Label>
-                  <InputField
-                    type="text"
-                    name="cardholderName"
-                    onChange={handleCardForm}
-                    placeholder="Name on card"
-                    className="bg-card border-border"
-                  />
-                </div>
+                  )}
+                </StripeElementsWrapper>
               </div>
-              <SelectButton
+              {/* <SelectButton
                 type="checkbox"
                 name="saveCard"
                 label={"Save this card"}
-                value={cardForm.saveCard}
-                checked={cardForm.saveCard}
-                onChange={() => {
-                  setCardForm({ ...cardForm, saveCard: !cardForm.saveCard });
-                }}
-              />
-              {SAVED_CARDS.length > 0 && (
+                value={"saveCard"}
+                checked={false}
+                onChange={() => {}}
+              /> */}
+              {cards.length > 0 && (
                 <button
                   type="button"
-                  onClick={handleUseSavdCardsButton}
+                  onClick={()=> {
+                    setUseNewCard(false);
+                    setPaymentMethodState("CardSelected");
+                  }}
                   className="text-sm text-primary hover:underline font-medium"
                 >
                   ← Use a saved card
@@ -291,8 +229,8 @@ const PaymentMethod = () => {
               )}
             </div>
           ) : (
-            <div className="space-y-4">
-              <p>loading ... </p>
+            <div className="space-y-4 flex items-center justify-center">
+              <Loading />
             </div>
           )}
         </div>

@@ -1,13 +1,13 @@
 import ProductDetails from "@/Sections/ProductDetails";
 import ProductTabs from "@/Sections/ProductTabs";
-import TopFixedLayer from "@/Sections/TopLayer/TopFixedLayer";
-import BottomLayer from "@/Sections/BottomLayer/BottomLayer";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getProductById } from "@/APIs/shopProductsService";
 import { getUserWishlist } from "@/APIs/UserProfileService";
+import { useLoaderData } from "react-router-dom";
 export default function ProductDetailsPage() {
   const { id } = useParams();
+  const { cart } = useLoaderData();
   let content = null;
   const {
     data: product,
@@ -15,7 +15,7 @@ export default function ProductDetailsPage() {
     error,
   } = useQuery({
     queryKey: ["product", id],
-    queryFn: () => getProductById({ id }),
+    queryFn: () => getProductById(id),
     enabled: !!id,
   });
   const { data: wishlist, isLoading: isLoadingWishlist } = useQuery({
@@ -36,6 +36,7 @@ export default function ProductDetailsPage() {
         <ProductDetails
           product={product}
           initialValueFromUserWishlist={isInWishlist}
+          intialQuantity={cart?.items.find((i) => i._id === product._id)?.quantity ?? 0}
         />
         <ProductTabs product={product} />
       </>

@@ -1,20 +1,17 @@
-import { useState } from "react";
 export default function SidebarFilter({
   title,
   items,
-  applyFilter,
-  MultiChoiceOption,
+  onSelectFilter,
+  activeFilter,
 }) {
-  const [MultiItemSelected, setMultiItemSelected] = useState([]);
-  const [singleItemSelected, setsingleItemSelected] = useState("");
   return (
-    <div >
+    <div>
       <h3 className="text-[30px] font-extralight uppercase tracking-wide">
         {title}
       </h3>
 
       <div
-        className="mt-2 mb-6 h-[10px]"
+        className="mt-2 mb-6 h-[10px] w-[60%]"
         style={{
           backgroundImage:
             "repeating-linear-gradient(135deg, #D4D4D4 0 1px, transparent 1px 10px)",
@@ -31,37 +28,12 @@ export default function SidebarFilter({
               key={item}
               className={` 
               hover:text-[#FF6543] active:scale-110 transition duration-300 ease-in
-              ${
-                (MultiChoiceOption && MultiItemSelected.includes(item)) ||
-                (!MultiChoiceOption && singleItemSelected === item)
-                  ? "text-[#FF6543]"
-                  : ""
-              }`}
+              ${activeFilter[title.toLowerCase()]?.includes(item)? "text-[#FF6543] underline" : ""}`}
             >
               <button
                 onClick={() => {
-                  // toggle the selected state
-                  if (!MultiChoiceOption && singleItemSelected === item) {
-                    setsingleItemSelected("");
-                  } else if (
-                    !MultiChoiceOption &&
-                    singleItemSelected !== item
-                  ) {
-                    setsingleItemSelected(item);
-                  }
-                  if (MultiChoiceOption && MultiItemSelected.includes(item)) {
-                    setMultiItemSelected(
-                      MultiItemSelected.filter((i) => i !== item),
-                    );
-                  } else if (
-                    MultiChoiceOption &&
-                    !MultiItemSelected.includes(item)
-                  ) {
-                    setMultiItemSelected((prev) => [...prev, item]);
-                  }
-                  applyFilter(item, title.toLowerCase());
+                  onSelectFilter(title.toLowerCase(), item);
                 }}
-                className="cursor-pointer "
               >
                 {item}
               </button>

@@ -6,6 +6,7 @@ export default function ProductActions({
   AddToCartHandler,
   AddToWishlistHandler,
   AddedToWishlistBefore,
+  ADDButtonText = "ADD TO CART",
 }) {
   
   return (
@@ -24,7 +25,7 @@ export default function ProductActions({
         }}
         variant="secondary"
       >
-        ADD TO CART
+        {ADDButtonText}
       </Button>
 
       <button

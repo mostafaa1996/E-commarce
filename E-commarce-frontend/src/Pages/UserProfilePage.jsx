@@ -13,6 +13,8 @@ export default function UserProfilePage() {
     queryFn: getUserProfileData,
   });
 
+  
+
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading profile</p>;
   if (!data) return <p>No profile found</p>;
@@ -24,7 +26,7 @@ export default function UserProfilePage() {
         <StatsGrid stats={data?.StatsData} />
         <OrderHistoryList orders={data?.Orders} />
         <AddressSection addresses={data?.Addresses} />
-        {/* <WishListSection WishList={data?.wishlist} /> */}
+        <WishListSection WishList={data?.wishlist} />
       </BaseSection>
     </>
   );

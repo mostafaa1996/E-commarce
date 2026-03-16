@@ -1,6 +1,7 @@
 import { redirect } from "react-router-dom";
 const URL = import.meta.env.VITE_API_URL;
 import { setAccessToken } from "./AuthFetch";
+import { useLoggedInEmail } from "@/zustand_loggedIn/loggedInEmail";
 export async function loginAction({ request }) {
   const formData = await request.formData();
   const email = formData.get("email");
@@ -25,7 +26,7 @@ export async function loginAction({ request }) {
 
     // store access-token
     setAccessToken(data.accessToken);
-
+    useLoggedInEmail.setState({ loggedInEmail: data.user.email });
     // redirect after success
     return redirect("/shop");
   } catch (error) {
@@ -41,7 +42,7 @@ export async function SignupAction({ request }) {
   const password = formData.get("password");
   const confirmPassword = formData.get("confirmPassword");
 
-  console.log(name, email, password, confirmPassword);
+  // console.log(name, email, password, confirmPassword);
   if (!email) return "Please enter your email";
   if (!password) return "password is required";
   if (password !== confirmPassword) return "Passwords do not match";
@@ -77,6 +78,7 @@ export async function logoutAction() {
       return "something went wrong not able to logout, try again";
     }
     // redirect after success
+    useLoggedInEmail.setState({ loggedInEmail: null });
     return redirect("/login");
   } catch (error) {
     console.error(error);

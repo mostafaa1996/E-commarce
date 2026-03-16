@@ -1,37 +1,41 @@
 import BillingDetailsSection from "@/Sections/CheckOut/BillingDetailsSection";
 import CartwithPaymentSection from "@/Sections/CheckOut/CartwithPaymentSection";
-import Button from "@/components/genericComponents/Button";
-import { Form, useActionData } from "react-router-dom";
+import { useLoaderData } from "react-router-dom";
 import TextArea from "@/components/genericComponents/TextArea";
-import { useCheckoutStore } from "@/zustand_checkout/checkoutStore";
+import { useState } from "react";
+import { useRef } from "react";
+import CheckoutPaymentSection from "@/Sections/CheckOut/placeOrderButtonSection";
+import StripeElementsWrapper from "@/components/genericComponents/stripeElementWrapper";
+import {SetUpPaymentMethods} from "@/APIs/UserProfileService";
+import useCheckoutStore from "@/zustand_checkout/checkoutStore";
 
 export default function CheckoutPage() {
-  const setOrderNotes = useCheckoutStore((state) => state.setOrderNotes);
-  const currentState = useCheckoutStore((state) => state.currentState);
-  const CardForm = useCheckoutStore((state) => state.CardForm);
-
-  function isCardValid(card) {
-    console.log(JSON.stringify(card, null, 2));
-    return (
-      card?.cardNumber?.length === 16 &&
-      card?.expiry?.match(/^\d{2}\/\d{2}$/) &&
-      card?.cvc?.length === 3 &&
-      card?.cardholderName?.trim().length > 0
-    );
-  }
-
-  console.log(isCardValid(CardForm));
+  const TimeRef = useRef(null);
+  const { cart, shippingDetails, VAT_shipping } = useLoaderData();
+  const [orderNotes, setOrderNotes] = useState("");
+  const [shippingDetailsModified, setShippingDetailsModified] =
+    useState(shippingDetails);
+  const { orderState } = useCheckoutStore();
 
   function setNotes(e) {
     setOrderNotes(e.target.value);
   }
+  function onChangeShippingDetails(e) {
+    if (TimeRef.current) clearTimeout(TimeRef.current);
+    TimeRef.current = setTimeout(() => {
+      setShippingDetailsModified((prev) => ({
+        ...prev,
+        [e.target.name]: e.target.value,
+      }));
+    }, 500);
+  }
+
   return (
-    <Form
-      action="/checkout"
-      method="post"
-      className="lg:flex lg:flex-row lg:items-start lg:justify-evenly flex flex-col gap-10 items-start my-20 "
-    >
-      <BillingDetailsSection />
+    <div className="lg:flex lg:flex-row lg:items-start lg:justify-evenly flex flex-col gap-10 items-start my-20 ">
+      <BillingDetailsSection
+        shippingDetails={shippingDetails}
+        onChange={onChangeShippingDetails}
+      />
       <div className="flex flex-col gap-10 max-w-2xl lg:w-[60%] w-[80%] m-5">
         {/* Additional information */}
         <div className="flex flex-col gap-6">
@@ -44,17 +48,20 @@ export default function CheckoutPage() {
             name="notes"
           />
         </div>
-        <CartwithPaymentSection />
-        {currentState !== "OrderPlaced" && (
-          <Button
-            className="w-fit tracking-widest"
-            type="submit"
-            disabled={currentState === "fillForm" && !isCardValid(CardForm)}
-          >
-            PLACE AN ORDER
-          </Button>
-        )}
+        <CartwithPaymentSection cart={cart} VAT_shipping={VAT_shipping} />
+        <StripeElementsWrapper
+          open={orderState === "InProgress"}
+          getClientSecret={SetUpPaymentMethods}
+        >
+          {(clientSecret) => (
+            <CheckoutPaymentSection
+              cart={cart}
+              shippingDetailsModified={shippingDetailsModified}
+              orderNotes={orderNotes}
+            />
+          )}
+        </StripeElementsWrapper>
       </div>
-    </Form>
+    </div>
   );
 }

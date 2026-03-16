@@ -3,37 +3,44 @@ import CurrentRangeOfResults from "@/components/genericComponents/CurrentRangeOf
 import SideBarFilterSection from "../SideBarFilterSection";
 import SortingSection from "../SortingSection";
 import SearchSection from "../SearchSection";
-import { useShopQueryStore } from "@/zustand_ShopPage/ShopQueryStore";
 import { useQuery } from "@tanstack/react-query";
 import { getShopProducts } from "@/APIs/shopProductsService";
+import Button from "@/components/genericComponents/Button";
+import useShopQuery from "@/hooks/shopPageQuery";
 
 export default function ShopSection({children}) {
-  const { shopQuery} = useShopQueryStore();
-  const { data , isLoading , error } = useQuery({
+  const {resetShopQuery , shopQuery } = useShopQuery();
+  const { data , error } = useQuery({
     queryKey: ["products", shopQuery],
     queryFn: () => getShopProducts(shopQuery),
+    placeholderData: (previousData) => previousData,
   });
+
+  if (error) return <p>Error loading products</p>;
 
   return (
     <div className="my-10 flex gap-10 mt-10 justify-center">
-      <div className="mt-10 flex flex-col gap-10">
-        <div className="flex items-center justify-between">
-          <CurrentRangeOfResults
-            from={
-              data?.pagination?.currentPage * shopQuery.limit -
-              shopQuery.limit +
-              1
-            }
-            to={data?.pagination?.currentPage * shopQuery.limit}
-            total={data?.pagination?.totalItems}
-          />
-          <SortingSection />
+      <div className="w-[60%] mt-10 flex flex-col justify-start gap-10">
+        <div className="max-w-8xl flex items-center justify-between">
+          <div className="flex items-center gap-5">
+            <CurrentRangeOfResults
+              from={
+                data?.pagination?.currentPage * shopQuery.limit -
+                shopQuery.limit +
+                1
+              }
+              to={data?.pagination?.currentPage * shopQuery.limit}
+              total={data?.pagination?.totalItems}
+            />
+            {shopQuery.category && <Button onClick={resetShopQuery}>Clear filter</Button>}
+          </div>
+          {shopQuery.category && <SortingSection />}
         </div>
         {children}
       </div>
-      <aside className="mt-10 ml-10 w-full lg:w-[310px] flex flex-col gap-10">
+      <aside className="w-[25%] mt-10 ml-10 flex flex-col gap-10">
         <SearchSection />
-        <SideBarFilterSection products={data} />
+        <SideBarFilterSection data={data} />
       </aside>
     </div>
   );

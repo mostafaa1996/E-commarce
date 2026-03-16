@@ -2,8 +2,11 @@ import { createBrowserRouter } from "react-router-dom";
 import { queryClient } from "./queryClient";
 import { getShopProducts, getProductById } from "./APIs/shopProductsService";
 import { loginAction, SignupAction, logoutAction } from "./APIs/AuthService";
-import { CartService } from "./APIs/CartService";
-import { checkoutLoader, checkoutAction } from "./APIs/checkoutService";
+import { getCart } from "@/APIs/CartService";
+import {
+  getCartData,
+  getShippingDetails,
+} from "./APIs/checkoutService";
 import {
   getUserProfileData,
   getPersonalInfo,
@@ -29,9 +32,9 @@ import UserAddressesPage from "./Pages/UserAddressesPage";
 import UserPaymentPage from "./Pages/UserPaymentPage";
 import UserSettingsPage from "./Pages/UserSettingsPage";
 import MainLayout from "./layouts/MainLayout";
-
-import { defaultShopQuery } from "./zustand_ShopPage/shopDefaultQuery";
 import ShopPageLayout from "./layouts/shopPageLayout";
+import { parseShopQueryFromUrl } from "./utils/ParseShopQuery";
+import StripeElementsWrapper from "./components/genericComponents/stripeElementWrapper";
 
 export const router = createBrowserRouter([
   {
@@ -45,10 +48,11 @@ export const router = createBrowserRouter([
             index: true,
             element: <ShopPage />,
             handle: { title: "Shop" },
-            loader: async () => {
+            loader: async ({ request }) => {
+              const InitialQuery = parseShopQueryFromUrl(request.url);
               return queryClient.ensureQueryData({
-                queryKey: ["products", defaultShopQuery],
-                queryFn: () => getShopProducts(defaultShopQuery),
+                queryKey: ["products", InitialQuery],
+                queryFn: () => getShopProducts(InitialQuery),
               });
             },
           },
@@ -59,25 +63,47 @@ export const router = createBrowserRouter([
         element: <ProductDetailsPage />,
         handle: { title: "Product Details" },
         loader: async ({ params }) => {
-          console.log(params.id);
-          return queryClient.ensureQueryData({
+          // console.log(params.id);
+          const product = await queryClient.ensureQueryData({
             queryKey: ["product", params.id],
             queryFn: () => getProductById(params.id),
           });
+
+          const cart = await queryClient.ensureQueryData({
+            queryKey: ["cart"],
+            queryFn: getCart,
+          });
+
+          return { product, cart };
         },
       },
       {
         path: "/cart",
         element: <CartPage />,
         handle: { title: "Cart" },
-        loader: CartService,
+        loader: async () => {
+          return queryClient.ensureQueryData({
+            queryKey: ["cart"],
+            queryFn: getCart,
+            staleTime: 1000 * 60 * 5,
+          });
+        },
       },
       {
         path: "/checkout",
         element: <CheckoutPage />,
         handle: { title: "Checkout" },
-        loader: checkoutLoader,
-        action: checkoutAction,
+        loader: async () => {
+          return queryClient.ensureQueryData({
+            queryKey: ["checkout"],
+            queryFn: async () => {
+              const { cart , VAT_shipping , message } = await getCartData();
+              const shippingDetails = await getShippingDetails();
+              if (message == "Cart not found") return { cart: [], shippingDetails , VAT_shipping };
+              return { cart, shippingDetails , VAT_shipping };
+            },
+          });
+        },
       },
       {
         path: "/profile",

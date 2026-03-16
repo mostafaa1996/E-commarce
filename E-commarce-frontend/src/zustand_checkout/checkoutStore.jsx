@@ -1,73 +1,59 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 
-const status = Object.freeze({
-  idle: "idle",
-  OrderPlaced: "OrderPlaced",
-  PaymentProcessing: "PaymentProcessing",
-  PaymentFailed: "PaymentFailed",
-  loading: "loading",
-  success: "success",
-  error: "error",
-});
+// PaymentMethodState = [
+//     "CashOnDelivery",
+//     "CardSelected",
+//     "AddingNewCard",
+// ]
 
-export const useCheckoutStore = create(
-  persist(
-    (set) => ({
-      CartInfo: { totalItems: 0, totalPrice: 0, items: [] },
-      ShippingDetails: {
-        firstName: "",
-        lastName: "",
-        email: "",
-        companyName: "",
-        country: "",
-        state: "",
-        city: "",
-        street: "",
-        Apartment: "",
-        postalCode: "",
-        phone: "",
-        isDefault: false,
-      },
-      PaymentMethod: "",
-      orderNotes: "",
-      shippingDetailsmodified: false,
-      currentState: status.idle,
-      ServerResponse: {},
-      CardForm: {
-        cardNumber: "",
-        expiry: "",
-        cvc: "",
-        cardholderName: "",
-        saveCard: false,
-      },
+// orderState = [
+//     "InProgress",
+//     "orderPlaced",
+//     "pending_payment",
+//     "paid",
+//     "payment_failed",
+//     "cancelled"
+//     "Loading",
+//     "Error",
+// ]
 
-      clearCheckout: () =>
-        set({
-          CartInfo: {},
-          PaymentMethod: {},
-          ShippingDetails: {},
-          orderNotes: "",
-          shippingDetailsmodified: false,
-          currentState: status.idle,
-          ServerResponse: {},
-        }),
-      setCartInfo: (cart) => set({ CartInfo: cart }),
-      setShippingDetails: (details) => set({ ShippingDetails: details }),
-      setPaymentMethod: (method) => set({ PaymentMethod: method }),
-      setOrderNotes: (notes) => set({ orderNotes: notes }),
-      setShippingDetailsmodified: (modified) =>
-        set({ shippingDetailsmodified: modified }),
-      setCurrentState: (state) => set({ currentState: state }),
-      setServerResponse: (response) => set({ ServerResponse: response }),
-      setCardForm: (form) => set({ CardForm: form }),
-      resetCardForm: () => set({ CardForm: { cardNumber: "", expiry: "", cvc: "", cardholderName: "" } }),
-    }),
-    {
-      name: "checkout-storage", // localStorage key
-      partialize: (state) => ({
-        ShippingDetails: state.ShippingDetails,
-      }),
+// paymentType = [
+//     "cod",
+//     "card",
+// ]
+
+// selectedCard = cardID in case of card payment
+
+const useCheckoutStore = create((set) => ({
+    PaymentMethodState: "CashOnDelivery",
+    selectedCard: null,
+    useNewCard: false,
+    paymentType :"cod",
+    orderState: "InProgress",
+    orderId: null,
+    setPaymentMethodState: (PaymentMethodState) => {
+        return set({ PaymentMethodState });
     },
-  ),
-);
+    setSelectedCard: (selectedCard) => {
+        console.log(selectedCard);
+        return set({ selectedCard });
+    },
+    setUseNewCard: (useNewCard) => {
+        return set({ useNewCard });
+    },
+    setPaymentType: (paymentType) => {
+        return set({ paymentType });
+    },
+    setOrderState: (orderState) => {
+        return set({ orderState });
+    },
+    setOrderId: (orderId) => {
+        return set({ orderId });
+    },
+}));
+
+export default useCheckoutStore
+
+
+
+

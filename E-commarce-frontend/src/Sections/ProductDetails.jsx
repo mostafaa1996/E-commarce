@@ -5,23 +5,25 @@ import ProductsVariantsShow from "@/components/ProductDetails/ProductsVariantsSh
 import ProductActions from "@/components/ProductDetails/ProductAction";
 import QuantityControl from "@/components/genericComponents/QuantityControl";
 import { useState } from "react";
-import { useCartStore } from "@/zustand_Cart/CartStore";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { updateUserWishlist } from "@/APIs/UserProfileService";
 import { queryClient } from "../queryClient";
 import useCurrency from "@/hooks/CurrencyChange";
 import { useCurrencyStore } from "@/zustand_preferences/currency";
-export default function ProductDetails({ product, initialValueFromUserWishlist }) {
-  console.log(initialValueFromUserWishlist);
-  
+import { syncCart } from "@/APIs/CartService";
+export default function ProductDetails({
+  product,
+  initialValueFromUserWishlist,
+  intialQuantity = 0,
+}) {
   const [activeImage, setActiveImage] = useState(0);
-  const [quantity, setQuantity] = useState(0);
-  const CartStorage = useCartStore();
+  const [quantity, setQuantity] = useState(intialQuantity);
+  const [displayQuantity, setDisplayQuantity] = useState(intialQuantity);
   const navigate = useNavigate();
-  const { currency, locale , conversion_rate } = useCurrencyStore();
+  const { currency, locale, conversion_rate } = useCurrencyStore();
   const format = useCurrency(currency, locale);
-  const rate = conversion_rate[currency] ?? 1 ;
+  const rate = conversion_rate[currency] ?? 1;
 
   const updateWishlist = useMutation({
     mutationKey: ["profile-wishlist"],
@@ -31,8 +33,62 @@ export default function ProductDetails({ product, initialValueFromUserWishlist }
     },
   });
 
+  const UpdateCart = useMutation({
+    mutationFn: ({ ActionType, id, quantity }) =>
+      syncCart({ ActionType, id, quantity }),
+    onMutate: async ({ ActionType, id, quantity }) => {
+      //optimistic update
+      queryClient.cancelQueries({ queryKey: ["cart"] });
+      const previousCart = queryClient.getQueryData(["cart"]);
+      const previousDisplayQuantity = displayQuantity;
+
+      if (ActionType === "add") {
+        setDisplayQuantity(quantity);
+      }
+
+      if (ActionType === "remove") {
+        setDisplayQuantity(0);
+      }
+      queryClient.setQueryData(["cart"], (oldCart) => {
+        if (!oldCart) return oldCart;
+        const oldItems = oldCart.items || [];
+
+        if (ActionType === "add") {
+          return {
+            ...oldCart,
+            items: [...oldItems, { _id: id, quantity }],
+          };
+        }
+
+        if (ActionType === "remove") {
+          return {
+            ...oldCart,
+            items: oldItems.filter((item) => item._id !== id),
+          };
+        }
+
+        return oldCart;
+      });
+      return { previousCart, previousDisplayQuantity };
+    },
+    onError: (context) => {
+      if (context?.previousCart) {
+        queryClient.setQueryData(["cart"], context.previousCart);
+      }
+      if (context) {
+        setDisplayQuantity(context.previousDisplayQuantity);
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+    },
+  });
+
   function handleAddToCart() {
-    CartStorage.addItem(product, quantity);
+    UpdateCart.mutate({ ActionType: "add", id: product._id, quantity });
+  }
+  function RemoveFromCart() {
+    UpdateCart.mutate({ ActionType: "remove", id: product._id, quantity: 0 });
   }
   function handleAddToWishlist() {
     updateWishlist.mutate([product._id]);
@@ -42,6 +98,7 @@ export default function ProductDetails({ product, initialValueFromUserWishlist }
   }
   function handleSelectVariantColor() {}
   function handleSelectVariantSize() {}
+
   return (
     <section className="py-20">
       <div className="max-w-7xl mx-auto px-6">
@@ -79,13 +136,25 @@ export default function ProductDetails({ product, initialValueFromUserWishlist }
               handleChoice={handleSelectVariantSize}
             />
 
-            <QuantityControl value={quantity} onChange={setQuantity} />
+            {displayQuantity === 0 && (
+              <QuantityControl value={quantity} onChange={setQuantity} />
+            )}
+            {displayQuantity !== 0 && (
+              <div className="text-xl text-green-500">
+                Quantity added to cart : {displayQuantity}
+              </div>
+            )}
 
             <ProductActions
               OrderHandler={handleOrderNow}
-              AddToCartHandler={handleAddToCart}
+              AddToCartHandler={
+                displayQuantity === 0 ? handleAddToCart : RemoveFromCart
+              }
               AddToWishlistHandler={handleAddToWishlist}
               AddedToWishlistBefore={initialValueFromUserWishlist}
+              ADDButtonText={
+                displayQuantity === 0 ? "Add To Cart" : "Remove From Cart"
+              }
             />
 
             <div

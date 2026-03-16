@@ -25,21 +25,33 @@ exports.getUserProfile = async (req, res, next) => {
   try {
     const userId = req.user.id;
     if (!userId) return res.sendStatus(401);
-    const user = await User.findById(userId).populate({
-      path: "orders",
-      select: "orderItems Status totalPrice createdAt",
-    });
+    const user = await User.findById(userId)
+      .populate({
+        path: "orders",
+        select: "orderItems Status totalPrice createdAt",
+        limit: 4,
+      })
+      .populate({
+        path: "Addresses",
+        limit: 3,
+      }).populate({
+        path: "wishlist",
+        limit: 3,
+      });
     if (!user) return res.sendStatus(401);
     // console.log(user);
     const contacts = {
       name: user.name,
       email: user.email,
-      phone: user.billingDetails?.[0]?.phone,
-      country: user.billingDetails?.[0]?.country,
-      city: user.billingDetails?.[0]?.city,
-      joinDate: user.createdAt,
+      phone: user.Addresses?.find((a) => a.isDefault)?.phone,
+      country: user.Addresses?.find((a) => a.isDefault)?.country,
+      city: user.Addresses?.find((a) => a.isDefault)?.city,
+      joinDate: new Intl.DateTimeFormat("en-US").format(
+        new Date(user.PersonalInfo?.createdAt),
+      ),
+      avatar: user.PersonalInfo?.avatar?.url,
     };
-    const Addresses = user.billingDetails;
+    const Addresses = user.Addresses;
     const Orders = user.orders;
     const wishlist = user.wishlist;
     const notifications = user.notifications;
@@ -326,8 +338,9 @@ exports.setAddressToDefault = async (req, res, next) => {
     const user = await User.findById(userId).populate("Addresses");
     if (!user) return res.status(401).json({ message: "User not found" });
     const Id = req.params.id;
-    const ownsAddress = (Id) => user.Addresses.some((a) => a._id.toString() === Id);
-    console.log(ownsAddress(Id) , "trying to set default");
+    const ownsAddress = (Id) =>
+      user.Addresses.some((a) => a._id.toString() === Id);
+    console.log(ownsAddress(Id), "trying to set default");
     if (!ownsAddress(Id))
       return res.status(401).json({ message: "Unauthorized" });
     await Address.updateMany(
@@ -338,26 +351,7 @@ exports.setAddressToDefault = async (req, res, next) => {
     const UpdatedAddress = await Address.findById(Id);
     if (!UpdatedAddress)
       return res.status(404).json({ message: "Address not found" });
-    const billingDetails = {
-      firstName: UpdatedAddress?.name?.split(" ")[0],
-      lastName: UpdatedAddress?.name?.split(" ")[1],
-      email: UpdatedAddress?.email || user.email || "",
-      phone: UpdatedAddress?.phone || user.phone || "",
-      companyName: UpdatedAddress?.label || "",
-      country: UpdatedAddress?.country || "",
-      state: UpdatedAddress?.state || "",
-      city: UpdatedAddress?.city || "",
-      street: UpdatedAddress?.street?.split(",")[2] || "",
-      building: UpdatedAddress?.street?.split(",")[1] || "",
-      Apartment: UpdatedAddress?.street?.split(",")[0] || "",
-      postalCode: UpdatedAddress?.zipCode || "",
-      isDefault: UpdatedAddress?.isDefault || false,
-      notes: "",
-      AddressId: Id,
-    };
-    await User.findByIdAndUpdate(userId, {
-      $set: { billingDetails: billingDetails },
-    });
+    
     res
       .status(200)
       .json({ message: "Address set as default successfully", ok: true });

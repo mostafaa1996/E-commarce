@@ -15,7 +15,7 @@ export default function UserProfileCard({ user }) {
         <Avatar src={user.avatar || "/Man_avatar.png"} alt={user.name} />
         <ProfileInfo
           name={user.name}
-          memberSince={user.memberSince || "--/--/--"}
+          memberSince={user.joinDate || "--/--/--"}
           email={shortenText(user.email, 19)}
           phone={user.phone}
           location={user.city + ", " + user.country}
