@@ -19,8 +19,10 @@ const userProfileRoutes = require("./routes/UserProfile");
 const userProfilePaymentsRoutes = require("./routes/UserProfilePayments");
 const UserProfileSettingsRoutes = require("./routes/UserProfileSettings");
 const exchangeRateRoutes = require("./routes/exchangeRate");
+const stripeWebhookRoute = require("./routes/stripeWebhookRoute");
 
 const app = express();
+app.use("/api", stripeWebhookRoute);
 app.use(express.json()); // for parsing application/json
 app.use(cookieParser());
 

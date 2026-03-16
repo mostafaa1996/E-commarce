@@ -351,26 +351,7 @@ exports.setAddressToDefault = async (req, res, next) => {
     const UpdatedAddress = await Address.findById(Id);
     if (!UpdatedAddress)
       return res.status(404).json({ message: "Address not found" });
-    const billingDetails = {
-      firstName: UpdatedAddress?.name?.split(" ")[0],
-      lastName: UpdatedAddress?.name?.split(" ")[1],
-      email: UpdatedAddress?.email || user.email || "",
-      phone: UpdatedAddress?.phone || user.phone || "",
-      companyName: UpdatedAddress?.label || "",
-      country: UpdatedAddress?.country || "",
-      state: UpdatedAddress?.state || "",
-      city: UpdatedAddress?.city || "",
-      street: UpdatedAddress?.street?.split(",")[2] || "",
-      building: UpdatedAddress?.street?.split(",")[1] || "",
-      Apartment: UpdatedAddress?.street?.split(",")[0] || "",
-      postalCode: UpdatedAddress?.zipCode || "",
-      isDefault: UpdatedAddress?.isDefault || false,
-      notes: "",
-      AddressId: Id,
-    };
-    await User.findByIdAndUpdate(userId, {
-      $set: { billingDetails: billingDetails },
-    });
+    
     res
       .status(200)
       .json({ message: "Address set as default successfully", ok: true });

@@ -104,8 +104,8 @@ export default function CartSection() {
         <CartTotals
           TotalItems={cart.totalItems}
           total={cart.totalPrice}
-          VAT={0.14 * cart.totalPrice}
-          shipping={0.1 * cart.totalPrice}
+          VAT={cart.VAT}
+          shipping={cart.shipping}
           format={format}
           rate={rate}
         />

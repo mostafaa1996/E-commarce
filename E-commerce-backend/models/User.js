@@ -45,27 +45,6 @@ const UserSchema = new mongoose.Schema({
       default: Date.now,
     },
   },
-  billingDetails: 
-    {
-      firstName: String,
-      lastName: String,
-      email: String,
-      companyName: String,
-      country: String,
-      state: String,
-      city: String,
-      street: String,
-      building: String,
-      Apartment: String,
-      postalCode: String,
-      phone: String,
-      notes: String,
-      AddressId : {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Address",
-      },
-      isDefault: Boolean,
-    },
   cart: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Cart",

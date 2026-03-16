@@ -3,7 +3,10 @@ import { queryClient } from "./queryClient";
 import { getShopProducts, getProductById } from "./APIs/shopProductsService";
 import { loginAction, SignupAction, logoutAction } from "./APIs/AuthService";
 import { getCart } from "@/APIs/CartService";
-import { checkoutLoader, checkoutAction } from "./APIs/checkoutService";
+import {
+  getCartData,
+  getShippingDetails,
+} from "./APIs/checkoutService";
 import {
   getUserProfileData,
   getPersonalInfo,
@@ -31,6 +34,7 @@ import UserSettingsPage from "./Pages/UserSettingsPage";
 import MainLayout from "./layouts/MainLayout";
 import ShopPageLayout from "./layouts/shopPageLayout";
 import { parseShopQueryFromUrl } from "./utils/ParseShopQuery";
+import StripeElementsWrapper from "./components/genericComponents/stripeElementWrapper";
 
 export const router = createBrowserRouter([
   {
@@ -89,8 +93,17 @@ export const router = createBrowserRouter([
         path: "/checkout",
         element: <CheckoutPage />,
         handle: { title: "Checkout" },
-        loader: checkoutLoader,
-        action: checkoutAction,
+        loader: async () => {
+          return queryClient.ensureQueryData({
+            queryKey: ["checkout"],
+            queryFn: async () => {
+              const { cart , VAT_shipping , message } = await getCartData();
+              const shippingDetails = await getShippingDetails();
+              if (message == "Cart not found") return { cart: [], shippingDetails , VAT_shipping };
+              return { cart, shippingDetails , VAT_shipping };
+            },
+          });
+        },
       },
       {
         path: "/profile",

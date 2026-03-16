@@ -1,5 +1,6 @@
 import { iconMap } from "./iconMap";
 import clsx from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export default function Icon({
   name,
@@ -26,7 +27,7 @@ export default function Icon({
     <Component
       size={size}
       strokeWidth={strokeWidth}
-      className={clsx(variants[variant], className)}
+      className={twMerge(clsx(variants[variant], className))}
     />
   );
 }

@@ -40,16 +40,16 @@ export default function CartTotals({
       </div>
       <div className="grid grid-cols-2 py-2 border-b border-zinc-300 text-[21px] font-light">
         <span>VAT</span>
-        <span className="text-[#FF6543]">{format(VAT*rate)}</span>
+        <span className="text-[#FF6543]">{format(VAT*rate*total)}</span>
       </div>
       <div className="grid grid-cols-2 py-2 border-b border-zinc-300 text-[21px] font-light">
         <span>Shipping</span>
-        <span className="text-[#FF6543]">{format(shipping*rate)}</span>
+        <span className="text-[#FF6543]">{format(shipping*rate*total)}</span>
       </div>
       <div className="grid grid-cols-2 py-2 text-[21px] font-light border-b border-zinc-300">
         <span>Total Price</span>
         <span className="text-[#FF6543]">
-          {format((total + VAT + shipping)*rate)}
+          {format((total + VAT*total + shipping*total)*rate)}
         </span>
       </div>
     </div>

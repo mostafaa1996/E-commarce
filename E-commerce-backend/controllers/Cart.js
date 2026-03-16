@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const Product = require("../models/Product");
 const Cart = require("../models/Cart");
+const VAT_shipping = require("../models/VAT");
 exports.getCart = async (req, res, next) => {
   try {
     const userId = req.user.id;
@@ -21,6 +22,7 @@ exports.getCart = async (req, res, next) => {
     if (!cart) {
       return res.status(200).json({ message: "Cart not found" });
     }
+    const createdVAT_shipping = await VAT_shipping.findOne({});
     const requiredCart = {
       totalItems: cart.totalItems,
       totalPrice: cart.totalPrice,
@@ -34,6 +36,8 @@ exports.getCart = async (req, res, next) => {
         quantity: item.quantity,
         subtotal: item.productId.price * item.quantity,
       })),
+      VAT: createdVAT_shipping.VAT,
+      shipping: createdVAT_shipping.shipping,
     };
     return res.status(200).json(requiredCart);
   } catch (err) {
