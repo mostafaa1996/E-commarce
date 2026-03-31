@@ -34,6 +34,10 @@ import { parseShopQueryFromUrl } from "./utils/ParseShopQuery";
 import StripeElementsWrapper from "./components/genericComponents/stripeElementWrapper";
 import DashboardPage from "./Pages/AdminDashboardPage";
 import AdminProductsPage from "./Pages/AdminProductsPage";
+import AdminCategoriesPage from "./Pages/AdminCategoriesPage";
+import AdminOrdersPage from "./Pages/AdminOrdersPage";
+import AdminCustomersPage from "./Pages/AdminCustomersPage";
+import AdminInventoryPage from "./Pages/AdminInventoryPage";
 
 export const router = createBrowserRouter([
   {
@@ -204,6 +208,22 @@ export const router = createBrowserRouter([
   {
     path: "/profile/admin/products",
     element: <AdminProductsPage />,
+  },
+  {
+    path: "/profile/admin/categories",
+    element: <AdminCategoriesPage />,
+  },
+  {
+    path: "/profile/admin/orders",
+    element: <AdminOrdersPage />,
+  },
+  {
+    path: "/profile/admin/customers",
+    element: <AdminCustomersPage />,
+  },
+  {
+    path: "/profile/admin/inventory",
+    element: <AdminInventoryPage />,
   },
   {
     path: "/login",

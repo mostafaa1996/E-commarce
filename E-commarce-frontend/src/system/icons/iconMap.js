@@ -44,6 +44,7 @@ import {
   Circle,
   ChevronDown,
   PanelLeft,
+   AlertTriangle,
 } from "lucide-react";
 
 export const iconMap = {
@@ -93,4 +94,5 @@ export const iconMap = {
   circle: Circle,
   chevronDown: ChevronDown,
   panelLeft: PanelLeft,
+  alertTriangle: AlertTriangle
 };
