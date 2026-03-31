@@ -38,6 +38,12 @@ import AdminCategoriesPage from "./Pages/AdminCategoriesPage";
 import AdminOrdersPage from "./Pages/AdminOrdersPage";
 import AdminCustomersPage from "./Pages/AdminCustomersPage";
 import AdminInventoryPage from "./Pages/AdminInventoryPage";
+import AdminCouponsPage from "./Pages/AdminCouponsPage";
+import AdminReviewsPage from "./Pages/AdminReviewsPage";
+import AdminAnalyticsPage from "./Pages/AdminAnalyticsPage";
+import AdminActivityPage from "./Pages/AdminActivityPage";
+import AdminNotificationsPage from "./Pages/AdminNotificationsPage";
+import AdminSettingsPage from "./Pages/AdminSettingsPage";
 
 export const router = createBrowserRouter([
   {
@@ -224,6 +230,30 @@ export const router = createBrowserRouter([
   {
     path: "/profile/admin/inventory",
     element: <AdminInventoryPage />,
+  },
+  {
+   path: "/profile/admin/coupons",
+   element: <AdminCouponsPage/>,
+  },
+  {
+    path: "/profile/admin/reviews",
+    element: <AdminReviewsPage />,
+  },
+  {
+    path: "/profile/admin/analytics",
+    element: <AdminAnalyticsPage />,
+  },
+  {
+    path: "/profile/admin/activity",
+    element: <AdminActivityPage />,
+  },
+  {
+    path: "/profile/admin/notifications",
+    element: <AdminNotificationsPage />,
+  },
+  {
+    path: "/profile/admin/settings",
+    element: <AdminSettingsPage />,
   },
   {
     path: "/login",
