@@ -3,10 +3,7 @@ import { queryClient } from "./queryClient";
 import { getShopProducts, getProductById } from "./APIs/shopProductsService";
 import { loginAction, SignupAction, logoutAction } from "./APIs/AuthService";
 import { getCart } from "@/APIs/CartService";
-import {
-  getCartData,
-  getShippingDetails,
-} from "./APIs/checkoutService";
+import { getCartData, getShippingDetails } from "./APIs/checkoutService";
 import {
   getUserProfileData,
   getPersonalInfo,
@@ -35,6 +32,7 @@ import MainLayout from "./layouts/MainLayout";
 import ShopPageLayout from "./layouts/shopPageLayout";
 import { parseShopQueryFromUrl } from "./utils/ParseShopQuery";
 import StripeElementsWrapper from "./components/genericComponents/stripeElementWrapper";
+import DashboardPage from "./Pages/DashboardPage";
 
 export const router = createBrowserRouter([
   {
@@ -97,9 +95,20 @@ export const router = createBrowserRouter([
           return queryClient.ensureQueryData({
             queryKey: ["checkout"],
             queryFn: async () => {
-              const { cart , VAT_shipping , message: cartMessage } = await getCartData();
-              const {shippingDetails , message: shippingDetailsMessage} = await getShippingDetails();
-              return { cart, shippingDetails , VAT_shipping , cartMessage , shippingDetailsMessage };
+              const {
+                cart,
+                VAT_shipping,
+                message: cartMessage,
+              } = await getCartData();
+              const { shippingDetails, message: shippingDetailsMessage } =
+                await getShippingDetails();
+              return {
+                cart,
+                shippingDetails,
+                VAT_shipping,
+                cartMessage,
+                shippingDetailsMessage,
+              };
             },
           });
         },
@@ -186,6 +195,10 @@ export const router = createBrowserRouter([
         action: async ({ request }) => await UpdatePersonalInfo(request),
       },
     ],
+  },
+  {
+    path: "/profile/admin/dashboard",
+    element: <DashboardPage />,
   },
   {
     path: "/login",
