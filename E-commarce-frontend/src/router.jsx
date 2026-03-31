@@ -32,7 +32,8 @@ import MainLayout from "./layouts/MainLayout";
 import ShopPageLayout from "./layouts/shopPageLayout";
 import { parseShopQueryFromUrl } from "./utils/ParseShopQuery";
 import StripeElementsWrapper from "./components/genericComponents/stripeElementWrapper";
-import DashboardPage from "./Pages/DashboardPage";
+import DashboardPage from "./Pages/AdminDashboardPage";
+import AdminProductsPage from "./Pages/AdminProductsPage";
 
 export const router = createBrowserRouter([
   {
@@ -199,6 +200,10 @@ export const router = createBrowserRouter([
   {
     path: "/profile/admin/dashboard",
     element: <DashboardPage />,
+  },
+  {
+    path: "/profile/admin/products",
+    element: <AdminProductsPage />,
   },
   {
     path: "/login",

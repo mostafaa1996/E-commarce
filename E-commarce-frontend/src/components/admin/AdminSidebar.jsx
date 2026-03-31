@@ -2,12 +2,12 @@ import {
   LayoutDashboard, Package, FolderTree, ShoppingCart, Users, Warehouse,
   TicketPercent, Star, Bell, Settings, BarChart3, Activity, LogOut,
 } from "lucide-react";
-import { NavLink } from "@/components/genericComponents/NavLink";
+import { NavLink } from "@/components/adminUI/NavLink";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
   SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarHeader, SidebarFooter,
   useSidebar,
-} from "@/components/genericComponents/sidebar";
+} from "@/components/adminUI/sidebar";
 
 const mainNav = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },

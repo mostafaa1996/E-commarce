@@ -1,7 +1,7 @@
 import {
   SidebarProvider,
   SidebarInset,
-} from "@/components/genericComponents/sidebar";
+} from "@/components/adminUI/sidebar";
 import { AdminSidebar } from "./AdminSidebar";
 import { AdminTopbar } from "./AdminTopbar";
 

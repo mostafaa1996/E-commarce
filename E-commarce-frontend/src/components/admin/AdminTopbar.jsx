@@ -1,14 +1,14 @@
 import InputField from "@/components/genericComponents/InputField";
-import {AdminButton} from "@/components/genericComponents/AdminButton";
-import { SidebarTrigger } from "@/components/genericComponents/sidebar";
+import { AdminButton } from "@/components/adminUI/AdminButton";
+import { SidebarTrigger } from "@/components/adminUI/sidebar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/genericComponents/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/genericComponents/avatar";
+} from "@/components/adminUI/dropdown-menu";
+import { Avatar, AvatarFallback } from "@/components/adminUI/avatar";
 import Icon from "@/system/icons/Icon";
 
 export function AdminTopbar() {
@@ -17,7 +17,10 @@ export function AdminTopbar() {
       <div className="flex items-center gap-3">
         <SidebarTrigger className="text-muted-foreground" />
         <div className="relative hidden md:block">
-          <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Icon
+            name="search"
+            className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+          />
           <InputField
             placeholder="Search orders, products, customers..."
             className="pl-9 w-[320px] lg:w-[400px] bg-secondary border-0 h-10"
@@ -53,7 +56,10 @@ export function AdminTopbar() {
                   Super Admin
                 </span>
               </div>
-              <Icon name="chevronDown" className="h-4 w-4 text-muted-foreground hidden md:block" />
+              <Icon
+                name="chevronDown"
+                className="h-4 w-4 text-muted-foreground hidden md:block"
+              />
             </AdminButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48">

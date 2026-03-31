@@ -39,4 +39,4 @@ const AdminButton = React.forwardRef(
 );
 AdminButton.displayName = "Button";
 
-export { AdminButton };
+export { AdminButton , buttonVariants };

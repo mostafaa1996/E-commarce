@@ -3,8 +3,8 @@ import { AdminLayout } from "@/components/admin/AdminLayout";
 import { StatCard } from "@/components/admin/StatCard";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { StatusBadge } from "@/components/admin/StatusBadge";
-import {AdminButton} from "@/components/genericComponents/AdminButton";
-import { Avatar, AvatarFallback } from "@/components/genericComponents/avatar";
+import { AdminButton } from "@/components/adminUI/AdminButton";
+import { Avatar, AvatarFallback } from "@/components/adminUI/avatar";
 import {
   BarChart,
   Bar,
@@ -258,7 +258,8 @@ export default function DashboardPage() {
               Recent Orders
             </h3>
             <AdminButton variant="ghost" size="sm" className="text-primary">
-              View All <Icon name="arrowUpRight" className="h-3 w-3 ml-1 text-primary" />
+              View All{" "}
+              <Icon name="arrowUpRight" className="h-3 w-3 ml-1 text-primary" />
             </AdminButton>
           </div>
           <div className="overflow-x-auto">
