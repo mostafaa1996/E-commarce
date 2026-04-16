@@ -1,0 +1,1044 @@
+{
+  "product": {
+    "itemId": "v1|285925870302|0",
+    "title": "Smart Bulb pack with  Smart Plug ",
+    "slug": "smart-bulb-pack-with-smart-plug-v1-285925870302-0",
+    "shortDescription": "New Sealed Boxes Enhance your home lighting experience with the GE Cync Full Color Direct Connect Smart Bulbs. This 2 pack set of LED bulbs with a warm color temperature of 2500-3000K Warm provides a luminous output of 800 lm. The bulbs are compatible with Amazon Alexa and can be controlled through Wi-Fi connectivity.",
+    "description": "<p dir=\"ltr\" style=\"margin-top:0; margin-bottom:0;\">New Sealed Boxes</p>\n<br>\n<br>\n<br>\n<p dir=\"ltr\" style=\"margin-top:0; margin-bottom:0;\">Enhance your home lighting experience with the GE Cync Full Color Direct Connect Smart Bulbs. This 2 pack set of LED bulbs with a warm color temperature of 2500-3000K Warm provides a luminous output of 800 lm. The bulbs are compatible with Amazon Alexa and can be controlled through Wi-Fi connectivity.</p>\n<br>\n<br>\n<br>",
+    "specifications": [
+      {
+        "name": "Brand",
+        "value": "GE"
+      },
+      {
+        "name": "Type",
+        "value": "LED"
+      },
+      {
+        "name": "Plug Type",
+        "value": "United States"
+      },
+      {
+        "name": "Color",
+        "value": "Multicolor"
+      },
+      {
+        "name": "Number of Outlets",
+        "value": "1"
+      },
+      {
+        "name": "Features",
+        "value": "App-Controlled"
+      },
+      {
+        "name": "Smart Home Compatibility",
+        "value": "Amazon Alexa, Google Assistant"
+      },
+      {
+        "name": "Smart Home Protocol",
+        "value": "Wi-Fi"
+      },
+      {
+        "name": "Condition",
+        "value": "New"
+      }
+    ],
+    "seo": {
+      "metaTitle": "Smart Bulb pack with  Smart Plug ",
+      "metaDescription": "New Sealed Boxes Enhance your home lighting experience with the GE Cync Full Color Direct Connect Smart Bulbs. This 2 pack set of LED bulbs with a warm color t…"
+    },
+    "price": 16.99,
+    "currency": "USD",
+    "originalPrice": null,
+    "brand": "GE",
+    "category": "69d69a7a8c15b0ac80c712e1",
+    "sourceCategoryName": "Smart Home",
+    "mainImage": {
+      "url": "https://i.ebayimg.com/images/g/I34AAOSw3QhmeJm4/s-l1600.jpg",
+      "alt": "image of Smart Home"
+    },
+    "images": [
+      {
+        "url": "https://i.ebayimg.com/images/g/3LoAAOSwk0FmeJm4/s-l1600.jpg",
+        "alt": "image of Smart Home"
+      },
+      {
+        "url": "https://i.ebayimg.com/images/g/FvcAAOSwcBxmeJm5/s-l1600.jpg",
+        "alt": "image of Smart Home"
+      },
+      {
+        "url": "https://i.ebayimg.com/images/g/k0kAAOSwF91meJm5/s-l1600.jpg",
+        "alt": "image of Smart Home"
+      },
+      {
+        "url": "https://i.ebayimg.com/images/g/IawAAOSw8D1meJm6/s-l1600.jpg",
+        "alt": "image of Smart Home"
+      },
+      {
+        "url": "https://i.ebayimg.com/images/g/INYAAOSwpONmeJm6/s-l1600.jpg",
+        "alt": "image of Smart Home"
+      },
+      {
+        "url": "https://i.ebayimg.com/images/g/sD8AAOSwg49meJm8/s-l1600.jpg",
+        "alt": "image of Smart Home"
+      },
+      {
+        "url": "https://i.ebayimg.com/images/g/wjYAAOSw~itmeJm7/s-l1600.jpg",
+        "alt": "image of Smart Home"
+      }
+    ],
+    "shipping": {
+      "estimatedDeliveryMinDate": "2026-04-17T18:22:55.980Z",
+      "estimatedDeliveryMaxDate": "2026-04-20T18:22:55.980Z",
+      "shipsFrom": "Alexandria, Egypt",
+      "costs": [
+        {
+          "shipsTo": "Alexandria, Egypt",
+          "cost": 4.99
+        },
+        {
+          "shipsTo": "Cairo, Egypt",
+          "cost": 30
+        },
+        {
+          "shipsTo": "Giza, Egypt",
+          "cost": 30
+        },
+        {
+          "shipsTo": "Behira, Egypt",
+          "cost": 20
+        },
+        {
+          "shipsTo": "Matrouh, Egypt",
+          "cost": 40
+        }
+      ]
+    },
+    "returnPolicy": {
+      "isReturnAccepted": false,
+      "returnWindowDays": 0,
+      "returnFeesPaidBy": "NONE",
+      "notes": ""
+    },
+    "isActive": true,
+    "hasVariants": false,
+    "variants": [
+      {
+        "sku": "v1|285925870302|0 - Smart Home",
+        "attributes": {
+          "color": {
+            "name": "",
+            "hex": ""
+          },
+          "size": "",
+          "storage": "",
+          "ram": "",
+          "ssd": ""
+        },
+        "price": 16.99,
+        "compareAtPrice": 19.538499999999996,
+        "stock": 20,
+        "lowStockThreshold": 5,
+        "availabilityStatus": "IN_STOCK",
+        "isActive": true
+      }
+    ],
+    "reviewSummary": {
+      "averageRating": 4.44,
+      "reviewsCount": 234,
+      "ratingBreakdown": {
+        "five": 150,
+        "four": 50,
+        "three": 20,
+        "two": 14,
+        "one": 0
+      },
+      "lastSyncedAt": "2026-04-16T19:08:00.649Z"
+    },
+    "reviews": [],
+    "tags": [
+      "Smart Bulb",
+      "Smart Plug",
+      "GE",
+      "Cync",
+      "LED",
+      "Wi-Fi",
+      "Amazon Alexa",
+      "Google Assistant",
+      "Multicolor"
+    ],
+    "soldCount": 0,
+    "viewsCount": 0,
+    "status": "COMPLETED",
+    "createdAt": "2026-04-16T18:22:55.980Z",
+    "updatedAt": "2026-04-16T18:22:55.980Z",
+    "pricing": {},
+    "inventory": {},
+    "defaultVariantId": null
+  },
+  "reviews": {
+    "Reviews": [
+      {
+        "rating": 5,
+        "comment": "Easy setup, works great with Alexa. Colors are vibrant and bulb brightness is consistent.",
+        "date": "2026-03-22",
+        "username": "homeguru87"
+      },
+      {
+        "rating": 4.5,
+        "comment": "Great bulbs and the included smart plug is handy. Minor lag occasionally when switching colors.",
+        "date": "2026-02-18",
+        "username": "techsavvy_mia"
+      },
+      {
+        "rating": 4,
+        "comment": "Good value for a 2-pack. Warm whites are very pleasant for evenings.",
+        "date": "2026-01-10",
+        "username": "cozycorner"
+      },
+      {
+        "rating": 3.5,
+        "comment": "Pretty reliable but had one bulb that lost Wi‑Fi once; reconnect was simple though.",
+        "date": "2025-12-05",
+        "username": "jared_in_dc"
+      },
+      {
+        "rating": 5,
+        "comment": "Perfect for my living room. App control is intuitive and the colors are true.",
+        "date": "2026-04-02",
+        "username": "lumenlover"
+      },
+      {
+        "rating": 2,
+        "comment": "Decent light but the smart plug occasionally drops connection. Customer support took a while.",
+        "date": "2026-03-01",
+        "username": "frustrated_user99"
+      },
+      {
+        "rating": 4.8,
+        "comment": "Excellent integration with Google Assistant. Setup took under 5 minutes.",
+        "date": "2026-02-27",
+        "username": "googlehomefan"
+      },
+      {
+        "rating": 1.5,
+        "comment": "One bulb arrived DOA. Return process was fine but disappointing out of the box.",
+        "date": "2026-01-20",
+        "username": "unlucky_purchaser"
+      },
+      {
+        "rating": 4.2,
+        "comment": "Colors and brightness are solid. Wish the app had more preset scenes.",
+        "date": "2025-11-15",
+        "username": "design_by_elle"
+      },
+      {
+        "rating": 3,
+        "comment": "Works as advertised but occasional app-to-bulb delay when changing color quickly.",
+        "date": "2026-03-11",
+        "username": "tim_tinker"
+      },
+      {
+        "rating": 5,
+        "comment": "Fantastic bulbs. No hub required and the plug lets me schedule a lamp easily.",
+        "date": "2026-04-10",
+        "username": "brightdays"
+      },
+      {
+        "rating": 2.5,
+        "comment": "Good brightness but color accuracy is off for some hues. Still usable for mood lighting.",
+        "date": "2026-02-05",
+        "username": "color_critic"
+      }
+    ],
+    "productId": "v1|285925870302|0"
+  }
+}
+{
+  "product": {
+    "itemId": "v1|274639910321|0",
+    "title": "Smart Light Bulbs, Works with Alexa, Echo, Google Home & Siri, 2.4GHz WiFi",
+    "slug": "smart-light-bulbs-works-with-alexa-echo-google-home-siri-24ghz-wifi-v1-274639910321-0",
+    "shortDescription": "How to connect with Alexa Echo?. Select “Smart Life” and tap “ENABLE” to enable the Skill. when the bulb into rapid blinking status,then turn “on-off-on-off-on”,ensure light is slowly flashing,tap the confirmation button.",
+    "description": "<hr class=\"bucketDivider\" noshade=\"true\" size=\"1\">\n<h2>Product Description</h2>\n\n<div cel_widget_id=\"aplus\" class=\"aplus-v2 desktop celwidget\">\n<style type=\"text/css\">.aplus-v2 {\ndisplay: block;\nmargin-left: auto;\nmargin-right: auto;\n}\n.aplus-v2 .aplus-3p-fixed-width {\nwidth: 970px;\n}\n.aplus-v2 .aplus-3p-fixed-width.aplus-module-wrapper {\nmargin-left: auto;\nmargin-right: auto;\n}\n</style>\n<style type=\"text/css\">.aplus-v2 .launchpad-module { max-width: 1000px; margin-left: auto; margin-right: auto; padding-top: 15px; padding-bottom: 15px; }\n.aplus-v2 .launchpad-text-container { margin-left: auto; margin-right: auto; text-align: justify; -moz-text-align-last: center; text-align-last: center; }\n.aplus-v2 .launchpad-text-center { text-align: center; }\n.aplus-v2 .launchpad-text-left-justify { text-align: justify; -moz-text-align-last: left; text-align-last: left; }\nhtml[dir='rtl'] .aplus-v2 .launchpad-text-left-justify { text-align: justify; -moz-text-align-last: right; text-align-last: right; }\n.aplus-v2 .launchpad-video-container { width: 100%; }\n.aplus-v2 .launchpad-module-video .aplusAiryVideoPlayer { margin-left: auto; margin-right: auto; padding-bottom: 25px; }\n.aplus-v2 .launchpad-module-three-stack .launchpad-module-stackable-column { display: inline-block; width: 32%; vertical-align: top; padding-left: 10px; padding-right: 10px; }\n.aplus-v2 .launchpad-module-three-stack .launchpad-module-three-stack-container { display: table; text-align: center; margin-left: auto; margin-right: auto; }\n.aplus-v2 .launchpad-module-three-stack .launchpad-module-three-stack-container img { max-width: none; }\n.aplus-v2 .launchpad-module-three-stack .launchpad-module-three-stack-block { margin-bottom: 14px; }\n.aplus-v2 .launchpad-module-three-stack .launchpad-module-three-stack-detail { display: table-caption; caption-side: bottom; }\n.aplus-v2 .launchpad-column-container { vertical-align: middle; }\n.aplus-v2 .launchpad-column-image-container { width: 34.5%; }\n.aplus-v2 .launchpad-column-text-container { width: 64.5%; padding: 0 150px; }\n.aplus-v2 .launchpad-module-left-image .launchpad-column-text-container { padding-right: 0; }\n.aplus-v2 .launchpad-module-right-image .launchpad-column-text-container { padding-left: 0; }\n.aplus-v2 .launchpad-about-the-startup h5 { font-weight: normal; font-style: italic; }\n.aplus-v2 .launchpad-faq h2 { color: #ffa500; }\n.aplus-v2 .launchpad-module-person-block { margin-bottom: 10px; }\n</style>\n<style type=\"text/css\">.aplus-v2 {\ndisplay:block;\nmargin-left:auto;\nmargin-right:auto;\nword-wrap: break-word;\noverflow-wrap: break-word;\nword-break: break-word;\n}\n/* Undo this for tech-specs because it breaks table layout */\n.aplus-v2 .aplus-standard .aplus-tech-spec-table { word-break: initial; }\n.aplus-v2 .aplus-standard .aplus-module-wrapper {text-align:inherit; display:block; margin-right:auto;margin-left:auto;}\n.aplus-v2 .aplus-standard.aplus-module.module-1,\n.aplus-v2 .aplus-standard.aplus-module.module-2,\n.aplus-v2 .aplus-standard.aplus-module.module-3,\n.aplus-v2 .aplus-standard.aplus-module.module-4,\n.aplus-v2 .aplus-standard.aplus-module.module-6,\n.aplus-v2 .aplus-standard.aplus-module.module-7,\n.aplus-v2 .aplus-standard.aplus-module.module-8,\n.aplus-v2 .aplus-standard.aplus-module.module-9,\n.aplus-v2 .aplus-standard.aplus-module.module-10,\n.aplus-v2 .aplus-standard.aplus-module.module-11,\n.aplus-v2 .aplus-standard.aplus-module.module-12{padding-bottom:12px; margin-bottom:12px;}\n.aplus-v2 .aplus-standard.aplus-module:last-child{border-bottom:none}\n.aplus-v2 .aplus-standard.aplus-module {min-width:979px;}\n/* aplus css needed to override aui on the detail page */\n.aplus-v2 .aplus-standard.aplus-module table.aplus-chart.a-bordered.a-vertical-stripes {border:none;}\n.aplus-v2 .aplus-standard.aplus-module table.aplus-chart.a-bordered.a-vertical-stripes td {background:none;}\n.aplus-v2 .aplus-standard.aplus-module table.aplus-chart.a-bordered.a-vertical-stripes td.selected {background-color:#ffd;}\n.aplus-v2 .aplus-standard.aplus-module table.aplus-chart.a-bordered.a-vertical-stripes td:first-child {background:#f7f7f7; font-weight:bold;}\n.aplus-v2 .aplus-standard.aplus-module table.aplus-chart.a-bordered.a-vertical-stripes tr th {background:none; border-right:none;}\n.aplus-v2 .aplus-standard.aplus-module table.aplus-chart.a-bordered tr td,.aplus-v2 .aplus-standard .aplus-module table.aplus-chart.a-bordered tr th {border-bottom:1px dotted #999;}\n/* A+ Template - General Module CSS */\n.aplus-v2 .aplus-standard .apm-top {height:100%; vertical-align:top;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-top {padding-left: 0px; padding-right: 3px}\n.aplus-v2 .aplus-standard .apm-center {height:100%; vertical-align:middle; text-align:center;}\n.aplus-v2 .aplus-standard .apm-row {width:100%; display:inline-block;}\n.aplus-v2 .aplus-standard .apm-wrap {width:100%;}\n.aplus-v2 .aplus-standard .apm-fixed-width {width:969px;}\n.aplus-v2 .aplus-standard .apm-floatleft {float:left;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-floatleft {float:right;}\n.aplus-v2 .aplus-standard .apm-floatright {float:right;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-floatright {float:left;}\n.aplus-v2 .aplus-standard .apm-floatnone {float:none;}\n.aplus-v2 .aplus-standard .apm-spacing img {border:none;}\n.aplus-v2 .aplus-standard .apm-leftimage {float:left; display:block; margin-right:20px; margin-bottom:10px;width: 300px;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-leftimage {float: right; margin-right: 0px; margin-left:20px;}\n.aplus-v2 .aplus-standard .apm-centerimage {text-align: center; width:300px; display:block; margin-bottom:10px;}\n.aplus-v2 .aplus-standard .apm-centerthirdcol {min-width:359px; display:block}\n.aplus-v2 .aplus-standard .apm-centerthirdcol ul,\n.aplus-v2 .aplus-standard .apm-centerthirdcol ol {margin-left: 334px;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-centerthirdcol ul,\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-centerthirdcol ol {margin-left: 0px; margin-right: 334px;}\n.aplus-v2 .aplus-standard .apm-rightthirdcol {float:right; width:230px; padding-left:30px; margin-left:30px; border-left:1px solid #dddddd;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-rightthirdcol {float: left; padding-left: 0px; padding-right:30px; margin-left:0px; margin-right:30px; border-left:0px; border-right:1px solid #dddddd;}\n.aplus-v2 .aplus-standard .apm-lefttwothirdswrap {width:709px; display:block;}\n.aplus-v2 .aplus-standard .apm-lefthalfcol {width:480px; padding-right:30px; display:block; float:left;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-lefthalfcol {padding-left:30px; float:right;}\n.aplus-v2 .aplus-standard .apm-righthalfcol {width:480px; display:block; float:left;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-righthalfcol {float:right;}\n.aplus-v2 .aplus-standard .apm-eventhirdcol {width:300px; display:block;}\n.aplus-v2 .aplus-standard .apm-eventhirdcol-table {border-spacing: 0px 0px; border-collapse: collapse;}\n.aplus-v2 .aplus-standard .apm-eventhirdcol-table tr td {vertical-align: top;}\n.aplus-v2 .aplus-standard .apm-fourthcol {width:220px; float:left;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-fourthcol {float:right;}\n.aplus-v2 .aplus-standard .apm-fourthcol .apm-fourthcol-image {position:relative;}\n.aplus-v2 .aplus-standard .apm-fourthcol img {display:block; margin:0 auto;}\n.aplus-v2 .aplus-standard .apm-fourthcol-table {border-spacing: 0px 0px; border-collapse: collapse;}\n.aplus-v2 .aplus-standard .apm-fourthcol-table tr td {vertical-align: top;}\n.aplus-v2 .aplus-standard .apm-listbox {width:100%;}\n.aplus-v2 .aplus-standard .apm-iconheader {float:left; padding-left:10px;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-iconheader {float:right; padding-left:0px; padding-right: 10px}\n.aplus-v2 .aplus-standard .apm-spacing ul:last-child,.aplus-v2 .aplus-standard ol:last-child {margin-bottom:0 !important;}\n.aplus-v2 .aplus-standard .apm-spacing ul,.aplus-v2 .aplus-standard ol {padding:0 !important;}\n.aplus-v2 .aplus-standard .apm-spacing ul {margin:0 0 18px 18px !important;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-spacing ul {margin:0 18px 18px 0 !important;}\n.aplus-v2 .aplus-standard .apm-spacing ul li,.aplus-v2 .aplus-standard ol li {word-wrap:break-word; margin:0 !important;}\n.aplus-v2 .aplus-standard .apm-spacing ul li {margin:0 !important;}\n/* A+ Template - Module 1 Sepcific CSS */\n.aplus-v2 .aplus-standard .amp-centerthirdcol-listbox {display:inline-block; width:359px;}\n/* A+ Template - Module 2/3 Specific CSS */\n.aplus-v2 .aplus-standard .apm-sidemodule {text-align:left; margin:0 auto; width:970px; padding:0; background-color:#ffffff; position:relative;}\n.aplus-v2 .aplus-standard .apm-sidemodule {text-align:inherit;}\n.aplus-v2 .aplus-standard .apm-sidemodule-textright {position:relative; display:table-cell; vertical-align:middle; padding-left:40px; height:300px; max-height:300px;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-sidemodule-textright {padding-left:0px; padding-right: 40px;}\n.aplus-v2 .aplus-standard .apm-sidemodule-textleft {position:relative; display:table-cell; vertical-align:middle; height:300px; max-height:300px;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-sidemodule-textleft {padding-left:0px;}\n.aplus-v2 .aplus-standard .apm-sidemodule-imageleft {position:relative; float:left; display:block;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-sidemodule-imageleft {float:right;}\n.aplus-v2 .aplus-standard .apm-sidemodule-imageright {position:relative; float:right; display:block;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-sidemodule-imageright {float:left;}\n/* A+ Template - Module 4 Specific CSS */\n.aplus-v2 .aplus-standard.aplus-module.module-4 th {padding: 0px; padding-right:30px; width:220px;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard.aplus-module.module-4 th {padding-left: 30px; padding-right: 0px;}\n.aplus-v2 .aplus-standard.aplus-module.module-4 th:last-of-type {padding-right:0px;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard.aplus-module.module-4 th:last-of-type {padding-left: 0px}\n/* A+ Template - Module 5 Specific CSS */\n.aplus-v2 .aplus-standard .apm-tablemodule {text-align:left; margin:0 auto; width:970px; display:table;}\n.aplus-v2 .aplus-standard table.apm-tablemodule-table {border-bottom:1px solid #dddddd; width: 970px; left:4%;table-layout: fixed}\n.aplus-v2 .aplus-standard th.apm-tablemodule-keyhead {border-top:1px solid #dddddd; padding:8px 14px 6px !important; background-color:#f7f7f7; font-weight:normal; color:#626262; float:none !important; margin-right:0; text-align:center; width:106px;}\n.aplus-v2 .aplus-standard tr.apm-tablemodule-keyvalue td {padding-top:8px !important; padding-left:14px; padding-bottom:8px; border-top:1px solid #dddddd; border-bottom:1px solid #dddddd; text-align:center;width:inherit!important}\n.aplus-v2 .aplus-standard .apm-tablemodule-valuecell.selected {background-color:#fff5ec;}\n.aplus-v2 .aplus-standard .apm-tablemodule-valuecell span {word-wrap:break-word;}\n.aplus-v2 .aplus-standard .apm-tablemodule-keyhead {border-right:1px solid #dddddd;}\n.aplus-v2 .aplus-standard .apm-tablemodule-blankkeyhead {border:0 !important; width:18%;}\n.aplus-v2 .aplus-standard .apm-tablemodule-image {background-color:#FFFFFF; padding:0 !important; text-align:center; overflow:hidden; vertical-align:bottom;}\n.aplus-v2 .aplus-standard .apm-tablemodule-imagerows > td > img {max-width:none !important;}\n.aplus-v2 .aplus-standard table.apm-tablemodule-table {margin-bottom: 6px!important;}\n.aplus-v2 .aplus-standard table.apm-tablemodule-table th {padding-bottom:8px; text-align:center;}\n.aplus-v2 .aplus-standard .apm-checked {text-align:center;}\n\n/* A+ Template - Module 6 Specific CSS */\n.aplus-v2 .aplus-standard .apm-hovermodule {text-align:left; margin:0 auto; width:970px; padding: 0; background-color:#ffffff; position:relative;}\n.aplus-v2 .aplus-standard .apm-hovermodule {text-align:inherit;}\n.aplus-v2 .aplus-standard .apm-hovermodule-slides {background-color:#ffffff; width:970px; height:300px;}\n.aplus-v2 .aplus-standard .apm-hovermodule-slides-inner {margin-left:345px; position:absolute; z-index:25;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-hovermodule-slides-inner {margin-left:0px; margin-right:345px;}\n.aplus-v2 .aplus-standard .apm-hovermodule-slidecontrol {padding-top: 14px;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-hovermodule-slidecontrol {left: 0px; right:345px;}\n.aplus-v2 .aplus-standard .apm-hovermodule-smallimage {vertical-align:top; display: inline-block; width:80px; cursor:pointer; margin-right:35px; padding:0;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-hovermodule-smallimage {margin-right:0px; margin-left:35px;}\n.aplus-v2 .aplus-standard .apm-hovermodule-smallimage-bg {background-color:#ffffff; width:80px; height:80px;}\n.aplus-v2 .aplus-standard .apm-hovermodule-smallimage-last {margin-right:0 !important;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-hovermodule-smallimage-last {margin-left:0 !important;}\n.aplus-v2 .aplus-standard .apm-hovermodule-smallimage a {text-transform:uppercase; font-size:11px; font-weight:bold;}\n.aplus-v2 .aplus-standard .apm-hovermodule-smallimage a:hover {text-decoration:none; color:#333333 !important;}\n.aplus-v2 .aplus-standard .apm-hovermodule-smallimage img {border:1px solid #888888;}\n.aplus-v2 .aplus-standard .apm-hovermodule-opacitymodon:hover {opacity:1 !important; filter:alpha(opacity=100) !important;}\n.aplus-v2 .aplus-standard .apm-hovermodule-opacitymodon img {opacity:0.3; filter:alpha(opacity=30);}\n.aplus-v2 .aplus-standard .apm-hovermodule-image {position:absolute; left:0; z-index: 1;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-hovermodule-image {right:0;}\n\n/* A+ Template - Module 9 Specific CSS */\n.aplus-v2 .aplus-standard.aplus-module.module-9 th.apm-center {padding: 0 35px 0 0; width:300px;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard.aplus-module.module-9 th.apm-center {padding: 0 0 0 35px; width:300px;}\n.aplus-v2 .aplus-standard.aplus-module.module-9 th.apm-center:last-of-type {padding:0px;}\n/*A+ Template - Module 11/12 Specific CSS */\n.aplus-v2 .aplus-standard .apm-heromodule-textright {align-self:center; right:50px; margin-left:auto; padding:15px; filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#BBBBBB,endColorstr=#FFFFFF); background-color: rgb(0,0,0); background-color:rgba(0,0,0,0.7);color:white; width:250px;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-heromodule-textright {left: 50px; right:auto; margin-left:0; margin-right:auto;}\n.aplus-v2 .aplus-standard .apm-heromodule-textright h3,\n.aplus-v2 .aplus-standard .apm-heromodule-textright ul,\n.aplus-v2 .aplus-standard .apm-heromodule-textright ol,\n.aplus-v2 .aplus-standard .apm-heromodule-textright ul .a-list-item,\n.aplus-v2 .aplus-standard .apm-heromodule-textright ol .a-list-item {color:white}\n.aplus-v2 .aplus-standard.module-12 .textright {align-self:center; right:50px; margin-left:auto; padding:15px; color:black; width:250px; filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#BBBBBB,endColorstr=#FFFFFF); background-color: rgb(255,255,255); background-color:rgba(255,255,255,0.7);}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard.module-12 .textright {left: 50px; right:auto; margin-left:0; margin-right:auto;}\n.aplus-v2 .aplus-standard.module-12 .apm-hero-image,.aplus-v2 .aplus-standard.module-11 .apm-hero-image{float:none}\n.aplus-v2 .aplus-standard.module-12 .apm-hero-image img,.aplus-v2 .aplus-standard.module-11 .apm-hero-image img{position:absolute}\n.aplus-v2 .aplus-standard.module-12 .apm-hero-text,.aplus-v2 .aplus-standard.module-11 .apm-hero-text{position:relative}\n.aplus-v2 .aplus-standard.module-11 .aplus-module-content,.aplus-v2 .aplus-standard.module-12 .aplus-module-content{min-height:300px; display: flex}\n/* module 13 text */\n.aplus-v2 .aplus-standard .aplus-module-13 {\npadding: 40px 0;\nmax-width: 979px;\n}\n.aplus-v2 .aplus-standard .aplus-module-13 .aplus-13-heading-text {\npadding-bottom: 10px;\n}\n.aplus-v2 .aplus-standard .aplus-module-13 p {\ntext-align: left;\npadding-bottom: 10px;\n}\n.aplus-v2 .aplus-standard .aplus-module-13 p {\ntext-align: inherit;\n}\n@media (max-width: 800px) {\n/* Main Media Queries */\n.aplus-v2 .aplus-standard .acs-ux-wrapfix {width:100%;}\n.aplus-v2 .aplus-standard .aplus-module-wrapper {width:100%;}\n.aplus-v2 .aplus-standard .apm-leftimage {float:none;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .acs-ux-wrapfix {width:100%;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .aplus-module-wrapper {width:100%;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-leftimage {float:none;}\n.aplus-v2 .aplus-standard .apm-centerthirdcol ul,\n.aplus-v2 .aplus-standard .apm-centerthirdcol ol {margin-left: 14px;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-centerthirdcol ul,\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-centerthirdcol ol {margin-left: 0px; margin-right: 14px;}\n/* Module1 Media Queries */\n.aplus-v2 .aplus-standard .apm-lefttwothirdswrap {float:none; width:100%; margin:0;}\n.aplus-v2 .aplus-standard .apm-leftimage p {display:none;}\n.aplus-v2 .aplus-standard .apm-centerthirdcol {float:none; width:100%;}\n.aplus-v2 .aplus-standard .apm-listbox {width:100%;}\n.aplus-v2 .aplus-standard .apm-rightthirdcol {float:none; width:100%; border-left:none; padding:0; margin:0; margin-bottom:20px;}\n.aplus-v2 .aplus-standard .apm-rightthirdcol-inner img {display:block; margin:auto;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-lefttwothirdswrap {float:none; width:100%; margin:0;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-leftimage p {display:none;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-centerthirdcol {float:none; width:100%;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-listbox {width:100%;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-rightthirdcol {float:none; width:100%; border-left:none; padding:0; margin:0; margin-bottom:20px;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-rightthirdcol-inner img {display:block; margin:auto;}\n/* Module2/3 Media Queries */\n.aplus-v2 .aplus-standard .apm-sidemodule {width:100%; height:auto;}\n.aplus-v2 .aplus-standard .apm-sidemodule-imageleft {width:100%; position:relative; display:block; margin-bottom:15px;}\n.aplus-v2 .aplus-standard .apm-sidemodule-imageleft img {display:block; margin:0 auto;}\n.aplus-v2 .aplus-standard .apm-sidemodule-imageright {width:100%; position:relative; display:block; margin-bottom:15px;}\n.aplus-v2 .aplus-standard .apm-sidemodule-imageright img {display:block; margin:0 auto;}\n.aplus-v2 .aplus-standard .apm-sidemodule .a-spacing-medium {margin-bottom:30px !important;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-sidemodule {width:100%; height:auto;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-sidemodule-imageleft {width:100%; position:relative; display:block; margin-bottom:15px;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-sidemodule-imageleft img {display:block; margin:0 auto;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-sidemodule-imageright {width:100%; position:relative; display:block; margin-bottom:15px;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-sidemodule-imageright img {display:block; margin:0 auto;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-sidemodule .a-spacing-medium {margin-bottom:30px !important;}\n/* Module4 Media Queries */\n.aplus-v2 .aplus-standard .apm-fourthcol {margin:0; padding-bottom:23px; width:100%; float:none;}\n.aplus-v2 .aplus-standard .apm-fourthcol .apm-fourthcol-image {height:inherit;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-fourthcol {margin:0; padding-bottom:23px; width:100%; float:none;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-fourthcol .apm-fourthcol-image {height:inherit;}\n/* Module5 Media Queries */\n.aplus-v2 .aplus-standard table.apm-tablemodule-table {width:100%;}\n.aplus-v2 .aplus-standard .apm-tablemodule-valuecell {width:auto;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard table.apm-tablemodule-table {width:100%;}\nhtml[dir='rtl'] .aplus-v2 .aplus-standard .apm-tablemodule-valuecell {width:auto;}\n}\n/* aui hack */\n.aplus-v2 .aplus-standard * {-moz-box-sizing: border-box;-webkit-box-sizing: border-box;box-sizing: border-box;}\n.aplus-v2 .aplus-standard .a-box mp-centerthirdcol-listboxer {-webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px;position: relative;padding: 14px 18px;}\n.aplus-v2 .aplus-standard .a-box {display: block;-webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px;border: 1px #ddd solid;background-color: white;}\n.aplus-v2 .aplus-standard .a-color-alternate-background {background-color: #f3f3f3!important;}\n.aplus-v2 .aplus-standard .a-section {margin-bottom: 12px;}\n.aplus-v2 .aplus-standard .a-size-base {font-size: 13px!important;line-height: 19px!important;}\n.aplus-v2 .aplus-standard .a-spacing-base, .aplus-v2 .aplus-standard .a-ws .a-ws-spacing-base {margin-bottom: 14px!important;}\n.aplus-v2 .aplus-standard .a-spacing-large, .aplus-v2 .aplus-standard .a-ws .a-ws-spacing-large {margin-bottom: 22px!important;}\n.aplus-v2 .aplus-standard .a-spacing-mini, .aplus-v2 .aplus-standard .a-ws .a-ws-spacing-mini {margin-bottom: 6px!important;}\n.aplus-v2 .aplus-standard .a-spacing-small, .aplus-v2 .aplus-standard .a-ws .a-ws-spacing-small {margin-bottom: 10px!important;}\n.aplus-v2 .aplus-standard a, .aplus-v2 .aplus-standard a:visited, .aplus-v2 .aplus-standard a:active, .aplus-v2 .aplus-standard a:link {text-decoration: none;}\n.aplus-v2 .aplus-standard a:hover {text-decoration: underline;cursor: pointer;}\n.aplus-v2 .aplus-standard h1, .aplus-v2 .aplus-standard h2, .aplus-v2 .aplus-standard h3, .aplus-v2 .aplus-standard h4 {font-family: Arial,sans-serif;text-rendering: optimizeLegibility;padding-bottom: 4px;}\n.aplus-v2 .aplus-standard h1, .aplus-v2 .aplus-standard h2, .aplus-v2 .aplus-standard h3, .aplus-v2 .aplus-standard h4 {font-family: inherit;}\n.aplus-v2 .aplus-standard h1, .aplus-v2 .aplus-standard h2, .aplus-v2 .aplus-standard h3, .aplus-v2 .aplus-standard h4, .aplus-v2 .aplus-standard h5, .aplus-v2 .aplus-standard h6 {padding: 0;margin: 0;}\n.aplus-v2 .aplus-standard h3{font-weight: bold;font-size: 17px;line-height: 1.255;}\n.aplus-v2 .aplus-standard h4 {font-weight: normal;font-size: 17px;line-height: 1.255;}\n.aplus-v2 .aplus-standard h5 {font-weight: bold;font-size: 13px;line-height: 19px;}\n.aplus-v2 .aplus-standard img {vertical-align: top;max-width: 100%;}\n.aplus-v2 .aplus-standard p {padding: 0;margin: 0 0 14px 0;}\n.aplus-v2 .aplus-standard ul li {list-style: disc;}\n.aplus-v2 .aplus-standard ul {margin: 0 0 18px 18px;}\n.aplus-v2 .aplus-standard ul, .aplus-v2 .aplus-standard ol {padding: 0;}\n.aplus-v2 .aplus-standard ul:last-child, .aplus-v2 .aplus-standard ol:last-child {margin-bottom: 0!important;}\n.aplus-v2 .aplus-standard .read-more-arrow-placeholder {text-align: right; cursor: pointer; display:none;}\n</style>\n<div cel_widget_id=\"aplus-launchpad-company-logo\" class=\"celwidget aplus-module launchpad-company-logo aplus-standard\">\n<div class=\"a-section a-text-center launchpad-module launchpad-module-company-logo\"><img alt=\"brand\" class=\"a-lazy-loaded\" src=\"https://m.media-amazon.com/images/S/aplus-media/sc/b6ff2e2e-b408-411b-94ff-2a42a939a3ca.__CR0,0,600,180_PT0_SX600_V1___.jpg\"></div>\n</div>\n\n<div cel_widget_id=\"aplus-3p-module-b\" class=\"celwidget aplus-module 3p-module-b aplus-standard\">\n<div class=\"aplus-module-wrapper aplus-3p-fixed-width\"><img alt=\"led\" class=\"a-spacing-base a-lazy-loaded\" src=\"https://m.media-amazon.com/images/S/aplus-media/sc/c8879ddf-6d01-4289-b461-4977d00892fd.__CR0,0,970,600_PT0_SX970_V1___.jpg\">\n<h3 class=\"a-spacing-mini\">Two modes of connecting light bulbs</h3>\n\n<p class=\"a-spacing-base\"><span class=\"a-text-bold\">EZ mode(quick mode)</span></p>\n\n<p class=\"a-spacing-base\">&nbsp;</p>\n\n<ul class=\"a-unordered-list a-vertical\">\n\t<li><span class=\"a-list-item\">Download Smart Life App</span></li>\n\t<li><span class=\"a-list-item\">Manually add lighting equipment and select WiFi connection</span></li>\n\t<li><span class=\"a-list-item\">power on the bulb with your switch,and repeatedly turn “on-off-on-off-on” the switch to activate the bulb into rapid blinking status.</span></li>\n\t<li><span class=\"a-list-item\">wait till the bulb rapidly blinks(about 0.5second per blink).tap the confirmation button</span></li>\n</ul>\n\n<p>&nbsp;</p>\n\n<p class=\"a-spacing-base\"><span class=\"a-text-bold\">AP mode(slow mode)</span></p>\n\n<p class=\"a-spacing-base\">&nbsp;</p>\n\n<ul class=\"a-unordered-list a-vertical\">\n\t<li><span class=\"a-list-item\">If the bulb can't be connected, try clicking on \"AP mode\" in the top right corner.Power on the bulb with your switch</span></li>\n\t<li><span class=\"a-list-item\">when the bulb into rapid blinking status,then turn “on-off-on-off-on”,ensure light is slowly flashing,tap the confirmation button.</span></li>\n</ul>\n\n<p>&nbsp;</p>\n</div>\n</div>\n\n<div cel_widget_id=\"aplus-module-2\" class=\"celwidget aplus-module module-2 aplus-standard\">\n<div aria-live=\"polite\" class=\"a-expander-collapsed-height a-row a-expander-container a-expander-partial-collapse-container\" data-a-expander-collapsed-height=\"700\" data-a-expander-name=\"aplus-module-expander\" style=\"max-height:700px; _height:700px\">\n<div aria-expanded=\"false\" class=\"a-expander-content a-expander-partial-collapse-content\">\n<div class=\"aplus-module-wrapper apm-floatnone apm-fixed-width\">\n<div class=\"apm-sidemodule apm-spacing\">\n<div class=\"apm-sidemodule-imageleft\"><img alt=\"group\" class=\"a-lazy-loaded\" src=\"https://m.media-amazon.com/images/S/aplus-media/sc/efc68030-a087-4758-8b3f-52be39e8d31c.__CR0,0,300,300_PT0_SX300_V1___.jpg\"></div>\n\n<div class=\"apm-sidemodule-textright\">\n<h3 class=\"a-spacing-mini\">Group Control via Smart Life APP</h3>\n\n<p><span class=\"a-text-italic\"><span class=\"a-text-bold\">How to control multiple bulbs at the same time？</span></span></p>\n\n<p>1. Open the Smart life app</p>\n\n<p>2. Click on the “Home” page</p>\n\n<p>3. Choose one of the bulbs you want to control</p>\n\n<p>4. Click the“...” option in the top right corner</p>\n\n<p>5. Click “Create Group”</p>\n\n<p>6. Choose all the bulbs you want to control</p>\n</div>\n</div>\n</div>\n\n<div style=\"clear:both\">&nbsp;</div>\n</div>\n\n<div class=\"a-expander-header a-expander-partial-collapse-header a-text-left\">\n<div class=\"a-expander-content-fade\">&nbsp;</div>\n</div>\n</div>\n</div>\n\n<div cel_widget_id=\"aplus-module-3\" class=\"celwidget aplus-module module-3 aplus-standard\">\n<div aria-live=\"polite\" class=\"a-expander-collapsed-height a-row a-expander-container a-expander-partial-collapse-container\" data-a-expander-collapsed-height=\"700\" data-a-expander-name=\"aplus-module-expander\" style=\"max-height:700px; _height:700px\">\n<div aria-expanded=\"false\" class=\"a-expander-content a-expander-partial-collapse-content\">\n<div class=\"aplus-module-wrapper apm-floatnone apm-fixed-width\">\n<div class=\"apm-sidemodule apm-spacing\">\n<div class=\"apm-sidemodule-imageright\"><img alt=\"voice\" class=\"a-spacing-mini a-lazy-loaded\" src=\"https://m.media-amazon.com/images/S/aplus-media/sc/4a1cf6ed-3de7-4ab4-9fa5-1aea45ea5519.__CR0,0,300,300_PT0_SX300_V1___.jpg\"></div>\n\n<div class=\"apm-sidemodule-textleft\">\n<h3 class=\"a-spacing-mini\">How to connect with Alexa Echo?</h3>\n\n<p>&nbsp;</p>\n\n<ol class=\"a-ordered-list a-vertical\">\n\t<li><span class=\"a-list-item\">Tap “Skills&amp;Games” in the app menu, then search “Smart Life”. Select “Smart Life” and tap “ENABLE” to enable the Skill.</span></li>\n\t<li><span class=\"a-list-item\">Type in your Smart Life account and password, don’t forget to select the country/region where your account belongs to. Then tap “Link Now”.</span></li>\n\t<li><span class=\"a-list-item\">After the skill binding is successful, Click “DISCOVER DEVICES” then Discovered devices will be shown in the list.</span></li>\n</ol>\n\n<p>&nbsp;</p>\n\n<p><span class=\"a-text-bold\">Note:</span></p>\n\n<p>&nbsp;</p>\n\n<ul class=\"a-unordered-list a-vertical\">\n\t<li><span class=\"a-list-item\">Every time you change the device’s name on Smart Life app, Echo must re-discover before you control them.</span></li>\n\t<li><span class=\"a-list-item\">Make sure that your Alexa app is connected to Amazon Echo,and both work together successfully under your WiFi home network</span></li>\n</ul>\n\n<p>&nbsp;</p>\n</div>\n</div>\n</div>\n\n<div style=\"clear:both\">&nbsp;</div>\n</div>\n\n<div class=\"a-expander-header a-expander-partial-collapse-header a-text-left\">\n<div class=\"a-expander-content-fade\">&nbsp;</div>\n</div>\n</div>\n</div>\n\n<div cel_widget_id=\"aplus-module-2\" class=\"celwidget aplus-module module-2 aplus-standard\">\n<div aria-live=\"polite\" class=\"a-expander-collapsed-height a-row a-expander-container a-expander-partial-collapse-container\" data-a-expander-collapsed-height=\"700\" data-a-expander-name=\"aplus-module-expander\" style=\"max-height:700px; _height:700px\">\n<div aria-expanded=\"false\" class=\"a-expander-content a-expander-partial-collapse-content\">\n<div class=\"aplus-module-wrapper apm-floatnone apm-fixed-width\">\n<div class=\"apm-sidemodule apm-spacing\">\n<div class=\"apm-sidemodule-imageleft\"><img alt=\"wide\" class=\"a-lazy-loaded\" src=\"https://m.media-amazon.com/images/S/aplus-media/sc/e3d2f3c1-9380-4a72-8417-66421216d068.__CR0,0,300,300_PT0_SX300_V1___.jpg\"></div>\n\n<div class=\"apm-sidemodule-textright\">\n<h3 class=\"a-spacing-mini\">At the right time, give you the right light</h3>\n\n<p>You can set different light modes on smart life to match various occasions including<u> kitchen, living room, bedroom</u>.</p>\n\n<p>SAUDIO smart light bulb also can be used for <u>cafe, bar, party, etc</u>.</p>\n\n<p>Also have this functions: <u>Color Palette, Sunlight, Timer,Sunrise, Sunset, Dimmable, MIC Function, DIY mode, Scene mode, Energy Saving</u>.</p>\n</div>\n</div>\n</div>\n\n<div style=\"clear:both\">&nbsp;</div>\n</div>\n\n<div class=\"a-expander-header a-expander-partial-collapse-header a-text-left\">\n<div class=\"a-expander-content-fade\">&nbsp;</div>\n</div>\n</div>\n</div>\n\n<div cel_widget_id=\"aplus-module-3\" class=\"celwidget aplus-module module-3 aplus-standard\">\n<div aria-live=\"polite\" class=\"a-expander-collapsed-height a-row a-expander-container a-expander-partial-collapse-container\" data-a-expander-collapsed-height=\"700\" data-a-expander-name=\"aplus-module-expander\" style=\"max-height:700px; _height:700px\">\n<div aria-expanded=\"false\" class=\"a-expander-content a-expander-partial-collapse-content\">\n<div class=\"aplus-module-wrapper apm-floatnone apm-fixed-width\">\n<div class=\"apm-sidemodule apm-spacing\">\n<div class=\"apm-sidemodule-imageright\"><img alt=\"long range\" class=\"a-spacing-mini a-lazy-loaded\" src=\"https://m.media-amazon.com/images/S/aplus-media/sc/3d35b224-2e5d-444e-8894-218ec9d76887.__CR0,0,300,300_PT0_SX300_V1___.jpg\"></div>\n\n<div class=\"apm-sidemodule-textleft\">\n<h3 class=\"a-spacing-mini\">Remote Control in Smart life</h3>\n\n<p>Forget to turn off the lights when you leave?</p>\n\n<p>Don't want to get out of bed and turn off the lights in winter?</p>\n\n<p>Don't want to wake up sleeping baby when you turn off the lights?</p>\n\n<p><span class=\"a-text-bold\"><span class=\"a-text-italic\">Select SAUDIO smart bulb, turn on the phone, you can control the bulb anytime and anywhere</span></span></p>\n</div>\n</div>\n</div>\n\n<div style=\"clear:both\">&nbsp;</div>\n</div>\n\n<div class=\"a-expander-header a-expander-partial-collapse-header a-text-left\">\n<div class=\"a-expander-content-fade\">&nbsp;</div>\n</div>\n</div>\n</div>\n\n<div cel_widget_id=\"aplus-launchpad-brand-description-left\" class=\"celwidget aplus-module launchpad-brand-description-left aplus-standard\">\n<div class=\"a-section launchpad-module launchpad-module-brand-description-left\">\n<div class=\"a-section launchpad-text-left-justify\">\n<p><span class=\"a-text-bold\"><span class=\"a-text-italic\">Tips：Remembering all routers today work in mixed band there you have to disable the 5Ghz band and configure only with the 2.4Ghz enabled after everything is working, after setup you can active 5Ghz again.</span></span></p>\n</div>\n</div>\n</div>\n</div>\n",
+    "specifications": [
+      {
+        "name": "Type of Bulb",
+        "value": "LED"
+      },
+      {
+        "name": "Usage",
+        "value": "Indoor use only"
+      },
+      {
+        "name": "Shape",
+        "value": "A19,E26 Fitting"
+      },
+      {
+        "name": "Size",
+        "value": "4 Pack"
+      },
+      {
+        "name": "Included Components",
+        "value": "Bulb included"
+      },
+      {
+        "name": "Color",
+        "value": "4 Pack"
+      },
+      {
+        "name": "Wattage",
+        "value": "7 watts"
+      },
+      {
+        "name": "Product Dimensions",
+        "value": "3.19 x 3.11 x 4.6 inches"
+      },
+      {
+        "name": "Special Features",
+        "value": "Dimmable, Group Control, Sunlight, Timer, Sunrise,"
+      },
+      {
+        "name": "Batteries Required?",
+        "value": "No"
+      },
+      {
+        "name": "Brand",
+        "value": "Saudio"
+      },
+      {
+        "name": "Bulb Shape Code",
+        "value": "A15"
+      },
+      {
+        "name": "Type",
+        "value": "Appliance Bulb"
+      },
+      {
+        "name": "Condition",
+        "value": "New"
+      }
+    ],
+    "seo": {
+      "metaTitle": "Smart Light Bulbs, Works with Alexa, Echo, Google Home & Siri, 2.4GHz…",
+      "metaDescription": "How to connect with Alexa Echo?. Select “Smart Life” and tap “ENABLE” to enable the Skill. when the bulb into rapid blinking status,then turn “on-off-on-off-on…"
+    },
+    "price": 39.99,
+    "currency": "USD",
+    "originalPrice": null,
+    "brand": "Saudio",
+    "category": "69d69a7a8c15b0ac80c712e1",
+    "sourceCategoryName": "Smart Home",
+    "mainImage": {
+      "url": "https://i.ebayimg.com/images/g/JikAAOSwgSBf92e5/s-l1600.jpg",
+      "alt": "image of Smart Home"
+    },
+    "images": [
+      {
+        "url": "https://i.ebayimg.com/images/g/Fx4AAOSwXHVf92e6/s-l1600.jpg",
+        "alt": "image of Smart Home"
+      },
+      {
+        "url": "https://i.ebayimg.com/images/g/oDUAAOSwCpVf92e7/s-l1600.jpg",
+        "alt": "image of Smart Home"
+      },
+      {
+        "url": "https://i.ebayimg.com/images/g/JsgAAOSwvfBf92e8/s-l1600.jpg",
+        "alt": "image of Smart Home"
+      },
+      {
+        "url": "https://i.ebayimg.com/images/g/mfQAAOSw4bZf92e9/s-l1600.jpg",
+        "alt": "image of Smart Home"
+      },
+      {
+        "url": "https://i.ebayimg.com/images/g/5FcAAOSw9XFf92e~/s-l1600.jpg",
+        "alt": "image of Smart Home"
+      },
+      {
+        "url": "https://i.ebayimg.com/images/g/LkcAAOSwU6lf92fA/s-l1600.jpg",
+        "alt": "image of Smart Home"
+      }
+    ],
+    "shipping": {
+      "estimatedDeliveryMinDate": "2026-04-17T18:22:56.673Z",
+      "estimatedDeliveryMaxDate": "2026-04-20T18:22:56.673Z",
+      "shipsFrom": "Alexandria, Egypt",
+      "costs": [
+        {
+          "shipsTo": "Alexandria, Egypt",
+          "cost": 0
+        },
+        {
+          "shipsTo": "Cairo, Egypt",
+          "cost": 40
+        },
+        {
+          "shipsTo": "Giza, Egypt",
+          "cost": 80
+        },
+        {
+          "shipsTo": "Behira, Egypt",
+          "cost": 20
+        },
+        {
+          "shipsTo": "Matrouh, Egypt",
+          "cost": 40
+        }
+      ]
+    },
+    "returnPolicy": {
+      "isReturnAccepted": true,
+      "returnWindowDays": 30,
+      "returnFeesPaidBy": "BUYER",
+      "notes": "MONEY_BACK"
+    },
+    "isActive": true,
+    "hasVariants": false,
+    "variants": [
+      {
+        "sku": "v1|274639910321|0 - Smart Home",
+        "attributes": {
+          "color": {
+            "name": "",
+            "hex": ""
+          },
+          "size": "",
+          "storage": "",
+          "ram": "",
+          "ssd": ""
+        },
+        "price": 39.99,
+        "compareAtPrice": 45.9885,
+        "stock": 20,
+        "lowStockThreshold": 5,
+        "availabilityStatus": "IN_STOCK",
+        "isActive": true
+      }
+    ],
+    "reviewSummary": {
+      "averageRating": 4.29,
+      "reviewsCount": 284,
+      "ratingBreakdown": {
+        "five": 170,
+        "four": 62,
+        "three": 28,
+        "two": 12,
+        "one": 12
+      },
+      "lastSyncedAt": "2026-04-16T19:08:39.089Z"
+    },
+    "reviews": [],
+    "tags": [
+      "Smart Light Bulbs",
+      "Alexa",
+      "Echo",
+      "Google Home",
+      "Siri",
+      "2.4GHz WiFi",
+      "Dimmable",
+      "A19",
+      "E26",
+      "Indoor use"
+    ],
+    "soldCount": 0,
+    "viewsCount": 0,
+    "status": "COMPLETED",
+    "createdAt": "2026-04-16T18:22:56.673Z",
+    "updatedAt": "2026-04-16T18:22:56.673Z",
+    "pricing": {},
+    "inventory": {},
+    "defaultVariantId": null
+  },
+  "reviews": {
+    "Reviews": [
+      {
+        "rating": 5,
+        "comment": "Excellent bulbs — easy setup with Smart Life and Alexa. Bright, dimmable, and the color temperature is pleasant for living rooms.",
+        "date": "2026-03-12",
+        "username": "HomeTechJen"
+      },
+      {
+        "rating": 4.5,
+        "comment": "Good value for a 4 pack. Works with Google Home and Siri through the app. One bulb had a slight flicker initially but resolved after firmware update.",
+        "date": "2026-02-28",
+        "username": "BrightBuyer82"
+      },
+      {
+        "rating": 4,
+        "comment": "Setup took a minute (had to use 2.4GHz WiFi) but once added they respond quickly. Dimming range is solid.",
+        "date": "2026-01-15",
+        "username": "ApartmentAlex"
+      },
+      {
+        "rating": 3.5,
+        "comment": "Decent lights, but the Smart Life skill can be finicky. Works well most of the time with Alexa though.",
+        "date": "2025-12-04",
+        "username": "TechCurious"
+      },
+      {
+        "rating": 3,
+        "comment": "Bright enough and good color, but one bulb stopped connecting after a month and required re-pairing.",
+        "date": "2025-11-20",
+        "username": "JanetM"
+      },
+      {
+        "rating": 2.5,
+        "comment": "Affordable and dimmable, but app experience is clunky and the schedule feature missed an event a couple times.",
+        "date": "2025-10-05",
+        "username": "SkepticalSam"
+      },
+      {
+        "rating": 2,
+        "comment": "Some bulbs don't always respond to Echo routines. Not reliable enough for outdoor-like schedules.",
+        "date": "2025-09-11",
+        "username": "RoutineTester"
+      },
+      {
+        "rating": 1.5,
+        "comment": "One out of four failed within two weeks. Customer support was slow to respond. Disappointed.",
+        "date": "2025-08-22",
+        "username": "UnhappyCustomer77"
+      },
+      {
+        "rating": 5,
+        "comment": "Love the sunrise/timer feature. Makes waking up easier. Installation instructions for Alexa were clear.",
+        "date": "2025-07-30",
+        "username": "MorningFan"
+      },
+      {
+        "rating": 4,
+        "comment": "Solid replacement for standard A19 bulbs. Color rendering is good and energy use is low at 7W.",
+        "date": "2025-06-18",
+        "username": "EcoPhil"
+      },
+      {
+        "rating": 4.5,
+        "comment": "Great price for a 4-pack. Group control works well and switching between scenes is smooth.",
+        "date": "2025-05-09",
+        "username": "SceneMaster"
+      },
+      {
+        "rating": 3.5,
+        "comment": "Works as advertised but required following the on-off-on reset sequence precisely to enter pairing mode.",
+        "date": "2025-04-01",
+        "username": "DIYDeb"
+      }
+    ],
+    "productId": "v1|274639910321|0"
+  }
+}
+{
+  "product": {
+    "itemId": "v1|256578090901|0",
+    "title": "New Brilliant Smart Home Control Plug-In Panel Built In Alexa Google RING $449",
+    "slug": "new-brilliant-smart-home-control-plug-in-panel-built-in-alexa-google-ring-449-v1-256578090901-0",
+    "shortDescription": "SMART LIGHTING: Turn regular lights into smart lights (supports LED, CFL, halogen, incandescent bulbs, dimmable, multiway).",
+    "description": "<ul class=\"a-unordered-list a-vertical a-spacing-mini\" style=\"box-sizing: border-box; margin: 0px 0px 0px 18px; color: rgb(15, 17, 17); padding: 0px; font-family: &quot;Amazon Ember&quot;, Arial, sans-serif; font-size: 14px;\"><li class=\"a-spacing-mini\" style=\"box-sizing: border-box; list-style: disc; overflow-wrap: break-word; margin: 0px;\"><span class=\"a-list-item\" style=\"box-sizing: border-box;\">EASY SMART HOME CONTROL FOR EVERYONE: Brilliant touchscreen panels with built-in Alexa make it easy for everyone at home to control popular smart devices, lighting, cameras, locks, thermostats, intercom, scenes and more by simply replacing a light switch.</span></li><li class=\"a-spacing-mini\" style=\"box-sizing: border-box; list-style: disc; overflow-wrap: break-word; margin: 0px;\"><span class=\"a-list-item\" style=\"box-sizing: border-box;\">INSTALLS ON ANY WALL &amp; DOESN’T REQUIRE NEUTRAL WIRE — This Brilliant Plug-in Panel flush mounts to any wall and plugs into any outlet. Includes a 5\" LCD touchscreen, built-in camera with privacy shutter, and built-in motion sensor.</span></li><li class=\"a-spacing-mini\" style=\"box-sizing: border-box; list-style: disc; overflow-wrap: break-word; margin: 0px;\"><span class=\"a-list-item\" style=\"box-sizing: border-box;\">SMART LIGHTING: Turn regular lights into smart lights (supports LED, CFL, halogen, incandescent bulbs, dimmable, multiway). Control Hue, LIFX, and Kasa TP-Link smart bulbs. Control lights using touch, voice, built-in motion detection, scenes or an app.</span></li><li class=\"a-spacing-mini\" style=\"box-sizing: border-box; list-style: disc; overflow-wrap: break-word; margin: 0px;\"><span class=\"a-list-item\" style=\"box-sizing: border-box;\">IN-WALL SONOS, RING &amp; SMART LOCK CONTROL: Now everyone at home can easily browse and play music with Sonos speakers, see who’s at the door with a Ring Video Doorbell, and unlock the door with a compatible smart lock—all without needing a phone.</span></li><li class=\"a-spacing-mini\" style=\"box-sizing: border-box; list-style: disc; overflow-wrap: break-word; margin: 0px;\"><span class=\"a-list-item\" style=\"box-sizing: border-box;\">ELIMINATE VOICE ASSISTANT CLUTTER FROM COUNTERTOPS: Put Amazon Alexa in your walls and enjoy the convenience of built-in clutter-free voice control with audio and visual responses from a touchscreen panel on your wall.</span></li></ul>",
+    "specifications": [
+      {
+        "name": "Brand",
+        "value": "Brilliant"
+      },
+      {
+        "name": "Compatible Brand",
+        "value": "Universal"
+      },
+      {
+        "name": "Type",
+        "value": "Male (Plug)"
+      },
+      {
+        "name": "Connectivity",
+        "value": "Wi-Fi"
+      },
+      {
+        "name": "Compatible Product",
+        "value": "Internet/Media Streamer, Speaker, Surveillance Camera, Video Player"
+      },
+      {
+        "name": "Smart Home Protocol",
+        "value": "Wi-Fi"
+      },
+      {
+        "name": "Smart Home Compatibility",
+        "value": "Apple HomeKit, Philips Hue, Samsung SmartThings, Nest, Logitech Harmony, Amazon Alexa, Google Assistant"
+      },
+      {
+        "name": "Country of Origin",
+        "value": "Taiwan"
+      },
+      {
+        "name": "UPC",
+        "value": "855591007743"
+      },
+      {
+        "name": "Condition",
+        "value": "New"
+      }
+    ],
+    "seo": {
+      "metaTitle": "New Brilliant Smart Home Control Plug-In Panel Built In Alexa Google…",
+      "metaDescription": "SMART LIGHTING: Turn regular lights into smart lights (supports LED, CFL, halogen, incandescent bulbs, dimmable, multiway)."
+    },
+    "price": 207.99,
+    "currency": "USD",
+    "originalPrice": null,
+    "brand": "Brilliant",
+    "category": "69d69a7a8c15b0ac80c712e1",
+    "sourceCategoryName": "Smart Home",
+    "mainImage": {
+      "url": "https://i.ebayimg.com/images/g/P5kAAOSwQA9mm9rp/s-l1600.jpg",
+      "alt": "image of Smart Home"
+    },
+    "images": [
+      {
+        "url": "https://i.ebayimg.com/images/g/lAwAAOSw0Gxmm9rp/s-l1600.jpg",
+        "alt": "image of Smart Home"
+      },
+      {
+        "url": "https://i.ebayimg.com/images/g/~38AAOSwHZBmm9rp/s-l1600.jpg",
+        "alt": "image of Smart Home"
+      },
+      {
+        "url": "https://i.ebayimg.com/images/g/2WAAAOSwtCpmm9rp/s-l1600.jpg",
+        "alt": "image of Smart Home"
+      },
+      {
+        "url": "https://i.ebayimg.com/images/g/e9wAAOSw8wtmm9rp/s-l1600.jpg",
+        "alt": "image of Smart Home"
+      },
+      {
+        "url": "https://i.ebayimg.com/images/g/PdIAAOSwtX9mm9rp/s-l1600.jpg",
+        "alt": "image of Smart Home"
+      },
+      {
+        "url": "https://i.ebayimg.com/images/g/aesAAOSwXaBmm9rp/s-l1600.jpg",
+        "alt": "image of Smart Home"
+      },
+      {
+        "url": "https://i.ebayimg.com/images/g/XvUAAOSw9Ahmm9rp/s-l1600.jpg",
+        "alt": "image of Smart Home"
+      }
+    ],
+    "shipping": {
+      "estimatedDeliveryMinDate": "2026-04-17T18:22:58.840Z",
+      "estimatedDeliveryMaxDate": "2026-04-20T18:22:58.840Z",
+      "shipsFrom": "Alexandria, Egypt",
+      "costs": [
+        {
+          "shipsTo": "Alexandria, Egypt",
+          "cost": 34.99
+        },
+        {
+          "shipsTo": "Cairo, Egypt",
+          "cost": 39.99
+        },
+        {
+          "shipsTo": "Giza, Egypt",
+          "cost": 30
+        },
+        {
+          "shipsTo": "Behira, Egypt",
+          "cost": 20
+        },
+        {
+          "shipsTo": "Matrouh, Egypt",
+          "cost": 40
+        }
+      ]
+    },
+    "returnPolicy": {
+      "isReturnAccepted": true,
+      "returnWindowDays": 30,
+      "returnFeesPaidBy": "SELLER",
+      "notes": "MONEY_BACK"
+    },
+    "isActive": true,
+    "hasVariants": false,
+    "variants": [
+      {
+        "sku": "v1|256578090901|0 - Smart Home",
+        "attributes": {
+          "color": {
+            "name": "",
+            "hex": ""
+          },
+          "size": "",
+          "storage": "",
+          "ram": "",
+          "ssd": ""
+        },
+        "price": 207.99,
+        "compareAtPrice": 239.1885,
+        "stock": 20,
+        "lowStockThreshold": 5,
+        "availabilityStatus": "IN_STOCK",
+        "isActive": true
+      }
+    ],
+    "reviewSummary": {
+      "averageRating": 4.39,
+      "reviewsCount": 236,
+      "ratingBreakdown": {
+        "five": 150,
+        "four": 50,
+        "three": 20,
+        "two": 10,
+        "one": 6
+      },
+      "lastSyncedAt": "2026-04-16T19:09:10.846Z"
+    },
+    "reviews": [],
+    "tags": [
+      "Brilliant",
+      "Smart Home",
+      "Alexa",
+      "Google Assistant",
+      "Ring",
+      "Wi-Fi",
+      "Smart Lighting",
+      "Plug-In Panel",
+      "HomeKit"
+    ],
+    "soldCount": 0,
+    "viewsCount": 0,
+    "status": "COMPLETED",
+    "createdAt": "2026-04-16T18:22:58.840Z",
+    "updatedAt": "2026-04-16T18:22:58.840Z",
+    "pricing": {},
+    "inventory": {},
+    "defaultVariantId": null
+  },
+  "reviews": {
+    "Reviews": [
+      {
+        "rating": 5,
+        "comment": "Seamless integration with Alexa and Google Assistant. Turned my regular lights into smart dimmable lights in minutes. Panel looks sleek.",
+        "date": "2026-03-12",
+        "username": "homeguru82"
+      },
+      {
+        "rating": 4.5,
+        "comment": "Great build quality and easy to set up. Worked with my Ring and HomeKit after a quick firmware update. Wish the app had more scheduling options.",
+        "date": "2026-02-27",
+        "username": "techmom"
+      },
+      {
+        "rating": 4,
+        "comment": "Reliable Wi‑Fi connectivity and supports multiway dimming as advertised. A bit pricey at first glance but performs very well.",
+        "date": "2026-01-18",
+        "username": "jared_in_tx"
+      },
+      {
+        "rating": 3.5,
+        "comment": "Works well with Hue and SmartThings but setup took longer than expected. Documentation could be clearer for multiway wiring.",
+        "date": "2026-04-02",
+        "username": "lighting_nerd"
+      },
+      {
+        "rating": 2,
+        "comment": "Had intermittent disconnects on a congested Wi‑Fi network. Customer support was helpful but it took a week to resolve.",
+        "date": "2026-02-05",
+        "username": "karenDIY"
+      },
+      {
+        "rating": 4.8,
+        "comment": "Excellent for converting old fixtures to smart lighting. Compatible with many platforms and the physical finish matches my switches.",
+        "date": "2026-03-30",
+        "username": "renovationpro"
+      },
+      {
+        "rating": 1.5,
+        "comment": "Unit arrived DOA. Replacement process with retailer was slow. Hoping the replacement works better.",
+        "date": "2026-01-07",
+        "username": "unluckybuyer"
+      },
+      {
+        "rating": 5,
+        "comment": "Fantastic device. Integrates with Logitech Harmony and my Nest thermostat scenes. Very responsive and stable.",
+        "date": "2026-03-22",
+        "username": "cinematicsam"
+      },
+      {
+        "rating": 3,
+        "comment": "Good hardware but needs more frequent firmware updates. I experienced one bug with multiway dimming that was fixed after update.",
+        "date": "2026-02-14",
+        "username": "emma.codes"
+      },
+      {
+        "rating": 4.2,
+        "comment": "Nice aesthetic and solid performance. Installation required an electrician for rewiring in my older home.",
+        "date": "2026-04-08",
+        "username": "household_hacker"
+      },
+      {
+        "rating": 4.6,
+        "comment": "Works as advertised with Philips Hue and Alexa. Love the built-in scheduling and reliable automation triggers.",
+        "date": "2026-03-05",
+        "username": "phil_hue_fan"
+      },
+      {
+        "rating": 2.8,
+        "comment": "Overall functional but had trouble pairing with one of my surveillance cameras. Support suggested network tweaks that helped slightly.",
+        "date": "2026-02-20",
+        "username": "networkedlife"
+      }
+    ],
+    "productId": "v1|256578090901|0"
+  }
+}
+{
+  "product": {
+    "itemId": "v1|285925870302|0",
+    "title": "Smart Bulb pack with  Smart Plug ",
+    "slug": "smart-bulb-pack-with-smart-plug-v1-285925870302-0",
+    "shortDescription": "New Sealed Boxes Enhance your home lighting experience with the GE Cync Full Color Direct Connect Smart Bulbs. This 2 pack set of LED bulbs with a warm color temperature of 2500-3000K Warm provides a luminous output of 800 lm. The bulbs are compatible with Amazon Alexa and can be controlled through Wi-Fi connectivity.",
+    "description": "<p dir=\"ltr\" style=\"margin-top:0; margin-bottom:0;\">New Sealed Boxes</p>\n<br>\n<br>\n<br>\n<p dir=\"ltr\" style=\"margin-top:0; margin-bottom:0;\">Enhance your home lighting experience with the GE Cync Full Color Direct Connect Smart Bulbs. This 2 pack set of LED bulbs with a warm color temperature of 2500-3000K Warm provides a luminous output of 800 lm. The bulbs are compatible with Amazon Alexa and can be controlled through Wi-Fi connectivity.</p>\n<br>\n<br>\n<br>",
+    "specifications": [
+      {
+        "name": "Brand",
+        "value": "GE"
+      },
+      {
+        "name": "Type",
+        "value": "LED"
+      },
+      {
+        "name": "Plug Type",
+        "value": "United States"
+      },
+      {
+        "name": "Color",
+        "value": "Multicolor"
+      },
+      {
+        "name": "Number of Outlets",
+        "value": "1"
+      },
+      {
+        "name": "Features",
+        "value": "App-Controlled"
+      },
+      {
+        "name": "Smart Home Compatibility",
+        "value": "Amazon Alexa, Google Assistant"
+      },
+      {
+        "name": "Smart Home Protocol",
+        "value": "Wi-Fi"
+      },
+      {
+        "name": "Condition",
+        "value": "New"
+      }
+    ],
+    "seo": {
+      "metaTitle": "Smart Bulb pack with  Smart Plug ",
+      "metaDescription": "New Sealed Boxes Enhance your home lighting experience with the GE Cync Full Color Direct Connect Smart Bulbs. This 2 pack set of LED bulbs with a warm color t…"
+    },
+    "price": 16.99,
+    "currency": "USD",
+    "originalPrice": null,
+    "brand": "GE",
+    "category": "69d69a7a8c15b0ac80c712e1",
+    "sourceCategoryName": "Smart Home",
+    "mainImage": {
+      "url": "https://i.ebayimg.com/images/g/I34AAOSw3QhmeJm4/s-l1600.jpg",
+      "alt": "image of Smart Home"
+    },
+    "images": [
+      {
+        "url": "https://i.ebayimg.com/images/g/3LoAAOSwk0FmeJm4/s-l1600.jpg",
+        "alt": "image of Smart Home"
+      },
+      {
+        "url": "https://i.ebayimg.com/images/g/FvcAAOSwcBxmeJm5/s-l1600.jpg",
+        "alt": "image of Smart Home"
+      },
+      {
+        "url": "https://i.ebayimg.com/images/g/k0kAAOSwF91meJm5/s-l1600.jpg",
+        "alt": "image of Smart Home"
+      },
+      {
+        "url": "https://i.ebayimg.com/images/g/IawAAOSw8D1meJm6/s-l1600.jpg",
+        "alt": "image of Smart Home"
+      },
+      {
+        "url": "https://i.ebayimg.com/images/g/INYAAOSwpONmeJm6/s-l1600.jpg",
+        "alt": "image of Smart Home"
+      },
+      {
+        "url": "https://i.ebayimg.com/images/g/sD8AAOSwg49meJm8/s-l1600.jpg",
+        "alt": "image of Smart Home"
+      },
+      {
+        "url": "https://i.ebayimg.com/images/g/wjYAAOSw~itmeJm7/s-l1600.jpg",
+        "alt": "image of Smart Home"
+      }
+    ],
+    "shipping": {
+      "estimatedDeliveryMinDate": "2026-04-17T19:33:04.544Z",
+      "estimatedDeliveryMaxDate": "2026-04-20T19:33:04.544Z",
+      "shipsFrom": "Alexandria, Egypt",
+      "costs": [
+        {
+          "shipsTo": "Alexandria, Egypt",
+          "cost": 4.99
+        },
+        {
+          "shipsTo": "Cairo, Egypt",
+          "cost": 30
+        },
+        {
+          "shipsTo": "Giza, Egypt",
+          "cost": 30
+        },
+        {
+          "shipsTo": "Behira, Egypt",
+          "cost": 20
+        },
+        {
+          "shipsTo": "Matrouh, Egypt",
+          "cost": 40
+        }
+      ]
+    },
+    "returnPolicy": {
+      "isReturnAccepted": false,
+      "returnWindowDays": 0,
+      "returnFeesPaidBy": "NONE",
+      "notes": ""
+    },
+    "isActive": true,
+    "hasVariants": false,
+    "variants": [
+      {
+        "sku": "v1|285925870302|0 - Smart Home",
+        "attributes": {
+          "color": {
+            "name": "",
+            "hex": ""
+          },
+          "size": "",
+          "storage": "",
+          "ram": "",
+          "ssd": ""
+        },
+        "price": 16.99,
+        "compareAtPrice": 19.538499999999996,
+        "stock": 20,
+        "lowStockThreshold": 5,
+        "availabilityStatus": "IN_STOCK",
+        "isActive": true
+      }
+    ],
+    "reviewSummary": {
+      "averageRating": 4.3,
+      "reviewsCount": 124,
+      "ratingBreakdown": {
+        "five": 80,
+        "four": 25,
+        "three": 10,
+        "two": 5,
+        "one": 4
+      },
+      "lastSyncedAt": "2026-04-16T19:33:49.712Z"
+    },
+    "reviews": [],
+    "tags": [
+      "Smart Bulb",
+      "Smart Plug",
+      "GE",
+      "Cync",
+      "LED",
+      "Wi-Fi",
+      "Amazon Alexa",
+      "Multicolor"
+    ],
+    "soldCount": 0,
+    "viewsCount": 0,
+    "status": "COMPLETED",
+    "createdAt": "2026-04-16T19:33:04.544Z",
+    "updatedAt": "2026-04-16T19:33:04.544Z",
+    "pricing": {},
+    "inventory": {},
+    "defaultVariantId": null
+  },
+  "reviews": {
+    "Reviews": [
+      {
+        "rating": 5,
+        "comment": "Easy setup, connected to my Alexa in seconds. Colors are vibrant and the warm white is perfect for evenings.",
+        "date": "2026-04-08",
+        "username": "HomeTechJen"
+      },
+      {
+        "rating": 4.5,
+        "comment": "Great bulbs and the included smart plug is handy. Wish the app had a few more preset scenes.",
+        "date": "2026-03-30",
+        "username": "BrightSpaces"
+      },
+      {
+        "rating": 4,
+        "comment": "Reliable Wi‑Fi connection and good color range. Occasionally the app lags for a second.",
+        "date": "2026-02-14",
+        "username": "MikeR_home"
+      },
+      {
+        "rating": 3.5,
+        "comment": "Decent lights and easy voice control, but one bulb had a flicker the first week and needed a reset.",
+        "date": "2026-01-25",
+        "username": "LoriS"
+      },
+      {
+        "rating": 3,
+        "comment": "Works fine for basic use. The multicolor is fun but not as saturated as I expected.",
+        "date": "2026-01-10",
+        "username": "AptLiving"
+      },
+      {
+        "rating": 2.5,
+        "comment": "Setup was confusing at first and support took a while to respond. Now it mostly works.",
+        "date": "2025-12-20",
+        "username": "TechTrial"
+      },
+      {
+        "rating": 2,
+        "comment": "The smart plug sometimes loses connection and the app shows offline until I toggle power.",
+        "date": "2025-11-05",
+        "username": "GadgetGuy82"
+      },
+      {
+        "rating": 1.5,
+        "comment": "One of the bulbs died after a month. Customer service was slow to replace it.",
+        "date": "2025-10-12",
+        "username": "UnhappyBuyer"
+      },
+      {
+        "rating": 4,
+        "comment": "Good value for a 2-pack with a plug. Colors are customizable and schedules work well.",
+        "date": "2025-09-28",
+        "username": "LightLover"
+      },
+      {
+        "rating": 5,
+        "comment": "Fantastic product — simple setup, voice control works flawlessly with Alexa.",
+        "date": "2025-08-17",
+        "username": "SmartHomeSam"
+      },
+      {
+        "rating": 4.2,
+        "comment": "Solid bulbs, saves energy and the warm white is very pleasant. App updates have improved stability.",
+        "date": "2025-07-03",
+        "username": "EcoDweller"
+      },
+      {
+        "rating": 3.8,
+        "comment": "Overall satisfied. Would give 4.5 if the scheduler had more advanced options.",
+        "date": "2025-06-12",
+        "username": "NeatNest"
+      }
+    ],
+    "productId": "v1|285925870302|0"
+  }
+}
