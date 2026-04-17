@@ -1,0 +1,1891 @@
+{
+  "itemId": "v1|127641279064|428791889780",
+  "sellerItemRevision": "44",
+  "title": "2026 HP Laptop Computer 15.6\" Touch 10-Core Intel i5 Up 64GB RAM 2TB SSD Win Pro",
+  "subtitle": "✅Lifetime Office 2024 ✅Fast Shipping ✅512GB|2TB SSD",
+  "shortDescription": "Boost your computer's performance with RAM upgrade of 12GB/16GB/32GB/64GB RAM. Key is not needed and provided. Storage Up to 2 TB PCIe SSD. Processor Specs Up to 4.6 GHz Max Boost Clock, 12 MB L3 Cache, 10 cores, 12 threads.",
+  "price": {
+    "value": "509.00",
+    "currency": "USD"
+  },
+  "categoryPath": "Computers/Tablets & Networking|Laptops & Netbooks|PC Laptops & Netbooks",
+  "categoryIdPath": "58058|175672|177",
+  "condition": "New",
+  "conditionId": "1000",
+  "itemLocation": {
+    "city": "Hudson",
+    "stateOrProvince": "New Hampshire",
+    "postalCode": "030**",
+    "country": "US"
+  },
+  "image": {
+    "imageUrl": "https://i.ebayimg.com/images/g/WyUAAeSwWxBpc7KM/s-l1600.jpg",
+    "width": 1600,
+    "height": 1478
+  },
+  "additionalImages": [
+    {
+      "imageUrl": "https://i.ebayimg.com/images/g/XasAAeSwq~ppc7KG/s-l1600.jpg",
+      "width": 1600,
+      "height": 1600
+    },
+    {
+      "imageUrl": "https://i.ebayimg.com/images/g/jcEAAOSwqkRniA7x/s-l1600.jpg",
+      "width": 1600,
+      "height": 1600
+    },
+    {
+      "imageUrl": "https://i.ebayimg.com/images/g/WYsAAeSwz0Npc7Kc/s-l1600.jpg",
+      "width": 1600,
+      "height": 1600
+    },
+    {
+      "imageUrl": "https://i.ebayimg.com/images/g/lu8AAeSwhw1pc7RH/s-l1600.jpg",
+      "width": 1600,
+      "height": 1600
+    },
+    {
+      "imageUrl": "https://i.ebayimg.com/images/g/5oYAAeSw6Utpc7LN/s-l1600.jpg",
+      "width": 1600,
+      "height": 1600
+    },
+    {
+      "imageUrl": "https://i.ebayimg.com/images/g/6doAAeSw9Z5pc7Kd/s-l1600.jpg",
+      "width": 1600,
+      "height": 1600
+    },
+    {
+      "imageUrl": "https://i.ebayimg.com/images/g/E-MAAeSwdUxpc7Kc/s-l1600.jpg",
+      "width": 1600,
+      "height": 1600
+    },
+    {
+      "imageUrl": "https://i.ebayimg.com/images/g/e1IAAeSwyztpc7Kd/s-l1600.jpg",
+      "width": 1600,
+      "height": 1600
+    },
+    {
+      "imageUrl": "https://i.ebayimg.com/images/g/X5YAAeSwnM1pc7Ki/s-l1600.jpg",
+      "width": 1600,
+      "height": 1600
+    },
+    {
+      "imageUrl": "https://i.ebayimg.com/images/g/3DsAAOSwb4lniA78/s-l1600.jpg",
+      "width": 1600,
+      "height": 1600
+    }
+  ],
+  "color": "Natural Silver",
+  "brand": "HP",
+  "itemCreationDate": "2026-01-23T17:53:27.000Z",
+  "seller": {
+    "username": "hellogoodlife1",
+    "feedbackPercentage": "98.0",
+    "feedbackScore": 19417
+  },
+  "mpn": "HP Flagship",
+  "estimatedAvailabilities": [
+    {
+      "deliveryOptions": [
+        "SHIP_TO_HOME"
+      ],
+      "availabilityThresholdType": "MORE_THAN",
+      "availabilityThreshold": 10,
+      "estimatedAvailabilityStatus": "IN_STOCK",
+      "estimatedSoldQuantity": 6,
+      "estimatedRemainingQuantity": 14
+    }
+  ],
+  "shippingOptions": [
+    {
+      "shippingServiceCode": "UPS Ground",
+      "shippingCarrierCode": "UPS",
+      "type": "Standard Shipping",
+      "shippingCost": {
+        "value": "0.00",
+        "currency": "USD"
+      },
+      "quantityUsedForEstimate": 1,
+      "minEstimatedDeliveryDate": "2026-04-13T10:00:00.000Z",
+      "maxEstimatedDeliveryDate": "2026-04-15T10:00:00.000Z",
+      "additionalShippingCostPerUnit": {
+        "value": "0.00",
+        "currency": "USD"
+      },
+      "shippingCostType": "FIXED"
+    }
+  ],
+  "shipToLocations": {
+    "regionIncluded": [
+      {
+        "regionName": "United States",
+        "regionType": "COUNTRY",
+        "regionId": "US"
+      },
+      {
+        "regionName": "Denmark",
+        "regionType": "COUNTRY",
+        "regionId": "DK"
+      },
+      {
+        "regionName": "Guatemala",
+        "regionType": "COUNTRY",
+        "regionId": "GT"
+      },
+      {
+        "regionName": "New Zealand",
+        "regionType": "COUNTRY",
+        "regionId": "NZ"
+      },
+      {
+        "regionName": "Fiji",
+        "regionType": "COUNTRY",
+        "regionId": "FJ"
+      },
+      {
+        "regionName": "Papua New Guinea",
+        "regionType": "COUNTRY",
+        "regionId": "PG"
+      },
+      {
+        "regionName": "Solomon Islands",
+        "regionType": "COUNTRY",
+        "regionId": "SB"
+      },
+      {
+        "regionName": "Vatican City State",
+        "regionType": "COUNTRY",
+        "regionId": "VA"
+      },
+      {
+        "regionName": "Sierra Leone",
+        "regionType": "COUNTRY",
+        "regionId": "SL"
+      },
+      {
+        "regionName": "Nauru",
+        "regionType": "COUNTRY",
+        "regionId": "NR"
+      },
+      {
+        "regionName": "Wallis and Futuna",
+        "regionType": "COUNTRY",
+        "regionId": "WF"
+      },
+      {
+        "regionName": "Marshall Islands",
+        "regionType": "COUNTRY",
+        "regionId": "MH"
+      },
+      {
+        "regionName": "Anguilla",
+        "regionType": "COUNTRY",
+        "regionId": "AI"
+      },
+      {
+        "regionName": "El Salvador",
+        "regionType": "COUNTRY",
+        "regionId": "SV"
+      },
+      {
+        "regionName": "Gambia",
+        "regionType": "COUNTRY",
+        "regionId": "GM"
+      },
+      {
+        "regionName": "Guam",
+        "regionType": "COUNTRY",
+        "regionId": "GU"
+      },
+      {
+        "regionName": "Micronesia",
+        "regionType": "COUNTRY",
+        "regionId": "FM"
+      },
+      {
+        "regionName": "Dominican Republic",
+        "regionType": "COUNTRY",
+        "regionId": "DO"
+      },
+      {
+        "regionName": "Cameroon",
+        "regionType": "COUNTRY",
+        "regionId": "CM"
+      },
+      {
+        "regionName": "Guyana",
+        "regionType": "COUNTRY",
+        "regionId": "GY"
+      },
+      {
+        "regionName": "Taiwan",
+        "regionType": "COUNTRY",
+        "regionId": "TW"
+      },
+      {
+        "regionName": "Azerbaijan Republic",
+        "regionType": "COUNTRY",
+        "regionId": "AZ"
+      },
+      {
+        "regionName": "Poland",
+        "regionType": "COUNTRY",
+        "regionId": "PL"
+      },
+      {
+        "regionName": "Georgia",
+        "regionType": "COUNTRY",
+        "regionId": "GE"
+      },
+      {
+        "regionName": "Suriname",
+        "regionType": "COUNTRY",
+        "regionId": "SR"
+      },
+      {
+        "regionName": "Tonga",
+        "regionType": "COUNTRY",
+        "regionId": "TO"
+      },
+      {
+        "regionName": "Kenya",
+        "regionType": "COUNTRY",
+        "regionId": "KE"
+      },
+      {
+        "regionName": "Argentina",
+        "regionType": "COUNTRY",
+        "regionId": "AR"
+      },
+      {
+        "regionName": "San Marino",
+        "regionType": "COUNTRY",
+        "regionId": "SM"
+      },
+      {
+        "regionName": "Guinea-Bissau",
+        "regionType": "COUNTRY",
+        "regionId": "GW"
+      },
+      {
+        "regionName": "Armenia",
+        "regionType": "COUNTRY",
+        "regionId": "AM"
+      },
+      {
+        "regionName": "Uzbekistan",
+        "regionType": "COUNTRY",
+        "regionId": "UZ"
+      },
+      {
+        "regionName": "Eritrea",
+        "regionType": "COUNTRY",
+        "regionId": "ER"
+      },
+      {
+        "regionName": "Senegal",
+        "regionType": "COUNTRY",
+        "regionId": "SN"
+      },
+      {
+        "regionName": "Togo",
+        "regionType": "COUNTRY",
+        "regionId": "TG"
+      },
+      {
+        "regionName": "Saint Kitts-Nevis",
+        "regionType": "COUNTRY",
+        "regionId": "KN"
+      },
+      {
+        "regionName": "Morocco",
+        "regionType": "COUNTRY",
+        "regionId": "MA"
+      },
+      {
+        "regionName": "Ireland",
+        "regionType": "COUNTRY",
+        "regionId": "IE"
+      },
+      {
+        "regionName": "Burundi",
+        "regionType": "COUNTRY",
+        "regionId": "BI"
+      },
+      {
+        "regionName": "Saint Vincent and the Grenadines",
+        "regionType": "COUNTRY",
+        "regionId": "VC"
+      },
+      {
+        "regionName": "Netherlands",
+        "regionType": "COUNTRY",
+        "regionId": "NL"
+      },
+      {
+        "regionName": "Slovakia",
+        "regionType": "COUNTRY",
+        "regionId": "SK"
+      },
+      {
+        "regionName": "Slovenia",
+        "regionType": "COUNTRY",
+        "regionId": "SI"
+      },
+      {
+        "regionName": "Equatorial Guinea",
+        "regionType": "COUNTRY",
+        "regionId": "GQ"
+      },
+      {
+        "regionName": "Thailand",
+        "regionType": "COUNTRY",
+        "regionId": "TH"
+      },
+      {
+        "regionName": "Mauritania",
+        "regionType": "COUNTRY",
+        "regionId": "MR"
+      },
+      {
+        "regionName": "Belize",
+        "regionType": "COUNTRY",
+        "regionId": "BZ"
+      },
+      {
+        "regionName": "Philippines",
+        "regionType": "COUNTRY",
+        "regionId": "PH"
+      },
+      {
+        "regionName": "Aruba",
+        "regionType": "COUNTRY",
+        "regionId": "AW"
+      },
+      {
+        "regionName": "Democratic Republic of the Congo",
+        "regionType": "COUNTRY",
+        "regionId": "CD"
+      },
+      {
+        "regionType": "COUNTRY",
+        "regionId": "UY"
+      },
+      {
+        "regionName": "Republic of the Congo",
+        "regionType": "COUNTRY",
+        "regionId": "CG"
+      },
+      {
+        "regionName": "American Samoa",
+        "regionType": "COUNTRY",
+        "regionId": "AS"
+      },
+      {
+        "regionName": "Sweden",
+        "regionType": "COUNTRY",
+        "regionId": "SE"
+      },
+      {
+        "regionName": "Colombia",
+        "regionType": "COUNTRY",
+        "regionId": "CO"
+      },
+      {
+        "regionName": "Spain",
+        "regionType": "COUNTRY",
+        "regionId": "ES"
+      },
+      {
+        "regionName": "Iceland",
+        "regionType": "COUNTRY",
+        "regionId": "IS"
+      },
+      {
+        "regionName": "Estonia",
+        "regionType": "COUNTRY",
+        "regionId": "EE"
+      },
+      {
+        "regionName": "Macedonia",
+        "regionType": "COUNTRY",
+        "regionId": "MK"
+      },
+      {
+        "regionName": "Belgium",
+        "regionType": "COUNTRY",
+        "regionId": "BE"
+      },
+      {
+        "regionName": "Liechtenstein",
+        "regionType": "COUNTRY",
+        "regionId": "LI"
+      },
+      {
+        "regionName": "Benin",
+        "regionType": "COUNTRY",
+        "regionId": "BJ"
+      },
+      {
+        "regionName": "Algeria",
+        "regionType": "COUNTRY",
+        "regionId": "DZ"
+      },
+      {
+        "regionName": "Bermuda",
+        "regionType": "COUNTRY",
+        "regionId": "BM"
+      },
+      {
+        "regionName": "Montserrat",
+        "regionType": "COUNTRY",
+        "regionId": "MS"
+      },
+      {
+        "regionName": "Zambia",
+        "regionType": "COUNTRY",
+        "regionId": "ZM"
+      },
+      {
+        "regionName": "South Korea",
+        "regionType": "COUNTRY",
+        "regionId": "KR"
+      },
+      {
+        "regionName": "Antigua and Barbuda",
+        "regionType": "COUNTRY",
+        "regionId": "AG"
+      },
+      {
+        "regionName": "Vanuatu",
+        "regionType": "COUNTRY",
+        "regionId": "VU"
+      },
+      {
+        "regionName": "Ecuador",
+        "regionType": "COUNTRY",
+        "regionId": "EC"
+      },
+      {
+        "regionName": "Albania",
+        "regionType": "COUNTRY",
+        "regionId": "AL"
+      },
+      {
+        "regionName": "Swaziland",
+        "regionType": "COUNTRY",
+        "regionId": "SZ"
+      },
+      {
+        "regionName": "Italy",
+        "regionType": "COUNTRY",
+        "regionId": "IT"
+      },
+      {
+        "regionName": "Ethiopia",
+        "regionType": "COUNTRY",
+        "regionId": "ET"
+      },
+      {
+        "regionName": "Monaco",
+        "regionType": "COUNTRY",
+        "regionId": "MC"
+      },
+      {
+        "regionName": "Niger",
+        "regionType": "COUNTRY",
+        "regionId": "NE"
+      },
+      {
+        "regionName": "Tanzania",
+        "regionType": "COUNTRY",
+        "regionId": "TZ"
+      },
+      {
+        "regionName": "Pakistan",
+        "regionType": "COUNTRY",
+        "regionId": "PK"
+      },
+      {
+        "regionName": "Burkina Faso",
+        "regionType": "COUNTRY",
+        "regionId": "BF"
+      },
+      {
+        "regionName": "Panama",
+        "regionType": "COUNTRY",
+        "regionId": "PA"
+      },
+      {
+        "regionName": "Singapore",
+        "regionType": "COUNTRY",
+        "regionId": "SG"
+      },
+      {
+        "regionName": "Kyrgyzstan",
+        "regionType": "COUNTRY",
+        "regionId": "KG"
+      },
+      {
+        "regionName": "Switzerland",
+        "regionType": "COUNTRY",
+        "regionId": "CH"
+      },
+      {
+        "regionName": "Ghana",
+        "regionType": "COUNTRY",
+        "regionId": "GH"
+      },
+      {
+        "regionName": "Djibouti",
+        "regionType": "COUNTRY",
+        "regionId": "DJ"
+      },
+      {
+        "regionName": "Puerto Rico",
+        "regionType": "COUNTRY",
+        "regionId": "PR"
+      },
+      {
+        "regionName": "Chile",
+        "regionType": "COUNTRY",
+        "regionId": "CL"
+      },
+      {
+        "regionName": "Cape Verde Islands",
+        "regionType": "COUNTRY",
+        "regionId": "CV"
+      },
+      {
+        "regionName": "Moldova",
+        "regionType": "COUNTRY",
+        "regionId": "MD"
+      },
+      {
+        "regionName": "Mali",
+        "regionType": "COUNTRY",
+        "regionId": "ML"
+      },
+      {
+        "regionName": "Botswana",
+        "regionType": "COUNTRY",
+        "regionId": "BW"
+      },
+      {
+        "regionName": "Republic of Croatia",
+        "regionType": "COUNTRY",
+        "regionId": "HR"
+      },
+      {
+        "regionName": "Cambodia",
+        "regionType": "COUNTRY",
+        "regionId": "KH"
+      },
+      {
+        "regionName": "Madagascar",
+        "regionType": "COUNTRY",
+        "regionId": "MG"
+      },
+      {
+        "regionName": "Indonesia",
+        "regionType": "COUNTRY",
+        "regionId": "ID"
+      },
+      {
+        "regionName": "Portugal",
+        "regionType": "COUNTRY",
+        "regionId": "PT"
+      },
+      {
+        "regionName": "Malta",
+        "regionType": "COUNTRY",
+        "regionId": "MT"
+      },
+      {
+        "regionName": "Tajikistan",
+        "regionType": "COUNTRY",
+        "regionId": "TJ"
+      },
+      {
+        "regionName": "Vietnam",
+        "regionType": "COUNTRY",
+        "regionId": "VN"
+      },
+      {
+        "regionName": "Cayman Islands",
+        "regionType": "COUNTRY",
+        "regionId": "KY"
+      },
+      {
+        "regionName": "Paraguay",
+        "regionType": "COUNTRY",
+        "regionId": "PY"
+      },
+      {
+        "regionName": "Cyprus",
+        "regionType": "COUNTRY",
+        "regionId": "CY"
+      },
+      {
+        "regionName": "Seychelles",
+        "regionType": "COUNTRY",
+        "regionId": "SC"
+      },
+      {
+        "regionName": "Liberia",
+        "regionType": "COUNTRY",
+        "regionId": "LR"
+      },
+      {
+        "regionName": "Rwanda",
+        "regionType": "COUNTRY",
+        "regionId": "RW"
+      },
+      {
+        "regionName": "Bangladesh",
+        "regionType": "COUNTRY",
+        "regionId": "BD"
+      },
+      {
+        "regionName": "Bolivia",
+        "regionType": "COUNTRY",
+        "regionId": "BO"
+      },
+      {
+        "regionName": "Maldives",
+        "regionType": "COUNTRY",
+        "regionId": "MV"
+      },
+      {
+        "regionName": "Australia",
+        "regionType": "COUNTRY",
+        "regionId": "AU"
+      },
+      {
+        "regionName": "Austria",
+        "regionType": "COUNTRY",
+        "regionId": "AT"
+      },
+      {
+        "regionName": "Gibraltar",
+        "regionType": "COUNTRY",
+        "regionId": "GI"
+      },
+      {
+        "regionName": "Sri Lanka",
+        "regionType": "COUNTRY",
+        "regionId": "LK"
+      },
+      {
+        "regionName": "Central African Republic",
+        "regionType": "COUNTRY",
+        "regionId": "CF"
+      },
+      {
+        "regionName": "Gabon Republic",
+        "regionType": "COUNTRY",
+        "regionId": "GA"
+      },
+      {
+        "regionName": "Lesotho",
+        "regionType": "COUNTRY",
+        "regionId": "LS"
+      },
+      {
+        "regionName": "Nigeria",
+        "regionType": "COUNTRY",
+        "regionId": "NG"
+      },
+      {
+        "regionName": "Zimbabwe",
+        "regionType": "COUNTRY",
+        "regionId": "ZW"
+      },
+      {
+        "regionName": "Mauritius",
+        "regionType": "COUNTRY",
+        "regionId": "MU"
+      },
+      {
+        "regionName": "Saint Lucia",
+        "regionType": "COUNTRY",
+        "regionId": "LC"
+      },
+      {
+        "regionName": "Bulgaria",
+        "regionType": "COUNTRY",
+        "regionId": "BG"
+      },
+      {
+        "regionName": "Guinea",
+        "regionType": "COUNTRY",
+        "regionId": "GN"
+      },
+      {
+        "regionName": "Czech Republic",
+        "regionType": "COUNTRY",
+        "regionId": "CZ"
+      },
+      {
+        "regionName": "Norway",
+        "regionType": "COUNTRY",
+        "regionId": "NO"
+      },
+      {
+        "regionName": "Canada",
+        "regionType": "COUNTRY",
+        "regionId": "CA"
+      },
+      {
+        "regionName": "Côte d'Ivoire (Ivory Coast)",
+        "regionType": "COUNTRY",
+        "regionId": "CI"
+      },
+      {
+        "regionName": "Turks and Caicos Islands",
+        "regionType": "COUNTRY",
+        "regionId": "TC"
+      },
+      {
+        "regionName": "Kiribati",
+        "regionType": "COUNTRY",
+        "regionId": "KI"
+      },
+      {
+        "regionName": "Andorra",
+        "regionType": "COUNTRY",
+        "regionId": "AD"
+      },
+      {
+        "regionName": "Grenada",
+        "regionType": "COUNTRY",
+        "regionId": "GD"
+      },
+      {
+        "regionName": "Greece",
+        "regionType": "COUNTRY",
+        "regionId": "GR"
+      },
+      {
+        "regionName": "Romania",
+        "regionType": "COUNTRY",
+        "regionId": "RO"
+      },
+      {
+        "regionName": "Costa Rica",
+        "regionType": "COUNTRY",
+        "regionId": "CR"
+      },
+      {
+        "regionName": "India",
+        "regionType": "COUNTRY",
+        "regionId": "IN"
+      },
+      {
+        "regionName": "Greenland",
+        "regionType": "COUNTRY",
+        "regionId": "GL"
+      },
+      {
+        "regionName": "Mexico",
+        "regionType": "COUNTRY",
+        "regionId": "MX"
+      },
+      {
+        "regionName": "Serbia",
+        "regionType": "COUNTRY",
+        "regionId": "RS"
+      },
+      {
+        "regionName": "Kazakhstan",
+        "regionType": "COUNTRY",
+        "regionId": "KZ"
+      },
+      {
+        "regionName": "Montenegro",
+        "regionType": "COUNTRY",
+        "regionId": "ME"
+      },
+      {
+        "regionName": "Japan",
+        "regionType": "COUNTRY",
+        "regionId": "JP"
+      },
+      {
+        "regionName": "Nepal",
+        "regionType": "COUNTRY",
+        "regionId": "NP"
+      },
+      {
+        "regionName": "Bahamas",
+        "regionType": "COUNTRY",
+        "regionId": "BS"
+      },
+      {
+        "regionName": "Lithuania",
+        "regionType": "COUNTRY",
+        "regionId": "LT"
+      },
+      {
+        "regionName": "Trinidad and Tobago",
+        "regionType": "COUNTRY",
+        "regionId": "TT"
+      },
+      {
+        "regionName": "Palau",
+        "regionType": "COUNTRY",
+        "regionId": "PW"
+      },
+      {
+        "regionName": "Malawi",
+        "regionType": "COUNTRY",
+        "regionId": "MW"
+      },
+      {
+        "regionName": "Bosnia and Herzegovina",
+        "regionType": "COUNTRY",
+        "regionId": "BA"
+      },
+      {
+        "regionName": "Hungary",
+        "regionType": "COUNTRY",
+        "regionId": "HU"
+      },
+      {
+        "regionName": "Angola",
+        "regionType": "COUNTRY",
+        "regionId": "AO"
+      },
+      {
+        "regionName": "Nicaragua",
+        "regionType": "COUNTRY",
+        "regionId": "NI"
+      },
+      {
+        "regionName": "Finland",
+        "regionType": "COUNTRY",
+        "regionId": "FI"
+      },
+      {
+        "regionName": "Tunisia",
+        "regionType": "COUNTRY",
+        "regionId": "TN"
+      },
+      {
+        "regionName": "Luxembourg",
+        "regionType": "COUNTRY",
+        "regionId": "LU"
+      },
+      {
+        "regionName": "Uganda",
+        "regionType": "COUNTRY",
+        "regionId": "UG"
+      },
+      {
+        "regionName": "Brazil",
+        "regionType": "COUNTRY",
+        "regionId": "BR"
+      },
+      {
+        "regionName": "Turkey",
+        "regionType": "COUNTRY",
+        "regionId": "TR"
+      },
+      {
+        "regionName": "Western Samoa",
+        "regionType": "COUNTRY",
+        "regionId": "WS"
+      },
+      {
+        "regionName": "France",
+        "regionType": "COUNTRY",
+        "regionId": "FR"
+      },
+      {
+        "regionName": "Egypt",
+        "regionType": "COUNTRY",
+        "regionId": "EG"
+      },
+      {
+        "regionName": "Latvia",
+        "regionType": "COUNTRY",
+        "regionId": "LV"
+      },
+      {
+        "regionName": "Jamaica",
+        "regionType": "COUNTRY",
+        "regionId": "JM"
+      },
+      {
+        "regionName": "Mozambique",
+        "regionType": "COUNTRY",
+        "regionId": "MZ"
+      },
+      {
+        "regionName": "Namibia",
+        "regionType": "COUNTRY",
+        "regionId": "NA"
+      },
+      {
+        "regionName": "Peru",
+        "regionType": "COUNTRY",
+        "regionId": "PE"
+      },
+      {
+        "regionName": "Virgin Islands (U.S.)",
+        "regionType": "COUNTRY",
+        "regionId": "VI"
+      },
+      {
+        "regionName": "Honduras",
+        "regionType": "COUNTRY",
+        "regionId": "HN"
+      }
+    ],
+    "regionExcluded": [
+      {
+        "regionName": "French Polynesia",
+        "regionType": "COUNTRY",
+        "regionId": "PF"
+      },
+      {
+        "regionName": "Libya",
+        "regionType": "COUNTRY",
+        "regionId": "LY"
+      },
+      {
+        "regionName": "New Caledonia",
+        "regionType": "COUNTRY",
+        "regionId": "NC"
+      },
+      {
+        "regionName": "Guadeloupe",
+        "regionType": "COUNTRY",
+        "regionId": "GP"
+      },
+      {
+        "regionName": "Venezuela",
+        "regionType": "COUNTRY",
+        "regionId": "VE"
+      },
+      {
+        "regionName": "Reunion",
+        "regionType": "COUNTRY",
+        "regionId": "RE"
+      },
+      {
+        "regionName": "Barbados",
+        "regionType": "COUNTRY",
+        "regionId": "BB"
+      },
+      {
+        "regionName": "Martinique",
+        "regionType": "COUNTRY",
+        "regionId": "MQ"
+      },
+      {
+        "regionName": "French Guiana",
+        "regionType": "COUNTRY",
+        "regionId": "GF"
+      },
+      {
+        "regionName": "Ukraine",
+        "regionType": "COUNTRY",
+        "regionId": "UA"
+      },
+      {
+        "regionName": "Russian Federation",
+        "regionType": "COUNTRY",
+        "regionId": "RU"
+      }
+    ]
+  },
+  "returnTerms": {
+    "returnsAccepted": true,
+    "refundMethod": "MONEY_BACK",
+    "returnShippingCostPayer": "SELLER",
+    "returnPeriod": {
+      "value": 30,
+      "unit": "CALENDAR_DAY"
+    }
+  },
+  "taxes": [
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Alabama",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "AL"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Alaska",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "AK"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Arizona",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "AZ"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Arkansas",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "AR"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "California",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "CA"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Colorado",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "CO"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Connecticut",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "CT"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "District of Columbia",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "DC"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Florida",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "FL"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Georgia",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "GA"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Hawaii",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "HI"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Idaho",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "ID"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Illinois",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "IL"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Indiana",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "IN"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Iowa",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "IA"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Kansas",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "KS"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Kentucky",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "KY"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Louisiana",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "LA"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Maine",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "ME"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Maryland",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "MD"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Massachusetts",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "MA"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Michigan",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "MI"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Minnesota",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "MN"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Mississippi",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "MS"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Nebraska",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "NE"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Nevada",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "NV"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "New Jersey",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "NJ"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "New Mexico",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "NM"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "New York",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "NY"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "North Carolina",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "NC"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "North Dakota",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "ND"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Ohio",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "OH"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Oklahoma",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "OK"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Pennsylvania",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "PA"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Puerto Rico",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "PR"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Rhode Island",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "RI"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "South Carolina",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "SC"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "South Dakota",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "SD"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Tennessee",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "TN"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Texas",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "TX"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Utah",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "UT"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Vermont",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "VT"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Virginia",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "VA"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Washington",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "WA"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "West Virginia",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "WV"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Wisconsin",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "WI"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    },
+    {
+      "taxJurisdiction": {
+        "region": {
+          "regionName": "Wyoming",
+          "regionType": "STATE_OR_PROVINCE"
+        },
+        "taxJurisdictionId": "WY"
+      },
+      "taxType": "STATE_SALES_TAX",
+      "shippingAndHandlingTaxed": true,
+      "includedInPrice": false,
+      "ebayCollectAndRemitTax": true
+    }
+  ],
+  "localizedAspects": [
+    {
+      "type": "STRING",
+      "name": "SSD for Fast Running",
+      "value": "256GB (Limited Time Deal)"
+    },
+    {
+      "type": "STRING",
+      "name": "RAM for Multitasking",
+      "value": "16GB (Recommended)"
+    },
+    {
+      "type": "STRING",
+      "name": "Wireless LAN",
+      "value": "Wi-Fi 6"
+    },
+    {
+      "type": "STRING",
+      "name": "Processor",
+      "value": "Intel Core i5-1334U"
+    },
+    {
+      "type": "STRING",
+      "name": "Graphics Processing Type",
+      "value": "Integrated/On-Board Graphics"
+    },
+    {
+      "type": "STRING",
+      "name": "MPN",
+      "value": "HP Flagship"
+    },
+    {
+      "type": "STRING",
+      "name": "SSD Capacity",
+      "value": "Up to 2 TB"
+    },
+    {
+      "type": "STRING",
+      "name": "Most Suitable For",
+      "value": "Casual Computing, Graphic Design, Everyday, Education, Student, Business, Professional, Light Gaming, College"
+    },
+    {
+      "type": "STRING",
+      "name": "Item Length",
+      "value": "9.29 inches"
+    },
+    {
+      "type": "STRING",
+      "name": "GPU",
+      "value": "Intel Iris Xe Graphics"
+    },
+    {
+      "type": "STRING",
+      "name": "Release Year",
+      "value": "2026"
+    },
+    {
+      "type": "STRING",
+      "name": "Item Height",
+      "value": "0.73 inches"
+    },
+    {
+      "type": "STRING",
+      "name": "Style",
+      "value": "HP Laptop Computer Notebook 15 15.6 Touch Touchscreen"
+    },
+    {
+      "type": "STRING",
+      "name": "Operating System",
+      "value": "Windows 11 Pro"
+    },
+    {
+      "type": "STRING",
+      "name": "Features",
+      "value": "5G, Bluetooth, Built-in Microphone, Built-in Webcam, Multi-Touch Trackpad, Touchscreen, Widescreen Display, Wi-Fi, Lifetime MS Office"
+    },
+    {
+      "type": "STRING",
+      "name": "Hard Drive Capacity",
+      "value": "Up to 2 TB"
+    },
+    {
+      "type": "STRING",
+      "name": "Item Width",
+      "value": "14.17 inches"
+    },
+    {
+      "type": "STRING",
+      "name": "Screen Size",
+      "value": "15.6 in"
+    },
+    {
+      "type": "STRING",
+      "name": "RAM Size",
+      "value": "Up to 64 GB"
+    },
+    {
+      "type": "STRING",
+      "name": "Color",
+      "value": "Natural Silver"
+    },
+    {
+      "type": "STRING",
+      "name": "Processor Speed",
+      "value": "Up to 4.60 GHz"
+    },
+    {
+      "type": "STRING",
+      "name": "Brand",
+      "value": "HP"
+    },
+    {
+      "type": "STRING",
+      "name": "Series",
+      "value": "HP Notebook"
+    },
+    {
+      "type": "STRING",
+      "name": "Type",
+      "value": "Notebook/Laptop"
+    },
+    {
+      "type": "STRING",
+      "name": "Maximum Resolution",
+      "value": "1920 x 1080"
+    },
+    {
+      "type": "STRING",
+      "name": "Model",
+      "value": "HP Flagship"
+    },
+    {
+      "type": "STRING",
+      "name": "Connectivity",
+      "value": "HDMI, USB 3.0, USB 3.1, USB-C, USB 3.2"
+    },
+    {
+      "type": "STRING",
+      "name": "Software",
+      "value": "Lifetime Microsoft Office"
+    },
+    {
+      "type": "STRING",
+      "name": "Storage Type",
+      "value": "SSD (Solid State Drive)"
+    },
+    {
+      "type": "STRING",
+      "name": "Item Weight",
+      "value": "3.52 lbs"
+    }
+  ],
+  "quantityLimitPerBuyer": 5,
+  "topRatedBuyingExperience": false,
+  "buyingOptions": [
+    "FIXED_PRICE"
+  ],
+  "itemWebUrl": "https://www.ebay.com/itm/127641279064?var=428791889780&amdata=enc%3AAQALAAAAoGfYFPkwiKCW4ZNSs2u11xALcnQV4yb3FSpBXbYYNlDztyD%2FEClUxcMze20NDo9c1o3bPjfNs2vF1kiecapRni4IFUdVAOpKcFup28wz8KLAVuQdkOk90SmlrHKx3FErLFD1Vw%2BwC2RgTGr4%2FH0YhVxz8eEV%2FYZ3KEezwzCJ1xV1OUVPhH7RutEydY0vMaTbEGEq49U4ux4LxVEmSpGMsxk%3D",
+  "description": "\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\n   <link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css\">\n    <style type=\"text/css\">\n        body {\n            font-family: Arial, sans-serif;\n        }\n\n        .custom-table {\n            border-collapse: collapse;\n            width: 100%;\n            margin-bottom: 20px;\n        }\n\n        .custom-table td {\n            border-top: 1px solid #F0F3F6;\n            border-bottom: 1px solid #F0F3F6;\n            border-left: 0;\n            border-right: 0;\n            padding: 10px;\n            font-size: 11pt;\n            overflow-wrap: break-word;\n            vertical-align: top;\n        }\n\n        .custom-table td:first-child {\n            background-color: #F0F3F6;\n            font-weight: bold;\n            width: 180px;\n        }\n\n        .custom-table td:last-child {\n            width: auto;\n        }\n    </style>\n\n<div style=\"background: #FDFEFE; border-left: 1px solid #CBD4C2; border-right: 1px solid #CBD4C2; border-top: 1px solid #CBD4C2; color: #353535; line-height: 45px\">\n    <div class=\"container\" style=\"padding: 40px 0 40px 0\">\n        <div class=\"col-12 col-md-12\">\n            <h2 style=\"text-align: center\"><font style=\"color: #FFA500\"><b>Newly Upgraded</b></font>\n            </h2>\n            <h2 style=\"text-align: center\">\n                <font style=\"color: #3498db; font-size: 24px; line-height: 35px;\"><b>Newest 2026 HP Business Laptop Computer, 15.6\" FHD Touch Display, 10-Core Intel Core i5-1334U (Up to 4.6 GHz), Intel Iris Xe Graphics, Up to 64GB RAM + 2TB SSD, Numeric Keypad, Wi-Fi 6, Privacy Webcam, Windows 11 Pro</b></font>\n            </h2>\n<h2 style=\"text-align: center\">\n                <font style=\"color: #F25022\"><b><i><u>Free Lifetime Microsoft Office</u></i></b></font>\n            </h2>\n            <h2 style=\"text-align: center\">\n                <font style=\"color: #16a085\"><b>Fast Shipping / Free Shipping within 48 Contiguous States</b></font>\n            </h2>\n        </div>\n    </div>\n</div>\n<div style=\"background: #FDFEFE; border-left: 1px solid #CBD4C2; border-right: 1px solid #CBD4C2; color: #353535; line-height: 25px\">\n    <div class=\"container\" style=\"border-top: 1px solid #CBD4C2; padding: 40px 0 40px 0\">\n        <div class=\"col-12 col-md-12\">\n            <h2>\n                <font style=\"color: #3498db\">Product Overview</font>\n            </h2>\n            <ul>\n                <li><b><font color=\"#0039f3\">Recommended Memory Upgrade</font></b>: Adding memory (RAM) to your computer can instantly make your computer faster, increase system responsiveness, and make multitasking seamless. Boost your computer's performance with RAM upgrade of 12GB/16GB/32GB/64GB RAM.</li>\n                <li><b><font color=\"#0039f3\">Recommended Storage Upgrade</font></b>: Upgrade your storage capacity and unleash blazing-fast performance with our SSD options from 256GB/512GB/1TB/2TB, ensuring you have the space and speed to tackle any task with ease.</li>\n                <li><b><font color=\"#0039f3\">Intel Core i5-1334U</font></b>: Up to 4.6 GHz Max Boost Clock, 12 MB L3 Cache, 10 cores, 12 threads. 13th Gen Intel Core processor distributes performance where you need it the most — saving you time and increasing your ability to do the things you actually want.</li>\n                <li><b><font color=\"#0039f3\">Windows 11 Pro</font></b>: Protect your data with enterprise-grade security, login from any device anywhere, and boost productivity with powerful management tools.</li>\n                <li><b><font color=\"#0039f3\">Free Microsoft Office Pro Plus 2024</font></b>: Free lifetime Office bundle including Word, Excel, OneNote, Outlook, PowerPoint, Access. Office 2024 is pre-installed and activated. Key is not needed and provided. Please DO NOT accept Microsoft 365 trial, which may invalidate the Office 2024 license.</li>\n                <li><b><font color=\"#0039f3\">FHD Touch Display</font></b>: Reach out and control your PC with just a touch. Being able to pinch, zoom, tap, and swipe right from the screen makes interacting with your computer a totally intuitive experience.</li>\n                <li><b><font color=\"#0039f3\">Wireless Connectivity</font></b>: Wi-Fi 6 and Bluetooth 5.4 combo.</li>\n                <li>For Home, Student, Professionals, Small Business, School Education, and Commercial Enterprise. Online Class, Google Classroom, Remote Learning, Zoom Ready.</li>\n\n            </ul>\n        </div>\n    </div>\n</div>\n<div style=\"background: #FDFEFE; border-left: 1px solid #CBD4C2; border-right: 1px solid #CBD4C2; color: #353535; line-height: 25px\">\n    <div class=\"container\" style=\"border-top: 1px solid #CBD4C2; padding: 40px 0 40px 0\">\n        <div class=\"col-12 col-md-12\">\n            <h2>\n                <font style=\"color: #2a633a\">Choose your upgrades</font>\n            </h2>\n            <p>We specialize in providing professional upgrades and customization for computers. Note that if you opt for customization of your computer from the aforementioned list, our engineers will open the manufacturer's box to install upgrades and test the system.\n            </p>\n            <ul>\n                <li><b>Upgrade Memory for Multi-tasking</b>: 12GB/16GB/32GB/64GB DDR4 SDRAM</li>\n                <li><b>Upgrade SSD for Storage and Speed</b>: 256GB/512GB/1TB/2TB NVMe SSD</li>\n            </ul>\n        </div>\n    </div>\n</div>\n<div style=\"background: #FDFEFE; border-left: 1px solid #CBD4C2; border-right: 1px solid #CBD4C2; color: #353535; line-height: 25px\">\n    <div class=\"container\" style=\"border-top: 1px solid #CBD4C2; padding: 40px 0 40px 0\">\n        <div class=\"col-12 col-md-12\">\n            <h2>\n                <font style=\"color: #7f160e\">Specifications</font>\n            </h2>\n            <h5>Quick Info</h5>\n            <table class=\"custom-table\">\n                <tbody>\n                    <tr>\n                        <td>Model</td>\n                        <td>HP Flagship</td>\n                    </tr>\n                    <tr>\n                        <td>Color</td>\n                        <td>Natural Silver</td>\n                    </tr>\n                    <tr>\n                        <td>Operating System</td>\n                        <td><b><font color=\"#0039f3\" size=\"5\">Windows 11 Pro</font></b></td>\n                    </tr>\n                    <tr>\n                        <td>Memory</td>\n                        <td><b><font color=\"#0039f3\" size=\"5\">Up to 64 GB DDR4 RAM</font></b></td>\n                    </tr>\n                    <tr>\n                        <td>Storage</td>\n                        <td><b><font color=\"#0039f3\" size=\"5\">Up to 2 TB PCIe SSD</font></b></td>\n                    </tr>\n                    <tr>\n                        <td>Processor</td>\n                        <td><b><font color=\"#0039f3\" size=\"5\">Intel Core i5-1334U</font></b></td>\n                    </tr>\n                    <tr>\n                        <td>Graphics</td>\n                        <td><b><font color=\"#0039f3\" size=\"5\">Intel Iris Xe Graphics</font></b></td>\n                    </tr>\n                    <tr>\n                        <td>Software</td>\n                        <td><b><font size=\"5\" color=\"#0039f3\">Lifetime Microsoft Office</font></b></td>\n                    </tr>\n                </tbody>\n            </table>\n            <h5>Display</h5>\n            <table class=\"custom-table\">\n                <tbody>\n                    <tr>\n                        <td>Screen Size</td>\n                        <td>15.6-inch diagonal</td>\n                    </tr>\n                    <tr>\n                        <td>Resolution</td>\n                        <td><b><font color=\"#0039f3\">FHD (1920 x 1080)</font></b></td>\n                    </tr>\n                    <tr>\n                        <td>Display Features</td>\n                        <td>Touch, micro-edge, BrightView</td>\n                    </tr>\n                </tbody>\n            </table>\n            <h5>Processor</h5>\n            <table class=\"custom-table\">\n                <tbody>\n                    <tr>\n                        <td>Processor Name</td>\n                        <td>Intel Core i5-1334U</td>\n                    </tr>\n                    <tr>\n                        <td>Processor Specs</td>\n                        <td>Up to 4.6 GHz Max Boost Clock, 12 MB L3 Cache, 10 cores, 12 threads</td>\n                    </tr>\n                </tbody>\n            </table>\n            <h5>Graphics</h5>\n            <table class=\"custom-table\">\n                <tbody>\n                    <tr>\n                        <td>Graphics Name</td>\n                        <td>Intel Iris Xe Graphics</td>\n                    </tr>\n                    <tr>\n                        <td>Graphics Type</td>\n                        <td>Integrated Graphics</td>\n                    </tr>\n                </tbody>\n            </table>\n            <h5>Storage</h5>\n            <table class=\"custom-table\">\n                <tbody>\n                    <tr>\n                        <td>Storage Size</td>\n                        <td>Up to 2 TB</td>\n                    </tr>\n                    <tr>\n                        <td>Storage Type</td>\n                        <td>PCIe NVMe SSD</td>\n                    </tr>\n                </tbody>\n            </table>\n            <h5>Memory</h5>\n            <table class=\"custom-table\">\n                <tbody>\n                    <tr>\n                        <td>Memory Size</td>\n                        <td>Up to 64 GB</td>\n                    </tr>\n                    <tr>\n                        <td>Memory Type</td>\n                        <td>DDR4 SDRAM</td>\n                    </tr>\n                </tbody>\n            </table>\n            <h5>Network</h5>\n            <table class=\"custom-table\">\n                <tbody>\n                    <tr>\n                        <td>WLAN + Bluetooth</td>\n                        <td>Wi-Fi 6 &amp; Bluetooth 5.4</td>\n                    </tr>\n                    <tr>\n                        <td>Ethernet</td>\n                        <td>No Onboard Ethernet</td>\n                    </tr>\n                </tbody>\n            </table>\n            <h5>Ports</h5>\n            <table class=\"custom-table\">\n                <tbody>\n                    <tr>\n                        <td>USB-C 3.2 Gen 1</td>\n                        <td>1 (support data transfer only)</td>\n                    </tr>\n                    <tr>\n                        <td>USB-A 3.2 Gen 1</td>\n                        <td>2</td>\n                    </tr>\n                    <tr>\n                        <td>HDMI 1.4b</td>\n                        <td>1</td>\n                    </tr>\n                    <tr>\n                        <td>Headphone/microphone combo</td>\n                        <td>1</td>\n                    </tr>\n                    <tr>\n                        <td>AC smart pin</td>\n                        <td>1</td>\n                    </tr>\n                </tbody>\n            </table>\n            <h5>Power</h5>\n            <table class=\"custom-table\">\n                <tbody>\n                    <tr>\n                        <td>Battery</td>\n                        <td>3-cell, 41 Wh Li-ion battery</td>\n                    </tr>\n                    <tr>\n                        <td>Power Supply</td>\n                        <td>45 W AC power adapter</td>\n                    </tr>\n                </tbody>\n            </table>\n            <h5>Dimensions &amp; Weight</h5>\n            <table class=\"custom-table\">\n                <tbody>\n                    <tr>\n                        <td>Width</td>\n                        <td>14.17 inches</td>\n                    </tr>\n                    <tr>\n                        <td>Depth</td>\n                        <td>9.29 inches</td>\n                    </tr>\n                    <tr>\n                        <td>Height</td>\n                        <td>0.73 inches</td>\n                    </tr>\n                    <tr>\n                        <td>Weight</td>\n                        <td>3.52 lbs</td>\n                    </tr>\n                </tbody>\n            </table>\n        </div>\n    </div>\n</div>\n<div style=\"border-left: 1px solid #CBD4C2; border-right: 1px solid #CBD4C2; border-bottom: 1px solid #CBD4C2; color: #353535; line-height: 25px\">\n    <div class=\"container\" style=\"border-top: 1px solid #CBD4C2; padding: 20px 0 20px 0; font-size: 80%; text-align: center\">\n        <p>We can be contacted at any time through eBay messages if you have any questions, comments or product requests. We will respond to you within 24 hours and do our best to help you out! We encourage our customers to contact us with any questions or concerns! We'd like to be sure you are completely satisfied with your purchase.\n        </p>\n    </div>\n</div>",
+  "paymentMethods": [
+    {
+      "paymentMethodType": "OTHER"
+    },
+    {
+      "paymentMethodType": "WALLET",
+      "paymentMethodBrands": [
+        {
+          "paymentMethodBrandType": "PAYPAL"
+        },
+        {
+          "paymentMethodBrandType": "APPLE_PAY"
+        },
+        {
+          "paymentMethodBrandType": "GOOGLE_PAY"
+        }
+      ]
+    },
+    {
+      "paymentMethodType": "CREDIT_CARD",
+      "paymentMethodBrands": [
+        {
+          "paymentMethodBrandType": "VISA"
+        },
+        {
+          "paymentMethodBrandType": "MASTERCARD"
+        },
+        {
+          "paymentMethodBrandType": "DISCOVER"
+        },
+        {
+          "paymentMethodBrandType": "DINERS_CLUB"
+        }
+      ]
+    }
+  ],
+  "immediatePay": true,
+  "primaryItemGroup": {
+    "itemGroupId": "127641279064",
+    "itemGroupType": "SELLER_DEFINED_VARIATIONS",
+    "itemGroupHref": "https://api.ebay.com/buy/browse/v1/item/get_items_by_item_group?item_group_id=127641279064",
+    "itemGroupTitle": "2026 HP Laptop Computer 15.6\" Touch 10-Core Intel i5 Up 64GB RAM 2TB SSD Win Pro",
+    "itemGroupImage": {
+      "imageUrl": "https://i.ebayimg.com/images/g/WyUAAeSwWxBpc7KM/s-l1600.jpg",
+      "width": 1600,
+      "height": 1478
+    },
+    "itemGroupAdditionalImages": [
+      {
+        "imageUrl": "https://i.ebayimg.com/images/g/XasAAeSwq~ppc7KG/s-l1600.jpg",
+        "width": 1600,
+        "height": 1600
+      },
+      {
+        "imageUrl": "https://i.ebayimg.com/images/g/jcEAAOSwqkRniA7x/s-l1600.jpg",
+        "width": 1600,
+        "height": 1600
+      },
+      {
+        "imageUrl": "https://i.ebayimg.com/images/g/WYsAAeSwz0Npc7Kc/s-l1600.jpg",
+        "width": 1600,
+        "height": 1600
+      },
+      {
+        "imageUrl": "https://i.ebayimg.com/images/g/lu8AAeSwhw1pc7RH/s-l1600.jpg",
+        "width": 1600,
+        "height": 1600
+      },
+      {
+        "imageUrl": "https://i.ebayimg.com/images/g/5oYAAeSw6Utpc7LN/s-l1600.jpg",
+        "width": 1600,
+        "height": 1600
+      },
+      {
+        "imageUrl": "https://i.ebayimg.com/images/g/6doAAeSw9Z5pc7Kd/s-l1600.jpg",
+        "width": 1600,
+        "height": 1600
+      },
+      {
+        "imageUrl": "https://i.ebayimg.com/images/g/E-MAAeSwdUxpc7Kc/s-l1600.jpg",
+        "width": 1600,
+        "height": 1600
+      },
+      {
+        "imageUrl": "https://i.ebayimg.com/images/g/e1IAAeSwyztpc7Kd/s-l1600.jpg",
+        "width": 1600,
+        "height": 1600
+      },
+      {
+        "imageUrl": "https://i.ebayimg.com/images/g/X5YAAeSwnM1pc7Ki/s-l1600.jpg",
+        "width": 1600,
+        "height": 1600
+      },
+      {
+        "imageUrl": "https://i.ebayimg.com/images/g/3DsAAOSwb4lniA78/s-l1600.jpg",
+        "width": 1600,
+        "height": 1600
+      }
+    ]
+  },
+  "enabledForGuestCheckout": true,
+  "eligibleForInlineCheckout": true,
+  "legacyItemId": "127641279064",
+  "priorityListing": true,
+  "adultOnly": false,
+  "categoryId": "177",
+  "listingMarketplaceId": "EBAY_US"
+}

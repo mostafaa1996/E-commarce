@@ -46,7 +46,7 @@ export default function ReviewsTab({ reviews }) {
       {
         reviewSubmitted && (
           <div className="flex flex-col gap-6 mx-10 mb-10 justify-center items-center">
-            <Icon name="checkCircle" className="w-20 h-20 text-green-500" />
+            <Icon name="checkCircle2" className="w-20 h-20 text-green-500" />
             <h3 className="text-[21px] font-light tracking-wide mb-5">
               Thank you for your review
             </h3>

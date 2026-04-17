@@ -3,10 +3,7 @@ import { queryClient } from "./queryClient";
 import { getShopProducts, getProductById } from "./APIs/shopProductsService";
 import { loginAction, SignupAction, logoutAction } from "./APIs/AuthService";
 import { getCart } from "@/APIs/CartService";
-import {
-  getCartData,
-  getShippingDetails,
-} from "./APIs/checkoutService";
+import { getCartData, getShippingDetails } from "./APIs/checkoutService";
 import {
   getUserProfileData,
   getPersonalInfo,
@@ -35,6 +32,18 @@ import MainLayout from "./layouts/MainLayout";
 import ShopPageLayout from "./layouts/shopPageLayout";
 import { parseShopQueryFromUrl } from "./utils/ParseShopQuery";
 import StripeElementsWrapper from "./components/genericComponents/stripeElementWrapper";
+import DashboardPage from "./Pages/AdminDashboardPage";
+import AdminProductsPage from "./Pages/AdminProductsPage";
+import AdminCategoriesPage from "./Pages/AdminCategoriesPage";
+import AdminOrdersPage from "./Pages/AdminOrdersPage";
+import AdminCustomersPage from "./Pages/AdminCustomersPage";
+import AdminInventoryPage from "./Pages/AdminInventoryPage";
+import AdminCouponsPage from "./Pages/AdminCouponsPage";
+import AdminReviewsPage from "./Pages/AdminReviewsPage";
+import AdminAnalyticsPage from "./Pages/AdminAnalyticsPage";
+import AdminActivityPage from "./Pages/AdminActivityPage";
+import AdminNotificationsPage from "./Pages/AdminNotificationsPage";
+import AdminSettingsPage from "./Pages/AdminSettingsPage";
 
 export const router = createBrowserRouter([
   {
@@ -97,9 +106,20 @@ export const router = createBrowserRouter([
           return queryClient.ensureQueryData({
             queryKey: ["checkout"],
             queryFn: async () => {
-              const { cart , VAT_shipping , message: cartMessage } = await getCartData();
-              const {shippingDetails , message: shippingDetailsMessage} = await getShippingDetails();
-              return { cart, shippingDetails , VAT_shipping , cartMessage , shippingDetailsMessage };
+              const {
+                cart,
+                VAT_shipping,
+                message: cartMessage,
+              } = await getCartData();
+              const { shippingDetails, message: shippingDetailsMessage } =
+                await getShippingDetails();
+              return {
+                cart,
+                shippingDetails,
+                VAT_shipping,
+                cartMessage,
+                shippingDetailsMessage,
+              };
             },
           });
         },
@@ -186,6 +206,54 @@ export const router = createBrowserRouter([
         action: async ({ request }) => await UpdatePersonalInfo(request),
       },
     ],
+  },
+  {
+    path: "/profile/admin/dashboard",
+    element: <DashboardPage />,
+  },
+  {
+    path: "/profile/admin/products",
+    element: <AdminProductsPage />,
+  },
+  {
+    path: "/profile/admin/categories",
+    element: <AdminCategoriesPage />,
+  },
+  {
+    path: "/profile/admin/orders",
+    element: <AdminOrdersPage />,
+  },
+  {
+    path: "/profile/admin/customers",
+    element: <AdminCustomersPage />,
+  },
+  {
+    path: "/profile/admin/inventory",
+    element: <AdminInventoryPage />,
+  },
+  {
+   path: "/profile/admin/coupons",
+   element: <AdminCouponsPage/>,
+  },
+  {
+    path: "/profile/admin/reviews",
+    element: <AdminReviewsPage />,
+  },
+  {
+    path: "/profile/admin/analytics",
+    element: <AdminAnalyticsPage />,
+  },
+  {
+    path: "/profile/admin/activity",
+    element: <AdminActivityPage />,
+  },
+  {
+    path: "/profile/admin/notifications",
+    element: <AdminNotificationsPage />,
+  },
+  {
+    path: "/profile/admin/settings",
+    element: <AdminSettingsPage />,
   },
   {
     path: "/login",

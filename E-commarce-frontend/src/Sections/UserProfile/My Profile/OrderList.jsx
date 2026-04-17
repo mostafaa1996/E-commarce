@@ -20,12 +20,12 @@ export default function OrderHistoryList({ orders }) {
         orders.length > 0 &&
         orders.map((order) => (
           <DashBoardItem
-            key={order._id}
-            items={order.orderItems}
-            orderId={order._id}
-            status={order.Status.status}
-            createdAt={order.createdAt}
-            totalPrice={order.totalPrice}
+            key={order?._id}
+            items={order?.orderItems || []}
+            orderId={order?._id || ""}
+            status={order?.Status?.status || ""}
+            createdAt={order?.createdAt || ""}
+            totalPrice={order?.totalPrice || 0}
           />
         ))}
     </DashBoardTable>
