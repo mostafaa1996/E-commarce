@@ -5,7 +5,7 @@ const Token = require("../models/token");
 const { generateAccessToken, generateRefreshToken } = require("../utils/token");
 const User = require("../models/User");
 
-exports.postSignup = async (req, res) => {
+exports.postSignup = async (req, res , next) => {
   try {
     const { name, email, password } = req.body;
     console.log(name, email, password);

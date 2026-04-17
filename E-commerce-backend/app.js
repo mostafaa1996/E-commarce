@@ -56,7 +56,7 @@ app.use((error, req, res, next) => {
 
 mongoose
   .connect(
-    "mongodb+srv://mostafahamdy:2201996220Mos@cluster0.uqgen2r.mongodb.net/ShopLite?",
+    "mongodb+srv://mostafahamdy:2201996220Mos@shoplite.ojxtkdz.mongodb.net/shoplite?",
   )
   .then(() => {
     console.log("Connected to database!");
