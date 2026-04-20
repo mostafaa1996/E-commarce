@@ -1,7 +1,6 @@
 const User = require("../models/User");
 const Product = require("../models/Product");
 const Cart = require("../models/Cart");
-const VAT_shipping = require("../models/VAT");
 exports.getCart = async (req, res, next) => {
   try {
     const userId = req.user.id;
@@ -16,13 +15,12 @@ exports.getCart = async (req, res, next) => {
 
     let cart = await Cart.findById(CartId).populate({
       path: "products.productId",
-      select: "_id title price images ",
+      select: "_id title images ",
       model: "Product",
     });
     if (!cart) {
       return res.status(200).json({ message: "Cart not found" });
     }
-    const createdVAT_shipping = await VAT_shipping.findOne({});
     const requiredCart = {
       totalItems: cart.totalItems,
       totalPrice: cart.totalPrice,
@@ -31,13 +29,12 @@ exports.getCart = async (req, res, next) => {
       items: cart.products.map((item) => ({
         _id: item.productId._id,
         title: item.productId.title,
-        price: item.productId.price,
         image: item.productId.images[0].url,
+        price: item.price,
+        variantId: item.variantId,
         quantity: item.quantity,
-        subtotal: item.productId.price * item.quantity,
+        subtotal: item.subtotal,
       })),
-      VAT: createdVAT_shipping.VAT,
-      shipping: createdVAT_shipping.shipping,
     };
     return res.status(200).json(requiredCart);
   } catch (err) {
@@ -49,8 +46,12 @@ exports.getCart = async (req, res, next) => {
 exports.SyncCart = async (req, res, next) => {
   try {
     const userId = req.user.id;
-    const { id, quantity } = req.body || [];
+    console.log(req.body);
+    const { productId: id, quantity , variantId } = req.body || [];
     const Quantity = Number(quantity);
+    if (!id || !Quantity) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
     let subtotal = 0;
 
     if (!userId) return res.status(401);
@@ -58,13 +59,9 @@ exports.SyncCart = async (req, res, next) => {
     if (!user) return res.status(401).json({ message: "Unauthorized" });
 
     const currentCart = await Cart.findOne({ userId });
-
-    if (!id || !Quantity) {
-      return res.status(400).json({ message: "Missing required fields" });
-    }
     const product = await Product.findById(id);
     if (!product) return res.status(404).json({ message: "Product not found" });
-
+    const Variant = product.variants.find((variant) => variant._id.toString() === variantId); 
     //create new cart
     if (!currentCart) {
       const cart = await Cart.create({
@@ -73,7 +70,8 @@ exports.SyncCart = async (req, res, next) => {
           {
             productId: id,
             quantity: quantity,
-            price: product.price,
+            price: Variant.price,
+            variantId: variantId,
             subtotal: product.price * quantity,
           },
         ],
@@ -98,17 +96,15 @@ exports.SyncCart = async (req, res, next) => {
       );
       if (existingProduct) {
         subtotal = Quantity * existingProduct.price;
-        console.log(subtotal);
         currentCart.totalItems += Quantity - existingProduct.quantity;
-        console.log(currentCart.totalItems);
         currentCart.totalPrice += subtotal - existingProduct.subtotal;
-        console.log(currentCart.totalPrice);
         existingProduct.quantity = Quantity;
         existingProduct.subtotal = subtotal;
         currentCart.updatedAt = Date.now();
       } else {
         currentCart.products.push({
           productId: id,
+          variantId: variantId,
           quantity: Quantity,
           price: product.price,
           subtotal: product.price * Quantity,
@@ -147,6 +143,7 @@ exports.deleteCart = async (req, res, next) => {
 exports.deleteCartItem = async (req, res, next) => {
   try {
     const userId = req.user.id;
+    const variantId = req.query.variantId;
     const productId = req.params.id;
     if (!userId) return res.status(401).json({ message: "Unauthorized" });
     const user = await User.findById(userId);
@@ -154,12 +151,12 @@ exports.deleteCartItem = async (req, res, next) => {
     const cart = await Cart.findOne({ userId });
     if (!cart) return res.status(404).json({ message: "Cart not found" });
     const product = cart.products.find(
-      (item) => item.productId.toString() === productId,
+      (item) => item.productId.toString() === productId && item.variantId.toString() === variantId,
     );
     if (!product)
       return res.status(404).json({ message: "Product not found in cart" });
     cart.products = cart.products.filter(
-      (item) => item.productId.toString() !== productId,
+      (item) => item.productId.toString() !== productId && item.variantId.toString() !== variantId,
     );
     cart.totalItems -= product.quantity;
     cart.totalPrice -= product.subtotal;

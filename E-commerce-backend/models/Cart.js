@@ -19,6 +19,10 @@ const CartSchema = new mongoose.Schema({
         type: Number,
         required: true,
       },
+      variantId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Variant",
+      },
       subtotal: {
         type: Number,
         required: true,

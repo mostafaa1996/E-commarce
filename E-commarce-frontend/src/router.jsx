@@ -44,6 +44,7 @@ import AdminAnalyticsPage from "./Pages/AdminAnalyticsPage";
 import AdminActivityPage from "./Pages/AdminActivityPage";
 import AdminNotificationsPage from "./Pages/AdminNotificationsPage";
 import AdminSettingsPage from "./Pages/AdminSettingsPage";
+import ProductPage from "./Pages/ProductPage";
 
 export const router = createBrowserRouter([
   {
@@ -69,21 +70,22 @@ export const router = createBrowserRouter([
       },
       {
         path: "/shop/products/:id",
-        element: <ProductDetailsPage />,
+        element: <ProductPage />,
         handle: { title: "Product Details" },
         loader: async ({ params }) => {
           // console.log(params.id);
-          const product = await queryClient.ensureQueryData({
+          // get the product
+          const preloadedProduct = await queryClient.ensureQueryData({
             queryKey: ["product", params.id],
             queryFn: () => getProductById(params.id),
           });
-
+          // get the cart to know if the product is in the cart or not and based on that start quantity from cart number
           const cart = await queryClient.ensureQueryData({
             queryKey: ["cart"],
             queryFn: getCart,
           });
 
-          return { product, cart };
+          return { preloadedProduct, cart };
         },
       },
       {
@@ -232,8 +234,8 @@ export const router = createBrowserRouter([
     element: <AdminInventoryPage />,
   },
   {
-   path: "/profile/admin/coupons",
-   element: <AdminCouponsPage/>,
+    path: "/profile/admin/coupons",
+    element: <AdminCouponsPage />,
   },
   {
     path: "/profile/admin/reviews",
@@ -268,5 +270,12 @@ export const router = createBrowserRouter([
   {
     path: "/logout",
     action: async () => await logoutAction(),
+  },
+  {
+    path: "/shop/cc",
+    element: <ProductPage />,
+    loader: async ({ params }) => {
+      return null;
+    },
   },
 ]);

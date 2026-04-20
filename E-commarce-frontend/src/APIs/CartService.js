@@ -29,15 +29,14 @@ export async function getCart() {
   return cart;
 }
 
-export async function syncCart({ ActionType, id, quantity }) {
+export async function syncCart({ ActionType, productId , variantId , quantity }) {
   if (ActionType === "add") {
-    console.log("add");
     const res = await authFetch(`${URL}/cart/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ id, quantity }),
+      body: JSON.stringify({ productId , variantId , quantity }),
     });
 
     if (!res.ok) {
@@ -69,7 +68,7 @@ export async function syncCart({ ActionType, id, quantity }) {
 
   if (ActionType === "remove") {
     console.log("remove item");
-    const res = await authFetch(`${URL}/cart/${id}`, {
+    const res = await authFetch(`${URL}/cart/${productId}?variantId=${encodeURIComponent(variantId)}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

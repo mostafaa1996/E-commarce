@@ -1,3 +1,4 @@
+import { Verified } from "lucide-react";
 import { authFetch } from "./AuthFetch";
 
 const URL = import.meta.env.VITE_API_URL;
@@ -43,18 +44,47 @@ export async function getProductById(id) {
   if (!response.ok) {
     throw new Error(data.message || "Failed to load product");
   }
-  return data;
+  return data.product;
 }
 
-export async function addProductReview({ id, rating, comment }) {
-  const API_Link = `${URL}/shop/products/${id}/reviews`;
+export async function getRelatedProductsForProductById(product) {
+  const requests = [
+    product.brand
+      ? getShopProducts({ brands: product.brand, limit: 8 })
+      : Promise.resolve({ products: [] }),
+    Array.isArray(product.tags) && product.tags.length > 0
+      ? getShopProducts({ tags: product.tags.slice(0, 3), limit: 8 })
+      : Promise.resolve({ products: [] }),
+  ];
+
+  const [brandResponse, tagsResponse] = await Promise.all(requests);
+
+  const relatedProducts = [...brandResponse.products, ...tagsResponse.products]
+    .filter((item) => item._id !== product._id)
+    .filter(
+      (item, index, items) =>
+        items.findIndex((candidate) => candidate._id === item._id) === index,
+    )
+    .slice(0, 4);
+
+  return relatedProducts;
+}
+
+export async function addProductReview(review) {
+  const API_Link = `${URL}/shop/products/${review.productId}/reviews`;
   console.log(API_Link);
   const response = await authFetch(API_Link, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ rating, comment }),
+    body: JSON.stringify({
+      rating: review.rating,
+      comment: review.comment,
+      verified: review.verified,
+      username: review.username,
+      email: review.email,
+    }),
   });
   const data = await response.json();
   if (!response.ok) {

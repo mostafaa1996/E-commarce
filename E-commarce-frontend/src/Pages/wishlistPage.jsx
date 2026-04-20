@@ -32,7 +32,7 @@ export default function WishListPage() {
   });
 
   const syncCartMutation = useMutation({
-    mutationFn: ({ ActionType , id, quantity }) => syncCart({ ActionType , id , quantity }),
+    mutationFn: ({ ActionType , productId, quantity }) => syncCart({ ActionType , productId , quantity }),
     onSettled: () =>{ 
       queryClient.invalidateQueries({ queryKey: ["cart"] });
       queryClient.invalidateQueries({ queryKey: ["checkout"] });
@@ -40,7 +40,7 @@ export default function WishListPage() {
   });
 
   function handleAddToCart(product) {
-    syncCartMutation.mutate({ ActionType: "add", id: product._id , quantity: 1 });
+    syncCartMutation.mutate({ ActionType: "add", productId: product._id , quantity: 1 });
   }
   function handleOnRemove(productId) {
     const arrOfIds = [productId];
