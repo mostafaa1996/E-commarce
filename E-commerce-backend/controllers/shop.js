@@ -129,8 +129,11 @@ exports.getProducts = async (req, res, next) => {
 exports.getProduct = async (req, res, next) => {
   try {
     const product = await Product.findById(req.params.id);
-    if (!product) return res.status(404).json({ message: "Product not found" });
-    res.status(200).json(product);
+    if(!product) return res.status(404).json({ message: "Product not found" , product: {}});
+    const reviews = await Review.find({ product: req.params.id });
+    if (!reviews) return res.status(404).json({ message: "no reviews found" , product: product});
+    product.reviews = reviews;
+    res.status(200).json({ message: "Product found with reviews" , product: product});
   } catch (err) {
     next(err);
   }
