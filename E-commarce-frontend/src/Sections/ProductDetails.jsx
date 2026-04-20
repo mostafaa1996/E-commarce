@@ -34,9 +34,9 @@ export default function ProductDetails({
   });
 
   const UpdateCart = useMutation({
-    mutationFn: ({ ActionType, id, quantity }) =>
-      syncCart({ ActionType, id, quantity }),
-    onMutate: async ({ ActionType, id, quantity }) => {
+    mutationFn: ({ ActionType, productId, quantity }) =>
+      syncCart({ ActionType, productId, quantity }),
+    onMutate: async ({ ActionType, productId, quantity }) => {
       //optimistic update
       queryClient.cancelQueries({ queryKey: ["cart"] });
       const previousCart = queryClient.getQueryData(["cart"]);
@@ -56,14 +56,14 @@ export default function ProductDetails({
         if (ActionType === "add") {
           return {
             ...oldCart,
-            items: [...oldItems, { _id: id, quantity }],
+            items: [...oldItems, { _id: productId, quantity }],
           };
         }
 
         if (ActionType === "remove") {
           return {
             ...oldCart,
-            items: oldItems.filter((item) => item._id !== id),
+            items: oldItems.filter((item) => item._id !== productId),
           };
         }
 
@@ -86,10 +86,10 @@ export default function ProductDetails({
   });
 
   function handleAddToCart() {
-    UpdateCart.mutate({ ActionType: "add", id: product._id, quantity });
+    UpdateCart.mutate({ ActionType: "add", productId: product._id, quantity });
   }
   function RemoveFromCart() {
-    UpdateCart.mutate({ ActionType: "remove", id: product._id, quantity: 0 });
+    UpdateCart.mutate({ ActionType: "remove", productId: product._id, quantity: 0 });
   }
   function handleAddToWishlist() {
     updateWishlist.mutate([product._id]);

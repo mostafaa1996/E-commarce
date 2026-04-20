@@ -43,7 +43,7 @@ export async function getProductById(id) {
   if (!response.ok) {
     throw new Error(data.message || "Failed to load product");
   }
-  return data;
+  return data.product;
 }
 
 export async function addProductReview({ id, rating, comment }) {

@@ -62,7 +62,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 97%;
+    --background: 0 0% 100%;
     --foreground: 220 20% 14%;
     --card: 0 0% 100%;
     --card-foreground: 220 20% 14%;
@@ -100,6 +100,54 @@
 
     --info: 217 91% 60%;
     --info-foreground: 0 0% 100%;
+
+    --background: 0 0% 100%;
+    --foreground: 20 14% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 20 14% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 14% 12%;
+
+    /* Brand orange */
+    --primary: 18 95% 56%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 18 95% 50%;
+    --primary-soft: 24 100% 96%;
+
+    --secondary: 30 20% 96%;
+    --secondary-foreground: 20 14% 12%;
+
+    --muted: 30 15% 96%;
+    --muted-foreground: 25 8% 45%;
+
+    --accent: 24 100% 96%;
+    --accent-foreground: 18 95% 40%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 142 71% 38%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    --border: 30 12% 90%;
+    --input: 30 12% 90%;
+    --ring: 18 95% 56%;
+
+    --radius: 0.875rem;
+
+    /* Premium gradients & shadows */
+    --gradient-primary: linear-gradient(135deg, hsl(18 95% 58%), hsl(12 90% 52%));
+    --gradient-soft: linear-gradient(180deg, hsl(24 100% 98%), hsl(0 0% 100%));
+    --shadow-sm: 0 1px 2px 0 hsl(20 14% 12% / 0.04);
+    --shadow-card: 0 1px 3px hsl(20 14% 12% / 0.04), 0 4px 16px -4px hsl(20 14% 12% / 0.06);
+    --shadow-elevated: 0 8px 30px -8px hsl(20 14% 12% / 0.12), 0 2px 8px -2px hsl(20 14% 12% / 0.06);
+    --shadow-glow: 0 8px 24px -8px hsl(18 95% 56% / 0.45);
+
+    --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   * {
@@ -119,6 +167,13 @@
   }
 }
 
+@utility container {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1700px;
+  padding-inline: 0rem;
+}
+
 @layer utilities {
   .stat-card {
     @apply bg-card rounded-xl border p-6 shadow-sm hover:shadow-md transition-shadow;
@@ -131,6 +186,33 @@
   }
   .page-description {
     @apply text-sm text-muted-foreground mt-1;
+  }
+}
+
+@layer utilities {
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+  .shadow-elevated {
+    box-shadow: var(--shadow-elevated);
+  }
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+  .gradient-soft {
+    background: var(--gradient-soft);
+  }
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    scrollbar-width: none;
   }
 }
 

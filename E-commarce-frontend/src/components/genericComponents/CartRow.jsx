@@ -10,9 +10,9 @@ import { syncCart } from "@/APIs/CartService";
 export default function CartRow({ item, format = (n) => n, rate = 1 }) {
   const [displayedQuantity, setdisplayedQuantity] = useState(item.quantity);
   const syncCartMutation = useMutation({
-    mutationFn: ({ ActionType, id, quantity }) =>
-      syncCart({ ActionType, id, quantity }),
-    onMutate: ({ ActionType, id, quantity }) => {
+    mutationFn: ({ ActionType, productId, quantity }) =>
+      syncCart({ ActionType, productId, quantity }),
+    onMutate: ({ ActionType, productId, quantity }) => {
       //optimistic update
       queryClient.cancelQueries({ queryKey: ["cart"] });
       const previousCart = queryClient.getQueryData(["cart"]);
@@ -24,7 +24,7 @@ export default function CartRow({ item, format = (n) => n, rate = 1 }) {
           return {
             ...oldCart,
             items: oldCart.items.map((item) => {
-              if (item._id === id) {
+              if (item._id === productId) {
                 return {
                   ...item,
                   quantity,
@@ -44,7 +44,7 @@ export default function CartRow({ item, format = (n) => n, rate = 1 }) {
           if (!oldCart) return null;
           return {
             ...oldCart,
-            items: oldCart.items.filter((item) => item._id !== id),
+            items: oldCart.items.filter((item) => item._id !== productId),
             totalItems: oldCart.totalItems - item.quantity,
             totalPrice: oldCart.totalPrice - item.price * item.quantity,
             updatedAt: new Date(),
@@ -72,7 +72,7 @@ export default function CartRow({ item, format = (n) => n, rate = 1 }) {
     }
     syncCartMutation.mutate({
       ActionType: "add",
-      id: item._id,
+      productId: item._id,
       quantity: newQuantity,
     });
   }
@@ -80,7 +80,7 @@ export default function CartRow({ item, format = (n) => n, rate = 1 }) {
   function handleRemove() {
     syncCartMutation.mutate({
       ActionType: "remove",
-      id: item._id,
+      productId: item._id,
       quantity: 0,
     });
   }

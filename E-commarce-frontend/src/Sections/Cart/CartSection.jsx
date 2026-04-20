@@ -25,9 +25,9 @@ export default function CartSection() {
   });
 
   const syncCartMutation = useMutation({
-    mutationFn: ({ ActionType, id, quantity }) =>
-      syncCart({ ActionType, id, quantity }),
-    onMutate: ({ ActionType, id, quantity }) => {
+    mutationFn: ({ ActionType, productId, quantity }) =>
+      syncCart({ ActionType, productId, quantity }),
+    onMutate: ({ ActionType, productId, quantity }) => {
       //optimistic update
       queryClient.cancelQueries({ queryKey: ["cart"] });
       const previousCart = queryClient.getQueryData(["cart"]);
@@ -59,7 +59,7 @@ export default function CartSection() {
     navigate("/checkout");
   }
   function handleClearCart() {
-    syncCartMutation.mutate({ ActionType: "clear" , id: null , quantity: 0 });
+    syncCartMutation.mutate({ ActionType: "clear" , productId: null , quantity: 0 });
   }
   function handleContinueShopping() {
     navigate("/shop");

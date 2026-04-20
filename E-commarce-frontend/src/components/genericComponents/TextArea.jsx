@@ -1,4 +1,6 @@
-export default function TextArea({label , placeholder , ...props }) {
+import clsx from "clsx";
+import { twMerge } from "tailwind-merge";
+export default function TextArea({ label, placeholder, ...props }) {
   return (
     <div className="flex flex-col">
       {label && <label className="text-sm text-zinc-500">{label}</label>}
@@ -6,7 +8,9 @@ export default function TextArea({label , placeholder , ...props }) {
         rows={4}
         placeholder={placeholder}
         {...props}
-        className={`
+        className={twMerge(
+          clsx(
+            `
           w-full
           px-4
           py-3
@@ -19,7 +23,10 @@ export default function TextArea({label , placeholder , ...props }) {
           resize-none
           focus:outline-none
           focus:border-[#FF6543]
-        `}
+        `,
+            props.className,
+          ),
+        )}
       />
     </div>
   );
