@@ -128,16 +128,24 @@ exports.getProducts = async (req, res, next) => {
 
 exports.getProduct = async (req, res, next) => {
   try {
-     const product = await Product.findByIdAndUpdate(
+    const product = await Product.findByIdAndUpdate(
       req.params.id,
       { $inc: { viewsCount: 1 } },
-      { new: true }
+      { new: true },
     );
-    if(!product) return res.status(404).json({ message: "Product not found" , product: {}});
+    if (!product)
+      return res
+        .status(404)
+        .json({ message: "Product not found", product: {} });
     const reviews = await Review.find({ product: req.params.id });
-    if (!reviews) return res.status(404).json({ message: "no reviews found" , product: product});
+    if (!reviews)
+      return res
+        .status(404)
+        .json({ message: "no reviews found", product: product });
     product.reviews = reviews;
-    res.status(200).json({ message: "Product found with reviews" , product: product});
+    res
+      .status(200)
+      .json({ message: "Product found with reviews", product: product });
   } catch (err) {
     next(err);
   }
@@ -146,64 +154,81 @@ exports.getProduct = async (req, res, next) => {
 exports.postReview = async (req, res, next) => {
   try {
     const userId = req.user.id;
+    console.log("user>>>>>>>", userId);
     const user = await User.findById(userId);
-    if (!user) return res.status(401).json({ message: "Unauthorized" });
+    if (!user) {
+      //anonymous user
+      const review = req.body;
+      if (!review.rating || !review.comment)
+        return res.status(400).json({ message: "Missing required fields" });
+      const newReview = await Review.create({
+        rating: review.rating,
+        comment: review.comment,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        date: new Date(Date.now()),
+        verified: false,
+        isApproved: true,
+        productId: req.params.id,
+        userId: null,
+        username: review.username,
+      });
+      if (!newReview)
+        return res.status(500).json({ message: "Failed to create review" });
+      const product = await Product.findById(req.params.id);
+      if (!product)
+        return res.status(404).json({ message: "Product not found" });
+      product.reviews.push(newReview._id);
+      const updatedProduct = await product.save();
+      if (!updatedProduct)
+        return res
+          .status(500)
+          .json({ message: "Failed to add review to product" });
+      return res
+        .status(200)
+        .json({ message: "Review created successfully", ok: true });
+    }
     const productId = req.params.id;
     const review = req.body;
     if (!review.rating || !review.comment)
       return res.status(400).json({ message: "Missing required fields" });
     const existedReview = await Review.findOne({
-      "user.id": userId,
-      productId: productId,
+      userId: userId,
+      product: productId,
     });
     if (existedReview) {
       const updatedReview = await Review.findOneAndUpdate(
-        { "user.id": userId, productId: productId },
-        { rating: review.rating, comment: review.comment },
+        { userId: userId, product: productId },
+        {
+          rating: review.rating,
+          comment: review.comment,
+          verified: true,
+          isApproved: true,
+          date: new Date(Date.now()),
+        },
       );
       if (!updatedReview)
         return res.status(500).json({ message: "Failed to update review" });
-      const product = await Product.findById(productId);
-      if (!product)
-        return res.status(404).json({ message: "Product not found" });
-      const updatedProduct = await Product.findOneAndUpdate(
-        { _id: productId, "reviews._id": updatedReview._id },
-        {
-          $set: {
-            "reviews.$.rating": updatedReview.rating,
-            "reviews.$.comment": updatedReview.comment,
-            "reviews.$.createdAt": updatedReview.createdAt,
-            "reviews.$.user.name": updatedReview.user.name,
-            "reviews.$.user.avatar": updatedReview.user.avatar,
-            "reviews.$.user.id": updatedReview.user.id, 
-            "reviews.$.productId": updatedReview.productId,
-            "reviews.$._id": updatedReview._id
-          },
-        },
-      );
-      console.log(updatedProduct);
-      if (!updatedProduct)
-        return res.status(500).json({ message: "Failed to update product" });
       return res
         .status(200)
         .json({ message: "Review updated successfully", ok: true });
     }
     const newReview = await Review.create({
-      user: {
-        id: userId,
-        name: user.name,
-        avatar: user.PersonalInfo.avatar.url,
-      },
-      productId: productId,
+      userId: userId,
+      product: productId,
       rating: review.rating,
       comment: review.comment,
       createdAt: new Date(),
+      updatedAt: new Date(),
+      date: new Date(Date.now()),
+      verified: true,
+      isApproved: true,
     });
     if (!newReview)
       return res.status(500).json({ message: "Failed to create review" });
     const product = await Product.findById(productId);
     if (!product) return res.status(404).json({ message: "Product not found" });
-    product.reviews.push(newReview);
+    product.reviews.push(newReview._id);
     const updatedProduct = await product.save();
     if (!updatedProduct)
       return res

@@ -5,7 +5,7 @@
     ref: "Product",
   },
 
-  user: {
+  userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },

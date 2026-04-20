@@ -9,11 +9,12 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import WriteReviewDialog from "./WriteReviewDialog";
+import { useMutation } from "@tanstack/react-query";
+import {addProductReview} from "@/APIs/shopProductsService";
 
 const ReviewsSection = ({ summary, reviews = [], isLoggedIn, currentUser }) => {
   const [sort, setSort] = useState("recent");
   const [page, setPage] = useState(1);
-  const [userReview, setUserReview] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const total = summary.reviewsCount;
   const buckets = ["five", "four", "three", "two", "one"];
@@ -43,14 +44,29 @@ const ReviewsSection = ({ summary, reviews = [], isLoggedIn, currentUser }) => {
     startIndex + reviewsPerPage,
   );
 
+  const UpdateReviews =  useMutation(
+    {
+      mutationFn: async (review) => {
+        return await addProductReview(review);
+      },
+      //TODO: implement optimistic updates
+      //TODO: implement error handling
+      
+      //TODO: reset userReview state on success
+    }
+  );
+
   const handleSubmitReview = (payload) => {
-    setUserReview(() => ({
+    const review = {
       verified: payload.verified,
-      date: payload.date,
       rating: payload.rating,
-      title: payload.comment.split(/[.!?\n]/)[0].slice(0, 60) || "Review",
-      body: payload.comment,
-    }));
+      comment: payload.comment,
+      productId: reviews[0]?.product || "",
+      // username and email are optional for unverified users
+      username: payload.verified ? "" : payload.username,
+      email: payload.verified ? "" : payload.email,
+    };
+    UpdateReviews.mutate(review);
   };
 
   return (
@@ -166,7 +182,7 @@ const ReviewsSection = ({ summary, reviews = [], isLoggedIn, currentUser }) => {
                 <div className="flex-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="font-semibold text-foreground">
-                      {r.author}
+                      {r.username || "Anonymous"}
                     </span>
                     {r.verified && (
                       <span className="inline-flex items-center gap-1 rounded-full bg-success/10 px-2 py-0.5 text-[11px] font-semibold text-success">
@@ -174,7 +190,7 @@ const ReviewsSection = ({ summary, reviews = [], isLoggedIn, currentUser }) => {
                       </span>
                     )}
                     <span className="text-xs text-muted-foreground">
-                      {new Date(r.updatedAt).toLocaleDateString("en-US", {
+                      {new Date(r.date).toLocaleDateString("en-US", {
                         month: "short",
                         day: "numeric",
                         year: "numeric",
@@ -184,9 +200,9 @@ const ReviewsSection = ({ summary, reviews = [], isLoggedIn, currentUser }) => {
                   <div className="mt-1">
                     <StarRating rating={r.rating} size={14} />
                   </div>
-                  {/* <h4 className="mt-2 font-semibold text-foreground">
-                    {r.title}
-                  </h4> */}
+                  <h4 className="mt-2 font-semibold text-foreground">
+                    {r.comment.split(/[.!?\n]/)[0].slice(0, 60) || "Review"}
+                  </h4>
                   <p className="mt-1 text-md leading-relaxed text-muted-foreground">
                     {r.comment}
                   </p>

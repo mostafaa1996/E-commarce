@@ -126,13 +126,10 @@ const ProductPage = () => {
   );
 
   const cartItems = cart?.items ?? [];
-  console.log(cartItems);
-
   const matchingCartItem = cartItems.find(
     (item) =>
       item._id === product?._id && item.variantId === selectedVariant?._id,
   );
-
   const isInCart = Boolean(matchingCartItem);
   const initialCartQty = matchingCartItem?.quantity ?? 1;
 
@@ -151,6 +148,10 @@ const ProductPage = () => {
       setSelectedVariant(defaultVariant);
     }
   }, [defaultVariant, product, selectedVariant]);
+
+  if(product){
+    console.log(product);
+  }
 
   const handleAddToCart = (qty) => {
     toast({

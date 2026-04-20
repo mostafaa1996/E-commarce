@@ -54,7 +54,8 @@ const WriteReviewDialog = ({ open, onOpenChange, isLoggedIn = false, currentUser
     const payload = {
       rating,
       comment: comment.trim(),
-      email: isLoggedIn ? currentUser : email.trim(),
+      username: !isLoggedIn? username.trim() : "",
+      email: !isLoggedIn? email.trim() : "",
       verified: isLoggedIn,
       date: new Date().toISOString(),
     };
@@ -90,7 +91,7 @@ const WriteReviewDialog = ({ open, onOpenChange, isLoggedIn = false, currentUser
           {isLoggedIn ? (
             <div className="inline-flex items-center gap-2 rounded-full bg-success/10 px-3 py-1.5 text-xs font-semibold text-success">
               <ShieldCheck className="h-3.5 w-3.5" />
-              Signed in as {currentUser?.name || "you"} · Verified buyer
+              Signed in as {currentUser || "you"} · Verified buyer
             </div>
           ) : (
             <div className="inline-flex items-center gap-2 rounded-full bg-secondary px-3 py-1.5 text-xs font-semibold text-muted-foreground">
