@@ -16,7 +16,10 @@ import { useToast } from "@/hooks/use-toast";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { useLoaderData } from "react-router-dom";
-import { getProductById } from "@/APIs/shopProductsService";
+import {
+  getProductById,
+  getRelatedProductsForProductById,
+} from "@/APIs/shopProductsService";
 import { getUserWishlist } from "@/APIs/UserProfileService";
 import { useLoggedInEmail } from "@/zustand_loggedIn/loggedInEmail";
 import { queryClient } from "../queryClient";
@@ -28,12 +31,13 @@ const ProductPage = () => {
   let content = null;
 
   const { id } = useParams();
-  const { cart } = useLoaderData();
+  const { preloadedProduct , cart } = useLoaderData();
   const { loggedInEmail } = useLoggedInEmail();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [galleryImages, setGalleryImages] = useState([]);
+
   const {
     data: product,
     isLoading: isLoadingProduct,
@@ -43,6 +47,20 @@ const ProductPage = () => {
     queryKey: ["product", id],
     queryFn: () => getProductById(id),
     enabled: !!id,
+    staleTime: 1000 * 60 * 5,
+    initialData: preloadedProduct,
+  });
+
+  const {
+    data: relatedProducts,
+    isLoading: isLoadingRelatedProducts,
+    isFetching: isFetchingRelatedProducts,
+    error: errorRelatedProducts,
+  } = useQuery({
+    queryKey: ["related-products", id],
+    queryFn: () => getRelatedProductsForProductById(product),
+    enabled: !!product,
+    staleTime: 1000 * 60 * 5,
   });
 
   const { data: wishlist, isLoading: isLoadingWishlist } = useQuery({
@@ -59,9 +77,9 @@ const ProductPage = () => {
   });
 
   const UpdateCart = useMutation({
-    mutationFn: ({ ActionType, productId , variantId , quantity }) =>
-      syncCart({ ActionType, productId, variantId , quantity }),
-    onMutate: async ({ ActionType, productId , variantId , quantity }) => {
+    mutationFn: ({ ActionType, productId, variantId, quantity }) =>
+      syncCart({ ActionType, productId, variantId, quantity }),
+    onMutate: async ({ ActionType, productId, variantId, quantity }) => {
       //optimistic update
       queryClient.cancelQueries({ queryKey: ["cart"] });
       const previousCart = queryClient.getQueryData(["cart"]);
@@ -72,14 +90,16 @@ const ProductPage = () => {
         if (ActionType === "add") {
           return {
             ...oldCart,
-            items: [...oldItems, { _id: productId, quantity , variantId}],
+            items: [...oldItems, { _id: productId, quantity, variantId }],
           };
         }
 
         if (ActionType === "remove") {
           return {
             ...oldCart,
-            items: oldItems.filter((item) => item._id !== productId && item.variantId !== variantId),
+            items: oldItems.filter(
+              (item) => item._id !== productId && item.variantId !== variantId,
+            ),
           };
         }
 
@@ -137,7 +157,12 @@ const ProductPage = () => {
       title: "Added to cart",
       description: `${qty} × ${product.title} (${selectedVariant.attributes.storage}, ${selectedVariant.attributes.color?.name})`,
     });
-    UpdateCart.mutate({ ActionType: "add", productId: product._id, variantId: selectedVariant._id , quantity: qty });
+    UpdateCart.mutate({
+      ActionType: "add",
+      productId: product._id,
+      variantId: selectedVariant._id,
+      quantity: qty,
+    });
   };
 
   function handleRemoveFromCart() {
@@ -145,15 +170,29 @@ const ProductPage = () => {
       title: "Removed from cart",
       description: `${product.title} (${selectedVariant.attributes.storage}, ${selectedVariant.attributes.color?.name})`,
     });
-    UpdateCart.mutate({ ActionType: "remove", productId: product._id , variantId: selectedVariant._id, quantity: 0 });
+    UpdateCart.mutate({
+      ActionType: "remove",
+      productId: product._id,
+      variantId: selectedVariant._id,
+      quantity: 0,
+    });
   }
   const handleBuyNow = (qty) => {
     toast({
       title: "Redirecting to checkout…",
       description: `${qty} × ${product.title}`,
     });
-    UpdateCart.mutate({ ActionType: "add", productId: product._id, qty });
-    navigate("/checkout");
+    navigate("/checkout", {
+      state: {
+        source: "buy-now",
+        from: `/product/${product._id}`,
+        product: {
+          productId: product._id,
+          variantId: selectedVariant._id,
+          quantity: qty,
+        },
+      },
+    });
   };
 
   function handleUpdateWishlist() {
@@ -328,7 +367,11 @@ const ProductPage = () => {
         />
 
         {/* Related */}
-        <RelatedProducts />
+        <RelatedProducts
+          items={relatedProducts}
+          loading={isFetchingRelatedProducts || isLoadingRelatedProducts}
+          error={errorRelatedProducts}  
+        />
 
         {/* Footer */}
         <footer className="w-full border-t border-border bg-secondary/30 py-10">

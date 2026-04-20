@@ -46,6 +46,29 @@ export async function getProductById(id) {
   return data.product;
 }
 
+export async function getRelatedProductsForProductById(product) {
+  const requests = [
+    product.brand
+      ? getShopProducts({ brands: product.brand, limit: 8 })
+      : Promise.resolve({ products: [] }),
+    Array.isArray(product.tags) && product.tags.length > 0
+      ? getShopProducts({ tags: product.tags.slice(0, 3), limit: 8 })
+      : Promise.resolve({ products: [] }),
+  ];
+
+  const [brandResponse, tagsResponse] = await Promise.all(requests);
+
+  const relatedProducts = [...brandResponse.products, ...tagsResponse.products]
+    .filter((item) => item._id !== product._id)
+    .filter(
+      (item, index, items) =>
+        items.findIndex((candidate) => candidate._id === item._id) === index,
+    )
+    .slice(0, 4);
+
+  return relatedProducts;
+};
+
 export async function addProductReview({ id, rating, comment }) {
   const API_Link = `${URL}/shop/products/${id}/reviews`;
   console.log(API_Link);
