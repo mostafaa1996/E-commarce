@@ -45,6 +45,8 @@ import {
   ChevronDown,
   PanelLeft,
   AlertTriangle,
+  PoundSterling,
+  Euro
 } from "lucide-react";
 
 export const iconMap = {
@@ -94,5 +96,7 @@ export const iconMap = {
   circle: Circle,
   chevronDown: ChevronDown,
   panelLeft: PanelLeft,
-  alertTriangle: AlertTriangle
+  alertTriangle: AlertTriangle,
+  poundSterling: PoundSterling,
+  euro: Euro
 };
