@@ -20,6 +20,7 @@ const userProfilePaymentsRoutes = require("./routes/UserProfilePayments");
 const UserProfileSettingsRoutes = require("./routes/UserProfileSettings");
 const exchangeRateRoutes = require("./routes/exchangeRate");
 const stripeWebhookRoute = require("./routes/stripeWebhookRoute");
+const adminDashboardRoute = require("./routes/adminDashboard");
 
 const app = express();
 app.use("/api", stripeWebhookRoute);
@@ -47,6 +48,7 @@ app.use(
   UserProfileSettingsRoutes,
 );
 app.use("/exchangeRate", exchangeRateRoutes);
+app.use("/admin/dashboard", adminDashboardRoute );
 
 app.use((error, req, res, next) => {
   console.log(error);
