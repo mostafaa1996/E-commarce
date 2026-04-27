@@ -588,6 +588,7 @@ export function ProductDialog({
     }
 
     if (onSubmit) {
+      // no need to send review summary or defaultVariantId
       const { reviewSummary, defaultVariantId, ...payload } = data;
       onSubmit(payload, mode);
     }
@@ -602,7 +603,7 @@ export function ProductDialog({
       description: data.title || "Untitled product",
     });
 
-    // onOpenChange(false);
+    onOpenChange(false);
   };
 
   const showError = (key) => touched && errors[key];
