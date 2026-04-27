@@ -46,7 +46,8 @@ import {
   PanelLeft,
   AlertTriangle,
   PoundSterling,
-  Euro
+  Euro,
+  Trash2,
 } from "lucide-react";
 
 export const iconMap = {
@@ -98,5 +99,6 @@ export const iconMap = {
   panelLeft: PanelLeft,
   alertTriangle: AlertTriangle,
   poundSterling: PoundSterling,
-  euro: Euro
+  euro: Euro,
+  trash2: Trash2,
 };

@@ -1,117 +1,514 @@
-import { Plus, Search, MoreHorizontal, Edit, Trash2, Eye } from "lucide-react";
+import Icon from "@/system/icons/Icon";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { PageHeader } from "@/components/admin/PageHeader";
+import { ProductDialog } from "@/components/admin/ProductDialog";
 import { DataTable } from "@/components/admin/DataTable";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { AdminButton } from "@/components/adminUI/AdminButton";
-import  InputField  from "@/components/genericComponents/InputField";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/adminUI/select";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/adminUI/dropdown-menu";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription } from "@/components/adminUI/dialog";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/adminUI/alert-dialog";
-import { Label } from "@/components/genericComponents/Label";
-import  Textarea  from "@/components/genericComponents/textarea";
-import { Switch } from "@/components/adminUI/switch";
-import { Separator } from "@/components/adminUI/separator";
-import { useState } from "react";
+import InputField from "@/components/genericComponents/InputField";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/adminUI/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/adminUI/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/adminUI/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/adminUI/alert-dialog";
+import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import useURLQuery from "@/hooks/UrlQuery";
+import {
+  getAdminProducts,
+  getProduct,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+} from "@/APIs/adminProducts";
+import Loading from "@/components/genericComponents/Loading";
+import { formatTime, shortenText } from "@/utils/utils";
 
-const initialProducts = [
-  { id: 1, name: 'ECOPAD 10.1" Tablet', category: "Tablets", price: "$59.99", stock: 142, status: "Active", date: "Mar 10, 2026", image: "📱", sku: "SKU-0001", description: "Affordable 10.1 inch tablet with long battery life." },
-  { id: 2, name: 'ZZA 32" 4K Monitor', category: "Monitors", price: "$169.99", stock: 28, status: "Active", date: "Mar 08, 2026", image: "🖥️", sku: "SKU-0002", description: "Ultra-sharp 4K display for professionals." },
-  { id: 3, name: "Smart Watch Pro", category: "Wearables", price: "$149.99", stock: 5, status: "Active", date: "Mar 05, 2026", image: "⌚", sku: "SKU-0003", description: "Feature-packed smartwatch with health tracking." },
-  { id: 4, name: "Wireless Earbuds X3", category: "Audio", price: "$39.99", stock: 0, status: "Draft", date: "Mar 03, 2026", image: "🎧", sku: "SKU-0004", description: "True wireless earbuds with noise cancellation." },
-  { id: 5, name: "Seagate HDD 1TB", category: "Storage", price: "$59.99", stock: 65, status: "Active", date: "Mar 01, 2026", image: "💾", sku: "SKU-0005", description: "Reliable 1TB external hard drive." },
-  { id: 6, name: "USB-C Hub Adapter", category: "Accessories", price: "$29.99", stock: 3, status: "Active", date: "Feb 28, 2026", image: "🔌", sku: "SKU-0006", description: "Multi-port USB-C hub with HDMI output." },
-  { id: 7, name: "Laptop Stand Pro", category: "Accessories", price: "$44.99", stock: 12, status: "Active", date: "Feb 25, 2026", image: "💻", sku: "SKU-0007", description: "Ergonomic adjustable laptop stand." },
-  { id: 8, name: "Mechanical Keyboard", category: "Peripherals", price: "$89.99", stock: 0, status: "Draft", date: "Feb 20, 2026", image: "⌨️", sku: "SKU-0008", description: "RGB mechanical keyboard with Cherry MX switches." },
-];
+const defaultQuery = {
+  status: "all",
+  category: "all",
+  search: "",
+  page: 1,
+  limit: 8,
+};
 
+const categoryValueMap = {
+  Tablets: "Tablets",
+  Monitors: "Monitors",
+  "Gaming Accessories": "Gaming Accessories",
+  Smartphones: "Smartphones",
+  Headphones: "Headphones",
+  "Smart Home": "Smart Home",
+  Cameras: "Cameras",
+  Laptops: "Laptops",
+  "Smart Watches": "Smart Watches",
+  "Computer Accessories": "Computer Accessories",
+};
 
+function isQueryChangedFromDefault(query) {
+  return (
+    query.status !== defaultQuery.status ||
+    query.category !== defaultQuery.category ||
+    query.search !== defaultQuery.search
+  );
+}
+
+const toDialogProductData = (product) => ({
+  id: product?._id || "",
+  title: product?.title || product?.name || "",
+  slug: (product?.slug || product?.title || product?.name || "")
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-"),
+  slugAuto: !product?.slug,
+  description: product?.description || "",
+  shortDescription: product?.shortDescription || product?.description || "",
+  brand: product?.brand && product.brand !== "None" ? product.brand : "",
+  category: product?.sourceCategoryName || "",
+  sourceCategoryName: product?.sourceCategoryName || "",
+  isActive: product?.isActive ?? product?.status === "Active",
+  status: product?.status || "New",
+  price: String(product?.price || "").replace(/[^0-9.]/g, ""),
+  originalPrice: String( product?.hasVariants ? 
+    product?.variants?.find((v) => v._id === product?.defaultVariantId)
+      ?.compareAtPrice || "" : product?.variants[0]?.compareAtPrice || "",
+  ).replace(/[^0-9.]/g, ""),
+  currency: product?.currency || "USD",
+  mainImage: {
+    url:
+      product?.mainImage?.url ||
+      (typeof product?.image === "string" && product.image.startsWith("http")
+        ? product.image
+        : ""),
+    alt: product?.mainImage?.alt || product?.title || product?.name || "",
+  },
+  images: product?.images || [],
+  specifications: product?.specifications || undefined,
+  seo: product?.seo || undefined,
+  hasVariants: Boolean(product?.hasVariants),
+  variants: product?.variants || [],
+  defaultVariantId: product?.defaultVariantId || "",
+  stock:product?.hasVariants ? String(product?.inventory?.totalStock || 0) : String(product?.variants[0]?.stock || 0),
+  sku: product?.hasVariants ? product?.variants?.find((v) => v._id === product?.defaultVariantId)
+      .sku || "" : product?.variants[0]?.sku || "",
+  shipping: product?.shipping || undefined,
+  returnPolicy: product?.returnPolicy || undefined,
+  tags: product?.tags || [],
+  reviewSummary: product?.reviewSummary || undefined,
+});
+
+const fromDialogCategory = (value, fallback) =>
+  Object.entries(categoryValueMap).find(
+    ([, dialogValue]) => dialogValue === value,
+  )?.[0] ||
+  fallback ||
+  "";
 
 export default function AdminProductsPage() {
+  let content = null;
   const { toast } = useToast();
-  const [products, setProducts] = useState(initialProducts);
-  const [showForm, setShowForm] = useState(false);
+  const [products, setProducts] = useState([]);
   const [viewProduct, setViewProduct] = useState(null);
   const [editProduct, setEditProduct] = useState(null);
-  const [deleteProduct, setDeleteProduct] = useState(null);
+  const [selectedProductId, setSelectedProductId] = useState(null);
+  const [pendingDialogMode, setPendingDialogMode] = useState(null);
+  const [productToDelete, setProductToDelete] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchInput, setSearchInput] = useState("");
 
-  // Edit form state
-  const [editForm, setEditForm] = useState({ name: "", category: "", price: "", stock: 0, status: "Active", description: "" });
+  const { MainQuery, updateUrlQuery, resetUrlQuery } =
+    useURLQuery(defaultQuery);
+  const {
+    data: productsData,
+    isLoading,
+    isFetching,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["adminProducts", MainQuery],
+    queryFn: () => getAdminProducts(MainQuery),
+    placeholderData: (previousData) => previousData,
+    keepPreviousData: true,
+  });
 
-  const openEdit = (p) => {
-    setEditProduct(p);
-    setEditForm({ name: p.name, category: p.category, price: p.price.replace("$", ""), stock: p.stock, status: p.status, description: p.description });
+  const {
+    data: targetedProduct,
+    isLoading: targetedProductLoading,
+    isFetching: targetedProductFetching,
+    isError: targetedProductError,
+    error: targetedProductErrorData,
+    refetch: refetchTargetedProduct,
+  } = useQuery({
+    queryKey: ["adminProduct", selectedProductId],
+    queryFn: () => getProduct(selectedProductId),
+    enabled: !!selectedProductId,
+  });
+
+  const createProductMutation = useMutation({
+    mutationFn: (product) => createProduct(product),
+    onMutate: (product) => {
+      const tempId = `temp-${Date.now()}`;
+      toast({
+        title: "Creating Product",
+        description: "We are creating your product.",
+      });
+      setProducts((prev) => [
+        {
+          id: tempId,
+          name: product.title || "Untitled Product",
+          itemId: "Pending",
+          brand: product.brand || "None",
+          category: fromDialogCategory(
+            product.category,
+            product.sourceCategoryName || "",
+          ),
+          price: product.price ? `$${product.price}` : "$0",
+          stock: Number(product.stock ?? 0),
+          status: product.isActive ? "Active" : "Draft",
+          image: product.mainImage?.url || "",
+          date: new Date().toISOString(),
+        },
+        ...prev,
+      ]);
+      return { tempId };
+    },
+    onError: (error, _product, context) => {
+      toast({
+        title: "Error creating product",
+        description: error.message,
+        variant: "destructive",
+      });
+      setProducts((prev) =>
+        prev.filter((product) => product.id !== context?.tempId),
+      );
+    },
+    onSuccess: (_data, product) => {
+      toast({
+        title: "Product created",
+        description: `"${product.title}" has been created.`,
+      });
+      setSelectedProductId(null);
+      setViewProduct(null);
+    },
+  });
+
+  const UpdateProductMutation = useMutation({
+    mutationFn: (product) => updateProduct(product.id, product),
+    onMutate: (product) => {
+      toast({
+        title: "Creating Product",
+        description: "We are creating your product.",
+      });
+      const originalProduct = products.find((p) => p.id === product.id);
+      setProducts((prev) =>
+        prev.map((currentProduct) =>
+          currentProduct.id === product.id
+            ? {
+                ...currentProduct,
+                name: product.title || currentProduct.name,
+                brand: product.brand || currentProduct.brand,
+                category: fromDialogCategory(
+                  product.category,
+                  product.sourceCategoryName || currentProduct.category,
+                ),
+                price: product.price
+                  ? `$${product.price}`
+                  : currentProduct.price,
+                stock: Number(product.stock ?? currentProduct.stock),
+                status: product.isActive ? "Active" : "Draft",
+                image:
+                  product.mainImage?.url ||
+                  product.image ||
+                  currentProduct.image,
+                date: new Date().toISOString(),
+              }
+            : currentProduct,
+        ),
+      );
+      return originalProduct;
+    },
+    onError: (error, _product, context) => {
+      toast({
+        title: "Error updating product",
+        description: error.message,
+        variant: "destructive",
+      });
+      setProducts((prev) =>
+        prev.map((currentProduct) =>
+          currentProduct.id === context?.id ? context : currentProduct,
+        ),
+      );
+    },
+    onSuccess: (_data, product) => {
+      toast({
+        title: "Product updated",
+        description: `"${product.name}" has been saved.`,
+      });
+      setSelectedProductId(null);
+      setEditProduct(null);
+    },
+  });
+
+  const deleteProductMutation = useMutation({
+    mutationFn: (product) => deleteProduct(product.id),
+    onMutate: (product) => {
+      toast({
+        title: "Deleting Product",
+        description: "We are deleting your product.",
+      });
+      const removedProduct = products.find(
+        (currentProduct) => currentProduct.id === product.id,
+      );
+      setProducts((prev) =>
+        prev.filter((currentProduct) => currentProduct.id !== product.id),
+      );
+      return { removedProduct };
+    },
+    onError: (error, _product, context) => {
+      toast({
+        title: "Error deleting product",
+        description: error.message,
+        variant: "destructive",
+      });
+      if (context?.removedProduct) {
+        setProducts((prev) => [context.removedProduct, ...prev]);
+      }
+    },
+    onSuccess: (_data, product) => {
+      toast({
+        title: "Product deleted",
+        description: `"${product.name}" has been removed.`,
+        variant: "destructive",
+      });
+    },
+  });
+
+  if (isLoading && !productsData) {
+    content = (
+      <AdminLayout>
+        <PageHeader
+          title="Products"
+          description="Loading your latest store products."
+          breadcrumbs={[{ label: "Products" }]}
+        />
+        <Loading message="Loading Products" fullPage />
+      </AdminLayout>
+    );
+  }
+
+  if (error || isError) {
+    content = (
+      <AdminLayout>
+        <PageHeader
+          title="Products"
+          description="We could not load your store Products right now."
+          breadcrumbs={[{ label: "Products" }]}
+        />
+        <div className="rounded-2xl border border-destructive/20 bg-destructive/5 p-6 text-destructive">
+          <p className="font-semibold">Failed to load dashboard data.</p>
+          <p className="mt-2 text-sm">{error.message}</p>
+        </div>
+      </AdminLayout>
+    );
+  }
+
+  const closeProductFlow = () => {
+    setViewProduct(null);
+    setEditProduct(null);
+    setPendingDialogMode(null);
+    setSelectedProductId(null);
   };
 
-  const handleSaveEdit = () => {
-    if (!editProduct) return;
-    setProducts((prev) =>
-      prev.map((p) =>
-        p.id === editProduct.id
-          ? { ...p, name: editForm.name, category: editForm.category, price: `$${editForm.price}`, stock: editForm.stock, status: editForm.status, description: editForm.description }
-          : p
-      )
-    );
-    setEditProduct(null);
-    toast({ title: "Product updated", description: `"${editForm.name}" has been saved.` });
+  const openEdit = (p) => {
+    setSelectedProductId(p.id);
+    setPendingDialogMode("edit");
+  };
+
+  const openView = (p) => {
+    setSelectedProductId(p.id);
+    setPendingDialogMode("view");
   };
 
   const handleDelete = () => {
-    if (!deleteProduct) return;
-    setProducts((prev) => prev.filter((p) => p.id !== deleteProduct.id));
-    toast({ title: "Product deleted", description: `"${deleteProduct.name}" has been removed.`, variant: "destructive" });
-    setDeleteProduct(null);
+    if (!productToDelete) return;
+    deleteProductMutation.mutate(productToDelete);
+    setProductToDelete(null);
   };
+
+  const onPageChange = (page) => {
+    updateUrlQuery({ page });
+    setCurrentPage(page);
+  };
+
+  useEffect(() => {
+    const timeOut = setTimeout(() => {
+      setSearchTerm(searchInput);
+    }, 500);
+    return () => {
+      clearTimeout(timeOut);
+    };
+  }, [searchInput]);
+
+  useEffect(() => {
+    console.log(selectedCategory, selectedStatus, searchTerm);
+    updateUrlQuery({
+      category: selectedCategory,
+      status: selectedStatus,
+      search: searchTerm,
+    });
+  }, [selectedCategory, selectedStatus, searchTerm]);
+
+  useEffect(() => {
+    if (productsData?.products) {
+      setProducts(productsData.products);
+    }
+  }, [productsData]);
+
+  useEffect(() => {
+    if (!targetedProduct || !pendingDialogMode) return;
+
+    if (pendingDialogMode === "view") {
+      setViewProduct(targetedProduct);
+    }
+
+    if (pendingDialogMode === "edit") {
+      setEditProduct(targetedProduct);
+    }
+
+    setPendingDialogMode(null);
+  }, [targetedProduct, pendingDialogMode]);
 
   const columns = [
     {
-      key: "name", header: "Product",
+      key: "name",
+      header: "Product",
       render: (item) => (
         <div className="flex items-center gap-3">
-          <span className="text-2xl">{item.image}</span>
+          <img
+            className="text-2xl h-10 w-10"
+            src={item.image}
+            alt="Product Image"
+          />
           <div>
-            <p className="font-medium text-foreground">{item.name}</p>
-            <p className="text-xs text-muted-foreground">{item.sku}</p>
+            <p className="font-medium text-foreground">
+              {shortenText(item.name, 25)}
+            </p>
+            <div>
+              <p className="text-xs text-muted-foreground">{item.itemId}</p>
+              <p className="text-xs text-muted-foreground">
+                {item.brand && item.brand !== "None" ? `${item.brand}` : ""}
+              </p>
+            </div>
           </div>
         </div>
       ),
     },
-    { key: "category", header: "Category" },
-    { key: "price", header: "Price", render: (item) => <span className="font-semibold">{item.price}</span> },
     {
-      key: "stock", header: "Stock",
+      key: "category",
+      header: "Category",
       render: (item) => (
-        <StatusBadge status={item.stock === 0 ? "danger" : item.stock < 10 ? "warning" : "success"}>
+        <span className="font-semibold flex justify-start">
+          {item.category}
+        </span>
+      ),
+    },
+    {
+      key: "price",
+      header: "Price",
+      render: (item) => <span className="font-semibold">{item.price}</span>,
+    },
+    {
+      key: "stock",
+      header: "Stock",
+      render: (item) => (
+        <StatusBadge
+          status={
+            item.stock === 0
+              ? "danger"
+              : item.stock < 10
+              ? "warning"
+              : "success"
+          }
+        >
           {item.stock === 0 ? "Out of stock" : `${item.stock} units`}
         </StatusBadge>
       ),
     },
     {
-      key: "status", header: "Status",
+      key: "status",
+      header: "Status",
       render: (item) => (
-        <StatusBadge status={item.status === "Active" ? "success" : "pending"}>{item.status}</StatusBadge>
+        <StatusBadge status={item.status === "Active" ? "success" : "pending"}>
+          {item.status}
+        </StatusBadge>
       ),
     },
-    { key: "date", header: "Created" },
     {
-      key: "actions", header: "",
+      key: "date",
+      header: "Created",
+      render: (item) => (
+        <span className="font-semibold">{formatTime(item.date)}</span>
+      ),
+    },
+    {
+      key: "actions",
+      header: "",
       render: (item) => (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <AdminButton variant="ghost" size="icon" className="h-8 w-8"><MoreHorizontal className="h-4 w-4" /></AdminButton>
+            <AdminButton variant="ghost" size="icon" className="h-8 w-8">
+              <Icon name="moreHorizontal" className="h-4 w-4" />
+            </AdminButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => setViewProduct(item)}>
-              <Eye className="h-4 w-4 mr-2" />View
+            <DropdownMenuItem onClick={() => openView(item)}>
+              <Icon name="eye" className="h-4 w-4 mr-2" />
+              View
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => openEdit(item)}>
-              <Edit className="h-4 w-4 mr-2" />Edit
+              <Icon name="edit" className="h-4 w-4 mr-2" />
+              Edit
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive" onClick={() => setDeleteProduct(item)}>
-              <Trash2 className="h-4 w-4 mr-2" />Delete
+            <DropdownMenuItem
+              className="text-destructive"
+              onClick={() => setProductToDelete(item)}
+            >
+              <Icon name="trash2" className="h-4 w-4 mr-2" />
+              Delete
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -119,216 +516,241 @@ export default function AdminProductsPage() {
     },
   ];
 
-  return (
-    <AdminLayout>
-      <PageHeader
-        title="Products"
-        description="Manage your product catalog"
-        breadcrumbs={[{ label: "Dashboard", href: "/" }, { label: "Products" }]}
-        actions={
-          <Dialog open={showForm} onOpenChange={setShowForm}>
-            <DialogTrigger asChild>
-              <AdminButton><Plus className="h-4 w-4 mr-2" />Add Product</AdminButton>
-            </DialogTrigger>
-            <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>Add New Product</DialogTitle>
-                <DialogDescription>Fill in the product details below.</DialogDescription>
-              </DialogHeader>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
-                <div className="space-y-2"><Label>Product Name</Label><InputField placeholder="e.g. Smart Watch Pro" /></div>
-                <div className="space-y-2"><Label>Slug</Label><InputField placeholder="smart-watch-pro" /></div>
-                <div className="space-y-2">
-                  <Label>Category</Label>
-                  <Select><SelectTrigger><SelectValue placeholder="Select category" /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="tablets">Tablets</SelectItem>
-                      <SelectItem value="monitors">Monitors</SelectItem>
-                      <SelectItem value="wearables">Wearables</SelectItem>
-                      <SelectItem value="audio">Audio</SelectItem>
-                      <SelectItem value="storage">Storage</SelectItem>
-                      <SelectItem value="accessories">Accessories</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2"><Label>SKU</Label><InputField placeholder="SKU-0001" /></div>
-                <div className="space-y-2"><Label>Price</Label><InputField type="number" placeholder="0.00" /></div>
-                <div className="space-y-2"><Label>Discount Price</Label><InputField type="number" placeholder="0.00" /></div>
-                <div className="space-y-2"><Label>Stock Quantity</Label><InputField type="number" placeholder="0" /></div>
-                <div className="space-y-2 flex items-end gap-3">
-                  <div className="flex items-center gap-2"><Switch id="active" /><Label htmlFor="active">Active</Label></div>
-                </div>
-                <div className="col-span-full space-y-2"><Label>Short Description</Label><InputField placeholder="Brief product description" /></div>
-                <div className="col-span-full space-y-2"><Label>Full Description</Label><Textarea placeholder="Detailed product description..." rows={4} /></div>
-                <div className="col-span-full space-y-2">
-                  <Label>Product Images</Label>
-                  <div className="border-2 border-dashed rounded-lg p-8 text-center text-muted-foreground">
-                    <p className="text-sm">Drag & drop images here, or click to browse</p>
-                    <p className="text-xs mt-1">PNG, JPG up to 5MB</p>
-                  </div>
-                </div>
-              </div>
-              <DialogFooter>
-                <AdminButton variant="outline" onClick={() => setShowForm(false)}>Cancel</AdminButton>
-                <AdminButton onClick={() => setShowForm(false)}>Save Product</AdminButton>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        }
-      />
-
-      <div className="flex flex-col sm:flex-row gap-3 mb-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <InputField placeholder="Search products..." className="pl-9" />
+  if (productsData) {
+    const { pagination } = productsData;
+    content = (
+      <AdminLayout>
+        {/* Page Header and add button section */}
+        <PageHeader
+          title="Products"
+          description="Manage your product catalog"
+          breadcrumbs={[
+            { label: "Dashboard", href: "/profile/admin/dashboard" },
+            { label: "Products" },
+          ]}
+          actions={
+            <ProductDialog
+              trigger={
+                <AdminButton>
+                  <Icon name="plus" className="h-4 w-4 mr-2 text-white" />
+                  Add Product
+                </AdminButton>
+              }
+              onSubmit={(productData, mode) => {
+                if (mode === "create") {
+                  createProductMutation.mutate(productData);
+                }
+                if (mode === "draft") {
+                  createProductMutation.mutate({
+                    ...productData,
+                    isActive: false,
+                  });
+                }
+              }}
+            />
+          }
+        />
+        {/* Search && Filters section */}
+        <div className="flex flex-col sm:flex-row gap-3 mb-4">
+          <div className="flex-1">
+            <Icon
+              name="search"
+              className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+            />
+            <InputField
+              placeholder="Search products..."
+              className="pl-9"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+            />
+          </div>
+          {isQueryChangedFromDefault(MainQuery) && (
+            <AdminButton
+              onClick={() => {
+                resetUrlQuery(defaultQuery);
+                setSearchInput("");
+                setSearchTerm("");
+                setSelectedCategory("all");
+                setSelectedStatus("all");
+              }}
+              variant="ghost"
+              className="w-full sm:w-auto"
+            >
+              Clear Filters
+            </AdminButton>
+          )}
+          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <SelectTrigger className="w-full sm:w-[160px] h-auto ">
+              <SelectValue placeholder="Category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Categories</SelectItem>
+              <SelectItem value="tablets">Tablets</SelectItem>
+              <SelectItem value="monitors">Monitors</SelectItem>
+              <SelectItem value="Smartphones">Smart phones</SelectItem>
+              <SelectItem value="Headphones">Headphones</SelectItem>
+              <SelectItem value="Smart Home">Smart Home</SelectItem>
+              <SelectItem value="Cameras">Cameras</SelectItem>
+              <SelectItem value="Laptops">Laptops</SelectItem>
+              <SelectItem value="Smart Watches">Smart Watches</SelectItem>
+              <SelectItem value="Computer Accessories">
+                Computer Accessories
+              </SelectItem>
+              <SelectItem value="Gaming Accessories">
+                Gaming Accessories
+              </SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+            <SelectTrigger className="w-full sm:w-[140px] h-auto ">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Status</SelectItem>
+              <SelectItem value="active">Active</SelectItem>
+              <SelectItem value="draft">Draft</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
-        <Select><SelectTrigger className="w-full sm:w-[160px]"><SelectValue placeholder="Category" /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Categories</SelectItem>
-            <SelectItem value="tablets">Tablets</SelectItem>
-            <SelectItem value="monitors">Monitors</SelectItem>
-            <SelectItem value="wearables">Wearables</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select><SelectTrigger className="w-full sm:w-[140px]"><SelectValue placeholder="Status" /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Status</SelectItem>
-            <SelectItem value="active">Active</SelectItem>
-            <SelectItem value="draft">Draft</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+        {/* Products table */}
+        <div className="relative">
+          <div
+            className={`transition-opacity duration-200 ${
+              isFetching ? "opacity-50 pointer-events-none" : "opacity-100"
+            }`}
+          >
+            <DataTable
+              columns={columns}
+              data={products}
+              page={currentPage}
+              totalPages={pagination.totalPages}
+              onPageChange={onPageChange}
+            />
+          </div>
 
-      <DataTable columns={columns} data={products} page={1} totalPages={3} />
-
-      {/* View Product Dialog */}
-      <Dialog open={!!viewProduct} onOpenChange={(open) => !open && setViewProduct(null)}>
-        <DialogContent className="max-w-lg">
-          <DialogHeader>
-            <DialogTitle>Product Details</DialogTitle>
-            <DialogDescription>View product information.</DialogDescription>
-          </DialogHeader>
-          {viewProduct && (
-            <div className="space-y-4 py-2">
-              <div className="flex items-center gap-4">
-                <span className="text-5xl">{viewProduct.image}</span>
-                <div>
-                  <h3 className="text-lg font-semibold text-foreground">{viewProduct.name}</h3>
-                  <p className="text-sm text-muted-foreground">{viewProduct.sku}</p>
-                </div>
-              </div>
-              <Separator />
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <p className="text-muted-foreground">Category</p>
-                  <p className="font-medium text-foreground">{viewProduct.category}</p>
-                </div>
-                <div>
-                  <p className="text-muted-foreground">Price</p>
-                  <p className="font-medium text-foreground">{viewProduct.price}</p>
-                </div>
-                <div>
-                  <p className="text-muted-foreground">Stock</p>
-                  <StatusBadge status={viewProduct.stock === 0 ? "danger" : viewProduct.stock < 10 ? "warning" : "success"}>
-                    {viewProduct.stock === 0 ? "Out of stock" : `${viewProduct.stock} units`}
-                  </StatusBadge>
-                </div>
-                <div>
-                  <p className="text-muted-foreground">Status</p>
-                  <StatusBadge status={viewProduct.status === "Active" ? "success" : "pending"}>{viewProduct.status}</StatusBadge>
-                </div>
-                <div>
-                  <p className="text-muted-foreground">Created</p>
-                  <p className="font-medium text-foreground">{viewProduct.date}</p>
-                </div>
-              </div>
-              <Separator />
-              <div>
-                <p className="text-sm text-muted-foreground mb-1">Description</p>
-                <p className="text-sm text-foreground">{viewProduct.description}</p>
+          {isFetching && (
+            <div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-white/35 backdrop-blur-[1px]">
+              <div
+                className="relative flex h-12 w-12 items-center justify-center"
+                role="status"
+                aria-live="polite"
+                aria-label="Refreshing products"
+              >
+                <div className="absolute h-full w-full rounded-full border-4 border-orange-100" />
+                <div className="absolute h-full w-full animate-spin rounded-full border-4 border-transparent border-t-orange-500 border-r-orange-400" />
+                <div className="h-6 w-6 rounded-full bg-orange-500/10 shadow-inner" />
               </div>
             </div>
           )}
-          <DialogFooter>
-            <AdminButton variant="outline" onClick={() => setViewProduct(null)}>Close</AdminButton>
-            <AdminButton onClick={() => { if (viewProduct) { openEdit(viewProduct); setViewProduct(null); } }}>
-              <Edit className="h-4 w-4 mr-2" />Edit Product
-            </AdminButton>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        </div>
 
-      {/* Edit Product Dialog */}
-      <Dialog open={!!editProduct} onOpenChange={(open) => !open && setEditProduct(null)}>
-        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Edit Product</DialogTitle>
-            <DialogDescription>Update the product details.</DialogDescription>
-          </DialogHeader>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
-            <div className="space-y-2">
-              <Label>Product Name</Label>
-              <InputField value={editForm.name} onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} />
-            </div>
-            <div className="space-y-2">
-              <Label>Category</Label>
-              <Select value={editForm.category.toLowerCase()} onValueChange={(v) => setEditForm({ ...editForm, category: v.charAt(0).toUpperCase() + v.slice(1) })}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="tablets">Tablets</SelectItem>
-                  <SelectItem value="monitors">Monitors</SelectItem>
-                  <SelectItem value="wearables">Wearables</SelectItem>
-                  <SelectItem value="audio">Audio</SelectItem>
-                  <SelectItem value="storage">Storage</SelectItem>
-                  <SelectItem value="accessories">Accessories</SelectItem>
-                  <SelectItem value="peripherals">Peripherals</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label>Price ($)</Label>
-              <InputField type="number" value={editForm.price} onChange={(e) => setEditForm({ ...editForm, price: e.target.value })} />
-            </div>
-            <div className="space-y-2">
-              <Label>Stock Quantity</Label>
-              <InputField type="number" value={editForm.stock} onChange={(e) => setEditForm({ ...editForm, stock: Number(e.target.value) })} />
-            </div>
-            <div className="space-y-2 flex items-end gap-3">
-              <div className="flex items-center gap-2">
-                <Switch checked={editForm.status === "Active"} onCheckedChange={(c) => setEditForm({ ...editForm, status: c ? "Active" : "Draft" })} />
-                <Label>{editForm.status}</Label>
+        <Dialog
+          open={
+            !!pendingDialogMode &&
+            (targetedProductLoading || targetedProductFetching)
+          }
+          onOpenChange={(open) => !open && closeProductFlow()}
+        >
+          <DialogContent className="max-w-sm">
+            <DialogHeader>
+              <DialogTitle>Loading product</DialogTitle>
+              <DialogDescription>
+                We are fetching the full product details before opening the
+                product dialog.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex items-center justify-center py-6">
+              <div
+                className="relative flex h-12 w-12 items-center justify-center"
+                role="status"
+                aria-live="polite"
+                aria-label="Loading product details"
+              >
+                <div className="absolute h-full w-full rounded-full border-4 border-orange-100" />
+                <div className="absolute h-full w-full animate-spin rounded-full border-4 border-transparent border-t-orange-500 border-r-orange-400" />
+                <div className="h-6 w-6 rounded-full bg-orange-500/10 shadow-inner" />
               </div>
             </div>
-            <div />
-            <div className="col-span-full space-y-2">
-              <Label>Description</Label>
-              <Textarea value={editForm.description} onChange={(e) => setEditForm({ ...editForm, description: e.target.value })} rows={4} />
-            </div>
-          </div>
-          <DialogFooter>
-            <AdminButton variant="outline" onClick={() => setEditProduct(null)}>Cancel</AdminButton>
-            <AdminButton onClick={handleSaveEdit}>Save Changes</AdminButton>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </DialogContent>
+        </Dialog>
 
-      {/* Delete Confirmation */}
-      <AlertDialog open={!!deleteProduct} onOpenChange={(open) => !open && setDeleteProduct(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete "{deleteProduct?.name}"?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This will permanently remove this product from your catalog. This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={handleDelete}>
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </AdminLayout>
-  );
+        <Dialog
+          open={!!pendingDialogMode && targetedProductError}
+          onOpenChange={(open) => !open && closeProductFlow()}
+        >
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Failed to load product</DialogTitle>
+              <DialogDescription>
+                {targetedProductErrorData?.message ||
+                  "Something went wrong while loading this product."}
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <AdminButton variant="ghost" onClick={closeProductFlow}>
+                Close
+              </AdminButton>
+              <AdminButton onClick={() => refetchTargetedProduct()}>
+                Try Again
+              </AdminButton>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Dialog of view product */}
+        <ProductDialog
+          mode="view"
+          open={!!viewProduct}
+          onOpenChange={(open) => !open && closeProductFlow()}
+          initialData={toDialogProductData(viewProduct)}
+          onEditFromView={() => {
+            if (viewProduct) {
+              setViewProduct(null);
+              setEditProduct(viewProduct);
+            }
+          }}
+        />
+
+        {/* Dialog of edit product */}
+        <ProductDialog
+          mode="edit"
+          open={!!editProduct}
+          onOpenChange={(open) => !open && closeProductFlow()}
+          initialData={toDialogProductData(editProduct)}
+          onSubmit={(data, mode) => {
+            UpdateProductMutation.mutate(data);
+          }}
+        />
+
+        {/* Delete Confirmation */}
+        <AlertDialog
+          open={!!productToDelete}
+          onOpenChange={(open) => !open && setProductToDelete(null)}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Delete "{productToDelete?.name}"?
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                This will permanently remove this product from your catalog.
+                This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                onClick={handleDelete}
+              >
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </AdminLayout>
+    );
+  }
+
+  return <>{content}</>;
 }

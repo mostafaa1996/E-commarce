@@ -9,9 +9,19 @@ import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 export function formatTime(t){
-  let date = new Date(t);
-  // 2026-03-12T16:54:55.139Z -> 2026-03-12
-  return date.toLocaleDateString('en-US') === "Invalid Date" ? "" : date.toLocaleDateString('en-US');
+  const date = new Date(t);
+
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  return new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(date);
 }
 
 export function cn(...inputs) {
