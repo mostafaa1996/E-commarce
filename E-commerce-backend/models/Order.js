@@ -32,7 +32,7 @@ const OrderSchema = new mongoose.Schema(
         "shipped",
         "returned",
       ],
-      default: "pending_payment",
+      default: "pending",
     },
     paymentStatus: {
       type: String,
