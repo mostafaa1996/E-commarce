@@ -24,6 +24,7 @@ const adminDashboardRoute = require("./routes/adminDashboard");
 const adminProductsRoute = require("./routes/adminProducts");
 const adminCategoriesRoute = require("./routes/adminCategories");
 const adminOrdersRoute = require("./routes/adminOrders");
+const adminCustomersRoute = require("./routes/adminCustomers");
 
 const app = express();
 app.use("/api", stripeWebhookRoute);
@@ -55,6 +56,7 @@ app.use("/admin/dashboard", adminDashboardRoute );
 app.use("/admin/products", adminProductsRoute);
 app.use("/admin/categories", adminCategoriesRoute);
 app.use("/admin/orders", adminOrdersRoute);
+app.use("/admin/customers", adminCustomersRoute);
 
 app.use((error, req, res, next) => {
   console.log(error);
