@@ -34,13 +34,13 @@ const UserSchema = new mongoose.Schema({
     Bio: String,
     avatar: {
       url: String,
-      publicId : String,
+      publicId: String,
     },
-    createdAt : {
+    createdAt: {
       type: Date,
       default: Date.now,
     },
-    updatedAt : {
+    updatedAt: {
       type: Date,
       default: Date.now,
     },
@@ -76,11 +76,13 @@ const UserSchema = new mongoose.Schema({
     },
   ],
 
-  Addresses : [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Address",
-    default: [],
-  }],
+  Addresses: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Address",
+      default: [],
+    },
+  ],
 
   reviews: [
     {
@@ -90,13 +92,21 @@ const UserSchema = new mongoose.Schema({
     },
   ],
 
-  stripeCustomerId: { type: String , default: null },
+  stripeCustomerId: { type: String, default: null },
 
   resetPasswordToken: String,
   resetPasswordExpires: Date,
 
   emailVerified: { type: Boolean, default: false },
   emailVerificationToken: String,
+  status: {
+    type: String,
+    enum: ["active", "inactive", "blocked"],
+    default: "active",
+  },
+  totalOrders: { type: Number, default: 0 },
+  totalSpent: { type: Number, default: 0 },
+  
 });
 
 module.exports = mongoose.model("User", UserSchema);
