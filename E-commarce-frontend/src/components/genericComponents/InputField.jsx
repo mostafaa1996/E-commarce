@@ -1,9 +1,15 @@
 import clsx from "clsx";
-export default function InputField({label, placeholder, type = "text" , className , ...props}){
+import { forwardRef } from "react";
+
+const InputField = forwardRef(function InputField(
+  { label, placeholder, type = "text", className, ...props },
+  ref
+) {
   return (
     <div className="flex flex-col">
       {label && <label className="text-sm text-zinc-500">{label}</label>}
       <input
+        ref={ref}
         type={type}
         placeholder={placeholder}
         className={clsx(`
@@ -18,9 +24,11 @@ export default function InputField({label, placeholder, type = "text" , classNam
           placeholder:text-zinc-400
           focus:outline-none
           focus:border-[#FF6543]
-        ` , className)}
+        `, className)}
         {...props}
       />
     </div>
   );
-}
+});
+
+export default InputField;
