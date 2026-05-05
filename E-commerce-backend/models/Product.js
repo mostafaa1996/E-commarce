@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const variantSchema = new mongoose.Schema(
   {
-    sku: { type: String, required: true, unique: true},
+    sku: { type: String, required: true, unique: true },
 
     attributes: {
       color: {
@@ -20,7 +20,13 @@ const variantSchema = new mongoose.Schema(
 
     stock: { type: Number, required: true },
     lowStockThreshold: { type: Number, default: 5 },
-    availabilityStatus: { type: String, default: "IN_STOCK" },
+    criticalStockThreshold: { type: Number, default: 3 },
+    availabilityStatus: {
+      type: String,
+      default: "IN_STOCK",
+      enum: ["IN_STOCK", "OUT_OF_STOCK", "LOW_STOCK", "CRITICAL_STOCK"],
+    },
+    updatedAt: { type: Date, default: new Date(Date.now()) },
 
     images: [
       {
@@ -146,6 +152,12 @@ const productSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
+productSchema.pre("validate", function () {
+  if (!this.defaultVariantId && Array.isArray(this.variants) && this.variants.length > 0) {
+    this.defaultVariantId = this.variants[0]._id;
+  }
+});
+
 // Indexes (critical)
 productSchema.index({ slug: 1 });
 productSchema.index({ category: 1 });
@@ -156,4 +168,3 @@ productSchema.index({ "pricing.minPrice": 1, "pricing.maxPrice": 1 });
 const Product = mongoose.model("Product", productSchema);
 
 module.exports = Product;
-

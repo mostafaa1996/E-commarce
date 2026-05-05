@@ -20,7 +20,9 @@ const variantSchema = new mongoose.Schema(
 
     stock: { type: Number, required: true },
     lowStockThreshold: { type: Number, default: 5 },
+    criticalStockThreshold: { type: Number, default: 3 },
     availabilityStatus: { type: String, default: "IN_STOCK" },
+    updatedAt: { type: Date, default: Date.now },
 
     images: [
       {
