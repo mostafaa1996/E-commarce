@@ -26,6 +26,7 @@ const adminCategoriesRoute = require("./routes/adminCategories");
 const adminOrdersRoute = require("./routes/adminOrders");
 const adminCustomersRoute = require("./routes/adminCustomers");
 const adminInventoryRoute = require("./routes/adminInventory");
+const adminCouponsDiscountRoute = require("./routes/adminCouponsDiscount");
 
 const app = express();
 app.use("/api", stripeWebhookRoute);
@@ -59,6 +60,7 @@ app.use("/admin/categories", adminCategoriesRoute);
 app.use("/admin/orders", adminOrdersRoute);
 app.use("/admin/customers", adminCustomersRoute);
 app.use("/admin/inventory", adminInventoryRoute);
+app.use("/admin/coupons-discounts", adminCouponsDiscountRoute);
 
 app.use((error, req, res, next) => {
   console.log(error);

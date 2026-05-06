@@ -38,7 +38,7 @@ const categorySchema = new mongoose.Schema({
 }, { timestamps: true });
 
 
-// 🔥 Indexes
+// Indexes
 categorySchema.index({ parent: 1 });
 categorySchema.index({ ancestors: 1 });
 
