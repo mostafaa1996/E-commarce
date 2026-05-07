@@ -27,6 +27,7 @@ const adminOrdersRoute = require("./routes/adminOrders");
 const adminCustomersRoute = require("./routes/adminCustomers");
 const adminInventoryRoute = require("./routes/adminInventory");
 const adminCouponsDiscountRoute = require("./routes/adminCouponsDiscount");
+const adminReviewsRoute = require("./routes/adminReviews");
 
 const app = express();
 app.use("/api", stripeWebhookRoute);
