@@ -48,6 +48,7 @@ import {
   PoundSterling,
   Euro,
   Trash2,
+  X,
 } from "lucide-react";
 
 export const iconMap = {
@@ -101,4 +102,5 @@ export const iconMap = {
   poundSterling: PoundSterling,
   euro: Euro,
   trash2: Trash2,
+  x: X,
 };
