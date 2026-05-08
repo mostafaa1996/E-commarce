@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const { Coupon, Discount } = require("../models/Coupons");
 const Product = require("../models/Product");
+const createActivityLog = require("../utils/CreateActivityLogs");
 
 const COUPON_TYPES = ["PERCENTAGE", "FIXED", "FREE_SHIPPING"];
 const DISCOUNT_TYPES = ["PERCENTAGE", "FIXED"];
@@ -254,6 +255,7 @@ async function restoreVariantPriceFromDiscount(discount) {
 }
 
 exports.createCouponForCustomer = async (req, res, next) => {
+  let coupon;
   try {
     if (!ensureAdmin(req, res)) {
       return;
@@ -314,7 +316,7 @@ exports.createCouponForCustomer = async (req, res, next) => {
       return res.status(409).json({ message: "Coupon code already exists." });
     }
 
-    const coupon = await Coupon.create({
+    coupon = await Coupon.create({
       code,
       type,
       value,
@@ -335,10 +337,25 @@ exports.createCouponForCustomer = async (req, res, next) => {
     });
   } catch (err) {
     next(err);
+  }finally {
+    if (coupon) {
+      createActivityLog({
+        type: "COUPON_CREATED",
+        title: `Coupon created`,
+        message: `Created a new coupon with code ${coupon.code}`,
+      }); 
+    }else{
+      createActivityLog({
+        type: "COUPON_CREATED",
+        title: `Coupon creation failed`,
+        message: `Failed to create a new coupon`,
+      }); 
+    }
   }
 };
 
 exports.createDiscountForProduct = async (req, res, next) => {
+  let result;
   try {
     if (!ensureAdmin(req, res)) {
       return;
@@ -378,7 +395,7 @@ exports.createDiscountForProduct = async (req, res, next) => {
         .json({ message: "A valid expireDate is required." });
     }
 
-    const result = await syncDiscountedVariant({
+    result = await syncDiscountedVariant({
       productId,
       variantId,
       type,
@@ -399,10 +416,25 @@ exports.createDiscountForProduct = async (req, res, next) => {
     });
   } catch (err) {
     next(err);
+  }finally {
+    if (result.discount) {
+      createActivityLog({
+        type: "DISCOUNT_CREATED",
+        title: `Discount created`,
+        message: `Created a new discount with title ${result.discount.title}`,
+      }); 
+    }else{
+      createActivityLog({
+        type: "DISCOUNT_CREATED",
+        title: `Discount creation `,
+        message: `Failed to create a new discount`,
+      }); 
+    }
   }
 };
 
 exports.deleteCouponForCustomer = async (req, res, next) => {
+  let deletedCoupon;
   try {
     if (!ensureAdmin(req, res)) {
       return;
@@ -412,7 +444,7 @@ exports.deleteCouponForCustomer = async (req, res, next) => {
       return res.status(400).json({ message: "Invalid coupon id." });
     }
 
-    const deletedCoupon = await Coupon.findByIdAndDelete(req.params.id);
+    deletedCoupon = await Coupon.findByIdAndDelete(req.params.id);
 
     if (!deletedCoupon) {
       return res.status(404).json({ message: "Coupon not found." });
@@ -424,10 +456,25 @@ exports.deleteCouponForCustomer = async (req, res, next) => {
     });
   } catch (err) {
     next(err);
+  }finally {
+    if (deletedCoupon) {
+      createActivityLog({
+        type: "COUPON_DELETED",
+        title: `Coupon deleted`,
+        message: `Deleted a coupon with code ${coupon.code}`,
+      }); 
+    }else{
+      createActivityLog({
+        type: "COUPON_DELETED",
+        title: `Coupon deletion`,
+        message: `Failed to delete a coupon`,
+      }); 
+    }
   }
 };
 
 exports.deleteDiscountForProduct = async (req, res, next) => {
+  let discount;
   try {
     if (!ensureAdmin(req, res)) {
       return;
@@ -437,7 +484,7 @@ exports.deleteDiscountForProduct = async (req, res, next) => {
       return res.status(400).json({ message: "Invalid discount id." });
     }
 
-    const discount = await Discount.findById(req.params.id);
+    discount = await Discount.findById(req.params.id);
 
     if (!discount) {
       return res.status(404).json({ message: "Discount not found." });
@@ -452,10 +499,25 @@ exports.deleteDiscountForProduct = async (req, res, next) => {
     });
   } catch (err) {
     next(err);
+  }finally {
+    if (discount) {
+      createActivityLog({
+        type: "DISCOUNT_DELETED",
+        title: `Discount deletion`,
+        message: `Deleted a discount with code ${discount.code}`,
+      }); 
+    }else{
+      createActivityLog({
+        type: "DISCOUNT_DELETED",
+        title: `Discount deletion`,
+        message: `Failed to delete a discount`,
+      }); 
+    }
   }
 };
 
 exports.updateCouponForCustomer = async (req, res, next) => {
+  let coupon;
   try {
     if (!ensureAdmin(req, res)) {
       return;
@@ -465,7 +527,7 @@ exports.updateCouponForCustomer = async (req, res, next) => {
       return res.status(400).json({ message: "Invalid coupon id." });
     }
 
-    const coupon = await Coupon.findById(req.params.id);
+    coupon = await Coupon.findById(req.params.id);
 
     if (!coupon) {
       return res.status(404).json({ message: "Coupon not found." });
@@ -586,10 +648,25 @@ exports.updateCouponForCustomer = async (req, res, next) => {
     });
   } catch (err) {
     next(err);
+  }finally {
+    if (coupon) {
+      createActivityLog({
+        type: "COUPON_UPDATED",
+        title: `Coupon update`,
+        message: `Updated a coupon with code ${coupon.code}`,
+      }); 
+    }else{
+      createActivityLog({
+        type: "COUPON_UPDATED",
+        title: `Coupon update`,
+        message: `Failed to update a coupon`,
+      }); 
+    }
   }
 };
 
 exports.updateDiscountForProduct = async (req, res, next) => {
+  let result;
   try {
     if (!ensureAdmin(req, res)) {
       return;
@@ -658,7 +735,7 @@ exports.updateDiscountForProduct = async (req, res, next) => {
       await restoreVariantPriceFromDiscount(discount);
     }
 
-    const result = await syncDiscountedVariant({
+    result = await syncDiscountedVariant({
       productId,
       variantId,
       type,
@@ -707,6 +784,20 @@ exports.updateDiscountForProduct = async (req, res, next) => {
     });
   } catch (err) {
     next(err);
+  }finally {
+    if (result.discount) {
+      createActivityLog({
+        type: "DISCOUNT_UPDATED",
+        title: `Discount update`,
+        message: `discount updated for product ${discount.title}`,
+      }); 
+    }else{
+      createActivityLog({
+        type: "DISCOUNT_UPDATED",
+        title: `Discount update`,
+        message: `Failed to update a discount`,
+      }); 
+    }
   }
 };
 

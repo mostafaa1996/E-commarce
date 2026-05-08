@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Order = require("../models/Order");
+const createActivityLog = require("../utils/CreateActivityLogs");
 
 function escapeRegex(value = "") {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -201,6 +202,7 @@ exports.getAdminOrders = async (req, res, next) => {
 };
 
 exports.updateOrderStatus = async (req, res, next) => {
+  let order;
   try {
     if (!req.user || req.user.role !== "admin") {
       return res.status(403).json({ message: "Access denied. Admins only." });
@@ -216,7 +218,7 @@ exports.updateOrderStatus = async (req, res, next) => {
       });
     }
 
-    const order = await Order.findByIdAndUpdate(
+    order = await Order.findByIdAndUpdate(
       req.params.id,
       { status },
       { new: true, runValidators: true },
@@ -232,5 +234,19 @@ exports.updateOrderStatus = async (req, res, next) => {
     });
   } catch (err) {
     next(err);
+  }finally {
+    if(order.status){
+      createActivityLog({
+        type: "ORDER_STATUS_CHANGED",
+        title: "Order Status Changed",
+        message: `Order status for order ${formatOrderId(order)} has been changed to ${order.status}.`,
+      });
+    }else{
+      createActivityLog({
+        type: "ORDER_STATUS_CHANGED",
+        title: "Order Status change",
+        message: `Order status failed to change`,
+      });
+    }
   }
 };

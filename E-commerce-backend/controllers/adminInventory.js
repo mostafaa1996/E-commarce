@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Product = require("../models/Product");
-
+const createActivityLog = require("../utils/CreateActivityLogs");
 function normalizePositiveNumber(value, fallback) {
   const parsed = Number(value);
 
@@ -19,7 +19,11 @@ function formatDate(date) {
   });
 }
 
-function normalizeInventoryStatus(stock, lowStockThreshold, criticalStockThreshold) {
+function normalizeInventoryStatus(
+  stock,
+  lowStockThreshold,
+  criticalStockThreshold,
+) {
   if (stock <= 0) {
     return "OUT_OF_STOCK";
   }
@@ -173,6 +177,7 @@ exports.getAdminInventory = async (req, res, next) => {
 };
 
 exports.updateInventory = async (req, res, next) => {
+  let product;
   try {
     if (!req.user || req.user.role !== "admin") {
       return res.status(403).json({ message: "Access denied. Admins only." });
@@ -205,18 +210,31 @@ exports.updateInventory = async (req, res, next) => {
     if (lowStockThreshold !== undefined && lowStockThreshold !== null) {
       const parsedLowStockThreshold = Number(lowStockThreshold);
 
-      if (!Number.isFinite(parsedLowStockThreshold) || parsedLowStockThreshold < 0) {
-        return res.status(400).json({ message: "Invalid lowStockThreshold value." });
+      if (
+        !Number.isFinite(parsedLowStockThreshold) ||
+        parsedLowStockThreshold < 0
+      ) {
+        return res
+          .status(400)
+          .json({ message: "Invalid lowStockThreshold value." });
       }
 
       updates.lowStockThreshold = parsedLowStockThreshold;
     }
 
-    if (criticalStockThreshold !== undefined && criticalStockThreshold !== null) {
+    if (
+      criticalStockThreshold !== undefined &&
+      criticalStockThreshold !== null
+    ) {
       const parsedCriticalStockThreshold = Number(criticalStockThreshold);
 
-      if (!Number.isFinite(parsedCriticalStockThreshold) || parsedCriticalStockThreshold < 0) {
-        return res.status(400).json({ message: "Invalid criticalStockThreshold value." });
+      if (
+        !Number.isFinite(parsedCriticalStockThreshold) ||
+        parsedCriticalStockThreshold < 0
+      ) {
+        return res
+          .status(400)
+          .json({ message: "Invalid criticalStockThreshold value." });
       }
 
       updates.criticalStockThreshold = parsedCriticalStockThreshold;
@@ -224,11 +242,12 @@ exports.updateInventory = async (req, res, next) => {
 
     if (!Object.keys(updates).length) {
       return res.status(400).json({
-        message: "At least one of stock, lowStockThreshold, or criticalStockThreshold is required.",
+        message:
+          "At least one of stock, lowStockThreshold, or criticalStockThreshold is required.",
       });
     }
 
-    const product = await Product.findById(productId);
+    product = await Product.findById(productId);
 
     if (!product) {
       return res.status(404).json({ message: "Product not found." });
@@ -240,7 +259,7 @@ exports.updateInventory = async (req, res, next) => {
       return res.status(404).json({ message: "Variant not found." });
     }
 
-    if (updates.stock !== undefined ) {
+    if (updates.stock !== undefined) {
       variant.stock = updates.stock;
     }
 
@@ -248,7 +267,7 @@ exports.updateInventory = async (req, res, next) => {
       variant.lowStockThreshold = updates.lowStockThreshold;
     }
 
-    if (updates.criticalStockThreshold !== undefined ) {
+    if (updates.criticalStockThreshold !== undefined) {
       variant.criticalStockThreshold = updates.criticalStockThreshold;
     }
 
@@ -281,5 +300,19 @@ exports.updateInventory = async (req, res, next) => {
     });
   } catch (err) {
     next(err);
+  } finally {
+    if (product.title) {
+      createActivityLog({
+        type: "PRODUCT_UPDATED",
+        title: "Product Inventory Updated",
+        message: `Updated stock of ${product.title}`,
+      });
+    }else{
+      createActivityLog({
+        type: "PRODUCT_UPDATED",
+        title: "Product Inventory Update",
+        message: `Failed to update stock of Product`,
+      });
+    }
   }
 };

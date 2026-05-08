@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const User = require("../models/User");
+const createActivityLog = require("../utils/CreateActivityLogs");
 
 function escapeRegex(value = "") {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -37,7 +38,9 @@ exports.getAdminCustomers = async (req, res, next) => {
     const status = String(req.query.status || "all")
       .trim()
       .toLowerCase();
-    const spent = String(req.query.spent || "").trim().toLowerCase();
+    const spent = String(req.query.spent || "")
+      .trim()
+      .toLowerCase();
 
     const matchStage = {
       role: "customer",
@@ -65,7 +68,9 @@ exports.getAdminCustomers = async (req, res, next) => {
 
     const totalCustomers = await User.countDocuments(matchStage);
     const customers = await User.find(matchStage)
-      .select("name email phone totalOrders totalSpent status PersonalInfo.createdAt")
+      .select(
+        "name email phone totalOrders totalSpent status PersonalInfo.createdAt",
+      )
       .sort(sortStage)
       .skip(skip)
       .limit(limit)
@@ -208,6 +213,7 @@ exports.getAdminCustomerDetails = async (req, res, next) => {
 };
 
 exports.updateAdminCustomerStatus = async (req, res, next) => {
+  let customer;
   try {
     if (!req.user || req.user.role !== "admin") {
       return res.status(403).json({ message: "Access denied. Admins only." });
@@ -223,7 +229,7 @@ exports.updateAdminCustomerStatus = async (req, res, next) => {
       });
     }
 
-    const customer = await User.findByIdAndUpdate(
+    customer = await User.findByIdAndUpdate(
       req.params.id,
       { status },
       { new: true, runValidators: true },
@@ -239,5 +245,27 @@ exports.updateAdminCustomerStatus = async (req, res, next) => {
     });
   } catch (err) {
     next(err);
+  } finally {
+    if (customer.status) {
+      if (customer.status === "blocked") {
+        createActivityLog({
+          type: "CUSTOMER_BLOCKED",
+          title: `Customer updated`,
+          message: `Customer ${customer.name} was blocked `,
+        });
+      } else {
+        createActivityLog({
+          type: "CUSTOMER_UNBLOCKED",
+          title: `Customer updated`,
+          message: `Customer ${customer.name} was unblocked `,
+        });
+      }
+    }else{
+      createActivityLog({
+        type: "CUSTOMER_STATUS_UPDATED",
+        title: `Customer status update`,
+        message: `Customer ${customer.name} status updated failed `,
+      });
+    }
   }
 };

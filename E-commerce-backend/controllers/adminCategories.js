@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Category = require("../models/Category");
 const cloudinary = require("../config/cloudinary");
+const createActivityLog = require("../utils/CreateActivityLogs");
 
 function slugify(value = "") {
   return String(value)
@@ -147,6 +148,7 @@ exports.getAdminCategories = async (req, res, next) => {
 };
 
 exports.addCategory = async (req, res, next) => {
+  let createdCategory;
   try {
     if (!req.user || req.user.role !== "admin") {
       return res.status(403).json({ message: "Access denied. Admins only." });
@@ -190,7 +192,7 @@ exports.addCategory = async (req, res, next) => {
       isActive: body.isActive !== undefined ? Boolean(body.isActive) : true,
     });
 
-    const createdCategory = await category.save();
+    createdCategory = await category.save();
 
     const icon = await normalizeImage(req , createdCategory._id , "Category Icon");
 
@@ -211,10 +213,26 @@ exports.addCategory = async (req, res, next) => {
     }
 
     next(err);
+  }finally {
+    if(createdCategory.name){
+      createActivityLog({
+      type: "Category_CREATED",
+      title: "Category Created",
+      message: `new category ${createdCategory.name} created`,
+    });
+    }
+    else{
+      createActivityLog({
+        type: "Category_CREATED",
+        title: "Category Creation",
+        message: `new category ${createdCategory.name} created failed`,
+      });
+    }
   }
 };
 
 exports.updateCategory = async (req, res, next) => {
+  let updatedCategory;
   try {
     if (!req.user || req.user.role !== "admin") {
       return res.status(403).json({ message: "Access denied. Admins only." });
@@ -280,7 +298,7 @@ exports.updateCategory = async (req, res, next) => {
     category.isActive =
       body.isActive !== undefined ? Boolean(body.isActive) : category.isActive;
 
-    const updatedCategory = await category.save();
+    updatedCategory = await category.save();
     await refreshDescendantAncestors(updatedCategory._id);
 
     const populatedCategory = await Category.findById(updatedCategory._id)
@@ -299,10 +317,26 @@ exports.updateCategory = async (req, res, next) => {
     }
 
     next(err);
+  }finally {
+    if(updatedCategory.name){
+    createActivityLog({
+      type: "Category_UPDATED",
+      title: "Category Updated",
+      message: `category ${updatedCategory.name} updated`,
+    });
+    }
+    else{
+      createActivityLog({
+        type: "Category_UPDATED",
+        title: "Category Update",
+        message: `category ${updatedCategory.name} updated failed`,
+      });
+    }
   }
 };
 
 exports.deleteCategory = async (req, res, next) => {
+  let category;
   try {
     if (!req.user || req.user.role !== "admin") {
       return res.status(403).json({ message: "Access denied. Admins only." });
@@ -312,7 +346,7 @@ exports.deleteCategory = async (req, res, next) => {
       return res.status(400).json({ message: "Invalid category id" });
     }
 
-    const category = await Category.findById(req.params.id)
+    category = await Category.findById(req.params.id)
       .select("_id attachedProducts")
       .lean();
 
@@ -343,5 +377,11 @@ exports.deleteCategory = async (req, res, next) => {
     });
   } catch (err) {
     next(err);
+  }finally {
+    createActivityLog({
+      type: "Category_DELETED",
+      title: "Category Deleted",
+      message: `category ${category.name} deleted`,
+    });
   }
 };

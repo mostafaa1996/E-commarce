@@ -2,6 +2,7 @@ const { on } = require("../models/ExchangeRate");
 const Product = require("../models/Product");
 const Category = require("../models/Category");
 const mongoose = require("mongoose");
+const createActivityLog = require("../utils/CreateActivityLogs");
 
 function escapeRegex(value = "") {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -170,6 +171,7 @@ exports.getAdminProducts = async (req, res, next) => {
 };
 
 exports.addProduct = async (req, res, next) => {
+  let createdProduct;
   try {
     if (!req.user || req.user.role !== "admin") {
       return res.status(403).json({ message: "Access denied. Admins only." });
@@ -327,7 +329,7 @@ exports.addProduct = async (req, res, next) => {
       defaultVariantId: new mongoose.Types.ObjectId("000000000000000000000000"),
     });
 
-    const createdProduct = await product.save();
+    createdProduct = await product.save();
 
     if (!createdProduct) {
       return res.status(500).json({ message: "Failed to create product" });
@@ -347,10 +349,25 @@ exports.addProduct = async (req, res, next) => {
     });
   } catch (err) {
     next(err);
+  }finally {
+    if(createdProduct.title){
+      createActivityLog({
+        type: "PRODUCT_CREATED",
+        title: "Product created",
+        message: `Product ${createdProduct.title} added to catalog`,
+      });
+    }else{
+      createActivityLog({
+        type: "PRODUCT_CREATED",
+        title: "Product creation",
+        message: `Product creation failed`,
+      });
+    }
   }
 };
 
 exports.updateProduct = async (req, res, next) => {
+  let updatedProduct;
   try {
     if (!req.user || req.user.role !== "admin") {
       return res.status(403).json({ message: "Access denied. Admins only." });
@@ -553,7 +570,7 @@ exports.updateProduct = async (req, res, next) => {
       normalizedVariants?.[0]?._id ||
       null;
 
-    const updatedProduct = await product.save();
+    updatedProduct = await product.save();
 
     return res.status(200).json({
       message: "Product updated successfully",
@@ -561,16 +578,31 @@ exports.updateProduct = async (req, res, next) => {
     });
   } catch (err) {
     next(err);
+  }finally {
+    if (updatedProduct.title){
+      createActivityLog({
+        type: "PRODUCT_UPDATED",
+        title: "Product updated",
+        message: `Product ${updatedProduct.title} was updated`,
+      });
+    }else{
+      createActivityLog({
+        type: "PRODUCT_UPDATED",
+        title: "Product update",
+        message: `Product update failed`,
+      });
+    }
   }
 };
 
 exports.deleteProduct = async (req, res, next) => {
+  let product;
   try {
     if (!req.user || req.user.role !== "admin") {
       return res.status(403).json({ message: "Access denied. Admins only." });
     }
 
-    const product = await Product.findById(req.params.id).select(
+    product = await Product.findById(req.params.id).select(
       "_id category",
     );
 
@@ -592,6 +624,20 @@ exports.deleteProduct = async (req, res, next) => {
     });
   } catch (err) {
     next(err);
+  }finally {
+    if(product.title){
+      createActivityLog({
+        type: "PRODUCT_DELETED",
+        title: "Product deleted",
+        message: `Product ${product.title} was deleted`,
+      });
+    }else{
+      createActivityLog({
+        type: "PRODUCT_DELETED",
+        title: "Product deletion ",
+        message: `Product delete failed`,
+      });
+    }
   }
 };
 

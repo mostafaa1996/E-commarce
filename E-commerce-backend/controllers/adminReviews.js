@@ -2,6 +2,7 @@ const Review = require("../models/Review");
 const Product = require("../models/Product");
 const User = require("../models/User");
 const mongoose = require("mongoose");
+const createActivityLog = require("../utils/CreateActivityLogs");
 
 const escapeRegex = (text) => {
   return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
@@ -306,6 +307,7 @@ exports.getAdminProductsReviews = async (req, res, next) => {
   }
 };
 exports.updateReviewStatus = async (req, res, next) => {
+  let status;
   try {
     if (!req.user || req.user.role !== "admin")
       return res
@@ -315,12 +317,13 @@ exports.updateReviewStatus = async (req, res, next) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: "Invalid review id" });
     }
-    const { status } = req.body;
+    status = req.body.status;
     if (Review.schema.path("status").enumValues.indexOf(status) === -1) {
-      return res
-        .status(400)
-        .json({ message: "Status is required and must be approved, rejected or pending " });
-    }else {
+      return res.status(400).json({
+        message:
+          "Status is required and must be approved, rejected or pending ",
+      });
+    } else {
       const review = await Review.findByIdAndUpdate(
         id,
         { status },
@@ -338,9 +341,24 @@ exports.updateReviewStatus = async (req, res, next) => {
   } catch (err) {
     console.log(err);
     next(err);
+  } finally {
+    if (status){
+      createActivityLog({
+        type: "REVIEW_UPDATED",
+        title: "Review status updated",
+        message: `Review was ${status}`,
+      });
+    }else{
+      createActivityLog({
+        type: "REVIEW_UPDATED",
+        title: "Review status update",
+        message: `attempted to update review status was failed`,
+      });
+    }
   }
 };
 exports.deleteReview = async (req, res, next) => {
+  let deletedReview;
   try {
     if (!req.user || req.user.role !== "admin") {
       return res.status(401).json({
@@ -384,7 +402,7 @@ exports.deleteReview = async (req, res, next) => {
       });
     }
 
-    await Review.findByIdAndDelete(id);
+    deletedReview = await Review.findByIdAndDelete(id);
 
     return res.status(200).json({
       message: "Review deleted successfully",
@@ -393,5 +411,19 @@ exports.deleteReview = async (req, res, next) => {
   } catch (err) {
     console.log(err);
     next(err);
+  }finally {
+    if (deletedReview){
+      createActivityLog({
+        type: "REVIEW_DELETED",
+        title: "Review status updated",
+        message: `Review with id ${deletedReview._id} was deleted`,
+      });
+    }else{
+      createActivityLog({
+        type: "REVIEW_DELETED",
+        title: "Review status update",
+        message: `attempted to delete review was failed`,
+      });
+    }
   }
 };

@@ -1,50 +1,244 @@
-import { Package, ShoppingCart, TicketPercent, LogIn, UserPlus, Edit, Trash2 } from "lucide-react";
+import {
+  Package,
+  ShoppingCart,
+  TicketPercent,
+  LogIn,
+  UserPlus,
+  Edit,
+  Trash2,
+} from "lucide-react";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { cn } from "@/utils/utils";
+import { useQuery } from "@tanstack/react-query";
+import { getAdminActivityLog } from "@/APIs/adminActivityLog";
 
-const activities = [
-  { action: "Product created", detail: "Added 'Wireless Earbuds X3' to catalog", user: "Admin", time: "2 minutes ago", icon: Package, color: "bg-success/10 text-success" },
-  { action: "Order status changed", detail: "Order #ORD-2024-006 marked as Shipped", user: "Admin", time: "15 minutes ago", icon: ShoppingCart, color: "bg-info/10 text-info" },
-  { action: "Coupon created", detail: "Created coupon 'VIP50' — 50% off", user: "Admin", time: "1 hour ago", icon: TicketPercent, color: "bg-primary/10 text-primary" },
-  { action: "Product updated", detail: "Updated stock for 'Smart Watch Pro' (5 → 50)", user: "Admin", time: "2 hours ago", icon: Edit, color: "bg-warning/10 text-warning" },
-  { action: "Admin login", detail: "Logged in from 192.168.1.1", user: "Admin", time: "3 hours ago", icon: LogIn, color: "bg-muted text-muted-foreground" },
-  { action: "Customer registered", detail: "New customer: Karim Ahmed (karim@mail.com)", user: "System", time: "5 hours ago", icon: UserPlus, color: "bg-success/10 text-success" },
-  { action: "Product deleted", detail: "Removed 'Old Webcam HD' from catalog", user: "Admin", time: "1 day ago", icon: Trash2, color: "bg-destructive/10 text-destructive" },
-  { action: "Order status changed", detail: "Order #ORD-2024-004 marked as Delivered", user: "Admin", time: "1 day ago", icon: ShoppingCart, color: "bg-info/10 text-info" },
+const suitableIconsForTypes = [
+  {
+    type: "PRODUCT_CREATED",
+    icon: Package,
+    color: "bg-emerald-100 text-emerald-700",
+  },
+  {
+    type: "PRODUCT_UPDATED",
+    icon: Edit,
+    color: "bg-amber-100 text-amber-700",
+  },
+  {
+    type: "PRODUCT_DELETED",
+    icon: Trash2,
+    color: "bg-rose-100 text-rose-700",
+  },
+  {
+    type: "ORDER_STATUS_CHANGED",
+    icon: ShoppingCart,
+    color: "bg-sky-100 text-sky-700",
+  },
+  {
+    type: "COUPON_CREATED",
+    icon: TicketPercent,
+    color: "bg-emerald-100 text-emerald-700",
+  },
+  {
+    type: "COUPON_UPDATED",
+    icon: Edit,
+    color: "bg-amber-100 text-amber-700",
+  },
+  {
+    type: "COUPON_DELETED",
+    icon: Trash2,
+    color: "bg-rose-100 text-rose-700",
+  },
+  {
+    type: "DISCOUNT_CREATED",
+    icon: TicketPercent,
+    color: "bg-emerald-100 text-emerald-700",
+  },
+  {
+    type: "DISCOUNT_UPDATED",
+    icon: Edit,
+    color: "bg-amber-100 text-amber-700",
+  },
+  {
+    type: "DISCOUNT_DELETED",
+    icon: Trash2,
+    color: "bg-rose-100 text-rose-700",
+  },
+  {
+    type: "CUSTOMER_BLOCKED",
+    icon: Trash2,
+    color: "bg-rose-100 text-rose-700",
+  },
+  {
+    type: "CUSTOMER_UNBLOCKED",
+    icon: UserPlus,
+    color: "bg-emerald-100 text-emerald-700",
+  },
+  {
+    type: "REVIEW_UPDATED",
+    icon: Edit,
+    color: "bg-amber-100 text-amber-700",
+  },
+  {
+    type: "REVIEW_DELETED",
+    icon: Trash2,
+    color: "bg-rose-100 text-rose-700",
+  },
+  {
+    type: "ADMIN_LOGIN",
+    icon: LogIn,
+    color: "bg-blue-100 text-blue-700",
+  },
+  {
+    type: "ADMIN_LOGOUT",
+    icon: LogIn,
+    color: "bg-slate-100 text-slate-700",
+  },
+  {
+    type: "Category_CREATED",
+    icon: Package,
+    color: "bg-emerald-100 text-emerald-700",
+  },
+  {
+    type: "Category_UPDATED",
+    icon: Edit,
+    color: "bg-amber-100 text-amber-700",
+  },
+  {
+    type: "Category_DELETED",
+    icon: Trash2,
+    color: "bg-rose-100 text-rose-700",
+  },
 ];
 
+function formatRelativeTime(createdAt) {
+  if (!createdAt) return "";
+
+  const date = new Date(createdAt);
+  if (Number.isNaN(date.getTime())) return createdAt;
+
+  const diffInSeconds = Math.floor((date.getTime() - Date.now()) / 1000);
+  const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+
+  const ranges = [
+    { unit: "year", seconds: 60 * 60 * 24 * 365 },
+    { unit: "month", seconds: 60 * 60 * 24 * 30 },
+    { unit: "day", seconds: 60 * 60 * 24 },
+    { unit: "hour", seconds: 60 * 60 },
+    { unit: "minute", seconds: 60 },
+  ];
+
+  for (const { unit, seconds } of ranges) {
+    if (Math.abs(diffInSeconds) >= seconds) {
+      return rtf.format(Math.round(diffInSeconds / seconds), unit);
+    }
+  }
+
+  return rtf.format(diffInSeconds, "second");
+}
+
 export default function AdminActivityPage() {
-  return (
-    <AdminLayout>
-      <PageHeader
-        title="Activity Log"
-        description="Track all admin actions and system events"
-        breadcrumbs={[{ label: "Dashboard", href: "/" }, { label: "Activity Log" }]}
-      />
+  let content = null;
+  const {
+    data: logs,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["Adminactivities"],
+    queryFn: getAdminActivityLog,
+  });
 
-      <div className="bg-card rounded-xl border shadow-sm">
-        <div className="relative">
-          {/* Timeline line */}
-          <div className="absolute left-[29px] top-0 bottom-0 w-px bg-border" />
+  if (isLoading) {
+    content = (
+      <AdminLayout>
+        <PageHeader
+          title="Activity Log"
+          description="Loading your activities."
+          breadcrumbs={[{ label: "Activity Log" }]}
+        />
+        <Loading message="Loading Activities" fullPage />
+      </AdminLayout>
+    );
+  }
 
-          {activities.map((activity, i) => (
-            <div key={i} className="relative flex items-start gap-4 p-4 hover:bg-secondary/30 transition-colors">
-              <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center shrink-0 z-10", activity.color)}>
-                <activity.icon className="h-4 w-4" />
-              </div>
-              <div className="flex-1 min-w-0 pt-1">
-                <div className="flex items-center justify-between gap-2">
-                  <p className="text-sm font-medium text-foreground">{activity.action}</p>
-                  <p className="text-xs text-muted-foreground whitespace-nowrap">{activity.time}</p>
-                </div>
-                <p className="text-sm text-muted-foreground mt-0.5">{activity.detail}</p>
-                <p className="text-xs text-muted-foreground/60 mt-1">by {activity.user}</p>
-              </div>
-            </div>
-          ))}
+  if (error) {
+    content = (
+      <AdminLayout>
+        <PageHeader
+          title="Activity Log"
+          description="We could not load your activities right now."
+          breadcrumbs={[{ label: "Activity Log" }]}
+        />
+        <div className="rounded-2xl border border-destructive/20 bg-destructive/5 p-6 text-destructive">
+          <p className="font-semibold">Failed to load data.</p>
+          <p className="mt-2 text-sm">{error.message}</p>
         </div>
-      </div>
-    </AdminLayout>
-  );
+      </AdminLayout>
+    );
+  }
+
+  if (logs) {
+    content = (
+      <AdminLayout>
+        <PageHeader
+          title="Activity Log"
+          description="Track all admin actions and system events"
+          breadcrumbs={[
+            { label: "Dashboard", href: "/profile/admin/dashboard" },
+            { label: "Activity Log" },
+          ]}
+        />
+
+        <div className="bg-card rounded-xl border shadow-sm">
+          <div className="relative">
+            {/* Timeline line */}
+            <div className="absolute left-[29px] top-0 bottom-0 w-px bg-border" />
+
+            {logs.map((activity, i) => {
+              const matchedActivityType = suitableIconsForTypes.find(
+                ({ type }) => type === activity.type
+              );
+              const ActivityIcon = matchedActivityType?.icon || Package;
+              const activityColor =
+                matchedActivityType?.color || "bg-muted text-muted-foreground";
+
+              return (
+                <div
+                  key={i}
+                  className="relative flex items-start gap-4 p-4 hover:bg-secondary/30 transition-colors"
+                >
+                  <div
+                    className={cn(
+                      "h-10 w-10 rounded-xl flex items-center justify-center shrink-0 z-10",
+                      activityColor,
+                    )}
+                  >
+                    <ActivityIcon className="h-4 w-4" />
+                  </div>
+                  <div className="flex-1 min-w-0 pt-1">
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-sm font-medium text-foreground">
+                        {activity.title}
+                      </p>
+                      <p className="text-xs text-muted-foreground whitespace-nowrap">
+                        {formatRelativeTime(activity.createdAt)}
+                      </p>
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-0.5">
+                      {activity.message}
+                    </p>
+                    <p className="text-xs text-muted-foreground/60 mt-1">
+                      by {activity.actorRole}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </AdminLayout>
+    );
+  }
+
+  return content;
 }
