@@ -68,8 +68,12 @@ exports.getAdminProductsReviews = async (req, res, next) => {
       return res
         .status(401)
         .json({ message: "this page is for admin only , Unauthorized Access" });
-    const page = req.query.page || 1;
-    const limit = req.query.limit || 6;
+    const page = Number(req.query.page || 1);
+    const limit = Number(req.query.limit || 6);
+    if (Number.isNaN(page) || Number.isNaN(limit))
+      return res
+        .sendStatus(400)
+        .json({ message: "page and limit must be numbers" });
     const skip = (page - 1) * limit;
     const search = String(req.query.search || "").trim();
     const status = String(req.query.status || "all").trim();
@@ -87,14 +91,12 @@ exports.getAdminProductsReviews = async (req, res, next) => {
         { "userData.email": searchRegex },
       ];
     }
-    if (status && status.toLowerCase() !== "all") {
-      if (status === "approved") {
-        matchStage.isApproved = true;
-      }
-
-      if (status === "pending" || status === "rejected") {
-        matchStage.isApproved = false;
-      }
+    if (
+      status &&
+      status.toLowerCase() !== "all" &&
+      Review.schema.path("status").enumValues.includes(status.toLowerCase())
+    ) {
+      matchStage.status = status.toLowerCase();
     }
     if (rating && rating.toLowerCase() !== "all") {
       const numericRating = Number(rating);
@@ -107,100 +109,132 @@ exports.getAdminProductsReviews = async (req, res, next) => {
         matchStage.rating = numericRating;
       }
     }
+    let reviews = [];
+    let totalItems = 0;
 
-    const pipeline = [
-      {
-        $match: matchStage,
-      },
-      {
-        $lookup: {
-          from: "products",
-          localField: "product",
-          foreignField: "_id",
-          as: "productData",
-        },
-      },
-      {
-        $unwind: {
-          path: "$productData",
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-      {
-        $lookup: {
-          from: "users",
-          localField: "userId",
-          foreignField: "_id",
-          as: "userData",
-        },
-      },
-      {
-        $unwind: {
-          path: "$userData",
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-    ];
+    if (!search) {
+      const [rawReviews, count] = await Promise.all([
+        Review.find(matchStage)
+          .sort({ date: -1, createdAt: -1 })
+          .skip(skip)
+          .limit(limit)
+          .populate("product", "title")
+          .populate("userId", "name email")
+          .lean(),
+        Review.countDocuments(matchStage),
+      ]);
 
-    if (search && search !== "") {
-      pipeline.push({
-        $match: searchMatchStage,
-      });
-    }
-
-    pipeline.push(
-      {
-        $sort: {
-          date: -1,
-          createdAt: -1,
+      reviews = rawReviews.map((review) => ({
+        _id: review._id,
+        rating: review.rating,
+        comment: review.comment,
+        username: review.username,
+        status: review.status,
+        verified: review.verified,
+        date: review.date,
+        product: review.product
+          ? {
+              _id: review.product._id,
+              title: review.product.title,
+            }
+          : null,
+        user: review.userId
+          ? {
+              _id: review.userId._id,
+              name: review.userId.name,
+              email: review.userId.email,
+            }
+          : null,
+      }));
+      totalItems = count;
+    } else {
+      const pipeline = [
+        {
+          $match: matchStage,
         },
-      },
-      {
-        $facet: {
-          reviews: [
-            {
-              $skip: skip,
-            },
-            {
-              $limit: limit,
-            },
-            {
-              $project: {
-                _id: 1,
-                rating: 1,
-                comment: 1,
-                username: 1,
-                isApproved: 1,
-                verified: 1,
-                date: 1,
-                createdAt: 1,
-                updatedAt: 1,
-
-                product: {
-                  _id: "$productData._id",
-                  title: "$productData.title",
-                },
-
-                user: {
-                  _id: "$userData._id",
-                  name: "$userData.name",
-                  email: "$userData.email",
+        {
+          $sort: {
+            date: -1,
+            createdAt: -1,
+          },
+        },
+        {
+          $lookup: {
+            from: "products",
+            localField: "product",
+            foreignField: "_id",
+            as: "productData",
+          },
+        },
+        {
+          $unwind: {
+            path: "$productData",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "userId",
+            foreignField: "_id",
+            as: "userData",
+          },
+        },
+        {
+          $unwind: {
+            path: "$userData",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $match: searchMatchStage,
+        },
+        {
+          $facet: {
+            reviews: [
+              {
+                $skip: skip,
+              },
+              {
+                $limit: limit,
+              },
+              {
+                $project: {
+                  _id: 1,
+                  rating: 1,
+                  comment: 1,
+                  username: 1,
+                  status: 1,
+                  verified: 1,
+                  date: 1,
+                  createdAt: 1,
+                  updatedAt: 1,
+                  product: {
+                    _id: "$productData._id",
+                    title: "$productData.title",
+                  },
+                  user: {
+                    _id: "$userData._id",
+                    name: "$userData.name",
+                    email: "$userData.email",
+                  },
                 },
               },
-            },
-          ],
-          totalCount: [
-            {
-              $count: "count",
-            },
-          ],
+            ],
+            totalCount: [
+              {
+                $count: "count",
+              },
+            ],
+          },
         },
-      }
-    );
+      ];
 
-    const result = await Review.aggregate(pipeline);
-    const reviews = result[0]?.reviews || [];
-    const totalItems = result[0]?.totalCount?.[0]?.count || 0;
+      const result = await Review.aggregate(pipeline).allowDiskUse(true);
+      reviews = result[0]?.reviews || [];
+      totalItems = result[0]?.totalCount?.[0]?.count || 0;
+    }
+
     const totalPages = Math.ceil(totalItems / limit);
 
     const stats = await Review.aggregate([
@@ -278,18 +312,19 @@ exports.updateReviewStatus = async (req, res, next) => {
         .status(401)
         .json({ message: "this page is for admin only , Unauthorized Access" });
     const { id } = req.params;
-    if(!mongoose.Types.ObjectId.isValid(id)){
+    if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: "Invalid review id" });
     }
     const { status } = req.body;
-    if(typeof status !== "boolean"){
-      return res.status(400).json({ message: "Status is required and must be a boolean" });
-    }
-    if (typeof status === "boolean") {
+    if (Review.schema.path("status").enumValues.indexOf(status) === -1) {
+      return res
+        .status(400)
+        .json({ message: "Status is required and must be approved, rejected or pending " });
+    }else {
       const review = await Review.findByIdAndUpdate(
         id,
-        { isApproved: status },
-        { new: true, runValidators: true }
+        { status },
+        { new: true, runValidators: true },
       );
       if (!review) {
         return res.status(404).json({ message: "Review not found." });

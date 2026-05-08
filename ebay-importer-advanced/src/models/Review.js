@@ -14,11 +14,22 @@
 
   username: String,
 
+  date: Date,
+
+  verified: {
+    type: Boolean,
+    default: false,
+  },
+
   rating: { type: Number, required: true, min: 1, max: 5 },
 
   comment: String,
 
-  isApproved: { type: Boolean, default: true }
+  status: {
+    type: String,
+    enum: ["pending", "approved", "rejected"],
+    default: "pending",
+  },
 
 }, { timestamps: true });
 

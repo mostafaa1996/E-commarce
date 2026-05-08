@@ -23,7 +23,7 @@ export async function getAdminProductsReviews(query) {
     throw new Error("Failed to fetch admin dashboard data");
   }
   const data = await res.json();
-  // console.log(data);
+  console.log(data);
   return data;
 }
 export async function updateAdminProductReview(id, status) {

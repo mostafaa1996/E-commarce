@@ -16,7 +16,11 @@
 
   comment: String,
 
-  isApproved: { type: Boolean, default: true },
+  status: {
+    type: String,
+    enum: ["pending", "approved", "rejected"],
+    default: "pending",
+  },
 
   verified: { type: Boolean, default: false },
 
@@ -27,6 +31,7 @@
 
 //Indexes
 reviewSchema.index({ product: 1, createdAt: -1 });
+reviewSchema.index({ date: -1, createdAt: -1 });
 reviewSchema.index({ user: 1 });
 
 const Review = mongoose.model("Review", reviewSchema);

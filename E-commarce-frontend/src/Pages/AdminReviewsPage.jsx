@@ -17,6 +17,13 @@ import Loading from "@/components/genericComponents/Loading";
 import { formatTime, shortenText } from "@/utils/utils";
 import InputField from "@/components/genericComponents/InputField";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/adminUI/dialog";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -33,9 +40,9 @@ const defaultQuery = {
 };
 
 const statusMap = {
-  Approved: "success",
-  Pending: "warning",
-  Rejected: "danger",
+  approved: "success",
+  pending: "warning",
+  rejected: "danger",
 };
 
 function isQueryChangedFromDefault(query) {
@@ -52,7 +59,7 @@ function StarRating({ rating }) {
       {[1, 2, 3, 4, 5].map((i) => (
         <Icon
           key={i}
-          name="star"
+          name="reviews"
           className={`h-3.5 w-3.5 ${
             i <= rating
               ? "fill-warning text-warning"
@@ -68,7 +75,9 @@ export default function AdminReviewsPage() {
   let content = null;
   const { toast } = useToast();
   const [reviews, setReviews] = useState([]);
+  const [pendingAction, setPendingAction] = useState(null);
   const [viewCompleteComment, setViewCompleteComment] = useState(null); //trigger dialog for complete comment
+  const [selectedItem, setSelectedItem] = useState(null);
   const [selectedRating, setSelectedRating] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
@@ -90,30 +99,48 @@ export default function AdminReviewsPage() {
   });
 
   const { mutateAsync: updateReview } = useMutation({
-    mutationFn: (id, status) => updateAdminProductReview(id, status),
-    onMutate: () => {
-      //TODO: add loading state like small spinner
+    mutationFn: ({ id, status }) => updateAdminProductReview(id, status),
+    onMutate: ({ id, status }) => {
+      setPendingAction({ id, type: status });
     },
-    onSuccess: () => {
+    onSuccess: (data, { id, status }) => {
       toast({
         title: "Review updated.",
         description: "The review has been updated.",
       });
-      //TODO: update table with new status and date.
+      setReviews((currentReviews) =>
+        currentReviews.map((review) =>
+          review._id === id
+            ? {
+                ...review,
+                status,
+                updatedAt: formatTime(data?.review?.updatedAt || new Date()),
+              }
+            : review,
+        ),
+      );
+    },
+    onSettled: () => {
+      setPendingAction(null);
     },
   });
 
   const { mutateAsync: deleteReview } = useMutation({
     mutationFn: (id) => deleteAdminProductReview(id),
-    onMutate: () => {
-      //TODO: add loading state like small spinner
+    onMutate: (id) => {
+      setPendingAction({ id, type: "delete" });
     },
     onSuccess: () => {
       toast({
         title: "Review deleted.",
         description: "The review has been deleted.",
       });
-      //TODO: update table with new status and date.
+      setReviews((currentReviews) =>
+        currentReviews.filter((review) => review._id !== pendingAction?.id),
+      );
+    },
+    onSettled: () => {
+      setPendingAction(null);
     },
   });
 
@@ -146,11 +173,17 @@ export default function AdminReviewsPage() {
       header: "Product",
       render: (item) => (
         <span className="font-medium text-foreground">
-          {item.product.title}
+          {shortenText(item.product.title, 30)}
         </span>
       ),
     },
-    { key: "customer", header: "Customer" },
+    {
+      key: "customer",
+      header: "Customer",
+      render: (item) => (
+        <span className="font-medium text-foreground">{item.username}</span>
+      ),
+    },
     {
       key: "rating",
       header: "Rating",
@@ -160,9 +193,16 @@ export default function AdminReviewsPage() {
       key: "comment",
       header: "Comment",
       render: (item) => (
-        <p className="text-sm text-muted-foreground max-w-[250px] truncate">
+        <AdminButton
+          onClick={() => {
+            setViewCompleteComment(true);
+            setSelectedItem(item);
+          }}
+          className="text-sm text-muted-foreground max-w-[250px] truncate"
+          variant="ghost"
+        >
           {item.comment}
-        </p>
+        </AdminButton>
       ),
       className: "max-w-[300px]",
     },
@@ -170,7 +210,7 @@ export default function AdminReviewsPage() {
       key: "date",
       header: "Date",
       render: (item) => (
-        <p className="text-sm text-muted-foreground">{item.updatedAt}</p>
+        <p className="text-sm text-muted-foreground">{formatTime(item.date)}</p>
       ),
     },
     {
@@ -183,42 +223,66 @@ export default function AdminReviewsPage() {
     {
       key: "actions",
       header: "",
-      render: (item) => (
-        <div className="flex gap-1">
-          {item.status === "Pending" && (
-            <>
-              <AdminButton
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-success"
-                onClick={() =>
-                  updateReview({ id: item._id, status: "Approved" })
-                }
-              >
-                <Icon name="check" className="h-4 w-4" />
-              </AdminButton>
-              <AdminButton
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-destructive"
-                onClick={() =>
-                  updateReview({ id: item._id, status: "Rejected" })
-                }
-              >
-                <Icon name="x" className="h-4 w-4" />
-              </AdminButton>
-            </>
-          )}
-          <AdminButton
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-destructive"
-            onClick={() => deleteReview(item._id)}
-          >
-            <Icon name="trash2" className="h-4 w-4" />
-          </AdminButton>
-        </div>
-      ),
+      render: (item) => {
+        const isApproving =
+          pendingAction?.id === item._id && pendingAction?.type === "approved";
+        const isRejecting =
+          pendingAction?.id === item._id && pendingAction?.type === "rejected";
+        const isDeleting =
+          pendingAction?.id === item._id && pendingAction?.type === "delete";
+
+        return (
+          <div className="flex gap-1">
+            {item.status === "pending" && (
+              <>
+                <AdminButton
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-success"
+                  disabled={Boolean(pendingAction)}
+                  onClick={() =>
+                    updateReview({ id: item._id, status: "approved" })
+                  }
+                >
+                  {isApproving ? (
+                    <Icon name="loader" className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Icon name="check" className="h-4 w-4 text-green" />
+                  )}
+                </AdminButton>
+                <AdminButton
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-destructive"
+                  disabled={Boolean(pendingAction)}
+                  onClick={() =>
+                    updateReview({ id: item._id, status: "rejected" })
+                  }
+                >
+                  {isRejecting ? (
+                    <Icon name="loader" className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Icon name="x" className="h-4 w-4 text-red" />
+                  )}
+                </AdminButton>
+              </>
+            )}
+            <AdminButton
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-destructive"
+              disabled={Boolean(pendingAction)}
+              onClick={() => deleteReview(item._id)}
+            >
+              {isDeleting ? (
+                <Icon name="loader" className="h-4 w-4 animate-spin" />
+              ) : (
+                <Icon name="trash2" className="h-4 w-4" />
+              )}
+            </AdminButton>
+          </div>
+        );
+      },
     },
   ];
 
@@ -251,7 +315,7 @@ export default function AdminReviewsPage() {
     );
   }
 
-  if (data && reviews.length > 0) {
+  if (reviewsData) {
     content = (
       <AdminLayout>
         <PageHeader
@@ -311,39 +375,104 @@ export default function AdminReviewsPage() {
               <SelectItem value="all">All Status</SelectItem>
               <SelectItem value="approved">Approved</SelectItem>
               <SelectItem value="rejected">Rejected</SelectItem>
-              <SelectItem value="rejected">Pending</SelectItem>
+              <SelectItem value="pending">Pending</SelectItem>
             </SelectContent>
           </Select>
         </div>
-        <div className="relative">
-          <div
-            className={`transition-opacity duration-200 ${
-              isFetching ? "opacity-50 pointer-events-none" : "opacity-100"
-            }`}
-          >
-            <DataTable
-              columns={columns}
-              data={reviews}
-              page={1}
-              totalPages={2}
-            />
-          </div>
-
-          {isFetching && (
-            <div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-white/35 backdrop-blur-[1px]">
-              <div
-                className="relative flex h-12 w-12 items-center justify-center"
-                role="status"
-                aria-live="polite"
-                aria-label="Refreshing products"
-              >
-                <div className="absolute h-full w-full rounded-full border-4 border-orange-100" />
-                <div className="absolute h-full w-full animate-spin rounded-full border-4 border-transparent border-t-orange-500 border-r-orange-400" />
-                <div className="h-6 w-6 rounded-full bg-orange-500/10 shadow-inner" />
-              </div>
+        {reviews && (
+          <div className="relative">
+            <div
+              className={`transition-opacity duration-200 ${
+                isFetching ? "opacity-50 pointer-events-none" : "opacity-100"
+              }`}
+            >
+              <DataTable
+                columns={columns}
+                data={reviews}
+                page={reviewsData?.pagination?.page}
+                totalPages={reviewsData?.pagination?.totalPages}
+                onPageChange={(page) => updateUrlQuery({ page })}
+              />
             </div>
-          )}
-        </div>
+
+            {isFetching && (
+              <div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-white/35 backdrop-blur-[1px]">
+                <div
+                  className="relative flex h-12 w-12 items-center justify-center"
+                  role="status"
+                  aria-live="polite"
+                  aria-label="Refreshing products"
+                >
+                  <div className="absolute h-full w-full rounded-full border-4 border-orange-100" />
+                  <div className="absolute h-full w-full animate-spin rounded-full border-4 border-transparent border-t-orange-500 border-r-orange-400" />
+                  <div className="h-6 w-6 rounded-full bg-orange-500/10 shadow-inner" />
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        <Dialog
+          open={Boolean(viewCompleteComment && selectedItem)}
+          onOpenChange={(open) => {
+            setViewCompleteComment(open);
+            if (!open) {
+              setSelectedItem(null);
+            }
+          }}
+        >
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Review details</DialogTitle>
+              <DialogDescription>
+                Complete review information for this customer feedback.
+              </DialogDescription>
+            </DialogHeader>
+
+            {selectedItem && (
+              <div className="space-y-4">
+                <div className="space-y-1">
+                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                    Username
+                  </p>
+                  <p className="text-sm font-medium text-foreground">
+                    {selectedItem.username || "Anonymous"}
+                  </p>
+                </div>
+
+                <div className="space-y-1">
+                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                    Email
+                  </p>
+                  <p className="text-sm text-foreground">
+                    {selectedItem.email || "No email provided"}
+                  </p>
+                </div>
+
+                <div className="space-y-1">
+                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                    Rating
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <StarRating rating={selectedItem.rating} />
+                    <span className="text-sm text-foreground">
+                      {selectedItem.rating}/5
+                    </span>
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                    Comment
+                  </p>
+                  <p className="text-sm leading-6 text-foreground">
+                    {selectedItem.comment}
+                  </p>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
       </AdminLayout>
     );
   }
