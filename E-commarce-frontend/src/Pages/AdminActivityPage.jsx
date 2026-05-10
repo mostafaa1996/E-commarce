@@ -12,6 +12,7 @@ import { PageHeader } from "@/components/admin/PageHeader";
 import { cn } from "@/utils/utils";
 import { useQuery } from "@tanstack/react-query";
 import { getAdminActivityLog } from "@/APIs/adminActivityLog";
+import Loading from "@/components/genericComponents/Loading";
 
 const suitableIconsForTypes = [
   {
