@@ -45,6 +45,8 @@ import AdminActivityPage from "./Pages/AdminActivityPage";
 import AdminNotificationsPage from "./Pages/AdminNotificationsPage";
 import AdminSettingsPage from "./Pages/AdminSettingsPage";
 import ProductPage from "./Pages/ProductPage";
+import HomePage from "./Pages/HomePage";
+import ContactPage from "./Pages/ContactPage";
 
 export const router = createBrowserRouter([
   {
@@ -208,6 +210,14 @@ export const router = createBrowserRouter([
         action: async ({ request }) => await UpdatePersonalInfo(request),
       },
     ],
+  },
+  {
+    path : "/home",
+    element : <HomePage />
+  },
+  {
+    path : "/contact",
+    element : <ContactPage />
   },
   {
     path: "/profile/admin/dashboard",
