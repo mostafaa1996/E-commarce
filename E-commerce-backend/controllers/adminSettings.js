@@ -171,8 +171,7 @@ exports.updateAdminStore = async (req, res, next) => {
     if (!req.user || req.user.role !== "admin") {
       return res.status(403).json({ message: "Access denied. Admins only." });
     }
-
-    const { storeName, supportEmail, phone, shippingFee, address } = req.body;
+    const { storeName, supportEmail, phone, shippingFee, address , workingDays } = req.body;
 
     let store = await Store.findOne();
     if (!store) {
@@ -181,11 +180,12 @@ exports.updateAdminStore = async (req, res, next) => {
         !supportEmail ||
         !phone ||
         shippingFee === undefined ||
-        !address
+        !address ||
+        !workingDays
       ) {
         return res.status(400).json({
           message:
-            "storeName, supportEmail, phone, shippingFee, and address are required to create the store.",
+            "storeName, supportEmail, phone, shippingFee, address, and workingDays fields are required to create the store.",
         });
       }
 
@@ -195,6 +195,7 @@ exports.updateAdminStore = async (req, res, next) => {
         phone,
         shippingFee: Number(shippingFee),
         address,
+        workingDays,
         icon: "",
       });
     }
@@ -204,6 +205,7 @@ exports.updateAdminStore = async (req, res, next) => {
     if (phone !== undefined) store.phone = phone;
     if (shippingFee !== undefined) store.shippingFee = Number(shippingFee);
     if (address !== undefined) store.address = address;
+    if (workingDays !== undefined) store.workingDays = workingDays;
 
     await store.save();
 
@@ -215,6 +217,7 @@ exports.updateAdminStore = async (req, res, next) => {
         phone: store.phone,
         shippingFee: String(store.shippingFee),
         address: store.address,
+        workingDays: store.workingDays,
       },
     });
   } catch (err) {
