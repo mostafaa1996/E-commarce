@@ -221,3 +221,27 @@ exports.updateAdminStore = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.getTopBarInfo = async(req, res, next) => {
+  try {
+    if (!req.user || req.user.role !== "admin") {
+      return res.status(403).json({ message: "Access denied. Admins only." });
+    }
+    const admin = await User.findById(req.user.id);
+    if (!admin) {
+      return res.status(404).json({ message: "Admin not found." });
+    }
+    const topBarInfo = {
+      firstName: admin.PersonalInfo?.firstName || admin.name?.split(" ")?.[0],
+      lastName: admin.PersonalInfo?.lastName || admin.name?.split(" ")?.slice(1).join(" "),
+      email: admin.PersonalInfo?.email || admin.email,
+      avatar: admin.PersonalInfo?.avatar?.url
+    }
+    if (!topBarInfo) {
+      return res.status(404).json({ message: "Top bar info not found." });
+    }
+    res.status(200).json({ message: "Top bar info fetched successfully", topBarInfo });
+  } catch (err) {
+    next(err);
+  }
+}

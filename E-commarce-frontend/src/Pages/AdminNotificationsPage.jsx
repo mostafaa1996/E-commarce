@@ -26,7 +26,7 @@ export default function AdminNotificationsPage() {
       <PageHeader
         title="Notifications"
         description="Stay updated with your store activity"
-        breadcrumbs={[{ label: "Dashboard", href: "/" }, { label: "Notifications" }]}
+        breadcrumbs={[{ label: "Dashboard", href: "/profile/admin/dashboard" }, { label: "Notifications" }]}
         actions={<AdminButton variant="outline" size="sm">Mark all as read</AdminButton>}
       />
 

@@ -9,25 +9,27 @@ import {
   useSidebar,
 } from "@/components/adminUI/sidebar";
 
+const mainURL = "/profile/admin";
+
 const mainNav = [
-  { title: "Dashboard", url: "/", icon: LayoutDashboard },
-  { title: "Products", url: "/products", icon: Package },
-  { title: "Categories", url: "/categories", icon: FolderTree },
-  { title: "Orders", url: "/orders", icon: ShoppingCart },
-  { title: "Customers", url: "/customers", icon: Users },
-  { title: "Inventory", url: "/inventory", icon: Warehouse },
+  { title: "Dashboard", url: mainURL + "/dashboard" , icon: LayoutDashboard },
+  { title: "Products", url: mainURL +"/products", icon: Package },
+  { title: "Categories", url: mainURL +"/categories", icon: FolderTree },
+  { title: "Orders", url: mainURL +"/orders", icon: ShoppingCart },
+  { title: "Customers", url: mainURL +"/customers", icon: Users },
+  { title: "Inventory", url: mainURL +"/inventory", icon: Warehouse },
 ];
 
 const secondaryNav = [
-  { title: "Coupons", url: "/coupons", icon: TicketPercent },
-  { title: "Reviews", url: "/reviews", icon: Star },
-  { title: "Analytics", url: "/analytics", icon: BarChart3 },
-  { title: "Activity Log", url: "/activity", icon: Activity },
+  { title: "Coupons", url: mainURL +"/coupons", icon: TicketPercent },
+  { title: "Reviews", url: mainURL +"/reviews", icon: Star },
+  { title: "Analytics", url: mainURL +"/analytics", icon: BarChart3 },
+  { title: "Activity Log", url: mainURL +"/activity", icon: Activity },
 ];
 
 const settingsNav = [
-  { title: "Notifications", url: "/notifications", icon: Bell },
-  { title: "Settings", url: "/settings", icon: Settings },
+  { title: "Notifications", url: mainURL +"/notifications", icon: Bell },
+  { title: "Settings", url: mainURL +"/settings", icon: Settings },
 ];
 
 function NavSection({ items, label, collapsed }) {

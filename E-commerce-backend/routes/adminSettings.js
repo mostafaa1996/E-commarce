@@ -13,5 +13,6 @@ router.put(
 );
 router.put("/password", isAuth, adminSettingsController.updateAdminPassword);
 router.put("/store", isAuth, adminSettingsController.updateAdminStore);
+router.get("/TopBarInfo", isAuth, adminSettingsController.getTopBarInfo);
 
 module.exports = router;

@@ -8,10 +8,50 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/adminUI/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/adminUI/avatar";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/adminUI/avatar";
 import Icon from "@/system/icons/Icon";
+import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
+import { getAdminUserForTopBar } from "@/APIs/adminSettingsService";
+import { useNavigate } from "react-router-dom";
+
+function getInitials(firstName, lastName, email) {
+  const fullName = [firstName, lastName].filter(Boolean).join(" ").trim();
+
+  if (fullName) {
+    return fullName
+      .split(" ")
+      .slice(0, 2)
+      .map((part) => part[0]?.toUpperCase())
+      .join("");
+  }
+
+  return email?.slice(0, 2).toUpperCase() || "AD";
+}
 
 export function AdminTopbar() {
+  const navigate = useNavigate();
+  const { data: profileForm } = useQuery({
+    queryKey: ["AdminUserForTopBar"],
+    queryFn: getAdminUserForTopBar,
+  });
+  const adminInitials = useMemo(
+    () =>
+      getInitials(
+        profileForm?.firstName,
+        profileForm?.lastName,
+        profileForm?.email,
+      ),
+    [profileForm],
+  );
+  const adminFullName =
+    [profileForm?.firstName, profileForm?.lastName].filter(Boolean).join(" ") ||
+    "Super Admin";
+
   return (
     <header className="h-18 border-b bg-card flex items-center justify-between px-4 md:px-6 gap-4 sticky top-0 z-30">
       <div className="flex items-center gap-3">
@@ -42,29 +82,40 @@ export function AdminTopbar() {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <AdminButton variant="ghost" className="gap-2 pl-2 pr-3">
-              <Avatar className="h-8 w-8">
-                <AvatarFallback className="bg-primary text-primary-foreground text-xs font-semibold">
-                  AD
-                </AvatarFallback>
-              </Avatar>
-              <div className="hidden md:flex flex-col items-start">
-                <span className="text-sm font-medium text-foreground">
-                  Admin
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  Super Admin
-                </span>
-              </div>
-              <Icon
-                name="chevronDown"
-                className="h-4 w-4 text-muted-foreground hidden md:block"
-              />
-            </AdminButton>
+            {profileForm && adminFullName && (
+              <AdminButton variant="ghost" className="gap-2 pl-2 pr-3">
+                <Avatar className="h-8 w-8">
+                  <AvatarImage
+                    src={profileForm?.avatar}
+                    alt={adminFullName || "Super Admin"}
+                  />
+                  <AvatarFallback className="bg-primary text-primary-foreground text-xs font-semibold">
+                    {adminInitials || "AD"}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="hidden md:flex flex-col items-start">
+                  <span className="text-sm font-medium text-foreground">
+                    Super Admin
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    {adminFullName || "Super Admin"}
+                  </span>
+                </div>
+                <Icon
+                  name="chevronDown"
+                  className="h-4 w-4 text-muted-foreground hidden md:block"
+                />
+              </AdminButton>
+            )}
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48">
-            <DropdownMenuItem>My Profile</DropdownMenuItem>
-            <DropdownMenuItem>Settings</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                navigate("/profile/admin/settings");
+              }}
+            >
+              Settings
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="text-destructive">
               Sign Out
