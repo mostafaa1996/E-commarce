@@ -27,6 +27,7 @@ const variantSchema = new mongoose.Schema(
       enum: ["IN_STOCK", "OUT_OF_STOCK", "LOW_STOCK", "CRITICAL_STOCK"],
     },
     updatedAt: { type: Date, default: new Date(Date.now()) },
+    expireDate: { type: Date, default: new Date(Date.now()) },
 
     images: [
       {

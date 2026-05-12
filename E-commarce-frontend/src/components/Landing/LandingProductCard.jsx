@@ -1,12 +1,16 @@
 import { Star } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function LandingProductCard({ product, badgeOverride }) {
   const badge = badgeOverride || product.badge;
 
   return (
-    <article className="group rounded-3xl border border-border bg-card p-4 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg">
+    <Link
+      className="group rounded-3xl border border-border bg-card p-4 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg"
+      to={`/shop/products/${product._id}`}
+    >
       <div className="flex aspect-[4/4.4] items-center justify-center rounded-2xl bg-gradient-to-br from-orange-50 via-background to-amber-50 text-6xl">
-        <span>{product.emoji || "[]"}</span>
+        <img src={product.image} alt={product.title} className="max-h-50" />
       </div>
 
       <div className="mt-4">
@@ -45,6 +49,6 @@ export default function LandingProductCard({ product, badgeOverride }) {
           )}
         </div>
       </div>
-    </article>
+    </Link>
   );
 }

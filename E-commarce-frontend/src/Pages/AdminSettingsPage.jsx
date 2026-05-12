@@ -41,6 +41,7 @@ const DEFAULT_STORE = {
   phone: "+20 112 233 44455",
   shippingFee: "16.79",
   address: "Alexandria, Egypt",
+  workingDays: "sun-thu, 9:00am- 8:00pm",
 };
 
 const DEFAULT_PASSWORD_FORM = {
@@ -129,6 +130,11 @@ function normalizeSettings(settings) {
         settings?.store?.address,
         settings?.address,
         DEFAULT_STORE.address,
+      ),
+      workingDays: getValue(
+        settings?.store?.workingDays,
+        settings?.workingDays,
+        DEFAULT_STORE.workingDays,
       ),
     },
   };
@@ -457,6 +463,17 @@ export default function AdminSettingsPage() {
                     value={storeForm.address}
                     onChange={(event) =>
                       updateStoreField("address", event.target.value)
+                    }
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="working-days">Working Days</Label>
+                  <InputField
+                    id="store-working-days"
+                    placeholder={DEFAULT_STORE.workingDays}
+                    value={storeForm.workingDays}
+                    onChange={(event) =>
+                      updateStoreField("workingDays", event.target.value)
                     }
                   />
                 </div>

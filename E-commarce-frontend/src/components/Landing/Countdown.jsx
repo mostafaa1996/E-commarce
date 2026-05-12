@@ -1,36 +1,66 @@
 import { useEffect, useState } from "react";
 
-export default function Countdown() {
-  const [timeLeft, setTimeLeft] = useState({ d: 2, h: 14, m: 32, s: 18 });
+
+function extractTime(date) {
+  if (!date) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+
+  let remainingTime = date;
+
+  if (typeof date === "string" || date instanceof Date) {
+    remainingTime = new Date(date).getTime() - Date.now();
+  }
+
+  if (typeof remainingTime !== "number" || Number.isNaN(remainingTime)) {
+    return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+  }
+
+  remainingTime = Math.max(0, remainingTime);
+
+  const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+  console.log({ days, hours, minutes, seconds });
+  return { days, hours, minutes, seconds };
+}
+
+export default function Countdown({ date }) {
+  const [timeLeft, setTimeLeft] = useState(() => extractTime(date));
 
   useEffect(() => {
+    setTimeLeft(extractTime(date));
+
     const intervalId = setInterval(() => {
       setTimeLeft((previousTimeLeft) => {
-        let { d, h, m, s } = previousTimeLeft;
+        let { days, hours, minutes, seconds } = previousTimeLeft;
 
-        s -= 1;
-        if (s < 0) {
-          s = 59;
-          m -= 1;
-        }
-        if (m < 0) {
-          m = 59;
-          h -= 1;
-        }
-        if (h < 0) {
-          h = 23;
-          d -= 1;
-        }
-        if (d < 0) {
-          d = 0;
+        if (days === 0 && hours === 0 && minutes === 0 && seconds === 0) {
+          return previousTimeLeft;
         }
 
-        return { d, h, m, s };
+        seconds -= 1;
+        if (seconds < 0) {
+          seconds = 59;
+          minutes -= 1;
+        }
+        if (minutes < 0) {
+          minutes = 59;
+          hours -= 1;
+        }
+        if (hours < 0) {
+          hours = 23;
+          days -= 1;
+        }
+        if (days < 0) {
+          return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+        }
+
+        return { days, hours, minutes, seconds };
       });
     }, 1000);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [date]);
 
   function renderCell(value, label) {
     return (
@@ -47,10 +77,10 @@ export default function Countdown() {
 
   return (
     <div className="flex items-center gap-2">
-      {renderCell(timeLeft.d, "Days")}
-      {renderCell(timeLeft.h, "Hrs")}
-      {renderCell(timeLeft.m, "Min")}
-      {renderCell(timeLeft.s, "Sec")}
+      {renderCell(timeLeft.days, "Days")}
+      {renderCell(timeLeft.hours, "Hrs")}
+      {renderCell(timeLeft.minutes, "Min")}
+      {renderCell(timeLeft.seconds, "Sec")}
     </div>
   );
 }
