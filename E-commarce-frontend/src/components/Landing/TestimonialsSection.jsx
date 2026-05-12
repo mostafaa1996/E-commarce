@@ -8,7 +8,7 @@ export default function TestimonialsSection({ testimonials }) {
       subtitle="Real reviews from real shoppers"
     >
       <div className="grid gap-5 md:grid-cols-3">
-        {testimonials.map((testimonial) => (
+        {testimonials && testimonials.map((testimonial) => (
           <div
             key={testimonial.name}
             className="rounded-2xl border border-border bg-card p-6"

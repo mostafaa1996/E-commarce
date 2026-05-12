@@ -17,6 +17,7 @@ const variantSchema = new mongoose.Schema(
 
     price: { type: Number, required: true },
     compareAtPrice: Number, // old price
+    expireDate: Date,
 
     stock: { type: Number, required: true },
     lowStockThreshold: { type: Number, default: 5 },
