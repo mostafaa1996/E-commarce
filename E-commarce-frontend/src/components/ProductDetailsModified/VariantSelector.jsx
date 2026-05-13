@@ -4,26 +4,26 @@ const VariantSelector = ({ variants = [], selected, onSelect }) => {
   if (!variants?.length) return null;
 
   // Derive option groups
-  const colors = Array.from(new Map(variants.map((v) => [v.attributes.color?.name, v.attributes.color])).values()).filter(Boolean);
-  const storages = Array.from(new Set(variants.map((v) => v.attributes.storage).filter(Boolean)));
-  const sizes = Array.from(new Set(variants.map((v) => v.attributes.size).filter(Boolean)));
-  const rams = Array.from(new Set(variants.map((v) => v.attributes.ram).filter(Boolean)));
-  const ssds = Array.from(new Set(variants.map((v) => v.attributes.ssd).filter(Boolean)));
+  const colors = Array.from(new Map(variants.map((v) => [v?.attributes?.color?.name, v?.attributes?.color])).values()).filter(Boolean);
+  const storages = Array.from(new Set(variants.map((v) => v?.attributes?.storage).filter(Boolean)));
+  const sizes = Array.from(new Set(variants.map((v) => v?.attributes?.size).filter(Boolean)));
+  const rams = Array.from(new Set(variants.map((v) => v?.attributes?.ram).filter(Boolean)));
+  const ssds = Array.from(new Set(variants.map((v) => v?.attributes?.ssd).filter(Boolean)));
 
   const findVariant = (overrides) => {
-    const target = { ...selected.attributes, ...overrides };
+    const target = { ...selected?.attributes, ...overrides };
     return (
       variants.find(
         (v) =>
-          v.attributes.color?.name === target.color?.name &&
-          v.attributes.storage === target.storage &&
-          v.attributes.size === target.size &&
-          v.attributes.ram === target.ram &&
-          v.attributes.ssd === target.ssd,
+          v?.attributes?.color?.name === target.color?.name &&
+          v?.attributes?.storage === target.storage &&
+          v?.attributes?.size === target.size &&
+          v?.attributes?.ram === target.ram &&
+          v?.attributes?.ssd === target.ssd,
       ) ||
       variants.find((v) =>
         Object.entries(overrides).every(([k, val]) =>
-          k === "color" ? v.attributes.color?.name === val?.name : v.attributes[k] === val,
+          k === "color" ? v?.attributes?.color?.name === val?.name : v?.attributes[k] === val,
         ),
       )
     );
@@ -40,11 +40,11 @@ const VariantSelector = ({ variants = [], selected, onSelect }) => {
         <div>
           <div className="mb-3 flex items-baseline justify-between">
             <span className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Color</span>
-            <span className="text-sm font-medium text-foreground">{selected.attributes.color?.name}</span>
+            <span className="text-sm font-medium text-foreground">{selected?.attributes?.color?.name}</span>
           </div>
           <div className="flex flex-wrap gap-3">
             {colors.map((c) => {
-              const active = selected.attributes.color?.name === c.name;
+              const active = selected?.attributes?.color?.name === c.name;
               return (
                 <button
                   key={c.name}
@@ -67,11 +67,11 @@ const VariantSelector = ({ variants = [], selected, onSelect }) => {
       )}
 
       {storages.length > 1 && (
-        <PillGroup label="Storage" options={storages} value={selected.attributes.storage} onChange={(v) => select("storage", v)} />
+        <PillGroup label="Storage" options={storages} value={selected?.attributes?.storage} onChange={(v) => select("storage", v)} />
       )}
-      {sizes.length > 1 && <PillGroup label="Size" options={sizes} value={selected.attributes.size} onChange={(v) => select("size", v)} />}
-      {rams.length > 1 && <PillGroup label="Memory" options={rams} value={selected.attributes.ram} onChange={(v) => select("ram", v)} />}
-      {ssds.length > 1 && <PillGroup label="SSD" options={ssds} value={selected.attributes.ssd} onChange={(v) => select("ssd", v)} />}
+      {sizes.length > 1 && <PillGroup label="Size" options={sizes} value={selected?.attributes?.size} onChange={(v) => select("size", v)} />}
+      {rams.length > 1 && <PillGroup label="Memory" options={rams} value={selected?.attributes?.ram} onChange={(v) => select("ram", v)} />}
+      {ssds.length > 1 && <PillGroup label="SSD" options={ssds} value={selected?.attributes?.ssd} onChange={(v) => select("ssd", v)} />}
     </div>
   );
 };

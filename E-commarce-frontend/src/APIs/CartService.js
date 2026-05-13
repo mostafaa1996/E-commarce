@@ -16,7 +16,7 @@ export async function getCart() {
   const cart = await res.json();
 
   // console.log(cart);
-  if (cart.message === "Cart not found") {
+  if (cart.message === "Cart not found" || cart.message === "Unauthorized") {
     return {
       items: [], //[{ _id, title, price, quantity, image, subtotal }],
       totalItems: 0,

@@ -33,15 +33,15 @@ const PurchaseCard = ({
   const [wished, setWished] = useState(onWishlist);
   const [qty, setQty] = useState(initialQty);
   const [addedToCart, setAddedToCart] = useState(initiallyInCart);
-  const max = Math.max(1, variant.stock);
+  const max = Math.max(1, variant?.stock);
   const oos =
-    variant.availabilityStatus === "out_of_stock" || variant.stock === 0;
+    variant?.availabilityStatus === "out_of_stock" || variant?.stock === 0;
   const low =
-    variant.availabilityStatus === "low_stock" ||
-    (variant.stock > 0 && variant.stock <= variant.lowStockThreshold);
-  const discount = variant.compareAtPrice
+    variant?.availabilityStatus === "low_stock" ||
+    (variant?.stock > 0 && variant?.stock <= variant?.lowStockThreshold);
+  const discount = variant?.compareAtPrice
     ? Math.round(
-        ((variant.compareAtPrice - variant.price) / variant.compareAtPrice) *
+        ((variant?.compareAtPrice - variant?.price) / variant?.compareAtPrice) *
           100,
       )
     : 0;
@@ -66,12 +66,12 @@ const PurchaseCard = ({
       {/* Price */}
       <div className="flex items-baseline gap-3">
         <span className="text-3xl font-bold tracking-tight text-foreground">
-          {formatCurrency(variant.price, currency)}
+          {formatCurrency(variant?.price, currency)}
         </span>
-        {variant.compareAtPrice && (
+        {variant?.compareAtPrice && (
           <>
             <span className="text-base text-muted-foreground line-through">
-              {formatCurrency(variant.compareAtPrice, currency)}
+              {formatCurrency(variant?.compareAtPrice, currency)}
             </span>
             <span className="rounded-full bg-primary px-2.5 py-0.5 text-xs font-bold text-primary-foreground">
               −{discount}%
@@ -93,12 +93,12 @@ const PurchaseCard = ({
         ) : low ? (
           <span className="inline-flex items-center gap-1.5 rounded-full bg-warning/10 px-3 py-1 text-xs font-semibold text-warning">
             <span className="h-1.5 w-1.5 rounded-full bg-warning animate-pulse" />{" "}
-            Only {variant.stock} left
+            Only {variant?.stock} left
           </span>
         ) : (
           <span className="inline-flex items-center gap-1.5 rounded-full bg-success/10 px-3 py-1 text-xs font-semibold text-success">
             <Check className="h-3 w-3" strokeWidth={3} /> In stock —{" "}
-            {variant.stock} available
+            {variant?.stock} available
           </span>
         )}
       </div>

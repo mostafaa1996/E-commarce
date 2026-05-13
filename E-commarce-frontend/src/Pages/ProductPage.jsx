@@ -296,7 +296,7 @@ const ProductPage = () => {
                   <Hash className="h-3 w-3" />
                   <span>SKU:</span>
                   <code className="rounded-md bg-secondary px-2 py-0.5 font-mono text-foreground">
-                    {selectedVariant.sku}
+                    {selectedVariant?.sku}
                   </code>
                 </div>
 
