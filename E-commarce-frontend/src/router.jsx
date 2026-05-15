@@ -59,7 +59,7 @@ export const router = createBrowserRouter([
           {
             index: true,
             element: <ShopPage />,
-            handle: { title: "Shop" },
+            handle: { items: [{ label: "Shop", href: "/shop" }] },
             loader: async ({ request }) => {
               const InitialQuery = parseShopQueryFromUrl(request.url);
               return queryClient.ensureQueryData({
@@ -73,7 +73,12 @@ export const router = createBrowserRouter([
       {
         path: "/shop/products/:id",
         element: <ProductPage />,
-        handle: { title: "Product Details" },
+        handle: {
+          items: [
+            { label: "Shop", href: "/shop" },
+            { label: "Product Details" },
+          ],
+        },
         loader: async ({ params }) => {
           // console.log(params.id);
           // get the product
@@ -93,7 +98,7 @@ export const router = createBrowserRouter([
       {
         path: "/cart",
         element: <CartPage />,
-        handle: { title: "Cart" },
+        handle: { items: [{ label: "Cart", href: "/cart" }] },
         loader: async () => {
           return queryClient.ensureQueryData({
             queryKey: ["cart"],
@@ -105,7 +110,7 @@ export const router = createBrowserRouter([
       {
         path: "/checkout",
         element: <CheckoutPage />,
-        handle: { title: "Checkout" },
+        handle: { items: [{ label: "Checkout", href: "/checkout" }] },
         loader: async () => {
           return queryClient.ensureQueryData({
             queryKey: ["checkout"],
@@ -212,12 +217,12 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path : "/home",
-    element : <HomePage />
+    path: "/home",
+    element: <HomePage />,
   },
   {
-    path : "/contact",
-    element : <ContactPage />
+    path: "/contact",
+    element: <ContactPage />,
   },
   {
     path: "/profile/admin/dashboard",

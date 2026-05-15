@@ -1,6 +1,5 @@
 import { useMemo, useState, useEffect } from "react";
-import TopNav from "@/components/ProductDetailsModified/TopNav";
-import Breadcrumbs from "@/components/ProductDetailsModified/Breadcrumbs";
+import Breadcrumbs from "@/components/genericComponents/Breadcrumbs";
 import ImageGallery from "@/components/ProductDetailsModified/ImageGallery";
 import StarRating from "@/components/ProductDetailsModified/StarRating";
 import VariantSelector from "@/components/ProductDetailsModified/VariantSelector";
@@ -210,19 +209,7 @@ const ProductPage = () => {
         (item) => item._id.toString() === product._id.toString(),
       ) ?? false;
     content = (
-      <div className="flex flex-col items-center min-h-screen bg-background pb-24 md:pb-0">
-        <TopNav />
-        <Breadcrumbs
-          items={[
-            {
-              label: product.sourceCategoryName?.split(" > ")[0] || "Shop",
-              href: "#",
-            },
-            { label: product.category, href: "#" },
-            { label: product.title },
-          ]}
-        />
-
+      <div className="flex flex-col items-center min-h-screen bg-background pb-24 md:pb-0"> 
         {/* HERO */}
         <section className="container py-20 animate-fade-in">
           <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
@@ -373,13 +360,6 @@ const ProductPage = () => {
           loading={isFetchingRelatedProducts || isLoadingRelatedProducts}
           error={errorRelatedProducts}  
         />
-
-        {/* Footer */}
-        <footer className="w-full border-t border-border bg-secondary/30 py-10">
-          <div className="container text-center text-sm text-muted-foreground">
-            © {new Date().getFullYear()} ShopLite. Crafted with care.
-          </div>
-        </footer>
 
         {/* Mobile sticky bar */}
         <StickyMobileBuyBar

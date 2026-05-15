@@ -1,5 +1,4 @@
 import Footer from "@/components/Landing/Footer";
-import Header from "@/components/Landing/Header";
 import BenefitsSection from "@/components/Landing/BenefitsSection";
 import CategoriesSection from "@/components/Landing/CategoriesSection";
 import DealsBannerSection from "@/components/Landing/DealsBannerSection";
@@ -46,7 +45,6 @@ export default function HomePage() {
   } else {
     content = (
       <div className="min-h-screen bg-background">
-        <Header />
         <HeroSection />
         <CategoriesSection
           categories={data?.categories}

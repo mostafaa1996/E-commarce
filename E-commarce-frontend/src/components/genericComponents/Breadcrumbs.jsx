@@ -1,13 +1,14 @@
 import { ChevronRight, Home } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Breadcrumbs = ({ items = [] }) => (
   <nav aria-label="Breadcrumb" className="container py-4">
     <ol className="flex flex-wrap items-center gap-1.5 text-sm">
       <li>
-        <a href="/" className="flex items-center gap-1 text-muted-foreground transition-smooth hover:text-primary">
+        <Link to="/home" className="flex items-center gap-1 text-muted-foreground transition-smooth hover:text-primary">
           <Home className="h-3.5 w-3.5" />
           <span className="sr-only">Home</span>
-        </a>
+        </Link>
       </li>
       {items.map((item, i) => (
         <li key={i} className="flex items-center gap-1.5">
@@ -15,9 +16,9 @@ const Breadcrumbs = ({ items = [] }) => (
           {i === items.length - 1 ? (
             <span className="font-medium text-foreground">{item.label}</span>
           ) : (
-            <a href={item.href || "#"} className="text-muted-foreground transition-smooth hover:text-primary">
+            <Link to={item.href || "#"} className="text-muted-foreground transition-smooth hover:text-primary">
               {item.label}
-            </a>
+            </Link>
           )}
         </li>
       ))}
