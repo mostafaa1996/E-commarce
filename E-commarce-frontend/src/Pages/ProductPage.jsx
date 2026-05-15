@@ -133,20 +133,23 @@ const ProductPage = () => {
   const initialCartQty = matchingCartItem?.quantity ?? 1;
 
   useEffect(() => {
-    if (defaultVariant) {
+    if (selectedVariant) {
       // Use variant images if present, fallback to product images
-      const galleryImages = defaultVariant.images?.length
+      const galleryImages = selectedVariant.images?.length
         ? [
-            ...defaultVariant.images,
+            ...selectedVariant.images,
             ...product.images.filter(
-              (p) => !defaultVariant.images.some((i) => i.url === p.url),
+              (p) => !selectedVariant.images.some((i) => i.url === p.url),
             ),
           ]
         : product.images;
       setGalleryImages(galleryImages);
-      setSelectedVariant(defaultVariant);
     }
-  }, [defaultVariant, product, selectedVariant]);
+  }, [product, selectedVariant]);
+
+  useEffect(() => {
+    setSelectedVariant(defaultVariant);
+  }, [defaultVariant]);
 
   if(product){
     console.log(product);
