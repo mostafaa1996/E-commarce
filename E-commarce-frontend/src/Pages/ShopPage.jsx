@@ -8,6 +8,7 @@ import Loading from "@/components/genericComponents/Loading";
 
 const RangeOfPagesNumberToShow = 4;
 export default function ShopPage() {
+  let content = null;
   const { shopQuery, updateShopQuery } = useShopQuery();
   const { data, isLoading, isFetching, error } = useQuery({
     queryKey: ["products", shopQuery],
@@ -15,41 +16,61 @@ export default function ShopPage() {
     placeholderData: (previousData) => previousData,
   });
 
-  const startPage = SetPaginationStart(
-    data.pagination.currentPage,
-    data.pagination.totalPages,
-    RangeOfPagesNumberToShow,
-  );
+  const startPage = data?.pagination
+    ? SetPaginationStart(
+        data.pagination.currentPage,
+        data.pagination.totalPages,
+        RangeOfPagesNumberToShow,
+      )
+    : 1;
 
   function setCurrentPageEvent(currentPage) {
     updateShopQuery({ page: currentPage });
   }
-  if (isLoading) {
-    <div className="flex justify-center items-center py-20">
-      <Loading />;
-    </div>;
+
+  if ((isLoading || isFetching) && !data) {
+    content = <Loading message="Loading products" fullPage />;
   }
-  if (error) return <p>Error loading products</p>;
-  return (
-    <div className="flex flex-col items-center justify-center gap-10 min-h-[80vh]">
-      <ProductGrid products={data.products} />
-      {data && data?.products?.length > 0 && (
-        <Pagination
-          totalPages={data.pagination.totalPages}
-          onChange={setCurrentPageEvent}
-          startPage={startPage}
-          currentPage={shopQuery.page}
-          RangeOfPagesNumberToShow={RangeOfPagesNumberToShow}
-        />
-      )}
-      {(!data || (data && data?.products?.length === 0)) && (
-        <p className="text-2xl text-center font-semibold">No products found</p>
-      )}
-      {isFetching && (
-        <div className="absolute inset-0 flex items-center justify-center bg-white/60 z-10">
-          <Loading />
+
+  if (error && !data) {
+    content = (
+      <div className="min-h-[80vh] px-4 py-16">
+        <div className="mx-auto max-w-5xl rounded-2xl border border-destructive/20 bg-destructive/5 p-6 text-destructive">
+          <p className="font-semibold">Failed to load products.</p>
+          <p className="mt-2 text-sm">{error.message}</p>
         </div>
-      )}
-    </div>
-  );
+      </div>
+    );
+  }
+
+  if (data) {
+    content = (
+      <div className="relative flex min-h-[80vh] flex-col items-center justify-center gap-10">
+        {data.products?.length > 0 ? (
+          <>
+            <ProductGrid products={data.products} />
+            <Pagination
+              totalPages={data.pagination.totalPages}
+              onChange={setCurrentPageEvent}
+              startPage={startPage}
+              currentPage={shopQuery.page}
+              RangeOfPagesNumberToShow={RangeOfPagesNumberToShow}
+            />
+          </>
+        ) : (
+          <p className="text-center text-2xl font-semibold">
+            No products found
+          </p>
+        )}
+
+        {isFetching && (
+          <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/60">
+            <Loading message="Updating products" />
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return <>{content}</>;
 }
