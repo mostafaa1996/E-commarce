@@ -31,7 +31,7 @@ exports.getProducts = async (req, res, next) => {
   let sortOptions = {};
 
   if (category && category !== "null" && category !== "") {
-    api_params.category = { $regex: category, $options: "i" };
+    api_params.sourceCategoryName  = { $regex: category, $options: "i" };
   }
   if (brands && Array.isArray(brands) && brands.length > 0) {
     api_params.brand = { $in: brands.map((brand) => new RegExp(brand, "i")) };
@@ -75,7 +75,7 @@ exports.getProducts = async (req, res, next) => {
       ...api_params,
       isActive: true,
     })
-      .select("_id title price images")
+      .select("_id title price images reviewSummary sourceCategoryName").lean()
       .sort(sortOptions)
       .skip((pageNumber - 1) * limitNumber)
       .limit(limitNumber);
@@ -87,16 +87,23 @@ exports.getProducts = async (req, res, next) => {
     );
     if (category && category !== "null" && category !== "") {
       const Brands = await Product.find({
-        category: { $regex: req.query.category || "", $options: "i" },
+        sourceCategoryName: { $regex: req.query.category || "", $options: "i" },
       }).distinct("brand");
       const Tags = await Product.find({
-        category: { $regex: req.query.category || "", $options: "i" },
+        sourceCategoryName: { $regex: req.query.category || "", $options: "i" },
       }).distinct("tags");
       const price = await Product.find({
-        category: { $regex: req.query.category || "", $options: "i" },
+        sourceCategoryName: { $regex: req.query.category || "", $options: "i" },
       }).distinct("price");
       res.status(200).json({
-        products,
+        products : products.map((product) => {
+          return {
+            ...product,
+            image: product?.images[0]?.url || product?.mainImage?.url,
+            rating: product.reviewSummary?.averageRating || 0,
+            category: product.sourceCategoryName
+          }
+        }),
         pagination: {
           totalItems,
           totalPages: Math.ceil(totalItems / limitNumber),
@@ -109,7 +116,14 @@ exports.getProducts = async (req, res, next) => {
       });
     } else {
       res.status(200).json({
-        products,
+        products : products.map((product) => {
+          return {
+            ...product,
+            image: product?.images[0]?.url || product?.mainImage?.url,
+            rating: product.reviewSummary?.averageRating || 0,
+            category: product.sourceCategoryName
+          }
+        }),
         pagination: {
           totalItems,
           totalPages: Math.ceil(totalItems / limitNumber),
