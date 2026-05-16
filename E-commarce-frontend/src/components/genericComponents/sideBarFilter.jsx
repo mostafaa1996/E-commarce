@@ -4,7 +4,7 @@ export default function SidebarFilter({
   title,
   items,
   onSelectFilter,
-  activeFilter,
+  selected,
 }) {
   return (
     <div className="space-y-3">
@@ -20,32 +20,27 @@ export default function SidebarFilter({
           font-extralight hover:overflow-y-auto max-h-[250px] overflow-hidden `}
       >
         {items &&
-          items.map((item) => (
-            <li
-              key={item}
-              className={` 
+          items.map((item) => {
+            const isChecked = Array.isArray(selected)
+              ? selected.includes(item)
+              : selected === item;
+            return (
+              <li
+                key={item}
+                className={` 
               hover:text-[#FF6543] active:scale-110 transition duration-300 ease-in
-              ${
-                activeFilter[title.toLowerCase()]?.includes(item)
-                  ? "text-[#FF6543] underline"
-                  : ""
-              }`}
-            >
-              <Label className="flex cursor-pointer items-center gap-2 text-sm text-muted-foreground hover:text-primary">
-                <CheckBox
-                  checked={
-                    Array.isArray(activeFilter[title.toLowerCase()])
-                      ? activeFilter[title.toLowerCase()].includes(item) 
-                      : activeFilter[title.toLowerCase()] === item 
-                  }
-                  onCheckedChange={() => {
-                    onSelectFilter(title.toLowerCase(), item);
-                  }}
-                />
-                <span>{item}</span>
-              </Label>
-            </li>
-          ))}
+              ${isChecked ? "text-[#FF6543] underline" : ""}`}
+              >
+                <Label className="flex cursor-pointer items-center gap-2 text-sm text-muted-foreground hover:text-primary">
+                  <CheckBox
+                    checked={isChecked}
+                    onCheckedChange={() => onSelectFilter(item)}
+                  />
+                  <span>{item}</span>
+                </Label>
+              </li>
+            );
+          })}
       </ul>
     </div>
   );

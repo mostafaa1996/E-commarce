@@ -9,6 +9,22 @@ function parseNumberOrDefault(value, defaultValue) {
   return Number.isFinite(parsedValue) ? parsedValue : defaultValue;
 }
 
+function parseBooleanOrDefault(value, defaultValue) {
+  if (value === null || value === "") {
+    return defaultValue;
+  }
+
+  if (value === "true") {
+    return true;
+  }
+
+  if (value === "false") {
+    return false;
+  }
+
+  return defaultValue;
+}
+
 // parse url query
 // input: searchParams from useSearchParams hook
 // output: query object
@@ -31,6 +47,11 @@ export function parseURLQuery(searchParams, defaultURLQuery) {
       continue;
     }
 
+    if (typeof defaultValue === "boolean") {
+      query[key] = parseBooleanOrDefault(searchValue, defaultValue);
+      continue;
+    }
+
     query[key] = searchValue || defaultValue;
   }
 
@@ -45,7 +66,7 @@ export function buildURLQueryParams(query) {
   const clean = {};
 
   Object.entries(query).forEach(([key, value]) => {
-    if (value == null || value === "") {
+    if (value == null || value === "" || value === false) {
       return;
     }
 

@@ -30,7 +30,8 @@ import UserPaymentPage from "./Pages/UserPaymentPage";
 import UserSettingsPage from "./Pages/UserSettingsPage";
 import MainLayout from "./layouts/MainLayout";
 import ShopPageLayout from "./layouts/shopPageLayout";
-import { parseShopQueryFromUrl } from "./utils/ParseShopQuery";
+import { defaultShopQuery } from "./Data/shopQuery";
+import { parseShopQueryFromUrl } from "./utils/ParseUrlQuery";
 import StripeElementsWrapper from "./components/genericComponents/stripeElementWrapper";
 import DashboardPage from "./Pages/AdminDashboardPage";
 import AdminProductsPage from "./Pages/AdminProductsPage";
@@ -61,7 +62,10 @@ export const router = createBrowserRouter([
             element: <ShopPage />,
             handle: { items: [{ label: "Shop", href: "/shop" }] },
             loader: async ({ request }) => {
-              const InitialQuery = parseShopQueryFromUrl(request.url);
+              const InitialQuery = parseShopQueryFromUrl(
+                request.url,
+                defaultShopQuery,
+              );
               return queryClient.ensureQueryData({
                 queryKey: ["products", InitialQuery],
                 queryFn: () => getShopProducts(InitialQuery),

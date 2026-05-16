@@ -1,11 +1,19 @@
-export default function SetPaginationStart(currentPage, totalPages, rangeToShow) {
-  let startValue = 1;
-  if (currentPage === 1)
-    startValue = 1;
-  if (currentPage === totalPages)
-    startValue = totalPages - rangeToShow  + 1;
-  if (currentPage > 1 && currentPage < totalPages)
-    startValue = currentPage - 1 ;
+export default function SetPaginationStart(
+  currentPage,
+  totalPages,
+  rangeToShow,
+) {
+  if (!totalPages || totalPages <= rangeToShow) {
+    return 1;
+  }
 
-  return startValue;
+  if (currentPage <= 1) {
+    return 1;
+  }
+
+  if (currentPage >= totalPages) {
+    return Math.max(1, totalPages - rangeToShow + 1);
+  }
+
+  return Math.max(1, currentPage - 1);
 }

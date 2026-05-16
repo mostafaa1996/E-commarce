@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { parseURLQuery, buildURLQueryParams } from "../utils/ParseUrlQuery";
-
+import { useCallback } from "react";
 
 const useURLQuery = (defaultQuery) => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -10,19 +10,24 @@ const useURLQuery = (defaultQuery) => {
     [defaultQuery, searchParams],
   );
 
-  function updateUrlQuery(UpdatedQuery) {
-    const query = {
-      ...MainQuery,
-      ...UpdatedQuery,
-      page: UpdatedQuery.page ? UpdatedQuery.page : 1,
-    };
+  const updateUrlQuery = useCallback(
+    (UpdatedQuery) => {
+      const query = {
+        ...MainQuery,
+        ...UpdatedQuery,
+        page: UpdatedQuery.page ?? 1,
+      };
+      setSearchParams(buildURLQueryParams(query));
+    },
+    [MainQuery, setSearchParams],
+  );
 
-    setSearchParams(buildURLQueryParams(query));
-  }
-
-  function resetUrlQuery(defaultQuery) {
-    setSearchParams(buildURLQueryParams(defaultQuery));
-  }
+  const resetUrlQuery = useCallback(
+    (defaultQuery) => {
+      setSearchParams(buildURLQueryParams(defaultQuery));
+    },
+    [setSearchParams],
+  );
   function ExistInQuery(key, value) {
     // console.log(key, value);
     return Array.isArray(MainQuery[key])

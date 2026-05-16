@@ -1,21 +1,14 @@
 import DropDownMenu from "@/components/genericComponents/DropDownMenu";
 import ProductsSortingOption from "@/components/genericComponents/ProductsSortingOption";
 import { useState , useRef , useEffect } from "react";
-import useShopQuery from "@/hooks/shopPageQuery";
+import useURLQuery  from "@/hooks/UrlQuery";
+import { defaultShopQuery } from "@/Data/ShopQuery";
+import { sortingArray } from "@/Data/ShopQuery";
 
-const sortingArray = [
-  "price-asc",
-  "price-desc",
-  "newest",
-  "oldest",
-  "rating",
-  "Alphabetical",
-  "ReverseAlphabetical",
-  "Default sorting",
-];
+
 export default function SortingSection() {
   const [showMenu, setShowMenu] = useState(false);
-  const { updateShopQuery , shopQuery } = useShopQuery();
+  const {MainQuery, updateUrlQuery} = useURLQuery(defaultShopQuery);
   const MenuRef = useRef(null);
 
   useEffect(() => {
@@ -34,13 +27,13 @@ export default function SortingSection() {
     setShowMenu(!showMenu);
   }
   function onSelect(value) {
-    updateShopQuery({ sort: value });
+    updateUrlQuery({ sort: value });
     setShowMenu(false);
   }
   return (
     <div className="relative">
       <ProductsSortingOption
-        sort={shopQuery.sort || "Default sorting"}
+        sort={MainQuery.sort || "Default sorting"}
         ShowFilterMenu={ShowFilterMenu}
       />
       {showMenu && (

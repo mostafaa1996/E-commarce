@@ -2,6 +2,14 @@ const Product = require("../models/Product");
 const categories = require("../getBaseProductsByRapidAPI/categories");
 const Review = require("../models/Review");
 const User = require("../models/User");
+
+const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const isEnabled = (value) =>
+  value === true ||
+  value === "true" ||
+  value === "1" ||
+  value === "yes" ||
+  value === "on";
 //
 //  API = /shop/products?
 //   page=...&
@@ -23,10 +31,14 @@ exports.getProducts = async (req, res, next) => {
     maxPrice,
     sort,
     tags,
+    onDeal,
+    topRated,
+    bestSeller,
+    search,
   } = req.query;
   console.log(req.query);
-  pageNumber = Number(page);
-  limitNumber = Number(limit);
+  const pageNumber = Number(page);
+  const limitNumber = Number(limit);
   const api_params = {};
   let sortOptions = {};
 
@@ -58,33 +70,84 @@ exports.getProducts = async (req, res, next) => {
   if (tags && !Array.isArray(tags)) {
     api_params.tags = { $regex: tags, $options: "i" };
   }
+  if (search && search !== "null" && String(search).trim() !== "") {
+    const searchRegex = new RegExp(escapeRegex(String(search).trim()), "i");
+    api_params.$or = [
+      { title: searchRegex },
+      { description: searchRegex },
+      { sourceCategoryName: searchRegex },
+      { brand: searchRegex },
+      { tags: searchRegex },
+    ];
+  }
+  if (isEnabled(onDeal)) {
+    const now = new Date();
+    const oneMonthFromNow = new Date(now);
+    oneMonthFromNow.setMonth(oneMonthFromNow.getMonth() + 1);
+
+    api_params.$expr = {
+      $gt: [
+        {
+          $size: {
+            $filter: {
+              input: { $ifNull: ["$variants", []] },
+              as: "variant",
+              cond: {
+                $and: [
+                  { $eq: ["$$variant.isActive", true] },
+                  { $gt: ["$$variant.compareAtPrice", 0] },
+                  { $lt: ["$$variant.price", "$$variant.compareAtPrice"] },
+                  { $gte: ["$$variant.expireDate", now] },
+                  { $lte: ["$$variant.expireDate", oneMonthFromNow] },
+                ],
+              },
+            },
+          },
+        },
+        0,
+      ],
+    };
+  }
+  if (isEnabled(topRated)) {
+    api_params["reviewSummary.averageRating"] = { $gt: 0 };
+  }
+  if (isEnabled(bestSeller)) {
+    api_params.soldCount = { $gt: 0 };
+  }
   if (sort && sort !== "null" && sort !== "") {
     if (sort === "price-asc") sortOptions.price = 1;
     if (sort === "price-desc") sortOptions.price = -1;
     if (sort === "newest" || sort === "default") sortOptions.createdAt = -1;
     if (sort === "oldest") sortOptions.createdAt = 1;
-    if (sort === "rating") sortOptions.rating = -1;
+    if (sort === "rating") sortOptions["reviewSummary.averageRating"] = -1;
     if (sort === "Alphabetical") sortOptions.title = 1;
     if (sort === "ReverseAlphabetical") sortOptions.title = -1;
+  } if (isEnabled(bestSeller)) {
+    sortOptions.soldCount = -1;
+    sortOptions.createdAt = -1;
+  } if (isEnabled(topRated)) {
+    sortOptions["reviewSummary.reviewsCount"] = -1;
+    sortOptions["reviewSummary.averageRating"] = -1;
+    sortOptions.createdAt = -1;
   } else {
     sortOptions.createdAt = -1;
   }
   console.log(api_params);
+  console.log(sortOptions);
   try {
-    const products = await Product.find({
+    const productFilter = {
       ...api_params,
       isActive: true,
+    };
+    const products = await Product.find({
+      ...productFilter,
     })
-      .select("_id title price images reviewSummary sourceCategoryName").lean()
+      .select("_id title price mainImage images reviewSummary sourceCategoryName")
+      .lean()
       .sort(sortOptions)
       .skip((pageNumber - 1) * limitNumber)
       .limit(limitNumber);
-    const totalItems = await Product.countDocuments(
-      { ...api_params },
-      {
-        isActive: true,
-      },
-    );
+    const totalItems = await Product.countDocuments(productFilter);
     if (category && category !== "null" && category !== "") {
       const Brands = await Product.find({
         sourceCategoryName: { $regex: req.query.category || "", $options: "i" },
