@@ -7,7 +7,7 @@ const formatRange = (min, max) => {
   return `${a} – ${b}`;
 };
 
-const ShippingCard = ({ shipping, currency = "USD" }) => (
+const ShippingCard = ({ shipping, formatCurrency = (price) => price , rate = 1 }) => (
   <div className="rounded-2xl border border-border bg-card p-6 shadow-card">
     <h3 className="mb-4 text-base font-bold tracking-tight text-foreground">Shipping & Delivery</h3>
     <div className="space-y-3 text-sm">
@@ -29,7 +29,7 @@ const ShippingCard = ({ shipping, currency = "USD" }) => (
           <li key={c.shipsTo} className="flex items-center justify-between py-2 text-sm">
             <span className="text-foreground">{c.shipsTo}</span>
             <span className={`font-semibold ${c.cost === 0 ? "text-success" : "text-foreground"}`}>
-              {c.cost === 0 ? "Free" : new Intl.NumberFormat("en-US", { style: "currency", currency }).format(c.cost)}
+              {c.cost === 0 ? "Free" : formatCurrency(c.cost * rate)}
             </span>
           </li>
         ))}

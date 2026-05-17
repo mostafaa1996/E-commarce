@@ -1,12 +1,7 @@
 import Loading from "@/components/genericComponents/Loading";
-import useCurrency from "@/hooks/CurrencyChange";
-import { useCurrencyStore } from "@/zustand_preferences/currency";
 import { Link } from "react-router-dom";
 
-const RelatedProducts = ({ items, loading, error }) => {
-  const { currency, locale, conversion_rate } = useCurrencyStore();
-  const format = useCurrency(currency, locale);
-  const rate = conversion_rate[currency] ?? 1;
+const RelatedProducts = ({ items, loading, error , formatCurrency = (price) => price , rate = 1 }) => {
 
   if (loading) {
     return (
@@ -124,7 +119,7 @@ const RelatedProducts = ({ items, loading, error }) => {
                 {item.title}
               </p>
               <p className="text-sm font-bold text-primary md:text-base">
-                {format((item.price ?? 0) * rate)}
+                {formatCurrency((item.price ?? 0) * rate)}
               </p>
             </div>
           </Link>

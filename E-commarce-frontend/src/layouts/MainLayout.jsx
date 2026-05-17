@@ -9,7 +9,11 @@ import { useState } from "react";
 
 export default function MainLayout() {
   const matches = useMatches();
-  const items = matches[matches.length - 1]?.handle?.items;
+  const currentMatch = matches[matches.length - 1];
+  const items =
+    typeof currentMatch?.handle?.breadcrumb === "function"
+      ? currentMatch.handle.breadcrumb(currentMatch.data)
+      : currentMatch?.handle?.items;
   const [CartTotal, setCartTotal] = useState(null);
   const { data: cart } = useQuery({
     queryKey: ["cart"],

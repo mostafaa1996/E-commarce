@@ -48,6 +48,8 @@ import AdminSettingsPage from "./Pages/AdminSettingsPage";
 import ProductPage from "./Pages/ProductPage";
 import HomePage from "./Pages/HomePage";
 import ContactPage from "./Pages/ContactPage";
+import { shortenText } from "./utils/utils";
+import { useLoggedInEmail } from "./zustand_loggedIn/loggedInEmail";
 
 export const router = createBrowserRouter([
   {
@@ -78,9 +80,13 @@ export const router = createBrowserRouter([
         path: "/shop/products/:id",
         element: <ProductPage />,
         handle: {
-          items: [
+          breadcrumb: (data) => [
             { label: "Shop", href: "/shop" },
-            { label: "Product Details" },
+            {
+              label:
+                shortenText(data?.preloadedProduct?.title, 20) ||
+                "Product Details",
+            },
           ],
         },
         loader: async ({ params }) => {
@@ -90,11 +96,15 @@ export const router = createBrowserRouter([
             queryKey: ["product", params.id],
             queryFn: () => getProductById(params.id),
           });
+
+          let cart = null;
           // get the cart to know if the product is in the cart or not and based on that start quantity from cart number
-          const cart = await queryClient.ensureQueryData({
-            queryKey: ["cart"],
-            queryFn: getCart,
-          });
+          if (useLoggedInEmail.getState().loggedInEmail) {
+            cart = await queryClient.ensureQueryData({
+              queryKey: ["cart"],
+              queryFn: getCart,
+            });
+          }
 
           return { preloadedProduct, cart };
         },
