@@ -79,7 +79,7 @@ export default function useProductCart(product, selectedVariant, preloadedCart) 
       description: `${quantity} × ${product.title} (${selectedVariant.sku})`,
     })
     cartMutation.mutate({
-      ActionType: "add",
+      ActionType: "updateQuantity",
       productId: product._id,
       variantId: selectedVariant._id,
       quantity,

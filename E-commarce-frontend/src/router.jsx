@@ -17,7 +17,7 @@ import {
 
 import ShopPage from "./pages/ShopPage";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
-import CartPage from "./Pages/CartPage";
+import CartPage from "./Pages/CartPageModified";
 import LoginPage from "./Pages/loginPage";
 import SignupPage from "./Pages/SignupPage";
 import CheckoutPage from "./Pages/checkoutPage";

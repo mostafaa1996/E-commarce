@@ -1,6 +1,9 @@
 const User = require("../models/User");
 const Product = require("../models/Product");
 const Cart = require("../models/Cart");
+const VAT_shipping = require("../models/VAT");
+const Address = require("../models/Address");
+const { compare } = require("bcryptjs");
 exports.getCart = async (req, res, next) => {
   try {
     const userId = req.user.id;
@@ -13,14 +16,43 @@ exports.getCart = async (req, res, next) => {
       return res.status(200).json({ message: "Cart not found" });
     }
 
-    let cart = await Cart.findById(CartId).populate({
-      path: "products.productId",
-      select: "_id title images ",
-      model: "Product",
-    });
+    const [cart, vatConfig, addressOfUser] = await Promise.all([
+      Cart.findById(CartId).populate({
+        path: "products.productId",
+        select:
+          "_id title images shipping variants._id variants.sku variants.compareAtPrice",
+        model: "Product",
+      }),
+      VAT_shipping.findOne({}).select("vat delivery").lean(),
+      Address.findOne({ user: userId, isDefault: true })
+        .select("street city state country zipCode")
+        .lean(),
+    ]);
     if (!cart) {
       return res.status(200).json({ message: "Cart not found" });
     }
+    const vatRate = Number(vatConfig?.vat) || 0;
+    const normalizedDelivery = (vatConfig?.delivery || []).map((delivery) => ({
+      ...delivery,
+      place: String(delivery.place || "")
+        .trim()
+        .toLowerCase(),
+    }));
+
+    const locationParts = [
+      addressOfUser?.city,
+      addressOfUser?.state,
+      addressOfUser?.country,
+      user.PersonalInfo?.location,
+    ]
+      .filter(Boolean)
+      .map((part) => String(part).trim().toLowerCase());
+
+    const exactShippingLocation = normalizedDelivery.find((delivery) =>
+      locationParts.includes(delivery.place),
+    );
+
+    const shippingCost = Number(exactShippingLocation?.cost) || 0;
     const requiredCart = {
       totalItems: cart.totalItems,
       totalPrice: cart.totalPrice,
@@ -32,8 +64,17 @@ exports.getCart = async (req, res, next) => {
         image: item.productId.images[0].url,
         price: item.price,
         variantId: item.variantId,
+        sku: item.productId.variants.find(
+          (variant) => String(variant._id) === String(item.variantId),
+        )?.sku,
+        compareAtPrice:
+          item.productId.variants.find(
+            (variant) => String(variant._id) === String(item.variantId),
+          )?.compareAtPrice ?? 0,
         quantity: item.quantity,
         subtotal: item.subtotal,
+        vat: item.subtotal * vatRate,
+        shippingCost,
       })),
     };
     return res.status(200).json(requiredCart);
@@ -47,7 +88,7 @@ exports.SyncCart = async (req, res, next) => {
   try {
     const userId = req.user.id;
     console.log(req.body);
-    const { productId: id, quantity , variantId } = req.body || [];
+    const { productId: id, quantity, variantId } = req.body || [];
     const Quantity = Number(quantity);
     if (!id || !Quantity) {
       return res.status(400).json({ message: "Missing required fields" });
@@ -61,7 +102,9 @@ exports.SyncCart = async (req, res, next) => {
     const currentCart = await Cart.findOne({ userId });
     const product = await Product.findById(id);
     if (!product) return res.status(404).json({ message: "Product not found" });
-    const Variant = product.variants.find((variant) => variant._id.toString() === variantId); 
+    const Variant = product.variants.find(
+      (variant) => variant._id.toString() === variantId,
+    );
     //create new cart
     if (!currentCart) {
       const cart = await Cart.create({
@@ -72,16 +115,25 @@ exports.SyncCart = async (req, res, next) => {
             quantity: quantity,
             price: Variant.price,
             variantId: variantId,
-            subtotal: product.price * quantity,
+            subtotal: Variant.price * quantity,
           },
         ],
-        totalItems: quantity,
-        totalPrice: product.price * quantity,
         createdAt: Date.now(),
         updatedAt: Date.now(),
+        totalItems: 0,
+        totalPrice: 0,
       });
       if (!cart)
         return res.status(500).json({ message: "Failed to create cart" });
+      cart.totalItems = cart.products.reduce(
+        (total, item) => total + item.quantity,
+        0,
+      );
+      cart.totalPrice = cart.products.reduce(
+        (total, item) => total + item.subtotal,
+        0,
+      );
+      await cart.save();
       user.cart = cart._id;
       const updatedUser = await user.save();
       if (!updatedUser)
@@ -92,7 +144,9 @@ exports.SyncCart = async (req, res, next) => {
     //update existing cart
     if (currentCart) {
       const existingProduct = currentCart.products.find(
-        (item) => item.productId.toString() === id,
+        (item) =>
+          item.productId.toString() === id &&
+          item.variantId.toString() === variantId,
       );
       if (existingProduct) {
         subtotal = Quantity * existingProduct.price;
@@ -151,19 +205,23 @@ exports.deleteCartItem = async (req, res, next) => {
     const cart = await Cart.findOne({ userId });
     if (!cart) return res.status(404).json({ message: "Cart not found" });
     const product = cart.products.find(
-      (item) => item.productId.toString() === productId && item.variantId.toString() === variantId,
+      (item) =>
+        item.productId.toString() === productId &&
+        item.variantId.toString() === variantId,
     );
     if (!product)
       return res.status(404).json({ message: "Product not found in cart" });
     cart.products = cart.products.filter(
-      (item) => item.productId.toString() !== productId && item.variantId.toString() !== variantId,
+      (item) =>
+        item.productId.toString() !== productId &&
+        item.variantId.toString() !== variantId,
     );
     cart.totalItems -= product.quantity;
     cart.totalPrice -= product.subtotal;
     if (cart.totalItems < 0) cart.totalItems = 0;
     if (cart.totalPrice < 0) cart.totalPrice = 0;
     await cart.save();
-    if(cart.products.length === 0){ 
+    if (cart.products.length === 0) {
       await Cart.findByIdAndDelete(user.cart);
       user.cart = null;
       await user.save();

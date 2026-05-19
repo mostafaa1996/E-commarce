@@ -15,7 +15,7 @@ export async function getCart() {
 
   const cart = await res.json();
 
-  // console.log(cart);
+  console.log(cart);
   if (cart.message === "Cart not found" || cart.message === "Unauthorized") {
     return {
       items: [], //[{ _id, title, price, quantity, image, subtotal }],
@@ -30,7 +30,7 @@ export async function getCart() {
 }
 
 export async function syncCart({ ActionType, productId , variantId , quantity }) {
-  if (ActionType === "add") {
+  if (ActionType === "updateQuantity") {
     const res = await authFetch(`${URL}/cart/`, {
       method: "POST",
       headers: {
