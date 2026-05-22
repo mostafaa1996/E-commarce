@@ -150,7 +150,7 @@ export default function UserPaymentPage() {
         className={`${
           isLoading || error
             ? "text-center"
-            : "grid grid-cols-1 lg:grid-cols-2 gap-10"
+            : "grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-2 lg:gap-10"
         }`}
       >
         {content}

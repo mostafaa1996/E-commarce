@@ -13,9 +13,9 @@ export default function SelectField({ label, options, onChange , ...props }) {
       </label>
 
       <select
-        className="border border-zinc-200 rounded-lg px-4 py-2 text-sm
+        className="rounded-lg border border-zinc-200 px-4 py-3 text-[16px] font-light
           focus:outline-none focus:border-[#FF6543] transition duration-300 ease-in-out"
-        onChange={e =>onChange(e.target.value)}
+        onChange={e => onChange?.(e.target.value)}
         {...props}
       >
         {Options.map(option => (

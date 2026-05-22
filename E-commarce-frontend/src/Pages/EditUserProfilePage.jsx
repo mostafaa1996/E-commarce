@@ -51,32 +51,38 @@ export default function EditUserProfilePage() {
     <>
       <BaseSection>
         <ProfileCard
-          className={`max-w-7xl lg:flex-col lg:items-start justify-center gap-0 h-fit`}
+          className="h-fit max-w-7xl justify-center gap-1 lg:flex-col lg:items-start"
         >
-          <h1 className="text-2xl font-bold mb-4">Edit Profile</h1>
+          <h1 className="text-2xl font-bold sm:text-3xl">Edit Profile</h1>
           <p className="text-zinc-400 text-sm">
             Update your personal information
           </p>
         </ProfileCard>
         <ProfileCard
-          className={`max-w-7xl lg:flex-col lg:items-start justify-center gap-0 h-fit`}
+          className="h-fit max-w-7xl justify-center gap-0 lg:flex-col lg:items-start"
         >
-          <div className="flex flex-row items-end gap-5">
-            <div className="flex flex-col items-start justify-center">
-              <h1 className="text-md mb-4">Profile Photo</h1>
+          <div className="flex w-full flex-col gap-4 sm:flex-row sm:items-end sm:gap-5">
+            <div className="flex flex-row items-center gap-4 sm:flex-col sm:items-start sm:justify-center sm:gap-0">
+              <h1 className="text-md hidden sm:mb-4 sm:block">Profile Photo</h1>
               <Avatar
                 src={data.avatar.url ||Man_avatar}
                 alt="Man"
                 onClick={handleOpenFileDialog}
               />
+              <div className="sm:hidden">
+                <h1 className="text-base font-medium text-[#272727]">
+                  Profile Photo
+                </h1>
+                <p className="text-sm text-zinc-400">Tap photo to change</p>
+              </div>
             </div>
-            <div className="flex flex-col items-start">
-              <h1 className="text-md ">Upload New Photo</h1>
+            <div className="flex min-w-0 flex-col items-start">
+              <h1 className="text-md hidden sm:block">Upload New Photo</h1>
               <p className="text-zinc-400 text-sm">
                 JPG, PNG, SVG, GIF (MAX. 800x800px)
               </p>
               <Button
-                className="lg:text-[15px] rounded-md"
+                className="mt-3 w-full rounded-md py-2 text-sm sm:w-fit lg:text-[15px]"
                 onClick={handleOpenFileDialog}
               >
                 Upload Photo
@@ -92,11 +98,19 @@ export default function EditUserProfilePage() {
           </div>
         </ProfileCard>
         <ProfileForm className="max-w-7xl" data={data}/>
-        <div className="flex flex-row items-center justify-end gap-5">
-          <Button className="rounded-md" type="button" onClick={() => navigate(-1)}>
+        <div className="flex flex-col-reverse items-stretch gap-3 sm:flex-row sm:items-center sm:justify-end sm:gap-5">
+          <Button
+            className="w-full rounded-md py-2 text-sm sm:w-fit"
+            type="button"
+            onClick={() => navigate(-1)}
+          >
             Cancel
           </Button>
-          <Button className="rounded-md" type="submit" form="profile-form">
+          <Button
+            className="w-full rounded-md py-2 text-sm sm:w-fit"
+            type="submit"
+            form="profile-form"
+          >
             <Icon name="save" variant="surrounded" size={18} className="mr-2" />
             Save Changes
           </Button>

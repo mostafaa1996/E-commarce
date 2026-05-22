@@ -2,7 +2,7 @@ import {Fragment } from "react";
 export default function Pagination({
   totalPages,
   RangeOfPagesNumberToShow,
-  startPage,
+  startPage = 1,
   currentPage,
   onChange,
 }) {
@@ -18,7 +18,7 @@ export default function Pagination({
   }
   // console.log(currentPage);
   return (
-    <div className="flex items-center justify-center gap-3 text-sm text-zinc-500">
+    <div className="flex flex-wrap items-center justify-center gap-3 text-sm text-zinc-500">
       <button
         onClick={PrevPage}
         disabled={currentPage === 1}

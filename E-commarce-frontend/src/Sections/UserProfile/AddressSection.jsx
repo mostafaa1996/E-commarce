@@ -23,7 +23,7 @@ export default function AddressSection({ addresses }) {
         }
         ButtonContent={{ position: "left", text: "Add address", icon: "+" }}
       />
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 p-6">
+      <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 sm:gap-6 sm:p-6">
         {addresses &&
           addresses.length > 0 &&
           addresses.map((address) => (

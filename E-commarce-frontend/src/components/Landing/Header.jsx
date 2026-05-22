@@ -65,7 +65,7 @@ export default function Header({ cartTotal = 0, loggedIn = false }) {
 
         <div className="flex items-center gap-1 ml-auto">
           <AdminButton
-            onClick={() => navigate("/wishlist")}
+            onClick={() => navigate("/profile/wishlist")}
             variant="ghost"
             size="icon"
             className="hidden sm:inline-flex"
@@ -86,7 +86,7 @@ export default function Header({ cartTotal = 0, loggedIn = false }) {
             </span>
           </AdminButton>
           <AdminButton
-            onClick={() => navigate("/account")}
+            onClick={() => navigate("/profile")}
             variant="ghost"
             size="icon"
             className="hidden sm:inline-flex"

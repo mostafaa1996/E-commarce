@@ -10,7 +10,7 @@ export default function UserSidebar({ items,onLogout }) {
   const navigate = useNavigate(); 
   return (
     <AccountSidebar>
-      <div className="mt-5 ">
+      <div className="flex gap-1 overflow-x-auto p-2 lg:mt-5 lg:block lg:overflow-visible lg:p-0">
         {items.map((item) => (
           <NavItem
             key={item.id}

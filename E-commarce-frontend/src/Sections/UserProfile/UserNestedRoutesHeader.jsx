@@ -14,18 +14,24 @@ export default function UserNestedRoutesHeader({
   return (
     <div
       className={twMerge(
-        clsx(`border border-zinc-200 rounded-xl bg-white p-6`, className),
+        clsx(`rounded-xl border border-zinc-200 bg-white p-4 sm:p-6`, className),
       )}
     >
-      <div className="flex flex-row items-center justify-between">
-        <div className="flex items-center gap-3">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex min-w-0 items-start gap-3 sm:items-center">
           <Icon name={iconName} size={24} strokeWidth={1.5} variant="primary" />
-          <h2 className="text-[21px] font-light text-[#272727]">{title}</h2>
-          <span className="text-sm text-zinc-500">({info})</span>
+          <div className="min-w-0 sm:flex sm:items-center sm:gap-3">
+            <h2 className="text-lg font-light text-[#272727] sm:text-[21px]">
+              {title}
+            </h2>
+            <span className="block text-sm text-zinc-500 sm:inline">
+              ({info})
+            </span>
+          </div>
         </div>
         {buttonText && (
           <Button
-            className="tracking-wide text-xl"
+            className="w-full tracking-wide sm:w-fit sm:text-base lg:text-xl"
             onClick={onClick}
           >
             <Icon

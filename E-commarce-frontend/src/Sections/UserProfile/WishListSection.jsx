@@ -11,7 +11,7 @@ export default function WishListSection({ WishList }) {
   const format = useCurrency(currency, locale);
   const navigate = useNavigate();
   return (
-    <DashBoardTable >
+    <DashBoardTable>
       <DashBoardTableHeader
         ButtonAction={() => navigate("/profile/wishlist")}
         HeaderText="WishList"
@@ -20,7 +20,7 @@ export default function WishListSection({ WishList }) {
         }
         ButtonContent={{ position: "right", text: "View all", icon: ">" }}
       />
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 m-3">
+      <div className="grid grid-cols-1 justify-items-center gap-4 p-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
         {WishList &&
           WishList.length > 0 &&
           WishList.map((product) => (

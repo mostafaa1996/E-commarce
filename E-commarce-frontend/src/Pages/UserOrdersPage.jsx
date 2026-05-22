@@ -107,7 +107,7 @@ export default function UserOrdersPage() {
 
   return (
     <BaseSection>
-      <div className="flex flex-col items-center justify-center">
+      <div className="flex w-full flex-col items-center justify-center">
         <UserNestedRoutesHeader
           className="w-full"
           iconName="orders"
@@ -121,12 +121,12 @@ export default function UserOrdersPage() {
           setActive={setFilter}
           setSearchValue={setSearchValue}
         />
-        <div className="flex flex-col gap-0 w-full">
-          <DashBoardTable className={`w-full my-4`}>
+        <div className="flex w-full flex-col gap-0">
+          <DashBoardTable className="my-4 w-full">
             {filteredOrders && filteredOrders.length > 0 ? (
               filteredOrders.map((order) => order)
             ) : (
-              <p className="text-center m-10">No orders found for this filter</p>
+              <p className="m-6 text-center sm:m-10">No orders found for this filter</p>
             )}
           </DashBoardTable>
         </div>

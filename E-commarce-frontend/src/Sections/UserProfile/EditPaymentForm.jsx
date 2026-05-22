@@ -68,9 +68,9 @@ export default function FormSection({ title, clientSecret , onCancel }) {
       </h1>
     );
   return (
-    <div className="border border-zinc-200 rounded-xl bg-white p-6">
-      <div className="flex flex-row items-center justify-between mb-5">
-        <h3 className="text-[21px] font-light text-[#272727] flex items-center gap-2">
+    <div className="rounded-xl border border-zinc-200 bg-white p-4 sm:p-6">
+      <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <h3 className="flex items-center gap-2 text-lg font-light text-[#272727] sm:text-[21px]">
           <Icon name="payment" size={24} strokeWidth={1.5} variant="primary" />
           {title}
         </h3>
@@ -81,10 +81,10 @@ export default function FormSection({ title, clientSecret , onCancel }) {
         <PaymentElement />
         {/* Actions */}
         <div className="flex flex-col">
-          <div className="flex justify-end gap-4 pt-4 border-t border-zinc-200">
+          <div className="flex flex-col-reverse gap-3 border-t border-zinc-200 pt-4 sm:flex-row sm:justify-end sm:gap-4">
             <button
               type="button"
-              className="px-5 py-2 rounded-lg border border-zinc-200 text-xl
+              className="rounded-lg border border-zinc-200 px-5 py-2 text-base
                 hover:bg-zinc-100 transition "
               onClick={() => onCancel()}
               ref={CancelButtonRef}
@@ -93,7 +93,7 @@ export default function FormSection({ title, clientSecret , onCancel }) {
             </button>
             <button
               type="button"
-              className=" px-6 py-2 rounded-lg bg-[#FF6543] text-white text-xl
+              className="rounded-lg bg-[#FF6543] px-6 py-2 text-base text-white
                 hover:bg-[#e05535] transition "
               disabled={!stripe || !elements || loading}
               onClick={handleSubmit}
@@ -103,7 +103,7 @@ export default function FormSection({ title, clientSecret , onCancel }) {
           </div>
           {msg && (
             <div
-              className={`text-md text-end  ${
+              className={`text-md mt-3 text-left sm:text-end ${
                 msg.type === "error" ? "text-red-500" : "text-green-500"
               }`}
             >

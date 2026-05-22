@@ -66,7 +66,7 @@ export default function WishListPage() {
             onClick={() => handleClearWishList(wishListIds)}
           />
 
-          <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 lg:gap-20 sm:gap-15 gap-10 w-full justify-items-center">
+          <div className="grid w-full grid-cols-1 justify-items-center gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 lg:gap-10">
             {wishList &&
               wishList.wishlist?.map((product) => (
                 <Fragment key={product._id}>

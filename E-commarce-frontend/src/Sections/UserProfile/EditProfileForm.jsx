@@ -11,17 +11,17 @@ export default function ProfileForm({ data, className }) {
       method="post"
       className={twMerge(
         clsx(
-          `flex flex-col gap-6 border border-zinc-200 rounded-xl bg-white p-6`,
+          `flex flex-col gap-4 rounded-xl border border-zinc-200 bg-white p-4 sm:gap-6 sm:p-6`,
           className,
         ),
       )}
     >
-      <h3 className="text-[21px] font-light text-[#272727] mb-6">
+      <h3 className="mb-2 text-lg font-light text-[#272727] sm:mb-6 sm:text-[21px]">
         Personal Form
       </h3>
 
       {/* Row 1 */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
         <InputField
           label="First Name"
           placeholder="First name"
@@ -37,7 +37,7 @@ export default function ProfileForm({ data, className }) {
       </div>
 
       {/* Row 2 */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
         <InputField
           label="Email Address"
           placeholder="...@email.com"
@@ -53,7 +53,7 @@ export default function ProfileForm({ data, className }) {
       </div>
 
       {/* Row 3 */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
         <InputField
           label="Date of Birth"
           type="date"

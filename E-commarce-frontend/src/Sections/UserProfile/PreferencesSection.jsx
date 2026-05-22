@@ -20,13 +20,13 @@ export default function PreferencesSection() {
   else if (value === "EUR") setLocale("en-EU");
 }
   return (
-    <div className="border border-zinc-200 rounded-xl bg-white p-6">
-      <h3 className="text-[21px] font-light text-[#272727] mb-6 flex items-center gap-2">
+    <div className="rounded-xl border border-zinc-200 bg-white p-4 sm:p-6">
+      <h3 className="mb-4 flex items-center gap-2 text-lg font-light text-[#272727] sm:mb-6 sm:text-[21px]">
         <Icon name="" size={24} strokeWidth={1.5} variant="primary" />
         preferences
       </h3>
       <Form className="flex flex-col gap-6">
-        <div className="flex lg:flex-row flex-col gap-4">
+        <div className="flex flex-col gap-4 lg:flex-row">
           <SelectField
             label="Language"
             defaultValue="English"
@@ -50,9 +50,9 @@ export default function PreferencesSection() {
           />
         </div>
 
-        <div className="flex lg:flex-row lg:justify-between flex-col gap-4">
+        <div className="flex flex-col gap-4 lg:flex-row lg:justify-between">
           <div className="flex flex-col">
-            <h1 className="text-[21px] font-light text-[#272727] flex items-center gap-2">
+            <h1 className="flex items-center gap-2 text-lg font-light text-[#272727] sm:text-[21px]">
               Apperance
             </h1>
             <p className="text-sm text-zinc-500">
@@ -67,9 +67,9 @@ export default function PreferencesSection() {
           />
         </div>
 
-        <div className="flex lg:flex-row lg:justify-between flex-col gap-4 border-t border-zinc-200 pt-4">
+        <div className="flex flex-col gap-4 border-t border-zinc-200 pt-4 lg:flex-row lg:justify-between">
           <div className="flex flex-col">
-            <h1 className="text-[21px] font-light text-[#272727] flex items-center gap-2">
+            <h1 className="flex items-center gap-2 text-lg font-light text-[#272727] sm:text-[21px]">
               Two-Factor Authentication
             </h1>
             <p className="text-sm text-zinc-500">

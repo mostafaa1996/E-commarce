@@ -9,11 +9,11 @@ export default function EditAddressForm({
   onCancel,
 }) {
   return (
-    <div className="border border-zinc-200 rounded-xl bg-white p-6 transform ease-in-out duration-300">
-      <h3 className="text-[21px] font-light text-[#272727] mb-6">{title}</h3>
-      <Form className="flex flex-col gap-6" method="post">
+    <div className="rounded-xl border border-zinc-200 bg-white p-4 duration-300 ease-in-out sm:p-6">
+      <h3 className="mb-4 text-lg font-light text-[#272727] sm:mb-6 sm:text-[21px]">{title}</h3>
+      <Form className="flex flex-col gap-4 sm:gap-6" method="post">
         {/* Row 1 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
           <InputField
             label="Label (e.g. Home)"
             placeholder="Home"
@@ -30,7 +30,7 @@ export default function EditAddressForm({
         </div>
 
         {/* Row 2 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
           <InputField
             label="Street Address"
             placeholder="Apart.num,Building, Main Street"
@@ -50,7 +50,7 @@ export default function EditAddressForm({
         </div>
 
         {/* Row 3 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
           <InputField
             label="ZIP Code"
             placeholder="10001"
@@ -67,7 +67,7 @@ export default function EditAddressForm({
         </div>
 
         {/* Row 4 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
           <InputField
             label="Email"
             placeholder="l7P8o@example.com"
@@ -84,14 +84,14 @@ export default function EditAddressForm({
         </div>
 
         {/* Actions */}
-        <div className="flex justify-end gap-4 pt-4 border-t border-zinc-200">
+        <div className="flex flex-col-reverse gap-3 border-t border-zinc-200 pt-4 sm:flex-row sm:justify-end sm:gap-4">
           <button
             type="button"
             className="
               px-5 py-2
               rounded-lg
               border border-zinc-200
-              text-xl
+              text-base sm:text-xl
               hover:bg-zinc-100
               transition
               cursor-pointer
@@ -108,11 +108,11 @@ export default function EditAddressForm({
               rounded-lg
               bg-[#FF6543]
               text-white
-              text-xl
+              text-base sm:text-xl
               hover:bg-[#e05535]
               transition
               cursor-pointer
-              flex flex-row items-center gap-2
+              flex flex-row items-center justify-center gap-2
             "
           >
             <Icon
