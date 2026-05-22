@@ -34,7 +34,8 @@ exports.getUserProfile = async (req, res, next) => {
       .populate({
         path: "Addresses",
         limit: 3,
-      }).populate({
+      })
+      .populate({
         path: "wishlist",
         limit: 3,
       });
@@ -117,21 +118,40 @@ exports.uploadProfilePic = async (req, res, next) => {
 
 exports.UpdatePersonalInfo = async (req, res, next) => {
   try {
-    console.log("Valid data");
+    const errors = validationResult(req);
+    if (!errors.isEmpty())
+      return res.status(400).json({ errors: errors.array() });
     const userId = req.user.id;
     if (!userId) return res.sendStatus(401);
     const user = await User.findById(userId);
     if (!user) return res.sendStatus(401);
+    const {
+      firstName,
+      lastName,
+      email,
+      phone,
+      DateOfBirth,
+      gender,
+      location,
+      Bio,
+    } = req.body;
+
+    const avatar = req.file;
+    const result = await UploadToCloudinary(avatar.buffer, req.user.id);
+
     await User.findByIdAndUpdate(userId, {
       $set: {
-        "PersonalInfo.firstName": req.body.firstName,
-        "PersonalInfo.lastName": req.body.lastName,
-        "PersonalInfo.email": req.body.email,
-        "PersonalInfo.phone": req.body.phone,
-        "PersonalInfo.dateOfBirth": req.body.dateOfBirth,
-        "PersonalInfo.gender": req.body.gender,
-        "PersonalInfo.location": req.body.location,
-        "PersonalInfo.Bio": req.body.Bio,
+        "PersonalInfo.firstName": firstName,
+        "PersonalInfo.lastName": lastName,
+        "PersonalInfo.email": email,
+        "PersonalInfo.phone": phone,
+        "PersonalInfo.dateOfBirth": DateOfBirth,
+        "PersonalInfo.gender": gender,
+        "PersonalInfo.location": location,
+        "PersonalInfo.Bio": Bio,
+        "PersonalInfo.avatar.url": result.secure_url,
+        "PersonalInfo.avatar.publicId": result.public_id,
+        "PersonalInfo.updatedAt": new Date(),
       },
     });
     await user.save();
@@ -351,7 +371,7 @@ exports.setAddressToDefault = async (req, res, next) => {
     const UpdatedAddress = await Address.findById(Id);
     if (!UpdatedAddress)
       return res.status(404).json({ message: "Address not found" });
-    
+
     res
       .status(200)
       .json({ message: "Address set as default successfully", ok: true });

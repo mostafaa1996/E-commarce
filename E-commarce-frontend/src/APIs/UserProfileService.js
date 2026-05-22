@@ -36,44 +36,21 @@ export async function getPersonalInfo() {
   return data;
 }
 
-export async function UploadProfileImage(formData) {
-  const res = await authFetch(
-    `${URL}/user/profile/uploadProfilePic`,
-    {
-      method: "POST",
-      body: formData,
-    },
-  );
-  if (!res.ok) {
-    throw new Error("Failed to upload user Image");
-  }
-  const data = await res.json();
-  return data;
-}
-
 export async function UpdatePersonalInfo(request) {
   const formData = await request.formData();
-  const personalInfo = {
-    firstName: formData.get("firstName"),
-    lastName: formData.get("lastName"),
-    email: formData.get("email"),
-    phone: formData.get("phone"),
-    dateOfBirth: formData.get("dateOfBirth"),
-    gender: formData.get("gender"),
-    location: formData.get("location"),
-    Bio: formData.get("bio"),
-  };
-  console.log(personalInfo);
-  const res = await authFetch(
-    `${URL}/user/profile/updatePersonalInfo`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(personalInfo),
-    },
-  );
+  const avatar = formData.get("avatar");
+
+  console.log(avatar);
+  console.log(avatar instanceof File);
+  console.log({
+    name: avatar?.name,
+    type: avatar?.type,
+    size: avatar?.size,
+  });
+  const res = await authFetch(`${URL}/user/profile/updatePersonalInfo`, {
+    method: "POST",
+    body: formData,
+  });
   if (!res.ok) {
     throw new Error("Failed to update user personal info");
   }
@@ -83,9 +60,7 @@ export async function UpdatePersonalInfo(request) {
 }
 
 export async function getUserPaginatedOrders(page, limit) {
-  console.log(
-    `${URL}/user/profile/orders?page=${page}&limit=${limit}`,
-  );
+  console.log(`${URL}/user/profile/orders?page=${page}&limit=${limit}`);
   const res = await authFetch(
     `${URL}/user/profile/orders?page=${page}&limit=${limit}`,
     {
@@ -182,44 +157,35 @@ export async function updateUserAddresses(request) {
       }
       break;
     case "Save":
-      res = await authFetch(
-        `${URL}/user/profile/updateAddress/${id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(address),
+      res = await authFetch(`${URL}/user/profile/updateAddress/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify(address),
+      });
       if (!res.ok) {
         throw new Error("Failed to update user address");
       }
       break;
     case "delete":
-      res = await authFetch(
-        `${URL}/user/profile/deleteAddress/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
+      res = await authFetch(`${URL}/user/profile/deleteAddress/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+      });
       if (!res.ok) {
         throw new Error("Failed to delete user address");
       }
       break;
     case "setAsDefault":
-      res = await authFetch(
-        `${URL}/user/profile/SetAddressToDefault/${id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
+      res = await authFetch(`${URL}/user/profile/SetAddressToDefault/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+      });
       if (!res.ok) {
         throw new Error("Failed to set user address as default");
       }
@@ -238,34 +204,28 @@ export async function updateUserAddresses(request) {
 }
 
 export async function getUserPaymentMethods() {
-  const res = await authFetch(
-    `${URL}/user/profile/getPaymentMethods`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+  const res = await authFetch(`${URL}/user/profile/getPaymentMethods`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
     },
-  )
+  });
   if (!res.ok) {
     throw new Error("Failed to fetch user payment methods");
   }
   const data = await res.json();
-  const {cards} = data;
+  const { cards } = data;
   // console.log(data);
   return cards;
 }
 
 export async function SetUpPaymentMethods() {
-  const res = await authFetch(
-    `${URL}/user/profile/setUpPaymentMethods`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+  const res = await authFetch(`${URL}/user/profile/setUpPaymentMethods`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
     },
-  )
+  });
   if (!res.ok) {
     throw new Error("Failed to set up payment methods");
   }
@@ -283,7 +243,7 @@ export async function setCardAsDefault(id) {
         "Content-Type": "application/json",
       },
     },
-  )
+  );
   if (!res.ok) {
     throw new Error("Failed to set card as default");
   }
@@ -292,16 +252,13 @@ export async function setCardAsDefault(id) {
   return data;
 }
 
-export async function deletePaymentMethod(id){
-  const res = await authFetch(
-    `${URL}/user/profile/deletePaymentMethod/${id}`,
-    {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
+export async function deletePaymentMethod(id) {
+  const res = await authFetch(`${URL}/user/profile/deletePaymentMethod/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
     },
-  )
+  });
   if (!res.ok) {
     throw new Error("Failed to delete payment method");
   }
@@ -310,22 +267,20 @@ export async function deletePaymentMethod(id){
   return data;
 }
 
-export async function changePassword(request){
+export async function changePassword(request) {
   const formData = await request.formData();
   const newPassword = formData.get("newPassword");
   const currentPassword = formData.get("currentPassword");
   const confirmPassword = formData.get("confirmPassword");
-  if (newPassword !== confirmPassword) return {message: "Passwords do not match" , ok: false};
-  const res = await authFetch(
-    `${URL}/user/profile/changePassword`,
-    {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ newPassword, currentPassword }),
+  if (newPassword !== confirmPassword)
+    return { message: "Passwords do not match", ok: false };
+  const res = await authFetch(`${URL}/user/profile/changePassword`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
     },
-  )
+    body: JSON.stringify({ newPassword, currentPassword }),
+  });
   if (!res.ok) {
     throw new Error("Failed to change password");
   }
@@ -333,5 +288,3 @@ export async function changePassword(request){
   console.log(data);
   return data;
 }
-
-

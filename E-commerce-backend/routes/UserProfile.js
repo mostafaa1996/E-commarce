@@ -11,15 +11,11 @@ const isValid = require("../MiddleWare/isValid");
 
 router.get("/", isAuth, UserProfileController.getUserProfile);
 router.get("/personalInfo", isAuth, UserProfileController.getPersonalInfo);
-router.post(
-  "/uploadProfilePic",
-  isAuth,
-  upload.single("image"),
-  UserProfileController.uploadProfilePic,
-);
+
 router.post(
   "/updatePersonalInfo",
   isAuth,
+  upload.single("avatar"),
   ValidatePersonalInfo,
   isValid,
   UserProfileController.UpdatePersonalInfo,

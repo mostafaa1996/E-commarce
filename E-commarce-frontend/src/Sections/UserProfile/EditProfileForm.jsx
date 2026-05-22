@@ -4,10 +4,11 @@ import SelectField from "@/components/genericComponents/SelectField";
 import { Form } from "react-router-dom";
 import clsx from "clsx";
 import { twMerge } from "tailwind-merge";
-export default function ProfileForm({ data, className }) {
+import { mongoDateToInputDate } from "@/utils/utils";
+export default function ProfileForm({ data, className, id }) {
   return (
     <Form
-      id="profile-form"
+      id={id}
       method="post"
       className={twMerge(
         clsx(
@@ -15,6 +16,7 @@ export default function ProfileForm({ data, className }) {
           className,
         ),
       )}
+      encType="multipart/form-data"
     >
       <h3 className="mb-2 text-lg font-light text-[#272727] sm:mb-6 sm:text-[21px]">
         Personal Form
@@ -26,13 +28,13 @@ export default function ProfileForm({ data, className }) {
           label="First Name"
           placeholder="First name"
           name="firstName"
-          defaultValue={data.firstName}
+          defaultValue={data?.firstName}
         />
         <InputField
           label="Last Name"
           placeholder="Last name"
           name="lastName"
-          defaultValue={data.lastName}
+          defaultValue={data?.lastName}
         />
       </div>
 
@@ -42,13 +44,13 @@ export default function ProfileForm({ data, className }) {
           label="Email Address"
           placeholder="...@email.com"
           name="email"
-          defaultValue={data.email}
+          defaultValue={data?.email}
         />
         <InputField
           label="Phone Number"
           placeholder="+1 234 567 890"
           name="phone"
-          defaultValue={data.phone}
+          defaultValue={data?.phone}
         />
       </div>
 
@@ -59,12 +61,12 @@ export default function ProfileForm({ data, className }) {
           type="date"
           placeholder="1990-05-15"
           name="dateOfBirth"
-          defaultValue={data.dateOfBirth}
+          defaultValue={mongoDateToInputDate(data?.DateOfBirth)}
         />
 
         <SelectField
           label="Gender"
-          defaultValue={data.gender || "Male"}
+          defaultValue={data?.gender || "Male"}
           options={["Male", "Female", "Other"]}
           name="gender"
         />
@@ -75,7 +77,7 @@ export default function ProfileForm({ data, className }) {
         label="Location"
         placeholder="city, country"
         name="location"
-        defaultValue={data.location}
+        defaultValue={data?.location}
       />
 
       {/* Bio */}
@@ -84,7 +86,7 @@ export default function ProfileForm({ data, className }) {
         rows={4}
         placeholder="write something about yourself..."
         name="bio"
-        defaultValue={data.Bio}
+        defaultValue={data?.Bio}
       />
     </Form>
   );
