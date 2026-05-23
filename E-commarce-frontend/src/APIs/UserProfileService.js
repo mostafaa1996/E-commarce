@@ -59,10 +59,21 @@ export async function UpdatePersonalInfo(request) {
   return data;
 }
 
-export async function getUserPaginatedOrders(page, limit) {
-  console.log(`${URL}/user/profile/orders?page=${page}&limit=${limit}`);
+export async function getUserOrders(Query) {
+  const params = new URLSearchParams();
+
+  Object.entries(Query).forEach(([key, value]) => {
+    if (Array.isArray(value)) {
+      value.forEach((v) => params.append(key, v));
+    } else if (value !== null && value !== "") {
+      params.append(key, value);
+    }
+  });
+
+  const API_Link = `${URL}/user/profile/orders?${params.toString()}`;
+  console.log(API_Link);
   const res = await authFetch(
-    `${URL}/user/profile/orders?page=${page}&limit=${limit}`,
+    API_Link,
     {
       method: "GET",
       headers: {

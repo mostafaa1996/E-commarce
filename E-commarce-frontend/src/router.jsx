@@ -8,7 +8,6 @@ import {
   getUserProfileData,
   getPersonalInfo,
   UpdatePersonalInfo,
-  getUserPaginatedOrders,
   getUserWishlist,
   getUserAddresses,
   updateUserAddresses,
@@ -163,13 +162,6 @@ export const router = createBrowserRouter([
         path: "/profile/orders",
         element: <UserOrdersPage />,
         handle: { title: "profile > Orders" },
-        loader: async () => {
-          return queryClient.ensureQueryData({
-            queryKey: ["profile-orders", 1],
-            queryFn: () => getUserPaginatedOrders(1, 5),
-            staleTime: 1000 * 60 * 5,
-          });
-        },
       },
       {
         path: "/profile/wishlist",

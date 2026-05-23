@@ -25,7 +25,7 @@ export default function OrderSearchAndFilteration({
         onClickSearch={SearchSubmitEvent}
       />
       <div className="mt-4 flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:gap-3 sm:overflow-visible">
-        {tabs.map((tab) => (
+        {tabs?.map((tab) => (
           <button
             key={tab}
             onClick={() => onChange(tab)}

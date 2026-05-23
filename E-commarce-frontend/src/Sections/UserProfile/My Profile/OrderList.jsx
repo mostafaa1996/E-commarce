@@ -1,4 +1,4 @@
-import DashBoardItem from "@/components/genericComponents/DashBoardItem";
+import OrderItem from "@/components/genericComponents/OrderItem";
 import DashBoardTable from "@/components/genericComponents/DashBoardTable";
 import DashBoardTableHeader from "@/components/genericComponents/DashBoardTableHeader";
 import Icon from "@/system/icons/Icon";
@@ -19,7 +19,7 @@ export default function OrderHistoryList({ orders }) {
       {orders &&
         orders.length > 0 &&
         orders.map((order) => (
-          <DashBoardItem
+          <OrderItem
             key={order?._id}
             items={order?.orderItems || []}
             orderId={order?._id || ""}

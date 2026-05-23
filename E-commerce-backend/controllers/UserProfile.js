@@ -1,8 +1,21 @@
 const User = require("../models/User");
 const Product = require("../models/Product");
 const Address = require("../models/Address");
+const Order = require("../models/Order");
 const cloudinary = require("../config/cloudinary");
 const { validationResult } = require("express-validator");
+const { createOrder } = require("./order");
+const mongoose = require("mongoose");
+
+function formatOrderId(order) {
+  const date = new Date(order.createdAt || order.date || Date.now())
+    .toISOString()
+    .slice(0, 10)
+    .replace(/-/g, "");
+  const suffix = String(order._id).slice(-6).toUpperCase();
+
+  return `#ORD-${date}-${suffix}`;
+}
 
 function UploadToCloudinary(fileBuffer, userId) {
   return new Promise((resolve, reject) => {
@@ -162,21 +175,136 @@ exports.UpdatePersonalInfo = async (req, res, next) => {
   }
 };
 
-exports.getUserPaginatedOrders = async (req, res, next) => {
+exports.getUserOrders = async (req, res, next) => {
   try {
-    const { page, limit } = req.query;
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const search = req.query.search || "";
+    const status = req.query.status;
     const userId = req.user.id;
     if (!userId) return res.sendStatus(401);
-    const user = await User.findById(userId)
-      .populate({
-        path: "orders",
-        select: "orderItems Status totalPrice createdAt",
-      })
-      .skip((page - 1) * limit)
-      .limit(limit);
-    if (!user) return res.sendStatus(401);
-    const orders = user.orders;
-    res.status(200).json({ orders });
+    const matchStage = {
+      userId: new mongoose.Types.ObjectId(userId),
+    };
+    if (status && status !== "All") {
+      matchStage.status = status;
+    }
+    const pipeline = [
+      {
+        $match: matchStage,
+      },
+      {
+        $lookup: {
+          from: "products",
+          localField: "orderItems.product",
+          foreignField: "_id",
+          as: "products",
+        },
+      },
+    ];
+    if (search) {
+      pipeline.push({
+        $match: {
+          $or: [
+            { paymentStatus: { $regex: search, $options: "i" } },
+            { paymentMethod: { $regex: search, $options: "i" } },
+            { status: { $regex: search, $options: "i" } },
+            { "products.title": { $regex: search, $options: "i" } },
+          ],
+        },
+      });
+    }
+    const result = await Order.aggregate([
+      ...pipeline,
+      {
+        $facet: {
+          data: [
+            { $sort: { createdAt: -1 } },
+            { $skip: skip },
+            { $limit: limit },
+            {
+              $project: {
+                _id: 1,
+                orderItems: {
+                  $map: {
+                    input: "$orderItems",
+                    as: "item",
+                    in: {
+                      $let: {
+                        vars: {
+                          productData: {
+                            $arrayElemAt: [
+                              {
+                                $filter: {
+                                  input: "$products",
+                                  as: "product",
+                                  cond: {
+                                    $eq: ["$$product._id", "$$item.product"],
+                                  },
+                                },
+                              },
+                              0,
+                            ],
+                          },
+                        },
+                        in: {
+                          product: "$$item.product",
+                          quantity: "$$item.quantity",
+                          price: "$$item.price",
+                          subtotal: "$$item.subtotal",
+                          title: "$$productData.title",
+                          image: {
+                            $arrayElemAt: ["$$productData.images.url", 0],
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                status: 1,
+                paymentMethod: 1,
+                paymentStatus: 1,
+                itemsPrice: 1,
+                shippingPrice: 1,
+                taxPrice: 1,
+                totalPrice: 1,
+                createdAt: 1,
+              },
+            },
+          ],
+          totalCount: [{ $count: "count" }],
+        },
+      },
+    ]);
+    const orders = (result[0]?.data || []).map((order) => ({
+      ...order,
+      orderId: formatOrderId(order),
+    }));
+    const totalCount = result[0]?.totalCount[0]?.count || 0;
+    res.status(200).json({
+      orders,
+      pagination: { totalCount, page, limit },
+      statusEnum: Order.schema.path("status").enumValues,
+      statusStyles: {
+        pending: "bg-red-200 text-red-600",
+        processing: "bg-red-200 text-red-600",
+        failed: "bg-red-200 text-red-600",
+        cancelled: "bg-red-100 text-red-600",
+        orderPlaced: "bg-green-200 text-green-600",
+        delivered: "bg-green-200 text-green-600",
+        shipped: "bg-yellow-100 text-yellow-600",
+        returned: "bg-blue-100 text-red-600",
+      },
+      paymentStatusStyles: {
+        pending: "bg-red-200 text-red-600",
+        paid: "bg-green-200 text-green-600",
+        failed: "bg-red-200 text-red-600",
+        cancelled: "bg-red-100 text-red-600",
+        refunded: "bg-blue-100 text-red-600",
+        not_required: "bg-yellow-100 text-yellow-600",
+      },
+    });
   } catch (err) {
     console.log(err);
     next(err);

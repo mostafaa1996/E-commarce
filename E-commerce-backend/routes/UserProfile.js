@@ -21,7 +21,7 @@ router.post(
   UserProfileController.UpdatePersonalInfo,
 );
 
-router.get("/orders", isAuth, UserProfileController.getUserPaginatedOrders);
+router.get("/orders", isAuth, UserProfileController.getUserOrders);
 router.get("/GetWishlist", isAuth, UserProfileController.getUserWishlist);
 router.post(
   "/UpdateWishlist",
