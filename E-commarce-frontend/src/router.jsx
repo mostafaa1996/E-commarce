@@ -3,7 +3,7 @@ import { queryClient } from "./queryClient";
 import { getShopProducts, getProductById } from "./APIs/shopProductsService";
 import { loginAction, SignupAction, logoutAction } from "./APIs/AuthService";
 import { getCart } from "@/APIs/CartService";
-import { getCartData, getShippingDetails } from "./APIs/checkoutService";
+import { getCartData } from "./APIs/checkoutService";
 import {
   getUserProfileData,
   getPersonalInfo,
@@ -133,14 +133,10 @@ export const router = createBrowserRouter([
                 VAT_shipping,
                 message: cartMessage,
               } = await getCartData();
-              const { shippingDetails, message: shippingDetailsMessage } =
-                await getShippingDetails();
               return {
                 cart,
-                shippingDetails,
                 VAT_shipping,
                 cartMessage,
-                shippingDetailsMessage,
               };
             },
           });

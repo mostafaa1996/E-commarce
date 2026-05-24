@@ -2,12 +2,18 @@ import { getUserAddresses } from "@/APIs/UserProfileService";
 import useProfileRoutingStates from "@/zustand_ProfileRoutesStates/ProfileRoutesStates";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
-import { useActionData, useFetcher, useLoaderData } from "react-router-dom";
+import {
+  useActionData,
+  useFetcher,
+  useLoaderData,
+  useNavigate,
+} from "react-router-dom";
 
 export default function useUserAddressesPage() {
   const loaderData = useLoaderData();
   const fetcher = useFetcher();
   const actionData = useActionData();
+  const navigate = useNavigate();
   const { currentRouteState, setCurrentRouteState } = useProfileRoutingStates();
 
   const loaderAddresses = loaderData?.addresses || [];
@@ -66,6 +72,14 @@ export default function useUserAddressesPage() {
     setCurrentState("add");
   }
 
+  function handleGoToAddAddress() {
+    setCurrentRouteState({
+      currentRoute: "addresses",
+      previousAction: "Add address",
+    });
+    navigate("/profile/addresses");
+  }
+
   function handleDelete(addressId) {
     setCurrentState(`delete-${addressId}`);
     fetcher.submit(
@@ -101,6 +115,7 @@ export default function useUserAddressesPage() {
     shouldShowAddForm,
     handleEdit,
     handleAdd,
+    handleGoToAddAddress,
     handleDelete,
     handleCancel,
     setAsDefault,

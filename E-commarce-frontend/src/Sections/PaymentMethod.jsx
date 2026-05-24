@@ -12,7 +12,8 @@ import { SetUpPaymentMethods } from "@/APIs/UserProfileService";
 import EditPaymentForm from "@/Sections/UserProfile/EditPaymentForm";
 import useCheckoutStore from "@/zustand_checkout/checkoutStore";
 import StripeElementsWrapper from "@/components/genericComponents/stripeElementWrapper";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
+import ProfilePageState from "@/components/genericComponents/ProfilePageState";
 
 const PaymentMethod = () => {
   const {
@@ -25,15 +26,17 @@ const PaymentMethod = () => {
     setUseNewCard,
   } = useCheckoutStore();
 
-  const { data: cards, isLoading } = useQuery({
+  const {
+    data: loadedCards,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["profile-payments"],
     queryFn: getUserPaymentMethods,
     enabled: paymentType === "card",
   });
 
-  if(cards){
-    console.log(cards);
-  }
+  const cards = useMemo(() => loadedCards || [], [loadedCards]);
 
   useEffect(() => {
   if (cards?.length > 0 && !selectedCard) {
@@ -130,7 +133,18 @@ const PaymentMethod = () => {
       {/* Card Details */}
       {paymentType === "card" && (
         <div className="space-y-4 animate-in fade-in-0 slide-in-from-top-2 duration-300">
-          {cards && !useNewCard && cards.length > 0 ? (
+          {isLoading ? (
+            <ProfilePageState
+              type="loading"
+              loadingMessage="Loading payment methods"
+            />
+          ) : error ? (
+            <ProfilePageState
+              type="error"
+              title="Error loading payment methods"
+              message={error.message}
+            />
+          ) : cards.length > 0 && !useNewCard ? (
             <div className="space-y-3">
               <p className="text-sm font-medium text-foreground">Saved Cards</p>
               <RadioGroup
@@ -186,7 +200,7 @@ const PaymentMethod = () => {
                 Use a different card
               </button>
             </div>
-          ) : !isLoading ? (
+          ) : (
             //use new card
             <div className="space-y-4">
               <p className="text-sm font-medium text-foreground">Card Form</p>
@@ -227,10 +241,6 @@ const PaymentMethod = () => {
                   ← Use a saved card
                 </button>
               )}
-            </div>
-          ) : (
-            <div className="space-y-4 flex items-center justify-center">
-              <Loading />
             </div>
           )}
         </div>

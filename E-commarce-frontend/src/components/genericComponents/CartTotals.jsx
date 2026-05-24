@@ -44,12 +44,12 @@ export default function CartTotals({
       </div>
       <div className="grid grid-cols-2 gap-3 border-b border-zinc-300 py-3 text-base font-light sm:py-2 sm:text-[21px]">
         <span>Shipping</span>
-        <span className="text-right text-[#FF6543] sm:text-left">{format(shipping*rate*total)}</span>
+        <span className="text-right text-[#FF6543] sm:text-left">{format(shipping*rate)}</span>
       </div>
       <div className="grid grid-cols-2 gap-3 border-b border-zinc-300 py-3 text-base font-light sm:py-2 sm:text-[21px]">
         <span>Total Price</span>
         <span className="text-right text-[#FF6543] sm:text-left">
-          {format((total + VAT*total + shipping*total)*rate)}
+          {format((total + VAT*total + shipping)*rate)}
         </span>
       </div>
     </div>
