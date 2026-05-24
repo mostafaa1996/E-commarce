@@ -2,72 +2,27 @@ import BaseSection from "@/Sections/UserProfile/BaseSectionForUserProfile";
 import AddressCard from "@/components/genericComponents/AddressCard";
 import UserNestedRoutesHeader from "@/Sections/UserProfile/UserNestedRoutesHeader";
 import EditAddressForm from "@/Sections/UserProfile/EditAddressForm";
-import { Fragment, useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { getUserAddresses } from "@/APIs/UserProfileService";
-import { useFetcher, useActionData, useLoaderData } from "react-router-dom";
-import useProfileRoutingStates from "@/zustand_ProfileRoutesStates/ProfileRoutesStates";
+import { Fragment } from "react";
 import ProfilePageState from "@/components/genericComponents/ProfilePageState";
+import useUserAddressesPage from "@/hooks/useUserAddressesPage";
+
 export default function UserAddressesPage() {
   let content = null;
-  const { addresses } = useLoaderData();
-  const fetcher = useFetcher();
-  const actionData = useActionData();
-  const DefaultAddressId = addresses?.find((address) => address.isDefault)?._id;
-  const [currentState, setCurrentState] = useState("");
-  const [DefaultAddress, setDefaultAddress] = useState(DefaultAddressId);
   const {
-    data: addressesObj,
-    isLoading: isLoadingAddresses,
+    addressesObj,
+    addresses,
+    isLoadingAddresses,
     error,
-  } = useQuery({
-    queryKey: ["profile-addresses"],
-    queryFn: getUserAddresses,
-  });
-  const {currentRouteState , setCurrentRouteState} = useProfileRoutingStates();
-
-  function handleEdit(addressId) {
-    setCurrentState(`edit-${addressId}`);
-  }
-
-  function handleAdd() {
-    console.log("add");
-    setCurrentState("add");
-  }
-
-  function handleDelete(addressId) {
-    setCurrentState(`delete-${addressId}`);
-    fetcher.submit(
-      { intent: "delete", id: addressId },
-      { method: "post", action: `/profile/addresses` },
-    );
-  }
-
-  function handleCancel() {
-    setCurrentState("");
-    setCurrentRouteState({
-      ...currentRouteState,
-      previousAction: "Cancel",
-    });
-  }
-
-  function setAsDefault(addressId) {
-    setDefaultAddress(addressId);
-    fetcher.submit(
-      { intent: "setAsDefault", id: addressId },
-      { method: "post", action: `/profile/addresses` },
-    );
-  }
-
-  useEffect(() => {
-    if (!actionData?.ok) return;
-
-    const timeout = setTimeout(() => {
-      setCurrentState("");
-    }, 0);
-
-    return () => clearTimeout(timeout);
-  }, [actionData]);
+    defaultAddressId,
+    editingAddress,
+    shouldShowEditForm,
+    shouldShowAddForm,
+    handleEdit,
+    handleAdd,
+    handleDelete,
+    handleCancel,
+    setAsDefault,
+  } = useUserAddressesPage();
 
   if (isLoadingAddresses) {
     content = (
@@ -92,21 +47,18 @@ export default function UserAddressesPage() {
     );
   }
   if (addressesObj) {
-    // console.log(addressesObj?.addresses, addressesObj?.addresses?.length);
     content = (
       <>
-        {currentState.includes("edit") && (
+        {shouldShowEditForm && (
           <EditAddressForm
             title="Edit Address"
             buttonText="Save"
             buttonIconName="save"
             onCancel={handleCancel}
-            InitialFormData={addressesObj?.addresses?.find(
-              (address) => address._id === currentState.split("-")[1],
-            )}
+            InitialFormData={editingAddress}
           />
         )}
-        {(currentState === "add" || (currentRouteState.previousAction === "Add address"))  && (
+        {shouldShowAddForm && (
           <EditAddressForm
             title="Add Address"
             buttonText="Add"
@@ -114,13 +66,13 @@ export default function UserAddressesPage() {
             onCancel={handleCancel}
           />
         )}
-        {addressesObj?.addresses?.length > 0 ? (
+        {addresses.length > 0 ? (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:gap-10">
-            {addressesObj?.addresses.map((address) => (
+            {addresses.map((address) => (
               <Fragment key={address._id}>
                 <AddressCard
                   type={address.label}
-                  isDefault={address._id === DefaultAddress}
+                  isDefault={address._id === defaultAddressId}
                   name={address.name}
                   street={address.street}
                   city={address.city}
