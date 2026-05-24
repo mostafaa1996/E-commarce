@@ -1,16 +1,38 @@
 import { useNavigate } from "react-router-dom";
-export default function CardMedia({ Image, badge , NavigationLink}) {
+import clsx from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export default function CardMedia({
+  Image,
+  alt = "",
+  badge,
+  NavigationLink,
+  className,
+}) {
   const navigate = useNavigate();
+
   function handleClick() {
+    if (!NavigationLink) {
+      return;
+    }
+
     navigate(NavigationLink);
   }
+
   return (
     <div
-      className="relative bg-white w-50 h-50 cursor-pointer hover:scale-105 transition border-b border-zinc-200"
+      className={twMerge(
+        clsx(
+          "relative h-50 w-50 border-b border-zinc-200 bg-white transition hover:scale-105",
+          NavigationLink && "cursor-pointer",
+          className,
+        ),
+      )}
       onClick={handleClick}
-      role="button"
+      role={NavigationLink ? "button" : undefined}
+      tabIndex={NavigationLink ? 0 : undefined}
     >
-      <img src={Image} alt="" className="w-full h-full object-contain" />
+      <img src={Image} alt={alt} className="h-full w-full object-contain" />
 
       {badge && (
         <span

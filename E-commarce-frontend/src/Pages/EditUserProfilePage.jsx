@@ -1,6 +1,4 @@
 import ProfileCard from "@/components/ProfileCard/profileCard";
-import { useQuery } from "@tanstack/react-query";
-import { getPersonalInfo } from "@/APIs/UserProfileService";
 import BaseSection from "@/Sections/UserProfile/BaseSectionForUserProfile";
 import {
   Avatar,
@@ -10,71 +8,51 @@ import {
 import Button from "@/components/genericComponents/Button";
 import ProfileForm from "@/Sections/UserProfile/EditProfileForm";
 import Icon from "@/system/icons/Icon";
-
-import { useRef, useMemo, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-
-function getInitials(firstName, lastName, email) {
-  const fullName = [firstName, lastName].filter(Boolean).join(" ").trim();
-
-  if (fullName) {
-    return fullName
-      .split(" ")
-      .slice(0, 2)
-      .map((part) => part[0]?.toUpperCase())
-      .join("");
-  }
-
-  return email?.slice(0, 2).toUpperCase() || "AD";
-}
+import ProfilePageState from "@/components/genericComponents/ProfilePageState";
+import useEditUserProfilePage from "@/hooks/useEditUserProfilePage";
 
 export default function EditUserProfilePage() {
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["profile-edit"],
-    queryFn: getPersonalInfo,
-  });
+  const {
+    data,
+    isLoading,
+    error,
+    fileInputRef,
+    avatarPreview,
+    userInitials,
+    handleOpenFileDialog,
+    handleAvatarChange,
+    handleCancel,
+  } = useEditUserProfilePage();
 
-  const fileInputRef = useRef(null);
-  const navigate = useNavigate();
-  const [avatarPreview, setAvatarPreview] = useState("");
-
-  useEffect(() => {
-    if (!data) return;
-    setAvatarPreview(data?.avatar?.url);
-  }, [data]);
-
-  useEffect(() => {
-    return () => {
-      if (avatarPreview?.startsWith("blob:")) {
-        URL.revokeObjectURL(avatarPreview);
-      }
-    };
-  }, [avatarPreview]);
-
-  const UserInitials = useMemo(
-    () => getInitials(data?.firstName, data?.lastName, data?.email),
-    [data?.email, data?.firstName, data?.lastName],
-  );
-
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error loading profile</p>;
-  if (!data) return <p>No profile found</p>;
-
-  function handleOpenFileDialog() {
-    fileInputRef.current.click();
+  if (isLoading) {
+    return (
+      <BaseSection>
+        <ProfilePageState type="loading" loadingMessage="Loading profile" />
+      </BaseSection>
+    );
   }
 
-  function handleAvatarChange(event) {
-    const selectedFile = event.target.files?.[0];
+  if (error) {
+    return (
+      <BaseSection>
+        <ProfilePageState
+          type="error"
+          title="Error loading profile"
+          message={error.message}
+        />
+      </BaseSection>
+    );
+  }
 
-    if (!selectedFile) {
-      return;
-    }
-
-    if (avatarPreview?.startsWith("blob:")) {
-      URL.revokeObjectURL(avatarPreview);
-    }
-    setAvatarPreview(URL.createObjectURL(selectedFile));
+  if (!data) {
+    return (
+      <BaseSection>
+        <ProfilePageState
+          title="No profile found"
+          message="We could not find your personal information."
+        />
+      </BaseSection>
+    );
   }
 
   return (
@@ -96,7 +74,7 @@ export default function EditUserProfilePage() {
                   alt={data?.firstName || "Man"}
                 />
                 <AvatarFallback className="bg-primary text-primary-foreground text-xl font-bold">
-                  {UserInitials}
+                  {userInitials}
                 </AvatarFallback>
               </Avatar>
               <div className="sm:hidden">
@@ -134,7 +112,7 @@ export default function EditUserProfilePage() {
           <Button
             className="w-full rounded-md py-2 text-sm sm:w-fit"
             type="button"
-            onClick={() => navigate(-1)}
+            onClick={handleCancel}
           >
             Cancel
           </Button>

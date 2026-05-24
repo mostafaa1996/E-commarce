@@ -50,7 +50,7 @@ const ProductPage = () => {
     const {
     isInWishlist,
     toggleWishlist,
-  } = useProductWishlist(product?._id);
+  } = useProductWishlist(product?._id , selectedVariant?._id);
   const {
     submitReview,
     isSubmittingReview,

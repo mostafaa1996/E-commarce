@@ -13,6 +13,7 @@ import {
 } from "@/APIs/UserProfileService";
 import { Fragment } from "react";
 import { queryClient } from "../queryClient";
+import ProfilePageState from "@/components/genericComponents/ProfilePageState";
 
 export default function UserPaymentPage() {
   const [isAdding, setIsAdding] = useState(false);
@@ -85,18 +86,25 @@ export default function UserPaymentPage() {
   }
 
   if (isLoading) {
-    content = <h1 className="text-center font-bold text-2xl">Loading...</h1>;
+    content = (
+      <ProfilePageState type="loading" loadingMessage="Loading payments" />
+    );
   }
   if (error) {
     content = (
-      <h1 className="text-center font-bold text-2xl">{error.message}</h1>
+      <ProfilePageState
+        type="error"
+        title="Error loading payment methods"
+        message={error.message}
+      />
     );
   }
-  if (!loadedCards && !isLoading && !error) {
+  if (loadedCards?.length === 0 && !isLoading && !error) {
     content = (
-      <h1 className="text-center font-bold text-2xl">
-        You have no payment methods
-      </h1>
+      <ProfilePageState
+        title="No payment methods"
+        message="Add a payment method to speed up checkout."
+      />
     );
   }
   if (loadedCards && loadedCards.length > 0) {
@@ -148,8 +156,8 @@ export default function UserPaymentPage() {
       </StripeElementsWrapper>
       <div
         className={`${
-          isLoading || error
-            ? "text-center"
+          isLoading || error || loadedCards?.length === 0
+            ? ""
             : "grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-2 lg:gap-10"
         }`}
       >

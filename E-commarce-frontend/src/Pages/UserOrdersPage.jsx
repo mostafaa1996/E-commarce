@@ -5,6 +5,7 @@ import OrderItem from "@/components/genericComponents/OrderItem";
 import DashBoardTable from "@/components/genericComponents/DashBoardTable";
 import Pagination from "@/components/genericComponents/Pagination";
 import useOrdersForUserProfile from "@/hooks/useOrdersForUserProfile";
+import ProfilePageState from "@/components/genericComponents/ProfilePageState";
 
 export default function UserOrdersPage() {
   const {
@@ -17,13 +18,40 @@ export default function UserOrdersPage() {
     setSearch,
     getStatusColor,
     getPaymentStatusColor,
-    formatOrderTotal,
+    formatPrice,
     updateUrlQuery,
   } = useOrdersForUserProfile();
 
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error loading profile</p>;
-  if (!data) return <p>No profile found</p>;
+  if (isLoading) {
+    return (
+      <BaseSection>
+        <ProfilePageState type="loading" loadingMessage="Loading orders" />
+      </BaseSection>
+    );
+  }
+
+  if (error) {
+    return (
+      <BaseSection>
+        <ProfilePageState
+          type="error"
+          title="Error loading orders"
+          message={error.message}
+        />
+      </BaseSection>
+    );
+  }
+
+  if (!data) {
+    return (
+      <BaseSection>
+        <ProfilePageState
+          title="No orders found"
+          message="Your order data is not available right now."
+        />
+      </BaseSection>
+    );
+  }
 
   return (
     <BaseSection>
@@ -52,10 +80,11 @@ export default function UserOrdersPage() {
                   status={order?.status}
                   statusColor={getStatusColor(order?.status)}
                   createdAt={order?.createdAt}
-                  totalPrice={formatOrderTotal(order?.totalPrice)}
-                  itemsPrice={formatOrderTotal(order?.itemsPrice)}
-                  taxPrice={formatOrderTotal(order?.taxPrice)}
-                  shippingPrice={formatOrderTotal(order?.shippingPrice)}
+                  updatedAt={order?.updatedAt}
+                  totalPrice={formatPrice(order?.totalPrice)}
+                  itemsPrice={formatPrice(order?.itemsPrice)}
+                  taxPrice={formatPrice(order?.taxPrice)}
+                  shippingPrice={formatPrice(order?.shippingPrice)}
                   paymentMethod={order?.paymentMethod}
                   paymentStatus={order?.paymentStatus}
                   paymentStatusColor={getPaymentStatusColor(

@@ -8,7 +8,7 @@ import { queryClient } from "@/queryClient";
 import { useLoggedInEmail } from "@/zustand_loggedIn/loggedInEmail";
 import { useToast } from "@/hooks/use-toast";
 
-export default function useProductWishlist(productId) {
+export default function useProductWishlist(productId, variantId) {
   const { toast } = useToast();
   const { loggedInEmail } = useLoggedInEmail();
   const isLoggedIn = Boolean(loggedInEmail);
@@ -20,14 +20,17 @@ export default function useProductWishlist(productId) {
   });
 
   const isInWishlist = useMemo(() => {
-    if (!productId || !wishlistQuery.data?.wishlist) {
+    if (!productId || !variantId || !wishlistQuery.data?.wishedProducts) {
       return false;
     }
 
-    return wishlistQuery.data.wishlist.some(
-      (item) => item._id.toString() === productId.toString(),
-    );
-  }, [productId, wishlistQuery.data]);
+    return wishlistQuery.data.wishedProducts.some((item) => {
+      return (
+        item?.productId?.toString() === productId.toString() &&
+        item?.variantId?.toString() === variantId.toString()
+      );
+    });
+  }, [productId, variantId, wishlistQuery.data]);
 
   const wishlistMutation = useMutation({
     mutationKey: ["profile-wishlist"],
@@ -38,11 +41,11 @@ export default function useProductWishlist(productId) {
   });
 
   function toggleWishlist() {
-    if (!productId || !isLoggedIn) {
+    if (!productId || !variantId || !isLoggedIn) {
       return;
     }
 
-    wishlistMutation.mutate([productId]);
+    wishlistMutation.mutate([{ productId, variantId }]);
 
     if (isInWishlist) {
       toast({

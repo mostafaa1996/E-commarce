@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getUserAddresses } from "@/APIs/UserProfileService";
 import { useFetcher, useActionData, useLoaderData } from "react-router-dom";
 import useProfileRoutingStates from "@/zustand_ProfileRoutesStates/ProfileRoutesStates";
+import ProfilePageState from "@/components/genericComponents/ProfilePageState";
 export default function UserAddressesPage() {
   let content = null;
   const { addresses } = useLoaderData();
@@ -59,20 +60,35 @@ export default function UserAddressesPage() {
   }
 
   useEffect(() => {
-    if (actionData?.ok) setCurrentState("");
+    if (!actionData?.ok) return;
+
+    const timeout = setTimeout(() => {
+      setCurrentState("");
+    }, 0);
+
+    return () => clearTimeout(timeout);
   }, [actionData]);
 
   if (isLoadingAddresses) {
-    content = <p className="text-center text-2xl font-bold">Loading...</p>;
+    content = (
+      <ProfilePageState type="loading" loadingMessage="Loading addresses" />
+    );
   }
   if (error) {
     content = (
-      <p className="text-center text-2xl font-bold">Error loading profile</p>
+      <ProfilePageState
+        type="error"
+        title="Error loading addresses"
+        message={error.message}
+      />
     );
   }
-  if (!addressesObj || addressesObj?.addresses?.length === 0) {
+  if (!addressesObj && !isLoadingAddresses && !error) {
     content = (
-      <h1 className="text-center text-2xl font-bold">No addresses found</h1>
+      <ProfilePageState
+        title="No addresses found"
+        message="Your saved addresses are not available right now."
+      />
     );
   }
   if (addressesObj) {
@@ -98,7 +114,7 @@ export default function UserAddressesPage() {
             onCancel={handleCancel}
           />
         )}
-        {addressesObj?.addresses?.length > 0 && (
+        {addressesObj?.addresses?.length > 0 ? (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:gap-10">
             {addressesObj?.addresses.map((address) => (
               <Fragment key={address._id}>
@@ -124,6 +140,11 @@ export default function UserAddressesPage() {
               </Fragment>
             ))}
           </div>
+        ) : (
+          <ProfilePageState
+            title="No addresses found"
+            message="Add an address to make checkout faster."
+          />
         )}
       </>
     );
@@ -133,7 +154,7 @@ export default function UserAddressesPage() {
       <UserNestedRoutesHeader
         iconName="location"
         title="My Addresses"
-        info={`${addressesObj?.addresses?.length} addresses`}
+        info={`${addressesObj?.addresses?.length || 0} addresses`}
         buttonIconName="plus"
         buttonText="Add Address"
         onClick={handleAdd}

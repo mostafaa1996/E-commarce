@@ -28,6 +28,7 @@ router.post(
   isAuth,
   UserProfileController.updateUserWishlist,
 );
+router.delete("/clearWishlist", isAuth, UserProfileController.clearWishlist);
 router.post(
   "/updateAddress",
   isAuth,

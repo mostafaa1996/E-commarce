@@ -60,7 +60,7 @@ export default function useOrdersForUserProfile() {
     );
   }
 
-  function formatOrderTotal(totalPrice) {
+  function formatPrice(totalPrice) {
     return format(totalPrice * rate);
   }
 
@@ -85,7 +85,7 @@ export default function useOrdersForUserProfile() {
     setSearch,
     getStatusColor,
     getPaymentStatusColor,
-    formatOrderTotal,
+    formatPrice,
     updateUrlQuery,
   };
 }

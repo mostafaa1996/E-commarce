@@ -6,11 +6,15 @@ import {
 } from "@/APIs/shopProductsService";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 export default function useProductDetails(id, preloadedProduct) {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [selectedVariantId, setSelectedVariantId] = useState(null);
+  const [searchParams] = useSearchParams();
+  const variantIdFromUrl = searchParams.get("variantId");
+  const [selectedVariantId, setSelectedVariantId] =
+    useState(variantIdFromUrl);
 
   const productQuery = useQuery({
     queryKey: ["product", id],
@@ -47,10 +51,13 @@ export default function useProductDetails(id, preloadedProduct) {
     }
 
     return (
-      product.variants.find((variant) => variant._id === selectedVariantId) ||
+      product.variants.find(
+        (variant) =>
+          variant._id === (selectedVariantId || variantIdFromUrl),
+      ) ||
       defaultVariant
     );
-  }, [defaultVariant, product, selectedVariantId]);
+  }, [defaultVariant, product, selectedVariantId, variantIdFromUrl]);
 
   const setSelectedVariant = useCallback((variant) => {
     setSelectedVariantId(variant?._id ?? null);

@@ -1,4 +1,4 @@
-import { CreditCard, Package, ReceiptText, Truck } from "lucide-react";
+import { Clock, CreditCard, Package, ReceiptText, Truck } from "lucide-react";
 
 function hasValue(value) {
   return value !== null && value !== undefined && value !== "";
@@ -131,6 +131,7 @@ function OrderItem({
   status,
   statusColor,
   createdAt,
+  updatedAt,
   totalPrice,
   itemsPrice,
   taxPrice,
@@ -229,6 +230,11 @@ function OrderItem({
         </div>
 
         <div className="grid gap-2 sm:grid-cols-2">
+          <DetailItem
+            icon={Clock}
+            label="Last update"
+            value={updatedAt ? formatDate(updatedAt) : ""}
+          />
           <DetailItem
             icon={CreditCard}
             label="Payment method"

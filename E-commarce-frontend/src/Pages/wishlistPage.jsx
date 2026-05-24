@@ -1,59 +1,56 @@
 import BaseSection from "@/Sections/UserProfile/BaseSectionForUserProfile";
 import UserNestedRoutesHeader from "@/Sections/UserProfile/UserNestedRoutesHeader";
 import ProductCard from "@/components/genericComponents/ProductCard_V";
-import { useQuery, useMutation } from "@tanstack/react-query";
-import { getUserWishlist } from "@/APIs/UserProfileService";
 import { Fragment } from "react";
-import { updateUserWishlist } from "@/APIs/UserProfileService";
-import { queryClient } from "@/queryClient";
-import useCurrency from "@/hooks/CurrencyChange";
-import { useCurrencyStore } from "@/zustand_preferences/currency";
-import { syncCart } from "@/APIs/CartService";
+import ProfilePageState from "@/components/genericComponents/ProfilePageState";
+import useWishlistPage from "@/hooks/useWishlistPage";
+
 export default function WishListPage() {
   let content = null;
-  const { currency, locale } = useCurrencyStore();
-  const format = useCurrency(currency, locale);
   const {
-    data: wishList,
+    wishList,
+    wishedProducts,
     isLoading,
     error,
-  } = useQuery({
-    queryKey: ["profile-wishlist"],
-    queryFn: getUserWishlist,
-    staleTime: 1000 * 60 * 5,
-  });
+    formatPrice,
+    getAddToCartButtonState,
+    handleAddToCart,
+    handleRemoveFromWishlist,
+    handleClearWishlist,
+  } = useWishlistPage();
 
-  const wishListMutation = useMutation({
-    mutationKey: ["profile-wishlist"],
-    mutationFn: (arrOfIds) => updateUserWishlist(arrOfIds),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["profile-wishlist"] });
-    },
-  });
+  if (isLoading) {
+    content = (
+      <BaseSection>
+        <ProfilePageState type="loading" loadingMessage="Loading wishlist" />
+      </BaseSection>
+    );
+  }
 
-  const syncCartMutation = useMutation({
-    mutationFn: ({ ActionType , productId, quantity }) => syncCart({ ActionType , productId , quantity }),
-    onSettled: () =>{ 
-      queryClient.invalidateQueries({ queryKey: ["cart"] });
-      queryClient.invalidateQueries({ queryKey: ["checkout"] });
-    },
-  });
+  if (error) {
+    content = (
+      <BaseSection>
+        <ProfilePageState
+          type="error"
+          title="Error loading wishlist"
+          message={error.message}
+        />
+      </BaseSection>
+    );
+  }
 
-  function handleAddToCart(product) {
-    syncCartMutation.mutate({ ActionType: "add", productId: product._id , quantity: 1 });
+  if (!wishList && !isLoading && !error) {
+    content = (
+      <BaseSection>
+        <ProfilePageState
+          title="No wishlist found"
+          message="Your wishlist data is not available right now."
+        />
+      </BaseSection>
+    );
   }
-  function handleOnRemove(productId) {
-    const arrOfIds = [productId];
-    wishListMutation.mutate(arrOfIds);
-  }
-  function handleClearWishList(arrOfIds) {
-    wishListMutation.mutate(arrOfIds);
-  }
-  if (isLoading) content = <p>Loading...</p>;
-  if (error) content = <p>Failed to load profile</p>;
-  if (!wishList) content = <p>No profile found</p>;
+
   if (wishList) {
-    const wishListIds = wishList.wishlist?.map((item) => item._id);
     content = (
       <>
         <BaseSection>
@@ -61,28 +58,52 @@ export default function WishListPage() {
             className="w-full"
             iconName="wishlist"
             title="My WishList"
-            info={`${wishList.wishlist?.length || 0} products`}
+            info={`${wishedProducts.length} products`}
             buttonText="Clear WishList"
-            onClick={() => handleClearWishList(wishListIds)}
+            onClick={handleClearWishlist}
           />
 
           <div className="grid w-full grid-cols-1 justify-items-center gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 lg:gap-10">
-            {wishList &&
-              wishList.wishlist?.map((product) => (
-                <Fragment key={product._id}>
-                  <ProductCard
-                    image={product.images[0].url}
-                    title={product.title}
-                    price={format(product.price)}
-                    oldPrice={product.originalPrice}
-                    category={product.category}
-                    onAdd={() => handleAddToCart(product)}
-                    onRemove={() => handleOnRemove(product._id)}
-                    NavigationLink={`/shop/products/${product._id}`}
-                    variant={"ShowWishlistStyle"}
-                  />
-                </Fragment>
-              ))}
+            {wishedProducts.length > 0 ? (
+              wishedProducts.map((product) => {
+                const addToCartButton = getAddToCartButtonState(
+                  product.productId,
+                  product.variantId,
+                );
+
+                return (
+                  <Fragment key={product.productId}>
+                    <ProductCard
+                      image={product.image}
+                      title={product.title}
+                      price={formatPrice(product.price)}
+                      oldPrice={formatPrice(product.compareAtPrice)}
+                      category={product.category}
+                      addButtonText={addToCartButton.text}
+                      isAddDisabled={addToCartButton.isDisabled}
+                      onAdd={() =>
+                        handleAddToCart(product.productId, product.variantId)
+                      }
+                      onRemove={() =>
+                        handleRemoveFromWishlist(
+                          product.productId,
+                          product.variantId,
+                        )
+                      }
+                      NavigationLink={`/shop/products/${product.productId}?variantId=${product.variantId}`}
+                      variant={"ShowWishlistStyle"}
+                    />
+                  </Fragment>
+                );
+              })
+            ) : (
+              <div className="col-span-full w-full">
+                <ProfilePageState
+                  title="Your wishlist is empty"
+                  message="Products you save will appear here."
+                />
+              </div>
+            )}
           </div>
         </BaseSection>
       </>

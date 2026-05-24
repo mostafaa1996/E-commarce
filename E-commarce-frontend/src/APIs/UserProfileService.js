@@ -18,6 +18,7 @@ export async function getUserProfileData() {
     throw new Error("Failed to fetch user profile data");
   }
   const data = await res.json();
+  // console.log(data);
   return data;
 }
 
@@ -72,15 +73,12 @@ export async function getUserOrders(Query) {
 
   const API_Link = `${URL}/user/profile/orders?${params.toString()}`;
   console.log(API_Link);
-  const res = await authFetch(
-    API_Link,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+  const res = await authFetch(API_Link, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
     },
-  );
+  });
   if (!res.ok) {
     throw new Error("Failed to fetch user orders");
   }
@@ -90,14 +88,26 @@ export async function getUserOrders(Query) {
 }
 
 export async function updateUserWishlist(arrOfIds) {
-  // console.log(`${URL}/user/profile/UpdateWishlist`, arrOfIds);
-  const res = await authFetch(`${URL}/user/profile/UpdateWishlist`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ arrOfIds }),
-  });
+  let res = null;
+  //clear wishlist
+  if (arrOfIds.length === 0) {
+    res = await authFetch(`${URL}/user/profile/clearWishlist`, {
+      method: "delete",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+  //update wishlist ... add or remove items 
+  else if(arrOfIds.length > 0){
+    res = await authFetch(`${URL}/user/profile/UpdateWishlist`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ arrOfIds }),
+    });
+  }
   if (!res.ok) {
     throw new Error("Failed to update user wishlist");
   }
@@ -118,7 +128,7 @@ export async function getUserWishlist() {
     throw new Error("Failed to fetch user wishlist");
   }
   const data = await res.json();
-  // console.log(data);
+  console.log(data);
   return data;
 }
 
