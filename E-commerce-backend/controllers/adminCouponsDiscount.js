@@ -843,13 +843,6 @@ exports.getCouponsAndDiscounts = async (req, res, next) => {
     await Promise.all(
       pagedCoupons.map(async (coupon) => {
         const nextStatus = resolveCouponStatus(coupon);
-        if (
-          nextStatus === "INACTIVE" ||
-          nextStatus === "EXPIRED" ||
-          nextStatus === "USED"
-        ) {
-          await restoreVariantPriceFromCoupon(coupon);
-        }
         coupon.status = nextStatus;
         return coupon.save();
       }),

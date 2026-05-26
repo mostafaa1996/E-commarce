@@ -13,7 +13,6 @@ import {
   SelectValue,
 } from "@/components/adminUI/select";
 import { Avatar, AvatarFallback } from "@/components/adminUI/avatar";
-import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -22,13 +21,10 @@ import {
   DialogDescription,
 } from "@/components/adminUI/dialog";
 import { Separator } from "@/components/adminUI/separator";
-import { useQuery, useMutation } from "@tanstack/react-query";
-import { getAdminOrders, updateAdminOrder } from "@/APIs/adminOrdersService";
-import { useToast } from "@/hooks/use-toast";
 import Loading from "@/components/genericComponents/Loading";
 import { AlertCircle } from "lucide-react";
-import useURLQuery from "@/hooks/UrlQuery";
 import { shortenText } from "@/utils/utils";
+import useAdminOrdersPage from "@/hooks/useAdminOrdersPage";
 
 const statusMap = {
   paid: "success",
@@ -45,98 +41,27 @@ const statusMap = {
   not_required: "success",
 };
 
-const defaultQuery = {
-  status: "all",
-  paymentStatus: "all",
-  search: "",
-  page: 1,
-  limit: 10,
-};
-
-function isQueryChangedFromDefault(query) {
-  return (
-    query.status !== defaultQuery.status ||
-    query.paymentStatus !== defaultQuery.paymentStatus ||
-    query.search !== defaultQuery.search
-  );
-}
-
 export default function AdminOrdersPage() {
   let content = null;
-  const { toast } = useToast();
-  const [selectedOrder, setSelectedOrder] = useState(null);
-  const [orders, setOrders] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchInput, setSearchInput] = useState("");
-  const [selectedPaymentStatus, setSelectedPaymentStatus] = useState("all");
-  const [selectedStatus, setSelectedStatus] = useState("all");
-
-  const { MainQuery, updateUrlQuery, resetUrlQuery } =
-    useURLQuery(defaultQuery);
-
   const {
-    data: ordersData,
+    ordersData,
+    orders,
     isLoading,
     isFetching,
     error,
-  } = useQuery({
-    queryKey: ["AdminOrders", MainQuery],
-    queryFn: () => getAdminOrders(MainQuery),
-    keepPreviousData: true,
-    placeholderData: (previousData) => previousData,
-  });
-
-  const { mutate: updateOrderStatus } = useMutation({
-    mutationFn: (order) => updateAdminOrder(order.id, order),
-    onMutate: (order) => {
-      const previousOrder = orders.find((o) => o.id === order.id);
-      setOrders((prev) => prev.map((o) => (o.id === order.id ? order : o)));
-      return { previousOrder };
-    },
-    onSuccess: () => {
-      setSelectedOrder(null);
-      toast({ title: "Order updated successfully" });
-    },
-    onError: (error, context) => {
-      if (context?.previousOrder) {
-        setOrders((prev) =>
-          prev.map((order) =>
-            order.id === context.previousOrder.id
-              ? context.previousOrder
-              : order,
-          ),
-        );
-        toast({
-          title: "Error updating order",
-          description: error.message,
-          variant: "destructive",
-        });
-      }
-    },
-  });
-
-  useEffect(() => {
-    const timeOut = setTimeout(() => {
-      setSearchTerm(searchInput);
-    }, 500);
-    return () => {
-      clearTimeout(timeOut);
-    };
-  }, [searchInput]);
-
-  useEffect(() => {
-    updateUrlQuery({
-      search: searchTerm,
-      status: selectedStatus,
-      paymentStatus: selectedPaymentStatus,
-      limit: 10,
-    });
-  }, [selectedPaymentStatus, selectedStatus, searchTerm]);
-
-  useEffect(() => {
-    if (!ordersData) return;
-    setOrders(ordersData.orders);
-  }, [ordersData]);
+    selectedOrder,
+    setSelectedOrder,
+    searchInput,
+    setSearchInput,
+    selectedPaymentStatus,
+    setSelectedPaymentStatus,
+    selectedStatus,
+    setSelectedStatus,
+    updateOrderStatus,
+    updateUrlQuery,
+    resetFilters,
+    isQueryChanged,
+  } = useAdminOrdersPage();
 
   const columns = [
     {
@@ -272,15 +197,9 @@ export default function AdminOrdersPage() {
               onChange={(e) => setSearchInput(e.target.value)}
             />
           </div>
-          {isQueryChangedFromDefault(MainQuery) && (
+          {isQueryChanged && (
             <AdminButton
-              onClick={() => {
-                resetUrlQuery(defaultQuery);
-                setSearchInput("");
-                setSearchTerm("");
-                setSelectedPaymentStatus("all");
-                setSelectedStatus("all");
-              }}
+              onClick={resetFilters}
               variant="ghost"
               className="w-full sm:w-auto"
             >

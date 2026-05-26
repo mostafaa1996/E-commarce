@@ -16,13 +16,9 @@ import {
   AreaChart,
   Area,
 } from "recharts";
-import { useQuery } from "@tanstack/react-query";
-import { getAdminDashboard } from "@/APIs/adminDashboardService";
 import Loading from "@/components/genericComponents/Loading";
-import { useCurrencyStore } from "@/zustand_preferences/currency";
-import useCurrency from "@/hooks/CurrencyChange";
-import { useNavigate } from "react-router-dom";
 import { shortenText } from "@/utils/utils";
+import useAdminDashboardPage from "@/hooks/useAdminDashboardPage";
 
 // Dummy Data for revenue chart
 // const revenueData = [
@@ -118,39 +114,21 @@ const statusMap = {
   not_required: "success",
 };
 
-function growthDirection(value) {
-  return value > 0 ? "up" : "down";
-}
-
-function CurrencySigndetermine(currency) {
-  if (currency === "USD") return "dollarSign";
-  if (currency === "EUR") return "euro";
-  if (currency === "EGP") return "poundSterling";
-  return "";
-}
-
-function currencySignForGraph(currency) {
-  if (currency === "USD") return "$";
-  if (currency === "EUR") return "€";
-  if (currency === "EGP") return "£";
-  return "";
-}
-
 export default function DashboardPage() {
   let content = null;
-  const { currency, locale, conversion_rate } = useCurrencyStore();
-  const format = useCurrency(currency, locale);
-  const rate = conversion_rate[currency] ?? 1;
   const {
-    data: dashboardData,
+    dashboardData,
     isLoading,
     isFetching,
     error,
-  } = useQuery({
-    queryKey: ["admin-dashboard"],
-    queryFn: getAdminDashboard,
-  });
-  const navigate = useNavigate();
+    currency,
+    format,
+    rate,
+    navigate,
+    growthDirection,
+    currencyIconName,
+    currencySignForGraph,
+  } = useAdminDashboardPage();
 
   if (isLoading || isFetching) {
     content = (
@@ -206,7 +184,7 @@ export default function DashboardPage() {
             changeType={growthDirection(
               overview?.revenueChangePercentage || "neutral",
             )}
-            iconName={CurrencySigndetermine(currency)}
+            iconName={currencyIconName(currency)}
             iconBg="bg-success/10"
           />
           <StatCard

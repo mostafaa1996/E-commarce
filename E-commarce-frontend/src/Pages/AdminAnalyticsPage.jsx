@@ -1,7 +1,6 @@
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { StatCard } from "@/components/admin/StatCard";
-import { useQuery } from "@tanstack/react-query";
 import {
   BarChart,
   Bar,
@@ -13,92 +12,23 @@ import {
   PieChart,
   Pie,
   Cell,
-  LineChart,
-  Line,
 } from "recharts";
-import { getAdminAnalytics } from "@/APIs/adminAnalitics";
 import Loading from "@/components/genericComponents/Loading";
-import { useCurrencyStore } from "@/zustand_preferences/currency";
-import useCurrency from "@/hooks/CurrencyChange";
-
-const COLORS = [
-  "hsl(16, 90%, 55%)",
-  "hsl(217, 91%, 60%)",
-  "hsl(142, 71%, 45%)",
-  "hsl(38, 92%, 50%)",
-  "hsl(280, 65%, 60%)",
-  "hsl(29, 90%, 55%)",
-  "hsl(42, 90%, 55%)",
-  "hsl(38, 72%, 20%)",
-  "hsl(240, 45%, 50%)",
-  "hsl(19, 70%, 35%)",
-];
-
-const extractLastMonthData = (data) => {
-  const LastMonthData = data[data.length - 2];
-  const BeforeLastMonthData = data[data.length - 3];
-  const conclusion = {
-    totalRevenue: {
-      lastMonth: LastMonthData.revenue,
-      percentage:
-        (((LastMonthData.revenue - BeforeLastMonthData.revenue) /
-          BeforeLastMonthData.revenue) *
-        100).toFixed(1),
-      behave:
-        LastMonthData.revenue > BeforeLastMonthData.revenue ? "up" : "down",
-    },
-    ordersCount: {
-      lastMonth: LastMonthData.ordersCount,
-      percentage:
-        (((LastMonthData.ordersCount - BeforeLastMonthData.ordersCount) /
-          BeforeLastMonthData.ordersCount) *
-        100).toFixed(1),
-      behave:
-        LastMonthData.ordersCount > BeforeLastMonthData.ordersCount
-          ? "up"
-          : "down",
-    },
-    totalCustomers: {
-      lastMonth: LastMonthData.customerNumberJoined,
-      percentage:
-        (((LastMonthData.customerNumberJoined - BeforeLastMonthData.customerNumberJoined) /
-          BeforeLastMonthData.customerNumberJoined) *
-        100).toFixed(1),
-      behave:
-        LastMonthData.customerNumberJoined > BeforeLastMonthData.customerNumberJoined
-          ? "up"
-          : "down",
-    },
-    avgOrderValue: {
-      lastMonth: LastMonthData.avgOrderValue,
-      percentage:
-        (((LastMonthData.avgOrderValue - BeforeLastMonthData.avgOrderValue) /
-          BeforeLastMonthData.avgOrderValue) *
-        100).toFixed(1),
-      behave:
-        LastMonthData.avgOrderValue > BeforeLastMonthData.avgOrderValue
-          ? "up"
-          : "down",
-    }
-  };
-  return conclusion;
-};
+import useAdminAnalyticsPage from "@/hooks/useAdminAnalyticsPage";
 
 export default function AdminAnalyticsPage() {
   let content = null;
   const {
-    data: analytics,
+    analytics,
     isLoading,
     isFetching,
     isError,
     error,
-  } = useQuery({
-    queryKey: ["admin-analytics"],
-    queryFn: getAdminAnalytics,
-  });
-  const { currency, locale, conversion_rate } = useCurrencyStore();
-  const format = useCurrency(currency, locale);
-  const rate = conversion_rate[currency] ?? 1;
+    conclusion,
+    colors,
+    format,
+    rate,
+  } = useAdminAnalyticsPage();
 
   if (isLoading || isFetching) {
     content = (
@@ -130,7 +60,6 @@ export default function AdminAnalyticsPage() {
   }
 
   if (analytics) {
-    const conclusion = extractLastMonthData(analytics?.monthlyRevenue);
     content = (
       <AdminLayout>
         <PageHeader
@@ -262,7 +191,7 @@ export default function AdminAnalyticsPage() {
                   }
                 >
                   {analytics?.categoryData.map((_, i) => (
-                    <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                    <Cell key={i} fill={colors[i % colors.length]} />
                   ))}
                 </Pie>
                 <Tooltip />
