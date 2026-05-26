@@ -9,9 +9,9 @@ export default function UserProfileCard({ user }) {
     navigate("/profile/edit-profile");
   }
   return (
-    <ProfileCard className={`w-full`}>
+    <ProfileCard className="w-full">
       {/* Left side */}
-      <div className="flex items-start gap-6">
+      <div className="flex min-w-0 items-start gap-4 sm:gap-6">
         <Avatar src={user.avatar || "/Man_avatar.png"} alt={user.name} />
         <ProfileInfo
           name={user.name}
@@ -25,7 +25,7 @@ export default function UserProfileCard({ user }) {
       {/* Right side */}
       <button
         onClick={onEdit}
-        className={`border border-zinc-300 px-2 py-2 rounded-lg text-sm
+        className={`w-full rounded-lg border border-zinc-300 px-2 py-2 text-sm sm:w-fit
         font-light hover:bg-zinc-50 transition-all duration-300 ease-in
         cursor-pointer active:scale-120 
         `}

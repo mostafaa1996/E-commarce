@@ -15,6 +15,8 @@ export async function getCartData() {
     console.error(checkout.message || "Failed to fetch checkout");
   }
 
+  console.log(checkout);
+
   return checkout;
 }
 
@@ -40,22 +42,4 @@ export async function placeOrder({
   console.log(data.nextAction);
 
   return data;
-}
-
-export async function getShippingDetails() {
-  const res = await authFetch(`${URL}/checkout/shippingDetails`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  const shippingDetails = await res.json();
-
-  if (!res.ok) {
-    console.error( shippingDetails.message ||  "Failed to fetch checkout");
-  }
-
-  
-  return shippingDetails;
 }

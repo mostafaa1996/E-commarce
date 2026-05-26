@@ -1,16 +1,29 @@
 import { Outlet } from "react-router-dom";
-import TopFixedLayer from "@/Sections/TopLayer/TopFixedLayer";
-import BottomLayer from "@/Sections/BottomLayer/BottomLayer";
+import Header from "@/components/Landing/Header";
+import Footer from "@/components/Landing/Footer";
+import Breadcrumbs from "@/components/genericComponents/Breadcrumbs";
 import { useMatches } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { getCart } from "@/APIs/CartService";
 
 export default function MainLayout() {
   const matches = useMatches();
-  const title = matches[matches.length - 1]?.handle?.title;
+  const currentMatch = matches[matches.length - 1];
+  const items =
+    typeof currentMatch?.handle?.breadcrumb === "function"
+      ? currentMatch.handle.breadcrumb(currentMatch.data)
+      : currentMatch?.handle?.items;
+  const { data: cart } = useQuery({
+    queryKey: ["cart"],
+    queryFn: getCart,
+  });
+  const CartTotal = cart?.totalItems??0;
   return (
     <>
-      <TopFixedLayer Title={title} />
+      <Header cartTotal={CartTotal} />
+      <Breadcrumbs items={items || [{ label: "Home", href: "/" }]} />
       <Outlet />
-      <BottomLayer />
+      <Footer />
     </>
   );
 }

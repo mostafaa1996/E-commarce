@@ -1,10 +1,10 @@
-import DashBoardItem from "@/components/genericComponents/DashBoardItem";
+import OrderItem from "@/components/genericComponents/OrderItem";
 import DashBoardTable from "@/components/genericComponents/DashBoardTable";
 import DashBoardTableHeader from "@/components/genericComponents/DashBoardTableHeader";
 import Icon from "@/system/icons/Icon";
 import { useNavigate } from "react-router-dom";
 
-export default function OrderHistoryList({ orders }) {
+export default function OrderHistoryList({ orders , getStatusColor, getPaymentStatusColor, formatPrice}) {
   const navigate = useNavigate();
   return (
     <DashBoardTable className={`w-full`}>
@@ -19,13 +19,21 @@ export default function OrderHistoryList({ orders }) {
       {orders &&
         orders.length > 0 &&
         orders.map((order) => (
-          <DashBoardItem
+          <OrderItem
             key={order?._id}
-            items={order?.orderItems || []}
-            orderId={order?._id || ""}
-            status={order?.Status?.status || ""}
-            createdAt={order?.createdAt || ""}
-            totalPrice={order?.totalPrice || 0}
+            items={order?.orderItems}
+            orderId={order?.orderId}
+            status={order?.status}
+            statusColor={getStatusColor(order?.status)}
+            createdAt={order?.createdAt}
+            updatedAt={order?.updatedAt}
+            totalPrice={formatPrice(order?.totalPrice)}
+            itemsPrice={formatPrice(order?.itemsPrice)}
+            taxPrice={formatPrice(order?.taxPrice)}
+            shippingPrice={formatPrice(order?.shippingPrice)}
+            paymentMethod={order?.paymentMethod}
+            paymentStatus={order?.paymentStatus}
+            paymentStatusColor={getPaymentStatusColor(order?.paymentStatus)}
           />
         ))}
     </DashBoardTable>

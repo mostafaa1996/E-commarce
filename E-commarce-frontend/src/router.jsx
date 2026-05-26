@@ -3,12 +3,11 @@ import { queryClient } from "./queryClient";
 import { getShopProducts, getProductById } from "./APIs/shopProductsService";
 import { loginAction, SignupAction, logoutAction } from "./APIs/AuthService";
 import { getCart } from "@/APIs/CartService";
-import { getCartData, getShippingDetails } from "./APIs/checkoutService";
+import { getCartData } from "./APIs/checkoutService";
 import {
   getUserProfileData,
   getPersonalInfo,
   UpdatePersonalInfo,
-  getUserPaginatedOrders,
   getUserWishlist,
   getUserAddresses,
   updateUserAddresses,
@@ -17,7 +16,7 @@ import {
 
 import ShopPage from "./pages/ShopPage";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
-import CartPage from "./Pages/CartPage";
+import CartPage from "./Pages/CartPageModified";
 import LoginPage from "./Pages/loginPage";
 import SignupPage from "./Pages/SignupPage";
 import CheckoutPage from "./Pages/checkoutPage";
@@ -30,7 +29,8 @@ import UserPaymentPage from "./Pages/UserPaymentPage";
 import UserSettingsPage from "./Pages/UserSettingsPage";
 import MainLayout from "./layouts/MainLayout";
 import ShopPageLayout from "./layouts/shopPageLayout";
-import { parseShopQueryFromUrl } from "./utils/ParseShopQuery";
+import { defaultShopQuery } from "./Data/shopQuery";
+import { parseShopQueryFromUrl } from "./utils/ParseUrlQuery";
 import StripeElementsWrapper from "./components/genericComponents/stripeElementWrapper";
 import DashboardPage from "./Pages/AdminDashboardPage";
 import AdminProductsPage from "./Pages/AdminProductsPage";
@@ -47,6 +47,8 @@ import AdminSettingsPage from "./Pages/AdminSettingsPage";
 import ProductPage from "./Pages/ProductPage";
 import HomePage from "./Pages/HomePage";
 import ContactPage from "./Pages/ContactPage";
+import { shortenText } from "./utils/utils";
+import { useLoggedInEmail } from "./zustand_loggedIn/loggedInEmail";
 
 export const router = createBrowserRouter([
   {
@@ -59,9 +61,12 @@ export const router = createBrowserRouter([
           {
             index: true,
             element: <ShopPage />,
-            handle: { title: "Shop" },
+            handle: { items: [{ label: "Shop", href: "/shop" }] },
             loader: async ({ request }) => {
-              const InitialQuery = parseShopQueryFromUrl(request.url);
+              const InitialQuery = parseShopQueryFromUrl(
+                request.url,
+                defaultShopQuery,
+              );
               return queryClient.ensureQueryData({
                 queryKey: ["products", InitialQuery],
                 queryFn: () => getShopProducts(InitialQuery),
@@ -73,7 +78,16 @@ export const router = createBrowserRouter([
       {
         path: "/shop/products/:id",
         element: <ProductPage />,
-        handle: { title: "Product Details" },
+        handle: {
+          breadcrumb: (data) => [
+            { label: "Shop", href: "/shop" },
+            {
+              label:
+                shortenText(data?.preloadedProduct?.title, 20) ||
+                "Product Details",
+            },
+          ],
+        },
         loader: async ({ params }) => {
           // console.log(params.id);
           // get the product
@@ -81,11 +95,15 @@ export const router = createBrowserRouter([
             queryKey: ["product", params.id],
             queryFn: () => getProductById(params.id),
           });
+
+          let cart = null;
           // get the cart to know if the product is in the cart or not and based on that start quantity from cart number
-          const cart = await queryClient.ensureQueryData({
-            queryKey: ["cart"],
-            queryFn: getCart,
-          });
+          if (useLoggedInEmail.getState().loggedInEmail) {
+            cart = await queryClient.ensureQueryData({
+              queryKey: ["cart"],
+              queryFn: getCart,
+            });
+          }
 
           return { preloadedProduct, cart };
         },
@@ -93,7 +111,7 @@ export const router = createBrowserRouter([
       {
         path: "/cart",
         element: <CartPage />,
-        handle: { title: "Cart" },
+        handle: { items: [{ label: "Cart", href: "/cart" }] },
         loader: async () => {
           return queryClient.ensureQueryData({
             queryKey: ["cart"],
@@ -105,7 +123,7 @@ export const router = createBrowserRouter([
       {
         path: "/checkout",
         element: <CheckoutPage />,
-        handle: { title: "Checkout" },
+        handle: { items: [{ label: "Checkout", href: "/checkout" }] },
         loader: async () => {
           return queryClient.ensureQueryData({
             queryKey: ["checkout"],
@@ -115,14 +133,10 @@ export const router = createBrowserRouter([
                 VAT_shipping,
                 message: cartMessage,
               } = await getCartData();
-              const { shippingDetails, message: shippingDetailsMessage } =
-                await getShippingDetails();
               return {
                 cart,
-                shippingDetails,
                 VAT_shipping,
                 cartMessage,
-                shippingDetailsMessage,
               };
             },
           });
@@ -144,13 +158,6 @@ export const router = createBrowserRouter([
         path: "/profile/orders",
         element: <UserOrdersPage />,
         handle: { title: "profile > Orders" },
-        loader: async () => {
-          return queryClient.ensureQueryData({
-            queryKey: ["profile-orders", 1],
-            queryFn: () => getUserPaginatedOrders(1, 5),
-            staleTime: 1000 * 60 * 5,
-          });
-        },
       },
       {
         path: "/profile/wishlist",
@@ -212,12 +219,12 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path : "/home",
-    element : <HomePage />
+    path: "/home",
+    element: <HomePage />,
   },
   {
-    path : "/contact",
-    element : <ContactPage />
+    path: "/contact",
+    element: <ContactPage />,
   },
   {
     path: "/profile/admin/dashboard",

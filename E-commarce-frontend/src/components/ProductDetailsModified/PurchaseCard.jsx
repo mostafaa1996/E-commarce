@@ -5,34 +5,27 @@ import {
   ShoppingCart,
   Zap,
   Heart,
-  Share2,
   ShieldCheck,
   Truck,
   RotateCcw,
   Check,
+  Clock,
 } from "lucide-react";
-
-const formatCurrency = (n, c = "USD") =>
-  new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: c,
-    maximumFractionDigits: 0,
-  }).format(n);
 
 const PurchaseCard = ({
   variant,
-  currency = "USD",
-  onAddToCart,
-  onRemoveFromCart,
-  onBuyNow,
-  onWishlist = false,
-  onUpdateWishlist,
+  onAddToCart = () => {},
+  onRemoveFromCart = () => {},
+  onBuyNow = () => {},
+  isInWishlist = false,
+  onUpdateWishlist = () => {},
   initiallyInCart = false,
   initialQty = 0,
+  formatCurrency = (price) => price,
+  rate = 1,
+  expireDate,
 }) => {
-  const [wished, setWished] = useState(onWishlist);
   const [qty, setQty] = useState(initialQty);
-  const [addedToCart, setAddedToCart] = useState(initiallyInCart);
   const max = Math.max(1, variant?.stock);
   const oos =
     variant?.availabilityStatus === "out_of_stock" || variant?.stock === 0;
@@ -46,32 +39,25 @@ const PurchaseCard = ({
       )
     : 0;
 
-  function changeWishlistState() {
-    onUpdateWishlist();
-    setWished(!wished);
-  }
-
   function handleCartAction() {
-    if (addedToCart) {
+    if (initiallyInCart) {
       onRemoveFromCart?.(qty);
-      setAddedToCart(false);
-      return;
+    }else{
+      onAddToCart?.(qty);
     }
-    onAddToCart?.(qty);
-    setAddedToCart(true);
   }
 
   return (
     <div className="rounded-2xl border border-border bg-card p-6 shadow-card">
       {/* Price */}
-      <div className="flex items-baseline gap-3">
+      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-2">
         <span className="text-3xl font-bold tracking-tight text-foreground">
-          {formatCurrency(variant?.price, currency)}
+          {formatCurrency(variant?.price * rate)}
         </span>
         {variant?.compareAtPrice && (
           <>
             <span className="text-base text-muted-foreground line-through">
-              {formatCurrency(variant?.compareAtPrice, currency)}
+              {formatCurrency(variant?.compareAtPrice * rate)}
             </span>
             <span className="rounded-full bg-primary px-2.5 py-0.5 text-xs font-bold text-primary-foreground">
               −{discount}%
@@ -79,8 +65,14 @@ const PurchaseCard = ({
           </>
         )}
       </div>
+      {variant?.compareAtPrice && expireDate && (
+        <div className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1 text-xs font-medium text-muted-foreground">
+          <Clock className="h-3.5 w-3.5" />
+          <span>Offer ends {expireDate}</span>
+        </div>
+      )}
       <p className="mt-1.5 text-xs text-muted-foreground">
-        Tax included. Shipping calculated at checkout.
+        Tax and Shipping calculated at checkout.
       </p>
 
       {/* Stock */}
@@ -127,7 +119,7 @@ const PurchaseCard = ({
             <Plus className="h-4 w-4" />
           </button>
         </div>
-        {addedToCart && (
+        {initiallyInCart && (
           <span className="ml-3 text-sm font-semibold text-success">
             Added to cart
           </span>
@@ -148,23 +140,23 @@ const PurchaseCard = ({
           onClick={handleCartAction}
           disabled={oos}
           className={`flex h-12 w-full items-center justify-center gap-2 rounded-xl border text-sm font-semibold transition-smooth active:scale-[0.98] disabled:cursor-not-allowed disabled:border-border disabled:bg-secondary disabled:text-muted-foreground ${
-            addedToCart
+            initiallyInCart
               ? "border-destructive bg-destructive text-destructive-foreground hover:bg-destructive/90"
               : "border-foreground bg-foreground text-background hover:bg-foreground/90"
           }`}
         >
           <ShoppingCart className="h-4 w-4" />
-          {addedToCart ? "Remove from cart" : "Add to cart"}
+          {initiallyInCart ? "Remove from cart" : "Add to cart"}
         </button>
         <button
-          onClick={changeWishlistState}
+          onClick={onUpdateWishlist}
           className={`flex h-11 w-full items-center justify-center gap-2 rounded-xl border text-sm font-semibold transition-smooth ${
-            wished
+            isInWishlist
               ? "border-primary bg-primary-soft text-primary"
               : "border-border bg-background text-foreground hover:bg-secondary"
           }`}
         >
-          <Heart className="h-4 w-4" fill={wished ? "currentColor" : "none"} />
+          <Heart className="h-4 w-4" fill={isInWishlist ? "currentColor" : "none"} />
           Wishlist
         </button>
       </div>

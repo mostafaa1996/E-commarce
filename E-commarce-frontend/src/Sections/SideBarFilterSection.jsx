@@ -1,136 +1,119 @@
 import SideBarFilter from "@/components/genericComponents/SideBarFilter";
+import PriceFilter from "@/Sections/Shop/PriceFilter";
+import ShowOnlyFilter from "@/Sections/Shop/ShowOnlyFilter";
 import useCurrency from "@/hooks/CurrencyChange";
 import { useCurrencyStore } from "@/zustand_preferences/currency";
-import useShopQuery from "@/hooks/shopPageQuery";
-import { Fragment } from "react";
+import { useMemo, useState, useEffect } from "react";
+import useShopFilters  from "@/hooks/useShopFilters";
 
 export default function SideBarFilterSection({ data }) {
-  const { updateShopQuery, shopQuery, resetShopQuery } = useShopQuery();
+  const {
+    shopQuery: MainQuery,
+    toggleArrayFilter,
+    toggleSingleFilter,
+    toggleCategoryFilter,
+    toggleBooleanFilter,
+    setPriceFilter
+  } = useShopFilters();
   const { currency, locale, conversion_rate } = useCurrencyStore();
   const format = useCurrency(currency, locale);
   const rate = conversion_rate[currency] ?? 1;
-  const HandleMaxMinPrice = () => {
-    if (data.price && Array.isArray(data.price) && data.price.length > 0) {
-      //sort the array
-      const sortedArray = data.price.sort((a, b) => a - b);
-      //Max and Min array
-      const max = sortedArray[sortedArray.length - 1];
-      const min = sortedArray[0];
-      const range = max - min;
-      const step = Math.ceil(range / 5);
-      const RangePriceArr = [];
-      for (let i = 0; i < 5; i++) {
-        const start = min + i * step;
-        const end = Math.min(max, start + step - 1);
-        RangePriceArr.push({
-          min: start,
-          max: end,
-        });
-      }
-      return RangePriceArr;
+  const [draftUiPriceRange, setDraftUiPriceRange] = useState([0, 0]);
+  const [isPriceSliderMoved, setIsPriceSliderMoved] = useState(false);
+  const maxPrice = useMemo(() => {
+    if (!Array.isArray(data?.price) || data.price.length === 0) {
+      return null;
     }
-  };
 
-  let PriceArr = HandleMaxMinPrice();
-  PriceArr = PriceArr?.map((item) => {
-    return {
-      label: `${format(item.min * rate)}-${format(item.max * rate)}`,
-      value: { min: item.min, max: item.max },
-    };
-  });
+    return Math.max(...data.price);
+  }, [data?.price]);
+  const defaultPriceRange = useMemo(
+    () => [0, (maxPrice ?? 0) * rate],
+    [maxPrice, rate],
+  );
+  const visiblePriceRange = isPriceSliderMoved
+    ? draftUiPriceRange
+    : defaultPriceRange;
 
-  function PrepareActivatedFilters() {
-    const query = {
-      category: shopQuery.category,
-      tags: shopQuery.tags,
-      brands: shopQuery.brands,
-      price: PriceArr?.find(
-        (item) =>
-          item.value.min === shopQuery.minPrice &&
-          item.value.max === shopQuery.maxPrice,
-      )?.label,
-    };
-    console.log(query);
-    return query;
-  }
+  const filterGroups = [
+    {
+      key: "category",
+      title: "Category",
+      items: data?.category || [],
+      selected: MainQuery.category,
+    },
+    {
+      key: "tags",
+      title: "Tags",
+      items: data?.tags || [],
+      selected: MainQuery.tags,
+      visible: Boolean(MainQuery.category),
+    },
+    {
+      key: "brands",
+      title: "Brands",
+      items: data?.brands || [],
+      selected: MainQuery.brands,
+      visible: Boolean(MainQuery.category),
+    },
+  ];
 
-  const FilterationData = {
-    categories: data?.category,
-    tags: data?.tags,
-    brands: data?.brands,
-    Price: PriceArr?.map((item) => item.label),
-  };
+  useEffect(() => {
+    if (!isPriceSliderMoved) return;
+
+    const timeoutId = setTimeout(() => {
+      setPriceFilter({
+        minPrice: draftUiPriceRange[0] / rate,
+        maxPrice: draftUiPriceRange[1] / rate,
+      });
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [draftUiPriceRange, isPriceSliderMoved, rate , setPriceFilter]);
 
   function applyFilter(Title, item) {
-    if (Array.isArray(shopQuery[Title])) {
-      const data = shopQuery[Title];
-      // check if the item is already in the array
-      if (!data.includes(item)) {
-        data.push(item); // add the item
-      } else {
-        data.splice(data.indexOf(item), 1); // remove the item
-      }
-      if (data.length === 0) {
-        updateShopQuery({ [Title]: [] }); // if the array is empty, set the value to empty array
-        return;
-      }
-      updateShopQuery({ [Title]: data }); //set the data to the title
+    if (Array.isArray(MainQuery[Title])) {
+      toggleArrayFilter(Title, item);
       return;
-    } else if (!Array.isArray(shopQuery[Title])) {
-      if (shopQuery[Title] === item) {
-        if (Title === "category") {
-          resetShopQuery();
-          return;
-        }
-        updateShopQuery({ [Title]: null });
+    } else {
+      if (Title === "category") {
+        toggleCategoryFilter(item);
         return;
       }
-      if (Title === "price") {
-        const maxPrice = PriceArr.find((price) => price.label === item).value
-          .max;
-        const minPrice = PriceArr.find((price) => price.label === item).value
-          .min;
-        // toggle the filter
-        if (
-          shopQuery["minPrice"] === minPrice &&
-          shopQuery["maxPrice"] === maxPrice
-        ) {
-          updateShopQuery({ minPrice: null, maxPrice: null });
-          return;
-        }
-        updateShopQuery({ minPrice: minPrice, maxPrice: maxPrice });
-        return;
-      }
+      toggleSingleFilter(Title, item);
     }
-    updateShopQuery({ [Title]: item });
   }
 
   return (
     <>
-      {/* the essential filter is categories */}
-      {FilterationData.categories && (
-        <SideBarFilter
-          title={"Category"}
-          items={FilterationData.categories || []}
-          onSelectFilter={applyFilter}
-          activeFilter={PrepareActivatedFilters()}
+      {filterGroups
+        .filter((group) => group.visible !== false)
+        .map((group) => (
+          <SideBarFilter
+            key={group.key}
+            title={group.title}
+            items={group.items}
+            selected={group.selected}
+            onSelectFilter={(item) => applyFilter(group.key, item)}
+          />
+        ))}
+      {MainQuery.category && (
+        <PriceFilter
+          value={visiblePriceRange}
+          max={(maxPrice ?? 0) * rate}
+          format={format}
+          onChange={(nextRange) => {
+            setIsPriceSliderMoved(true);
+            setDraftUiPriceRange(nextRange);
+          }}
         />
       )}
-      {/* the rest of the filters determined by the categories selected */}
-      {shopQuery.category &&
-        Object.entries(FilterationData).map(([key, values]) => {
-          if (key === "categories") return;
-          return (
-            <Fragment key={key}>
-              <SideBarFilter
-                title={key}
-                items={values || []}
-                onSelectFilter={applyFilter}
-                activeFilter={PrepareActivatedFilters()}
-              />
-            </Fragment>
-          );
-        })}
+      {MainQuery.category && (
+        <ShowOnlyFilter
+          selectedFilters={MainQuery}
+          onToggle={(key) => toggleBooleanFilter(key)}
+        />
+      )}
     </>
   );
 }

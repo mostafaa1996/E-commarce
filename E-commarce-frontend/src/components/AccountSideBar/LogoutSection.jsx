@@ -4,8 +4,8 @@ export default function LogoutSection({ onLogout }) {
     <div className="border-t border-zinc-200">
       <button
         onClick={onLogout}
-        className={`w-full text-start px-6 py-4 text-red-500 hover:bg-red-50
-          transition flex items-center gap-3 cursor-pointer text-sm font-light hover:text-red-600 hover:scale-105 `}
+        className={`flex w-full cursor-pointer items-center justify-center gap-3 px-4 py-3 text-start text-sm font-light text-red-500
+          transition hover:bg-red-50 hover:text-red-600 lg:justify-start lg:px-6 lg:py-4 lg:hover:scale-105 `}
       >
         <Icon name="logout" size={24} strokeWidth={1.5} variant="danger" />
         <span className="text-sm font-light">Sign Out</span>

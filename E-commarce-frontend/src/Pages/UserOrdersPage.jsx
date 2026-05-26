@@ -1,113 +1,61 @@
 import OrderSearchAndFilteration from "@/Sections/UserProfile/OrderRoute/OrderSearchAndFilteration.jsx";
 import UserNestedRoutesHeader from "@/Sections/UserProfile/UserNestedRoutesHeader";
 import BaseSection from "@/Sections/UserProfile/BaseSectionForUserProfile";
-import DashBoardItem from "@/components/genericComponents/DashBoardItem";
+import OrderItem from "@/components/genericComponents/OrderItem";
 import DashBoardTable from "@/components/genericComponents/DashBoardTable";
 import Pagination from "@/components/genericComponents/Pagination";
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import { getUserPaginatedOrders } from "@/APIs/UserProfileService";
-import useCurrency from "@/hooks/CurrencyChange";
-import { useCurrencyStore } from "@/zustand_preferences/currency";
-
-const styles = {
-  delivered: "bg-green-100 text-green-600",
-  "In transit": "bg-yellow-100 text-yellow-600",
-  cancelled: "bg-red-100 text-red-600",
-  default: "bg-zinc-200 text-black",
-  pending_Payment: "bg-red-200 text-red-600",
-  returned: "bg-blue-100 text-red-600",
-};
-
-const tabs = [
-  "All",
-  "Delivered",
-  "In Transit",
-  "Cancelled",
-  "Returned",
-  "Pending_Payment",
-];
+import useOrdersForUserProfile from "@/hooks/useOrdersForUserProfile";
+import ProfilePageState from "@/components/genericComponents/ProfilePageState";
 
 export default function UserOrdersPage() {
-  const [page, setPage] = useState(1);
-  const [FilterAndSearch, setFilterAndSearch] = useState({
-    filterValue: "All",
-    searchValue: "",
-  });
-  let filteredOrders = [];
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["profile-orders" , page],
-    queryFn: () => getUserPaginatedOrders(page, 5),
-  });
+  const {
+    data,
+    isLoading,
+    error,
+    tabs,
+    activeFilter,
+    setFilter,
+    setSearch,
+    getStatusColor,
+    getPaymentStatusColor,
+    formatPrice,
+    updateUrlQuery,
+  } = useOrdersForUserProfile();
 
-  const { currency , locale, conversion_rate } = useCurrencyStore();
-  const format = useCurrency(currency, locale);
-  const rate = conversion_rate[currency] ?? 1 ;
-
-  filteredOrders = data?.orders
-    ?.filter(
-      (order) =>
-        //filter on search only
-        (FilterAndSearch.filterValue === "All" &&
-        FilterAndSearch.searchValue !== ""
-          ? order.orderItems.some((item) =>
-              item.name
-                .toLowerCase()
-                .includes(FilterAndSearch.searchValue.toLowerCase()),
-            ) ||
-            order._id
-              .toLowerCase()
-              .includes(FilterAndSearch.searchValue.toLowerCase())
-          : false) ||
-        //filter on status including search
-        (FilterAndSearch.filterValue !== "All" &&
-        FilterAndSearch.searchValue !== ""
-          ? (order.orderItems.some((item) =>
-              item.name
-                .toLowerCase()
-                .includes(FilterAndSearch.searchValue.toLowerCase()),
-            ) ||
-              order._id
-                .toLowerCase()
-                .includes(FilterAndSearch.searchValue.toLowerCase())) &&
-            order.Status.status.toLowerCase() ===
-              FilterAndSearch.filterValue.toLowerCase()
-          : false) ||
-        //filter on status only
-        (FilterAndSearch.filterValue !== "All" &&
-          FilterAndSearch.searchValue === "" &&
-          order.Status.status.toLowerCase() ===
-            FilterAndSearch.filterValue.toLowerCase()) ||
-        // No filter applied
-        (FilterAndSearch.filterValue === "All" &&
-          FilterAndSearch.searchValue === ""),
-    )
-    .map((order) => (
-      <DashBoardItem
-        key={order._id}
-        items={order.orderItems}
-        orderId={order._id}
-        status={order.Status.status}
-        statusColor={styles[order.Status.status] || styles.default}
-        createdAt={order.createdAt}
-        totalPrice={format(order.totalPrice * rate)}
-      />
-    ));
-
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error loading profile</p>;
-  if (!data) return <p>No profile found</p>;
-
-  function setSearchValue(value) {
-    setFilterAndSearch({ ...FilterAndSearch, searchValue: value });
+  if (isLoading) {
+    return (
+      <BaseSection>
+        <ProfilePageState type="loading" loadingMessage="Loading orders" />
+      </BaseSection>
+    );
   }
-  function setFilter(value) {
-    setFilterAndSearch({ ...FilterAndSearch, filterValue: value });
+
+  if (error) {
+    return (
+      <BaseSection>
+        <ProfilePageState
+          type="error"
+          title="Error loading orders"
+          message={error.message}
+        />
+      </BaseSection>
+    );
+  }
+
+  if (!data) {
+    return (
+      <BaseSection>
+        <ProfilePageState
+          title="No orders found"
+          message="Your order data is not available right now."
+        />
+      </BaseSection>
+    );
   }
 
   return (
     <BaseSection>
-      <div className="flex flex-col items-center justify-center">
+      <div className="flex w-full flex-col items-center justify-center">
         <UserNestedRoutesHeader
           className="w-full"
           iconName="orders"
@@ -117,16 +65,37 @@ export default function UserOrdersPage() {
         <OrderSearchAndFilteration
           className="w-full"
           tabs={tabs}
-          active={FilterAndSearch.filterValue}
+          active={activeFilter}
           setActive={setFilter}
-          setSearchValue={setSearchValue}
+          setSearchValue={setSearch}
         />
-        <div className="flex flex-col gap-0 w-full">
-          <DashBoardTable className={`w-full my-4`}>
-            {filteredOrders && filteredOrders.length > 0 ? (
-              filteredOrders.map((order) => order)
+        <div className="flex w-full flex-col gap-0">
+          <DashBoardTable className="my-4 w-full">
+            {data && data?.orders?.length > 0 ? (
+              data?.orders?.map((order) => (
+                <OrderItem
+                  key={order?._id}
+                  items={order?.orderItems}
+                  orderId={order?.orderId}
+                  status={order?.status}
+                  statusColor={getStatusColor(order?.status)}
+                  createdAt={order?.createdAt}
+                  updatedAt={order?.updatedAt}
+                  totalPrice={formatPrice(order?.totalPrice)}
+                  itemsPrice={formatPrice(order?.itemsPrice)}
+                  taxPrice={formatPrice(order?.taxPrice)}
+                  shippingPrice={formatPrice(order?.shippingPrice)}
+                  paymentMethod={order?.paymentMethod}
+                  paymentStatus={order?.paymentStatus}
+                  paymentStatusColor={getPaymentStatusColor(
+                    order?.paymentStatus,
+                  )}
+                />
+              ))
             ) : (
-              <p className="text-center m-10">No orders found for this filter</p>
+              <p className="m-6 text-center sm:m-10">
+                No orders found for this filter
+              </p>
             )}
           </DashBoardTable>
         </div>
@@ -135,8 +104,8 @@ export default function UserOrdersPage() {
             data.orders.length <= 5 ? 1 : Math.ceil(data.orders.length / 5)
           }
           RangeOfPagesNumberToShow={5}
-          currentPage={page}
-          onChange={setPage}
+          currentPage={data?.pagination?.page}
+          onChange={(page) => updateUrlQuery({ page })}
         />
       </div>
     </BaseSection>

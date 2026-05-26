@@ -1,4 +1,3 @@
-import { useEffect, useMemo, useRef, useState } from "react";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { AdminButton } from "@/components/adminUI/AdminButton";
@@ -17,245 +16,35 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/adminUI/tabs";
-import { useQuery, useMutation } from "@tanstack/react-query";
-import {
-  getAdminSettings,
-  updateAdminProfile,
-  updateAdminPassword,
-  updateAdminStore,
-} from "@/APIs/adminSettingsService";
 import Loading from "@/components/genericComponents/Loading";
-import { useToast } from "@/hooks/use-toast";
-
-const DEFAULT_PROFILE = {
-  firstName: "Admin",
-  lastName: "User",
-  email: "admin@shoplite.com",
-  phone: "+20 123 456 789",
-  image: null,
-};
-
-const DEFAULT_STORE = {
-  storeName: "ShopLite",
-  supportEmail: "support@shoplite.com",
-  phone: "+20 112 233 44455",
-  shippingFee: "16.79",
-  address: "Alexandria, Egypt",
-  workingDays: "sun-thu, 9:00am- 8:00pm",
-};
-
-const DEFAULT_PASSWORD_FORM = {
-  currentPassword: "",
-  newPassword: "",
-  confirmPassword: "",
-};
-
-function getInitials(firstName, lastName, email) {
-  const fullName = [firstName, lastName].filter(Boolean).join(" ").trim();
-
-  if (fullName) {
-    return fullName
-      .split(" ")
-      .slice(0, 2)
-      .map((part) => part[0]?.toUpperCase())
-      .join("");
-  }
-
-  return email?.slice(0, 2).toUpperCase() || "AD";
-}
-function getValue(...values) {
-  return values.find(
-    (value) => value !== undefined && value !== null && value !== "",
-  );
-}
-
-function normalizeSettings(settings) {
-  return {
-    profile: {
-      firstName: getValue(
-        settings?.profile?.firstName,
-        settings?.admin?.firstName,
-        settings?.firstName,
-        DEFAULT_PROFILE.firstName,
-      ),
-      lastName: getValue(
-        settings?.profile?.lastName,
-        settings?.admin?.lastName,
-        settings?.lastName,
-        DEFAULT_PROFILE.lastName,
-      ),
-      email: getValue(
-        settings?.profile?.email,
-        settings?.admin?.email,
-        settings?.email,
-        DEFAULT_PROFILE.email,
-      ),
-      phone: getValue(
-        settings?.profile?.phone,
-        settings?.admin?.phone,
-        settings?.phone,
-        DEFAULT_PROFILE.phone,
-      ),
-      image: getValue(
-        settings?.profile?.image,
-        settings?.admin?.image,
-        settings?.image,
-        DEFAULT_PROFILE.image,
-      ),
-    },
-    store: {
-      storeName: getValue(
-        settings?.store?.storeName,
-        settings?.storeName,
-        DEFAULT_STORE.storeName,
-      ),
-      supportEmail: getValue(
-        settings?.store?.supportEmail,
-        settings?.supportEmail,
-        DEFAULT_STORE.supportEmail,
-      ),
-      phone: getValue(
-        settings?.store?.phone,
-        settings?.storePhone,
-        DEFAULT_STORE.phone,
-      ),
-      shippingFee: String(
-        getValue(
-          settings?.store?.shippingFee,
-          settings?.shippingFee,
-          DEFAULT_STORE.shippingFee,
-        ),
-      ),
-      address: getValue(
-        settings?.store?.address,
-        settings?.address,
-        DEFAULT_STORE.address,
-      ),
-      workingDays: getValue(
-        settings?.store?.workingDays,
-        settings?.workingDays,
-        DEFAULT_STORE.workingDays,
-      ),
-    },
-  };
-}
+import useAdminSettingsPage, {
+  DEFAULT_PROFILE,
+  DEFAULT_STORE,
+} from "@/hooks/useAdminSettingsPage";
 
 export default function AdminSettingsPage() {
-  const { toast } = useToast();
   let content = null;
-  const avatarInputRef = useRef(null);
-  const [avatarPreview, setAvatarPreview] = useState("");
-  const [profileForm, setProfileForm] = useState();
-  const [storeForm, setStoreForm] = useState();
-  const [passwordForm, setPasswordForm] = useState(DEFAULT_PASSWORD_FORM);
-
   const {
-    data: settings,
+    settings,
     isLoading,
     isFetching,
     error,
-  } = useQuery({
-    queryKey: ["AdminSettings"],
-    queryFn: getAdminSettings,
-  });
-
-  const { mutateAsync: updateProfile } = useMutation({
-    mutationFn: updateAdminProfile,
-    onSuccess: () => {
-      toast({
-        title: "Profile updated successfully",
-      });
-    },
-  });
-  const { mutateAsync: updatePassword } = useMutation( {
-    mutationFn: updateAdminPassword,
-    onSuccess: () => {
-      toast({
-        title: "Password updated successfully",
-      });
-    },
-  });
-  const { mutateAsync: updateStore } = useMutation({
-    mutationFn: updateAdminStore,
-    onSuccess: () => {
-      toast({
-        title: "Store updated successfully",
-      });
-    },
-  });
-
-  useEffect(() => {
-    if (!settings) {
-      return;
-    }
-
-    const normalizedSettings = normalizeSettings(settings);
-    setProfileForm(normalizedSettings.profile);
-    setStoreForm(normalizedSettings.store);
-    setAvatarPreview(normalizedSettings.profile.image);
-  }, [settings]);
-
-  useEffect(() => {
-    return () => {
-      if (avatarPreview?.startsWith("blob:")) {
-        URL.revokeObjectURL(avatarPreview);
-      }
-    };
-  }, [avatarPreview]);
-
-  const adminInitials = useMemo(
-    () =>
-      getInitials(
-        profileForm?.firstName,
-        profileForm?.lastName,
-        profileForm?.email,
-      ),
-    [profileForm?.email, profileForm?.firstName, profileForm?.lastName],
-  );
-
-  const adminFullName =
-    [profileForm?.firstName, profileForm?.lastName].filter(Boolean).join(" ") ||
-    "Super Admin";
-
-  function updateProfileField(field, value) {
-    setProfileForm((currentProfileForm) => ({
-      ...currentProfileForm,
-      [field]: value,
-    }));
-  }
-
-  function updateStoreField(field, value) {
-    setStoreForm((currentStoreForm) => ({
-      ...currentStoreForm,
-      [field]: value,
-    }));
-  }
-
-  function updatePasswordField(field, value) {
-    setPasswordForm((currentPasswordForm) => ({
-      ...currentPasswordForm,
-      [field]: value,
-    }));
-  }
-
-  function handleAvatarButtonClick() {
-    avatarInputRef.current?.click();
-  }
-
-  function handleAvatarChange(event) {
-    const selectedFile = event.target.files?.[0];
-
-    if (!selectedFile) {
-      return;
-    }
-
-    if (avatarPreview?.startsWith("blob:")) {
-      URL.revokeObjectURL(avatarPreview);
-    }
-
-    updateProfileField("image", selectedFile);
-    setAvatarPreview(URL.createObjectURL(selectedFile));
-  }
+    avatarInputRef,
+    avatarSource,
+    profileForm,
+    storeForm,
+    passwordForm,
+    adminInitials,
+    adminFullName,
+    updateProfileField,
+    updateStoreField,
+    updatePasswordField,
+    handleAvatarButtonClick,
+    handleAvatarChange,
+    updateProfile,
+    updatePassword,
+    updateStore,
+  } = useAdminSettingsPage();
 
   if ((isLoading || isFetching) && !settings) {
     content = (
@@ -289,7 +78,7 @@ export default function AdminSettingsPage() {
     );
   }
 
-  if (settings && profileForm && storeForm) {
+  if (settings) {
     content = (
       <AdminLayout>
         <PageHeader
@@ -312,7 +101,7 @@ export default function AdminSettingsPage() {
             <div className="bg-card rounded-xl border shadow-sm p-6 space-y-6">
               <div className="flex items-center gap-6">
                 <Avatar className="h-20 w-20">
-                  <AvatarImage src={avatarPreview} alt={adminFullName} />
+                  <AvatarImage src={avatarSource} alt={adminFullName} />
                   <AvatarFallback className="bg-primary text-primary-foreground text-xl font-bold">
                     {adminInitials}
                   </AvatarFallback>
@@ -348,7 +137,7 @@ export default function AdminSettingsPage() {
                   <Label htmlFor="admin-first-name">First Name</Label>
                   <InputField
                     id="admin-first-name"
-                    placeholder={DEFAULT_PROFILE.first_name}
+                    placeholder={DEFAULT_PROFILE.firstName}
                     value={profileForm.firstName}
                     onChange={(event) =>
                       updateProfileField("firstName", event.target.value)
@@ -359,7 +148,7 @@ export default function AdminSettingsPage() {
                   <Label htmlFor="admin-last-name">Last Name</Label>
                   <InputField
                     id="admin-last-name"
-                    placeholder={DEFAULT_PROFILE.last_name}
+                    placeholder={DEFAULT_PROFILE.lastName}
                     value={profileForm.lastName}
                     onChange={(event) =>
                       updateProfileField("lastName", event.target.value)
@@ -412,7 +201,7 @@ export default function AdminSettingsPage() {
                   <Label htmlFor="store-name">Store Name</Label>
                   <InputField
                     id="store-name"
-                    placeholder={DEFAULT_STORE.store_name}
+                    placeholder={DEFAULT_STORE.storeName}
                     value={storeForm.storeName}
                     onChange={(event) =>
                       updateStoreField("storeName", event.target.value)
@@ -423,7 +212,7 @@ export default function AdminSettingsPage() {
                   <Label htmlFor="support-email">Support Email</Label>
                   <InputField
                     id="support-email"
-                    placeholder={DEFAULT_STORE.support_email}
+                    placeholder={DEFAULT_STORE.supportEmail}
                     value={storeForm.supportEmail}
                     type="email"
                     onChange={(event) =>
@@ -447,7 +236,7 @@ export default function AdminSettingsPage() {
                   <Label htmlFor="shipping-fee">Shipping Fee</Label>
                   <InputField
                     id="shipping-fee"
-                    placeholder={DEFAULT_STORE.shipping_fee}
+                    placeholder={DEFAULT_STORE.shippingFee}
                     value={storeForm.shippingFee}
                     type="number"
                     onChange={(event) =>
@@ -479,10 +268,7 @@ export default function AdminSettingsPage() {
                 </div>
               </div>
               <div className="flex justify-end">
-                <AdminButton
-                  onClick={() => updateStore(storeForm)}
-                  type="button"
-                >
+                <AdminButton onClick={() => updateStore(storeForm)} type="button">
                   Save Settings
                 </AdminButton>
               </div>
@@ -499,7 +285,7 @@ export default function AdminSettingsPage() {
                   <Label>Current Password</Label>
                   <InputField
                     type="password"
-                    placeholder="••••••••"
+                    placeholder="********"
                     value={passwordForm.currentPassword}
                     onChange={(event) =>
                       updatePasswordField("currentPassword", event.target.value)
@@ -510,7 +296,7 @@ export default function AdminSettingsPage() {
                   <Label>New Password</Label>
                   <InputField
                     type="password"
-                    placeholder="••••••••"
+                    placeholder="********"
                     value={passwordForm.newPassword}
                     onChange={(event) =>
                       updatePasswordField("newPassword", event.target.value)
@@ -521,7 +307,7 @@ export default function AdminSettingsPage() {
                   <Label>Confirm New Password</Label>
                   <InputField
                     type="password"
-                    placeholder="••••••••"
+                    placeholder="********"
                     value={passwordForm.confirmPassword}
                     onChange={(event) =>
                       updatePasswordField("confirmPassword", event.target.value)

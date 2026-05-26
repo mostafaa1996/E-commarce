@@ -4,15 +4,6 @@ import { PageHeader } from "@/components/admin/PageHeader";
 import { DataTable } from "@/components/admin/DataTable";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { AdminButton } from "@/components/adminUI/AdminButton";
-import { useState, useEffect } from "react";
-import { useToast } from "@/hooks/use-toast";
-import { useQuery, useMutation } from "@tanstack/react-query";
-import useURLQuery from "@/hooks/UrlQuery";
-import {
-  getAdminProductsReviews,
-  updateAdminProductReview,
-  deleteAdminProductReview,
-} from "@/APIs/adminReviews";
 import Loading from "@/components/genericComponents/Loading";
 import { formatTime, shortenText } from "@/utils/utils";
 import InputField from "@/components/genericComponents/InputField";
@@ -30,28 +21,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/adminUI/select";
-
-const defaultQuery = {
-  status: "all",
-  rating: "all",
-  search: "",
-  page: 1,
-  limit: 6,
-};
+import useAdminReviewsPage from "@/hooks/useAdminReviewsPage";
 
 const statusMap = {
   approved: "success",
   pending: "warning",
   rejected: "danger",
 };
-
-function isQueryChangedFromDefault(query) {
-  return (
-    query.status !== defaultQuery.status ||
-    query.rating !== defaultQuery.rating ||
-    query.search !== defaultQuery.search
-  );
-}
 
 function StarRating({ rating }) {
   return (
@@ -73,99 +49,30 @@ function StarRating({ rating }) {
 
 export default function AdminReviewsPage() {
   let content = null;
-  const { toast } = useToast();
-  const [reviews, setReviews] = useState([]);
-  const [pendingAction, setPendingAction] = useState(null);
-  const [viewCompleteComment, setViewCompleteComment] = useState(null); //trigger dialog for complete comment
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [selectedRating, setSelectedRating] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchInput, setSearchInput] = useState("");
-
-  const { MainQuery, updateUrlQuery, resetUrlQuery } =
-    useURLQuery(defaultQuery);
   const {
-    data: reviewsData,
+    reviewsData,
+    reviews,
     isLoading,
     isFetching,
     isError,
     error,
-  } = useQuery({
-    queryKey: ["adminReviews", MainQuery],
-    queryFn: () => getAdminProductsReviews(MainQuery),
-    placeholderData: (previousData) => previousData,
-    keepPreviousData: true,
-  });
-
-  const { mutateAsync: updateReview } = useMutation({
-    mutationFn: ({ id, status }) => updateAdminProductReview(id, status),
-    onMutate: ({ id, status }) => {
-      setPendingAction({ id, type: status });
-    },
-    onSuccess: (data, { id, status }) => {
-      toast({
-        title: "Review updated.",
-        description: "The review has been updated.",
-      });
-      setReviews((currentReviews) =>
-        currentReviews.map((review) =>
-          review._id === id
-            ? {
-                ...review,
-                status,
-                updatedAt: formatTime(data?.review?.updatedAt || new Date()),
-              }
-            : review,
-        ),
-      );
-    },
-    onSettled: () => {
-      setPendingAction(null);
-    },
-  });
-
-  const { mutateAsync: deleteReview } = useMutation({
-    mutationFn: (id) => deleteAdminProductReview(id),
-    onMutate: (id) => {
-      setPendingAction({ id, type: "delete" });
-    },
-    onSuccess: () => {
-      toast({
-        title: "Review deleted.",
-        description: "The review has been deleted.",
-      });
-      setReviews((currentReviews) =>
-        currentReviews.filter((review) => review._id !== pendingAction?.id),
-      );
-    },
-    onSettled: () => {
-      setPendingAction(null);
-    },
-  });
-
-  useEffect(() => {
-    const timeOut = setTimeout(() => {
-      setSearchTerm(searchInput);
-    }, 500);
-    return () => {
-      clearTimeout(timeOut);
-    };
-  }, [searchInput]);
-
-  useEffect(() => {
-    updateUrlQuery({
-      rating: selectedRating,
-      status: selectedStatus,
-      search: searchTerm,
-    });
-  }, [selectedRating, selectedStatus, searchTerm]);
-
-  useEffect(() => {
-    if (reviewsData?.reviews) {
-      setReviews(reviewsData.reviews);
-    }
-  }, [reviewsData]);
+    pendingAction,
+    viewCompleteComment,
+    setViewCompleteComment,
+    selectedItem,
+    setSelectedItem,
+    selectedRating,
+    setSelectedRating,
+    selectedStatus,
+    setSelectedStatus,
+    searchInput,
+    setSearchInput,
+    updateReview,
+    deleteReview,
+    updateUrlQuery,
+    resetFilters,
+    isQueryChanged,
+  } = useAdminReviewsPage();
 
   const columns = [
     {
@@ -339,15 +246,9 @@ export default function AdminReviewsPage() {
               onChange={(e) => setSearchInput(e.target.value)}
             />
           </div>
-          {isQueryChangedFromDefault(MainQuery) && (
+          {isQueryChanged && (
             <AdminButton
-              onClick={() => {
-                resetUrlQuery(defaultQuery);
-                setSearchInput("");
-                setSearchTerm("");
-                setSelectedRating("all");
-                setSelectedStatus("all");
-              }}
+              onClick={resetFilters}
               variant="ghost"
               className="w-full sm:w-auto"
             >

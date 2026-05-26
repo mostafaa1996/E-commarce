@@ -38,378 +38,48 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/adminUI/alert-dialog";
-import { useState, useEffect } from "react";
-import { useToast } from "@/hooks/use-toast";
-import { useQuery, useMutation } from "@tanstack/react-query";
-import useURLQuery from "@/hooks/UrlQuery";
-import {
-  getAdminProducts,
-  getProduct,
-  createProduct,
-  updateProduct,
-  deleteProduct,
-} from "@/APIs/adminProducts";
 import Loading from "@/components/genericComponents/Loading";
 import { formatTime, shortenText } from "@/utils/utils";
-
-const defaultQuery = {
-  status: "all",
-  category: "all",
-  search: "",
-  page: 1,
-  limit: 8,
-};
-
-const categoryValueMap = {
-  Tablets: "Tablets",
-  Monitors: "Monitors",
-  "Gaming Accessories": "Gaming Accessories",
-  Smartphones: "Smartphones",
-  Headphones: "Headphones",
-  "Smart Home": "Smart Home",
-  Cameras: "Cameras",
-  Laptops: "Laptops",
-  "Smart Watches": "Smart Watches",
-  "Computer Accessories": "Computer Accessories",
-};
-
-function isQueryChangedFromDefault(query) {
-  return (
-    query.status !== defaultQuery.status ||
-    query.category !== defaultQuery.category ||
-    query.search !== defaultQuery.search
-  );
-}
-
-const toDialogProductData = (product) => ({
-  id: product?._id || "",
-  title: product?.title || product?.name || "",
-  slug: (product?.slug || product?.title || product?.name || "")
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-"),
-  slugAuto: !product?.slug,
-  description: product?.description || "",
-  shortDescription: product?.shortDescription || product?.description || "",
-  brand: product?.brand && product.brand !== "None" ? product.brand : "",
-  category: product?.sourceCategoryName || "",
-  sourceCategoryName: product?.sourceCategoryName || "",
-  isActive: product?.isActive ?? product?.status === "Active",
-  status: product?.status || "New",
-  price: String(product?.price || "").replace(/[^0-9.]/g, ""),
-  originalPrice: String( product?.hasVariants ? 
-    product?.variants?.find((v) => v._id === product?.defaultVariantId)
-      ?.compareAtPrice || "" : product?.variants[0]?.compareAtPrice || "",
-  ).replace(/[^0-9.]/g, ""),
-  currency: product?.currency || "USD",
-  mainImage: {
-    url:
-      product?.mainImage?.url ||
-      (typeof product?.image === "string" && product.image.startsWith("http")
-        ? product.image
-        : ""),
-    alt: product?.mainImage?.alt || product?.title || product?.name || "",
-  },
-  images: product?.images || [],
-  specifications: product?.specifications || undefined,
-  seo: product?.seo || undefined,
-  hasVariants: Boolean(product?.hasVariants),
-  variants: product?.variants || [],
-  defaultVariantId: product?.defaultVariantId || "",
-  stock:product?.hasVariants ? String(product?.inventory?.totalStock || 0) : String(product?.variants[0]?.stock || 0),
-  sku: product?.hasVariants ? product?.variants?.find((v) => v._id === product?.defaultVariantId)
-      .sku || "" : product?.variants[0]?.sku || "",
-  shipping: product?.shipping || undefined,
-  returnPolicy: product?.returnPolicy || undefined,
-  tags: product?.tags || [],
-  reviewSummary: product?.reviewSummary || undefined,
-});
-
-const fromDialogCategory = (value, fallback) =>
-  Object.entries(categoryValueMap).find(
-    ([, dialogValue]) => dialogValue === value,
-  )?.[0] ||
-  fallback ||
-  "";
+import useAdminProductsPage from "@/hooks/useAdminProductsPage";
 
 export default function AdminProductsPage() {
   let content = null;
-  const { toast } = useToast();
-  const [products, setProducts] = useState([]);
-  const [viewProduct, setViewProduct] = useState(null);
-  const [editProduct, setEditProduct] = useState(null);
-  const [selectedProductId, setSelectedProductId] = useState(null);
-  const [pendingDialogMode, setPendingDialogMode] = useState(null);
-  const [productToDelete, setProductToDelete] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchInput, setSearchInput] = useState("");
-
-  const { MainQuery, updateUrlQuery, resetUrlQuery } =
-    useURLQuery(defaultQuery);
   const {
-    data: productsData,
+    productsData,
+    products,
     isLoading,
     isFetching,
     isError,
     error,
-  } = useQuery({
-    queryKey: ["adminProducts", MainQuery],
-    queryFn: () => getAdminProducts(MainQuery),
-    placeholderData: (previousData) => previousData,
-    keepPreviousData: true,
-  });
-
-  const {
-    data: targetedProduct,
-    isLoading: targetedProductLoading,
-    isFetching: targetedProductFetching,
-    isError: targetedProductError,
-    error: targetedProductErrorData,
-    refetch: refetchTargetedProduct,
-  } = useQuery({
-    queryKey: ["adminProduct", selectedProductId],
-    queryFn: () => getProduct(selectedProductId),
-    enabled: !!selectedProductId,
-  });
-
-  const createProductMutation = useMutation({
-    mutationFn: (product) => createProduct(product),
-    onMutate: (product) => {
-      const tempId = `temp-${Date.now()}`;
-      toast({
-        title: "Creating Product",
-        description: "We are creating your product.",
-      });
-      setProducts((prev) => [
-        {
-          id: tempId,
-          name: product.title || "Untitled Product",
-          itemId: "Pending",
-          brand: product.brand || "None",
-          category: fromDialogCategory(
-            product.category,
-            product.sourceCategoryName || "",
-          ),
-          price: product.price ? `$${product.price}` : "$0",
-          stock: Number(product.stock ?? 0),
-          status: product.isActive ? "Active" : "Draft",
-          image: product.mainImage?.url || "",
-          date: new Date().toISOString(),
-        },
-        ...prev,
-      ]);
-      return { tempId };
-    },
-    onError: (error, _product, context) => {
-      toast({
-        title: "Error creating product",
-        description: error.message,
-        variant: "destructive",
-      });
-      setProducts((prev) =>
-        prev.filter((product) => product.id !== context?.tempId),
-      );
-    },
-    onSuccess: (_data, product) => {
-      toast({
-        title: "Product created",
-        description: `"${product.title}" has been created.`,
-      });
-      setSelectedProductId(null);
-      setViewProduct(null);
-    },
-  });
-
-  const UpdateProductMutation = useMutation({
-    mutationFn: (product) => updateProduct(product.id, product),
-    onMutate: (product) => {
-      toast({
-        title: "Creating Product",
-        description: "We are creating your product.",
-      });
-      const originalProduct = products.find((p) => p.id === product.id);
-      setProducts((prev) =>
-        prev.map((currentProduct) =>
-          currentProduct.id === product.id
-            ? {
-                ...currentProduct,
-                name: product.title || currentProduct.name,
-                brand: product.brand || currentProduct.brand,
-                category: fromDialogCategory(
-                  product.category,
-                  product.sourceCategoryName || currentProduct.category,
-                ),
-                price: product.price
-                  ? `$${product.price}`
-                  : currentProduct.price,
-                stock: Number(product.stock ?? currentProduct.stock),
-                status: product.isActive ? "Active" : "Draft",
-                image:
-                  product.mainImage?.url ||
-                  product.image ||
-                  currentProduct.image,
-                date: new Date().toISOString(),
-              }
-            : currentProduct,
-        ),
-      );
-      return originalProduct;
-    },
-    onError: (error, _product, context) => {
-      toast({
-        title: "Error updating product",
-        description: error.message,
-        variant: "destructive",
-      });
-      setProducts((prev) =>
-        prev.map((currentProduct) =>
-          currentProduct.id === context?.id ? context : currentProduct,
-        ),
-      );
-    },
-    onSuccess: (_data, product) => {
-      toast({
-        title: "Product updated",
-        description: `"${product.name}" has been saved.`,
-      });
-      setSelectedProductId(null);
-      setEditProduct(null);
-    },
-  });
-
-  const deleteProductMutation = useMutation({
-    mutationFn: (product) => deleteProduct(product.id),
-    onMutate: (product) => {
-      toast({
-        title: "Deleting Product",
-        description: "We are deleting your product.",
-      });
-      const removedProduct = products.find(
-        (currentProduct) => currentProduct.id === product.id,
-      );
-      setProducts((prev) =>
-        prev.filter((currentProduct) => currentProduct.id !== product.id),
-      );
-      return { removedProduct };
-    },
-    onError: (error, _product, context) => {
-      toast({
-        title: "Error deleting product",
-        description: error.message,
-        variant: "destructive",
-      });
-      if (context?.removedProduct) {
-        setProducts((prev) => [context.removedProduct, ...prev]);
-      }
-    },
-    onSuccess: (_data, product) => {
-      toast({
-        title: "Product deleted",
-        description: `"${product.name}" has been removed.`,
-        variant: "destructive",
-      });
-    },
-  });
-
-  if (isLoading && !productsData) {
-    content = (
-      <AdminLayout>
-        <PageHeader
-          title="Products"
-          description="Loading your latest store products."
-          breadcrumbs={[{ label: "Products" }]}
-        />
-        <Loading message="Loading Products" fullPage />
-      </AdminLayout>
-    );
-  }
-
-  if (error || isError) {
-    content = (
-      <AdminLayout>
-        <PageHeader
-          title="Products"
-          description="We could not load your store Products right now."
-          breadcrumbs={[{ label: "Products" }]}
-        />
-        <div className="rounded-2xl border border-destructive/20 bg-destructive/5 p-6 text-destructive">
-          <p className="font-semibold">Failed to load dashboard data.</p>
-          <p className="mt-2 text-sm">{error.message}</p>
-        </div>
-      </AdminLayout>
-    );
-  }
-
-  const closeProductFlow = () => {
-    setViewProduct(null);
-    setEditProduct(null);
-    setPendingDialogMode(null);
-    setSelectedProductId(null);
-  };
-
-  const openEdit = (p) => {
-    setSelectedProductId(p.id);
-    setPendingDialogMode("edit");
-  };
-
-  const openView = (p) => {
-    setSelectedProductId(p.id);
-    setPendingDialogMode("view");
-  };
-
-  const handleDelete = () => {
-    if (!productToDelete) return;
-    deleteProductMutation.mutate(productToDelete);
-    setProductToDelete(null);
-  };
-
-  const onPageChange = (page) => {
-    updateUrlQuery({ page });
-    setCurrentPage(page);
-  };
-
-  useEffect(() => {
-    const timeOut = setTimeout(() => {
-      setSearchTerm(searchInput);
-    }, 500);
-    return () => {
-      clearTimeout(timeOut);
-    };
-  }, [searchInput]);
-
-  useEffect(() => {
-    console.log(selectedCategory, selectedStatus, searchTerm);
-    updateUrlQuery({
-      category: selectedCategory,
-      status: selectedStatus,
-      search: searchTerm,
-    });
-  }, [selectedCategory, selectedStatus, searchTerm]);
-
-  useEffect(() => {
-    if (productsData?.products) {
-      setProducts(productsData.products);
-    }
-  }, [productsData]);
-
-  useEffect(() => {
-    if (!targetedProduct || !pendingDialogMode) return;
-
-    if (pendingDialogMode === "view") {
-      setViewProduct(targetedProduct);
-    }
-
-    if (pendingDialogMode === "edit") {
-      setEditProduct(targetedProduct);
-    }
-
-    setPendingDialogMode(null);
-  }, [targetedProduct, pendingDialogMode]);
+    selectedCategory,
+    setSelectedCategory,
+    selectedStatus,
+    setSelectedStatus,
+    searchInput,
+    setSearchInput,
+    updateUrlQuery,
+    currentPage,
+    resetFilters,
+    isQueryChanged,
+    openEdit,
+    openView,
+    closeProductFlow,
+    viewProduct,
+    editProduct,
+    dialogProductData,
+    pendingDialogMode,
+    setPendingDialogMode,
+    productToDelete,
+    setProductToDelete,
+    handleDelete,
+    handleCreateProduct,
+    handleUpdateProduct,
+    targetedProductLoading,
+    targetedProductFetching,
+    targetedProductError,
+    targetedProductErrorData,
+    refetchTargetedProduct,
+  } = useAdminProductsPage();
 
   const columns = [
     {
@@ -420,7 +90,7 @@ export default function AdminProductsPage() {
           <img
             className="text-2xl h-10 w-10"
             src={item.image}
-            alt="Product Image"
+            alt={item.name}
           />
           <div>
             <p className="font-medium text-foreground">
@@ -459,8 +129,8 @@ export default function AdminProductsPage() {
             item.stock === 0
               ? "danger"
               : item.stock < 10
-              ? "warning"
-              : "success"
+                ? "warning"
+                : "success"
           }
         >
           {item.stock === 0 ? "Out of stock" : `${item.stock} units`}
@@ -516,11 +186,39 @@ export default function AdminProductsPage() {
     },
   ];
 
+  if (isLoading && !productsData) {
+    content = (
+      <AdminLayout>
+        <PageHeader
+          title="Products"
+          description="Loading your latest store products."
+          breadcrumbs={[{ label: "Products" }]}
+        />
+        <Loading message="Loading Products" fullPage />
+      </AdminLayout>
+    );
+  }
+
+  if (error || isError) {
+    content = (
+      <AdminLayout>
+        <PageHeader
+          title="Products"
+          description="We could not load your store Products right now."
+          breadcrumbs={[{ label: "Products" }]}
+        />
+        <div className="rounded-2xl border border-destructive/20 bg-destructive/5 p-6 text-destructive">
+          <p className="font-semibold">Failed to load dashboard data.</p>
+          <p className="mt-2 text-sm">{error.message}</p>
+        </div>
+      </AdminLayout>
+    );
+  }
+
   if (productsData) {
     const { pagination } = productsData;
     content = (
       <AdminLayout>
-        {/* Page Header and add button section */}
         <PageHeader
           title="Products"
           description="Manage your product catalog"
@@ -536,23 +234,13 @@ export default function AdminProductsPage() {
                   Add Product
                 </AdminButton>
               }
-              onSubmit={(productData, mode) => {
-                if (mode === "create") {
-                  createProductMutation.mutate(productData);
-                }
-                if (mode === "draft") {
-                  createProductMutation.mutate({
-                    ...productData,
-                    isActive: false,
-                  });
-                }
-              }}
+              onSubmit={handleCreateProduct}
             />
           }
         />
-        {/* Search && Filters section */}
+
         <div className="flex flex-col sm:flex-row gap-3 mb-4">
-          <div className="flex-1">
+          <div className="relative flex-1">
             <Icon
               name="search"
               className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
@@ -564,15 +252,9 @@ export default function AdminProductsPage() {
               onChange={(e) => setSearchInput(e.target.value)}
             />
           </div>
-          {isQueryChangedFromDefault(MainQuery) && (
+          {isQueryChanged && (
             <AdminButton
-              onClick={() => {
-                resetUrlQuery(defaultQuery);
-                setSearchInput("");
-                setSearchTerm("");
-                setSelectedCategory("all");
-                setSelectedStatus("all");
-              }}
+              onClick={resetFilters}
               variant="ghost"
               className="w-full sm:w-auto"
             >
@@ -612,7 +294,7 @@ export default function AdminProductsPage() {
             </SelectContent>
           </Select>
         </div>
-        {/* Products table */}
+
         <div className="relative">
           <div
             className={`transition-opacity duration-200 ${
@@ -624,7 +306,7 @@ export default function AdminProductsPage() {
               data={products}
               page={currentPage}
               totalPages={pagination.totalPages}
-              onPageChange={onPageChange}
+              onPageChange={(page) => updateUrlQuery({ page })}
             />
           </div>
 
@@ -697,32 +379,22 @@ export default function AdminProductsPage() {
           </DialogContent>
         </Dialog>
 
-        {/* Dialog of view product */}
         <ProductDialog
           mode="view"
           open={!!viewProduct}
           onOpenChange={(open) => !open && closeProductFlow()}
-          initialData={toDialogProductData(viewProduct)}
-          onEditFromView={() => {
-            if (viewProduct) {
-              setViewProduct(null);
-              setEditProduct(viewProduct);
-            }
-          }}
+          initialData={dialogProductData}
+          onEditFromView={() => setPendingDialogMode("edit")}
         />
 
-        {/* Dialog of edit product */}
         <ProductDialog
           mode="edit"
           open={!!editProduct}
           onOpenChange={(open) => !open && closeProductFlow()}
-          initialData={toDialogProductData(editProduct)}
-          onSubmit={(data, mode) => {
-            UpdateProductMutation.mutate(data);
-          }}
+          initialData={dialogProductData}
+          onSubmit={handleUpdateProduct}
         />
 
-        {/* Delete Confirmation */}
         <AlertDialog
           open={!!productToDelete}
           onOpenChange={(open) => !open && setProductToDelete(null)}

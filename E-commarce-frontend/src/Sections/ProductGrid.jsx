@@ -1,22 +1,20 @@
-import ProductCard from "@/components/genericComponents/ProductCard_V";
+import LandingProductCard from "@/components/Landing/LandingProductCard";
 import useCurrency from "@/hooks/CurrencyChange";
 import { useCurrencyStore } from "@/zustand_preferences/currency";
 
 export default function ProductGrid({ products }) {
   const MainProducts = products.map((product) => product);
-  const { currency, locale , conversion_rate } = useCurrencyStore();
+  const { currency, locale, conversion_rate } = useCurrencyStore();
   const format = useCurrency(currency, locale);
-  const rate = conversion_rate[currency] ?? 1 ;
+  const rate = conversion_rate[currency] ?? 1;
   return (
     <div className="max-w-8xl grid grid-cols-1 lg:grid-cols-3 gap-6">
       {MainProducts.map((product) => (
-        <ProductCard
+        <LandingProductCard
           key={product._id}
-          image={product.images[0].url}
-          title={product.title}
-          price={format(product.price * rate)}
-          NavigationLink={`/shop/products/${product._id}`}
-          // variant={product.variant}
+          product={product}
+          format={format}
+          rate={rate}
         />
       ))}
     </div>

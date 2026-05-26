@@ -7,122 +7,40 @@ import { AdminButton } from "@/components/adminUI/AdminButton";
 import { CreateCouponDiscountDialog } from "@/components/admin/CreateCouponDiscountDialog";
 import { DeleteConfirmationDialog } from "@/components/admin/DeleteConfirmationDialog";
 import Loading from "@/components/genericComponents/Loading";
-import { useToast } from "@/hooks/use-toast";
-import { useQuery, useMutation } from "@tanstack/react-query";
-import {
-  getCouponsAndDiscounts,
-  createDiscountForProduct,
-  deleteDiscountForProduct,
-  updateDiscountForProduct,
-  updateCouponForCustomer,
-  deleteCouponForCustomer,
-  createCouponForCustomer,
-} from "@/APIs/adminCouponsDiscounts";
-import { useState } from "react";
-import { useCurrencyStore } from "@/zustand_preferences/currency";
-import  useCurrency  from "@/hooks/CurrencyChange";
-import  useURLQuery  from "@/hooks/UrlQuery";
-
-const defaultQuery = {
-  CouponsPage: 1,
-  ProductsPage: 1,
-  limit: 5,
-};
+import useAdminCouponsPage from "@/hooks/useAdminCouponsPage";
 
 export default function AdminCouponsPage() {
   let content = null;
-  const { toast } = useToast();
-  const { currency, conversion_rate, locale } = useCurrencyStore();
-  const format = useCurrency(currency, locale);
-  const rate = conversion_rate[currency] ?? 1;
-  const { MainQuery, updateUrlQuery } = useURLQuery(defaultQuery);
-  const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [editMode, setEditMode] = useState(null);
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [deleteMode, setDeleteMode] = useState(null);
-
-  const { data, isLoading, isFetching, isError, error } = useQuery({
-    queryKey: ["admin-coupons", MainQuery],
-    queryFn: () => getCouponsAndDiscounts(MainQuery),
-    keepPreviousData: true,
-    placeholderData: (previousData) => previousData,
-  });
-
-  const { mutate: MutateCouponOrDiscount } = useMutation({
-    mutationFn: ({ action, item }) => {
-      if (action === "createCoupon") {
-        return createCouponForCustomer(item);
-      } else if (action === "createDiscount") {
-        return createDiscountForProduct(item);
-      } else if (action === "updateCoupon") {
-        return updateCouponForCustomer(item._id, item);
-      } else if (action === "updateDiscount") {
-        return updateDiscountForProduct(item._id, item);
-      } else if (action === "deleteCoupon") {
-        return deleteCouponForCustomer(item._id);
-      } else if (action === "deleteDiscount") {
-        return deleteDiscountForProduct(item._id);
-      }
-    },
-    onSuccess: (data) => {
-      toast({
-        title: "Success",
-        description: data.message,
-      });
-    },
-    onError: (error) => {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      });
-    },
-  });
-
-  const couponsData = data?.coupons || [];
-  const discountedProducts = data?.discounts|| [];
-  const currentCouponsPage = data?.pagination?.coupons?.page || 1;
-  const currentProductsPage = data?.pagination?.discounts?.page || 1;
-  const totalPagesOfCoupons = data?.pagination?.coupons?.totalPages || 1;
-  const totalPagesOfProducts = data?.pagination?.discounts?.totalPages || 1;
-  const deleteTargetLabel =
-    deleteMode === "coupon"
-      ? selectedItem?.code
-      : selectedItem?.title || selectedItem?.sku;
-
-  const handleDelete = () => {
-    if (!selectedItem || !deleteMode) return;
-
-    const deleteId = selectedItem?._id || selectedItem?.id;
-    MutateCouponOrDiscount({
-      action: deleteMode === "coupon" ? "deleteCoupon" : "deleteDiscount",
-      item: deleteId,
-    });
-    setDeleteDialogOpen(false);
-    setSelectedItem(null);
-    setDeleteMode(null);
-  };
-
-  const handleUpdate = (Form) => {
-    if (!selectedItem || !editMode) return;
-    console.log("Form" , Form);
-    MutateCouponOrDiscount({
-      action: editMode === "coupon" ? "updateCoupon" : "updateDiscount",
-      item: Form,
-    });
-    setEditDialogOpen(false);
-    setSelectedItem(null);
-    setEditMode(null);
-  };
-
-  const handleCreate = (activeTab, item) => {
-    MutateCouponOrDiscount({
-      action: activeTab === "coupon" ? "createCoupon" : "createDiscount",
-      item: item,
-    });
-    setEditDialogOpen(false);
-  };
+  const {
+    data,
+    couponsData,
+    discountedProducts,
+    currentCouponsPage,
+    currentProductsPage,
+    totalPagesOfCoupons,
+    totalPagesOfProducts,
+    isLoading,
+    isFetching,
+    isError,
+    error,
+    format,
+    rate,
+    MainQuery,
+    updateUrlQuery,
+    editDialogOpen,
+    editMode,
+    selectedItem,
+    deleteDialogOpen,
+    deleteMode,
+    deleteTargetLabel,
+    setEditDialogOpen,
+    openEditDialog,
+    openDeleteDialog,
+    closeDeleteDialog,
+    handleCreate,
+    handleUpdate,
+    handleDelete,
+  } = useAdminCouponsPage();
 
   if ((isLoading || isFetching) && !data) {
     content = <Loading message="Loading Coupons And Discounts" fullPage />;
@@ -217,11 +135,7 @@ export default function AdminCouponsPage() {
             variant="ghost"
             size="icon"
             className="h-8 w-8"
-            onClick={() => {
-              setEditDialogOpen(true);
-              setSelectedItem(item);
-              setEditMode("coupon");
-            }}
+            onClick={() => openEditDialog(item, "coupon")}
           >
             <Edit className="h-4 w-4" />
           </AdminButton>
@@ -229,11 +143,7 @@ export default function AdminCouponsPage() {
             variant="ghost"
             size="icon"
             className="h-8 w-8 text-destructive"
-            onClick={() => {
-              setDeleteDialogOpen(true);
-              setSelectedItem(item);
-              setDeleteMode("coupon");
-            }}
+            onClick={() => openDeleteDialog(item, "coupon")}
           >
             <Trash2 className="h-4 w-4" />
           </AdminButton>
@@ -295,11 +205,7 @@ export default function AdminCouponsPage() {
             variant="ghost"
             size="icon"
             className="h-8 w-8"
-            onClick={() => {
-              setEditDialogOpen(true);
-              setSelectedItem(item);
-              setEditMode("discount");
-            }}
+            onClick={() => openEditDialog(item, "discount")}
           >
             <Edit className="h-4 w-4" />
           </AdminButton>
@@ -307,11 +213,7 @@ export default function AdminCouponsPage() {
             variant="ghost"
             size="icon"
             className="h-8 w-8 text-destructive"
-            onClick={() => {
-              setDeleteDialogOpen(true);
-              setSelectedItem(item);
-              setDeleteMode("discount");
-            }}
+            onClick={() => openDeleteDialog(item, "discount")}
           >
             <Trash2 className="h-4 w-4" />
           </AdminButton>
@@ -374,13 +276,7 @@ export default function AdminCouponsPage() {
         />
         <DeleteConfirmationDialog
           open={deleteDialogOpen}
-          onOpenChange={(open) => {
-            setDeleteDialogOpen(open);
-            if (!open) {
-              setSelectedItem(null);
-              setDeleteMode(null);
-            }
-          }}
+          onOpenChange={closeDeleteDialog}
           title={`Delete "${deleteTargetLabel || "item"}"?`}
           description={
             deleteMode === "coupon"

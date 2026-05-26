@@ -6,21 +6,9 @@ import { StatCard } from "@/components/admin/StatCard";
 import { AdminButton } from "@/components/adminUI/AdminButton";
 import InputField from "@/components/genericComponents/InputField";
 import { shortenText } from "@/utils/utils";
-import { useState, useEffect, useRef } from "react";
-import { useToast } from "@/hooks/use-toast";
-import { useQuery, useMutation } from "@tanstack/react-query";
-import {
-  getAdminInventory,
-  updateAdminInventory,
-} from "@/APIs/adminInventoryService";
 import Loading from "@/components/genericComponents/Loading";
 import { AlertCircle } from "lucide-react";
-import useURLQuery from "@/hooks/UrlQuery";
-
-const defaultQuery = {
-  page: 1,
-  limit: 10,
-};
+import useAdminInventoryPage from "@/hooks/useAdminInventoryPage";
 
 const statusMap = {
   "In Stock": "success",
@@ -31,45 +19,29 @@ const statusMap = {
 
 export default function AdminInventoryPage() {
   let content = null;
-  const { toast } = useToast();
-  const { MainQuery, updateUrlQuery } = useURLQuery(defaultQuery);
-  const [InventoryData, setInventoryData] = useState(null);
-  const [stock, setStock] = useState({});
-  const [lowStockThreshold, setLowStockThreshold] = useState({});
-  const [criticalStockThreshold, setCriticalStockThreshold] = useState({});
-  const [updatingKey, setUpdatingKey] = useState(null);
+  const {
+    inventoryData,
+    isLoading,
+    isFetching,
+    isError,
+    error,
+    stock,
+    lowStockThreshold,
+    criticalStockThreshold,
+    updatingKey,
+    setUpdatingKey,
+    updateInventory,
+    updateStockDraft,
+    updateLowStockThresholdDraft,
+    updateCriticalStockThresholdDraft,
+    updateUrlQuery,
+  } = useAdminInventoryPage();
 
-  const { data, isLoading, isFetching, isError, error } = useQuery({
-    queryKey: ["adminInventory", MainQuery],
-    queryFn: () => getAdminInventory(MainQuery),
-    keepPreviousData: true,
-    placeholderData: (previousData) => previousData,
-  });
-
-  const { mutateAsync: updateInventory } = useMutation({
-    mutationFn: ({ id, variantId, intent }) =>
-      updateAdminInventory({ id, variantId, intent }),
-    onSuccess: () => {
-      console.log("Inventory updated successfully");
-      toast({
-        title: "Success",
-        description: "Inventory updated successfully",
-      });
-      setUpdatingKey(null);
-    },
-  });
-
-  useEffect(() => {
-    if (data && !InventoryData) {
-      setInventoryData(data);
-    }
-  }, [data, InventoryData]);
-
-  if ((isLoading || isFetching) && !InventoryData) {
+  if ((isLoading || isFetching) && !inventoryData) {
     content = <Loading message="Loading Inventory Data" fullPage />;
   }
 
-  if (error && isError && !InventoryData) {
+  if (error && isError && !inventoryData) {
     content = (
       <AdminLayout>
         <div className="rounded-xl border border-destructive/20 bg-destructive/5 p-4 text-destructive">
@@ -114,7 +86,7 @@ export default function AdminInventoryPage() {
             type="number"
             value={stock[item.sku] || item.stock}
             className="w-20 h-8 text-center"
-            onChange={(e) => setStock({ ...stock, [item.sku]: e.target.value })}
+            onChange={(e) => updateStockDraft(item.sku, e.target.value)}
           />
           <AdminButton
             onClick={() => {
@@ -155,10 +127,7 @@ export default function AdminInventoryPage() {
             className="w-20 h-8 text-center"
             value={lowStockThreshold[item.sku] || item.lowStockThreshold}
             onChange={(e) =>
-              setLowStockThreshold({
-                ...lowStockThreshold,
-                [item.sku]: e.target.value,
-              })
+              updateLowStockThresholdDraft(item.sku, e.target.value)
             }
           />
           <AdminButton
@@ -203,10 +172,7 @@ export default function AdminInventoryPage() {
               criticalStockThreshold[item.sku] || item.criticalStockThreshold
             }
             onChange={(e) =>
-              setCriticalStockThreshold({
-                ...criticalStockThreshold,
-                [item.sku]: e.target.value,
-              })
+              updateCriticalStockThresholdDraft(item.sku, e.target.value)
             }
           />
           <AdminButton
@@ -252,7 +218,7 @@ export default function AdminInventoryPage() {
     },
   ];
 
-  if (InventoryData) {
+  if (inventoryData) {
     content = (
       <AdminLayout>
         <PageHeader
@@ -267,18 +233,18 @@ export default function AdminInventoryPage() {
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
           <StatCard
             title="Total Products"
-            value={InventoryData?.productsCount || 0}
+            value={inventoryData?.productsCount || 0}
             iconName={"package"}
           />
           <StatCard
             title="In Stock"
-            value={InventoryData?.InStockCount || 0}
+            value={inventoryData?.InStockCount || 0}
             iconName={"package"}
             iconBg="bg-success/10"
           />
           <StatCard
             title="Low Stock"
-            value={InventoryData?.LowStockCount || 0}
+            value={inventoryData?.LowStockCount || 0}
             change="Needs attention"
             changeType="down"
             iconName={"alertTriangle"}
@@ -286,7 +252,7 @@ export default function AdminInventoryPage() {
           />
           <StatCard
             title="Critical Stock"
-            value={InventoryData?.CriticalStockCount || 0}
+            value={inventoryData?.CriticalStockCount || 0}
             change="Restock needed"
             changeType="down"
             iconName={"alertTriangle"}
@@ -294,7 +260,7 @@ export default function AdminInventoryPage() {
           />
           <StatCard
             title="Out of Stock"
-            value={InventoryData?.OutOfStockCount || 0}
+            value={inventoryData?.OutOfStockCount || 0}
             change="Restock needed"
             changeType="down"
             iconName={"alertTriangle"}
@@ -304,9 +270,9 @@ export default function AdminInventoryPage() {
 
         <DataTable
           columns={columns}
-          data={InventoryData?.Inventory || []}
-          page={InventoryData?.pagination?.page || 1}
-          totalPages={InventoryData?.pagination?.totalPages || 1}
+          data={inventoryData?.Inventory || []}
+          page={inventoryData?.pagination?.page || 1}
+          totalPages={inventoryData?.pagination?.totalPages || 1}
           onPageChange={(page) => updateUrlQuery({ page })}
         />
       </AdminLayout>

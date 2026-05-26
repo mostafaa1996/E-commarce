@@ -50,11 +50,19 @@ const UserSchema = new mongoose.Schema({
     ref: "Cart",
     default: null,
   },
-  wishlist: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: "Product",
-    default: [],
-  },
+  wishlist: [
+    {
+      productId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
+        required: true,
+      },
+      variantId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+      },
+    },
+  ],
   orders: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: "Order",
@@ -106,7 +114,6 @@ const UserSchema = new mongoose.Schema({
   },
   totalOrders: { type: Number, default: 0 },
   totalSpent: { type: Number, default: 0 },
-  
 });
 
 module.exports = mongoose.model("User", UserSchema);

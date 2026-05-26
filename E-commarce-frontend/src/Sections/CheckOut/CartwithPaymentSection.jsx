@@ -24,8 +24,8 @@ export default function CartwithPaymentSection({ cart, VAT_shipping }) {
         TotalItems={cart.totalItems}
         total={cart.totalPrice}
         className={"w-full"}
-        VAT={VAT_shipping.VAT}
-        shipping={VAT_shipping.shipping}
+        VAT={VAT_shipping.vat}
+        shipping={VAT_shipping.shippingCost}
         format={format}
         rate={rate}
       />

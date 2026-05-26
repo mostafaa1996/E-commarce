@@ -15,13 +15,13 @@ export default function ResetPasswordForm({ title }) {
     }, 3000);
   } , [actionData]);
   return (
-    <div className="border border-zinc-200 rounded-xl bg-white p-6">
-      <h3 className="text-[21px] font-light text-[#272727] mb-6 flex items-center gap-2">
+    <div className="rounded-xl border border-zinc-200 bg-white p-4 sm:p-6">
+      <h3 className="mb-4 flex items-center gap-2 text-lg font-light text-[#272727] sm:mb-6 sm:text-[21px]">
         <Icon name="password" size={24} strokeWidth={1.5} variant="primary" />
         {title}
       </h3>
       <Form
-        className="flex flex-col gap-6"
+        className="flex flex-col gap-4 sm:gap-6"
         method="post"
         action="/profile/settings"
       >
@@ -53,8 +53,7 @@ export default function ResetPasswordForm({ title }) {
         </div>
         <Button
           type="submit"
-          className="px-5 py-2 rounded-lg text-[16px] hover:bg-zinc-500  
-          transition duration-300 ease-in-out cursor-pointer active:scale-95 w-fit self-end"
+          className="w-full rounded-lg px-5 py-2 text-[16px] transition duration-300 ease-in-out hover:bg-zinc-500 active:scale-95 sm:w-fit sm:self-end"
         >
           {navigation.state === "submitting"
             ? "Updating..."

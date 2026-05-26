@@ -9,13 +9,19 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import WriteReviewDialog from "./WriteReviewDialog";
-import { useMutation } from "@tanstack/react-query";
-import {addProductReview} from "@/APIs/shopProductsService";
 
-const ReviewsSection = ({ summary, reviews = [], isLoggedIn, currentUser }) => {
+const ReviewsSection = ({
+  summary,
+  reviews = [],
+  isLoggedIn,
+  currentUser,
+  submitReview = () => {},
+  isSubmittingReview = false,
+  setDialogOpen = () => {},
+  dialogOpen = false,
+}) => {
   const [sort, setSort] = useState("recent");
   const [page, setPage] = useState(1);
-  const [dialogOpen, setDialogOpen] = useState(false);
   const total = summary.reviewsCount;
   const buckets = ["five", "four", "three", "two", "one"];
   const reviewsPerPage = 3;
@@ -44,18 +50,6 @@ const ReviewsSection = ({ summary, reviews = [], isLoggedIn, currentUser }) => {
     startIndex + reviewsPerPage,
   );
 
-  const UpdateReviews =  useMutation(
-    {
-      mutationFn: async (review) => {
-        return await addProductReview(review);
-      },
-      //TODO: implement optimistic updates
-      //TODO: implement error handling
-      
-      //TODO: reset userReview state on success
-    }
-  );
-
   const handleSubmitReview = (payload) => {
     const review = {
       verified: payload.verified,
@@ -66,7 +60,7 @@ const ReviewsSection = ({ summary, reviews = [], isLoggedIn, currentUser }) => {
       username: payload.verified ? "" : payload.username,
       email: payload.verified ? "" : payload.email,
     };
-    UpdateReviews.mutate(review);
+    submitReview(review);
   };
 
   return (
@@ -251,6 +245,7 @@ const ReviewsSection = ({ summary, reviews = [], isLoggedIn, currentUser }) => {
         isLoggedIn={isLoggedIn}
         currentUser={currentUser}
         onSubmit={handleSubmitReview}
+        isSubmittingReview={isSubmittingReview}
       />
     </section>
   );

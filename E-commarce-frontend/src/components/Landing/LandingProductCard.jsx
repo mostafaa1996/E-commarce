@@ -1,9 +1,8 @@
 import { Star } from "lucide-react";
 import { Link } from "react-router-dom";
 
-export default function LandingProductCard({ product, badgeOverride }) {
+export default function LandingProductCard({ product, badgeOverride , format = (price) => price , rate = 1}) {
   const badge = badgeOverride || product.badge;
-
   return (
     <Link
       className="group rounded-3xl border border-border bg-card p-4 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg"
@@ -33,11 +32,11 @@ export default function LandingProductCard({ product, badgeOverride }) {
         <div className="mt-4 flex items-center justify-between gap-3">
           <div className="flex items-end gap-2">
             <span className="text-lg font-bold text-foreground">
-              ${product.price}
+              {format(product.price * rate)}
             </span>
-            {product.original && (
+            {product.pricing && (
               <span className="text-sm text-muted-foreground line-through">
-                ${product.original}
+                {format(product.pricing.maxPrice * rate)}
               </span>
             )}
           </div>

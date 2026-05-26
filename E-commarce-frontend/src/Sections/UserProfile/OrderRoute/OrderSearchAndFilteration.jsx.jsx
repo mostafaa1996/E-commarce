@@ -15,7 +15,7 @@ export default function OrderSearchAndFilteration({
   return (
     <div
       className={twMerge(
-        clsx(`border border-zinc-200 rounded-xl bg-white p-6 mt-6`, className),
+        clsx(`mt-4 rounded-xl border border-zinc-200 bg-white p-4 sm:mt-6 sm:p-6`, className),
       )}
     >
       <SearchBox
@@ -24,12 +24,12 @@ export default function OrderSearchAndFilteration({
         onChange={setSearchValue}
         onClickSearch={SearchSubmitEvent}
       />
-      <div className="flex flex-wrap gap-3 mt-4">
-        {tabs.map((tab) => (
+      <div className="mt-4 flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:gap-3 sm:overflow-visible">
+        {tabs?.map((tab) => (
           <button
             key={tab}
             onClick={() => onChange(tab)}
-            className={`px-4 py-1.5 text-sm rounded-full transition
+            className={`shrink-0 rounded-full px-4 py-1.5 text-sm transition
             ${
               active === tab
                 ? "bg-[#FF6543] text-white"

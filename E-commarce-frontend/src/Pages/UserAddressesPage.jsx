@@ -2,95 +2,63 @@ import BaseSection from "@/Sections/UserProfile/BaseSectionForUserProfile";
 import AddressCard from "@/components/genericComponents/AddressCard";
 import UserNestedRoutesHeader from "@/Sections/UserProfile/UserNestedRoutesHeader";
 import EditAddressForm from "@/Sections/UserProfile/EditAddressForm";
-import { Fragment, useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { getUserAddresses } from "@/APIs/UserProfileService";
-import { useFetcher, useActionData, useLoaderData } from "react-router-dom";
-import useProfileRoutingStates from "@/zustand_ProfileRoutesStates/ProfileRoutesStates";
+import { Fragment } from "react";
+import ProfilePageState from "@/components/genericComponents/ProfilePageState";
+import useUserAddressesPage from "@/hooks/useUserAddressesPage";
+
 export default function UserAddressesPage() {
   let content = null;
-  const { addresses } = useLoaderData();
-  const fetcher = useFetcher();
-  const actionData = useActionData();
-  const DefaultAddressId = addresses?.find((address) => address.isDefault)?._id;
-  const [currentState, setCurrentState] = useState("");
-  const [DefaultAddress, setDefaultAddress] = useState(DefaultAddressId);
   const {
-    data: addressesObj,
-    isLoading: isLoadingAddresses,
+    addressesObj,
+    addresses,
+    isLoadingAddresses,
     error,
-  } = useQuery({
-    queryKey: ["profile-addresses"],
-    queryFn: getUserAddresses,
-  });
-  const {currentRouteState , setCurrentRouteState} = useProfileRoutingStates();
-
-  function handleEdit(addressId) {
-    setCurrentState(`edit-${addressId}`);
-  }
-
-  function handleAdd() {
-    console.log("add");
-    setCurrentState("add");
-  }
-
-  function handleDelete(addressId) {
-    setCurrentState(`delete-${addressId}`);
-    fetcher.submit(
-      { intent: "delete", id: addressId },
-      { method: "post", action: `/profile/addresses` },
-    );
-  }
-
-  function handleCancel() {
-    setCurrentState("");
-    setCurrentRouteState({
-      ...currentRouteState,
-      previousAction: "Cancel",
-    });
-  }
-
-  function setAsDefault(addressId) {
-    setDefaultAddress(addressId);
-    fetcher.submit(
-      { intent: "setAsDefault", id: addressId },
-      { method: "post", action: `/profile/addresses` },
-    );
-  }
-
-  useEffect(() => {
-    if (actionData?.ok) setCurrentState("");
-  }, [actionData]);
+    defaultAddressId,
+    editingAddress,
+    shouldShowEditForm,
+    shouldShowAddForm,
+    handleEdit,
+    handleAdd,
+    handleDelete,
+    handleCancel,
+    setAsDefault,
+  } = useUserAddressesPage();
 
   if (isLoadingAddresses) {
-    content = <p className="text-center text-2xl font-bold">Loading...</p>;
+    content = (
+      <ProfilePageState type="loading" loadingMessage="Loading addresses" />
+    );
   }
   if (error) {
     content = (
-      <p className="text-center text-2xl font-bold">Error loading profile</p>
+      <ProfilePageState
+        type="error"
+        title="Error loading addresses"
+        message={error.message}
+      />
     );
   }
-  if (!addressesObj || addressesObj?.addresses?.length === 0) {
+  if (!addressesObj && !isLoadingAddresses && !error) {
     content = (
-      <h1 className="text-center text-2xl font-bold">No addresses found</h1>
+      <ProfilePageState
+        title="No addresses found"
+        message="Your saved addresses are not available right now."
+      />
     );
   }
   if (addressesObj) {
-    // console.log(addressesObj?.addresses, addressesObj?.addresses?.length);
     content = (
       <>
-        {currentState.includes("edit") && (
+        {shouldShowEditForm && (
           <EditAddressForm
             title="Edit Address"
             buttonText="Save"
             buttonIconName="save"
             onCancel={handleCancel}
-            InitialFormData={addressesObj?.addresses?.find(
-              (address) => address._id === currentState.split("-")[1],
-            )}
+            InitialFormData={editingAddress}
           />
         )}
-        {(currentState === "add" || (currentRouteState.previousAction === "Add address"))  && (
+        {shouldShowAddForm && (
           <EditAddressForm
             title="Add Address"
             buttonText="Add"
@@ -98,13 +66,13 @@ export default function UserAddressesPage() {
             onCancel={handleCancel}
           />
         )}
-        {addressesObj?.addresses?.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
-            {addressesObj?.addresses.map((address) => (
+        {addresses.length > 0 ? (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:gap-10">
+            {addresses.map((address) => (
               <Fragment key={address._id}>
                 <AddressCard
                   type={address.label}
-                  isDefault={address._id === DefaultAddress}
+                  isDefault={address._id === defaultAddressId}
                   name={address.name}
                   street={address.street}
                   city={address.city}
@@ -124,6 +92,11 @@ export default function UserAddressesPage() {
               </Fragment>
             ))}
           </div>
+        ) : (
+          <ProfilePageState
+            title="No addresses found"
+            message="Add an address to make checkout faster."
+          />
         )}
       </>
     );
@@ -133,7 +106,7 @@ export default function UserAddressesPage() {
       <UserNestedRoutesHeader
         iconName="location"
         title="My Addresses"
-        info={`${addressesObj?.addresses?.length} addresses`}
+        info={`${addressesObj?.addresses?.length || 0} addresses`}
         buttonIconName="plus"
         buttonText="Add Address"
         onClick={handleAdd}

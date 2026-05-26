@@ -86,9 +86,9 @@ export default function CartRow({ item, format = (n) => n, rate = 1 }) {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-6 gap-6 py-6 ">
+    <div className="grid grid-cols-1 gap-4 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm sm:grid-cols-6 sm:gap-6 sm:rounded-none sm:border-0 sm:bg-transparent sm:p-0 sm:py-6 sm:shadow-none">
       {/* Product */}
-      <div className="col-span-2">
+      <div className="sm:col-span-2">
         <ProductRow
           image={item.image}
           title={item.title}
@@ -97,31 +97,40 @@ export default function CartRow({ item, format = (n) => n, rate = 1 }) {
       </div>
 
       {/* Quantity */}
-      <div className="col-span-1 flex justify-end">
+      <div className="flex items-center justify-between border-t border-zinc-100 pt-4 sm:col-span-1 sm:justify-end sm:border-t-0 sm:pt-0">
+        <span className="text-xs font-semibold uppercase tracking-wide text-zinc-500 sm:hidden">
+          Quantity
+        </span>
         <QuantityControl
           value={displayedQuantity}
           onChange={onChangeQuantity}
         />
       </div>
       {/* Subtotal */}
-      <p className="col-span-2  text-[#FF6543] text-right font-light text-[18px] flex justify-end items-center">
-        {format(item.price * item.quantity * rate)}
-      </p>
+      <div className="flex items-center justify-between sm:col-span-2 sm:justify-end">
+        <span className="text-xs font-semibold uppercase tracking-wide text-zinc-500 sm:hidden">
+          Subtotal
+        </span>
+        <p className="text-right text-[18px] font-light text-[#FF6543]">
+          {format(item.price * item.quantity * rate)}
+        </p>
+      </div>
       {/* Remove */}
       <button
-        className={`w-10 justify-self-center cursor-pointer group `}
+        className="group flex h-10 w-full cursor-pointer items-center justify-center gap-2 rounded-full border border-zinc-200 text-sm font-light text-[#272727] transition-colors hover:border-[#FF6543] hover:text-[#FF6543] sm:w-10 sm:justify-self-center sm:border-0"
         onClick={handleRemove}
       >
         <img
-          className="w-fit block  group-hover:hidden"
+          className="block w-5 group-hover:hidden sm:w-fit"
           src={RemoveCart}
           alt="Remove"
         />
         <img
-          className="w-fit hidden group-hover:block"
+          className="hidden w-5 group-hover:block sm:w-fit"
           src={RemoveCartHover}
           alt="Remove"
         />
+        <span className="sm:hidden">Remove</span>
       </button>
     </div>
   );

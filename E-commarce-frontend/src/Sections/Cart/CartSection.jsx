@@ -1,69 +1,15 @@
 import CartRow from "../../components/genericComponents/CartRow";
 import CartTotals from "@/components/genericComponents/CartTotals";
-import Button from "@/components/genericComponents/Button";
-import { useNavigate } from "react-router-dom";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { syncCart, getCart } from "@/APIs/CartService";
-import { useCurrencyStore } from "@/zustand_preferences/currency"; 
+import { AdminButton } from "@/components/adminUI/AdminButton";
+import { useCurrencyStore } from "@/zustand_preferences/currency";
 import useCurrency from "@/hooks/CurrencyChange";
-import { queryClient } from "@/queryClient";
-
-
+import  useCart  from "@/hooks/useCart";
 export default function CartSection() {
-  const navigate = useNavigate();
   let content = null;
-  const { currency , locale , conversion_rate } = useCurrencyStore();
+  const { currency, locale, conversion_rate } = useCurrencyStore();
   const format = useCurrency(currency, locale);
-  const rate = conversion_rate[currency]??1;
-
-  const { //update cartStore from database
-    data: cart,
-  } = useQuery({
-    queryKey: ["cart"],
-    queryFn: () => getCart(),
-    placeholderData: (previousData) => previousData,
-  });
-
-  const syncCartMutation = useMutation({
-    mutationFn: ({ ActionType, productId, quantity }) =>
-      syncCart({ ActionType, productId, quantity }),
-    onMutate: ({ ActionType, productId, quantity }) => {
-      //optimistic update
-      queryClient.cancelQueries({ queryKey: ["cart"] });
-      const previousCart = queryClient.getQueryData(["cart"]);
-      if (ActionType === "clear") {
-        queryClient.setQueryData(["cart"], (oldCart) => {
-          if (!oldCart) return null;
-          return {
-            ...oldCart,
-            items: [],
-            totalItems: 0,
-            totalPrice: 0,
-            updatedAt: new Date(),
-          };
-        });
-      }
-      return { previousCart };
-    },
-    onError: (context) => {
-      if (context.previousCart)
-        queryClient.setQueryData(["cart"], context.previousCart);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["cart"] });
-      queryClient.invalidateQueries({ queryKey: ["checkout"] });
-    },
-  });
-
-  function handleCheckout() {
-    navigate("/checkout");
-  }
-  function handleClearCart() {
-    syncCartMutation.mutate({ ActionType: "clear" , productId: null , quantity: 0 });
-  }
-  function handleContinueShopping() {
-    navigate("/shop");
-  }
+  const rate = conversion_rate[currency] ?? 1;
+  const { cart, handleCheckout, handleClearCart, handleContinueShopping } = useCart();
 
   if (cart?.items?.length === 0) {
     content = (
@@ -75,16 +21,17 @@ export default function CartSection() {
 
   if (cart && cart?.items?.length > 0) {
     content = (
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
         {/* Header */}
-        <div className="hidden sm:grid grid-cols-5 gap-6 mb-6 text-sm text-zinc-500 uppercase">
+        <div className="mb-6 hidden grid-cols-6 gap-6 text-sm uppercase text-zinc-500 sm:grid">
           <span className="col-span-2">Product</span>
-          <span className="col-span-1">Quantity</span>
-          <span className="col-span-2 text-center">Subtotal</span>
+          <span className="col-span-1 text-right">Quantity</span>
+          <span className="col-span-2 text-right">Subtotal</span>
+          <span className="col-span-1 text-center">Remove</span>
         </div>
 
         <div
-          className="mt-6 mb-2 h-[10px]"
+          className="mb-4 mt-4 h-[10px] sm:mb-2 sm:mt-6"
           style={{
             backgroundImage:
               "repeating-linear-gradient(135deg, #D4D4D4 0 2px, transparent 2px 10px)",
@@ -92,14 +39,16 @@ export default function CartSection() {
         />
 
         {/* Rows */}
-        {cart.items.map((item) => (
-          <CartRow
-            key={`CartRow - ${item.title}`}
-            item={item}
-            format={format}
-            rate={rate}
-          />
-        ))}
+        <div className="space-y-3 sm:space-y-0">
+          {cart.items.map((item) => (
+            <CartRow
+              key={`CartRow - ${item.title}`}
+              item={item}
+              format={format}
+              rate={rate}
+            />
+          ))}
+        </div>
 
         {/* Totals */}
         <CartTotals
@@ -112,27 +61,29 @@ export default function CartSection() {
         />
 
         {/* Actions */}
-        <div className="flex flex-wrap gap-4 mt-10">
-          <Button onClick={handleClearCart} className="w-fit tracking-widest">
+        <div className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:flex-wrap sm:gap-4">
+          <AdminButton
+            onClick={handleClearCart}
+            className="w-full tracking-widest sm:w-fit"
+          >
             CLEAR CART
-          </Button>
-          <Button
+          </AdminButton>
+          <AdminButton
             onClick={handleContinueShopping}
-            className="w-fit tracking-widest"
+            className="w-full tracking-widest sm:w-fit"
           >
             CONTINUE SHOPPING
-          </Button>
-          <Button onClick={handleCheckout} className="w-fit tracking-widest">
+          </AdminButton>
+          <AdminButton
+            onClick={handleCheckout}
+            className="w-full tracking-widest sm:w-fit"
+          >
             PROCEED TO CHECKOUT
-          </Button>
+          </AdminButton>
         </div>
       </div>
     );
   }
 
-  return (
-    <section className="py-20 bg-white">
-      {content}
-    </section>
-  );
+  return <section className="bg-white py-10 sm:py-20">{content}</section>;
 }

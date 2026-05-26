@@ -24,6 +24,19 @@ export function formatTime(t){
   }).format(date);
 }
 
+export function mongoDateToInputDate(value) {
+  if (!value) return "";
+
+  if (typeof value === "string" && value.includes("T")) {
+    return value.split("T")[0];
+  }
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+
+  return date.toISOString().split("T")[0];
+}
+
 export function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
