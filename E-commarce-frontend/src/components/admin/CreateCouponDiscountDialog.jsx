@@ -1,4 +1,4 @@
-import { Plus } from "lucide-react";
+import { Currency, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AdminButton } from "@/components/adminUI/AdminButton";
 import {
@@ -29,11 +29,13 @@ import {
 
 const defaultCouponForm = {
   code: "",
-  type: "",
-  value: "",
-  minOrder: "",
+  discountType: "",
+  discountValue: "",
+  eligibilityType: "",
+  eligibilityValue: "",
+  currency: "",
   expiry: "",
-  usage: "",
+  usageLimit: "",
   active: true,
 };
 
@@ -104,14 +106,18 @@ export function CreateCouponDiscountDialog({
   useEffect(() => {
     if (initialMode === "coupon") {
       setCouponForm({
-        _id: initialData?._id || "",
-        code: initialData?.code || "",
-        type: initialData?.type?.toLowerCase() || "",
-        value: initialData?.value || "",
-        minOrder: initialData?.minOrder || "",
-        expireDate: normalizeDateValue(initialData?.expireDate),
-        usageLimit: initialData?.usageLimit || "",
-        active: initialData?.status ? initialData.status === "ACTIVE" : true,
+        _id: initialData?.item?._id || "",
+        code: initialData?.item?.code || "",
+        discountType: initialData?.item?.discountType || "",
+        discountValue: initialData?.item?.discountValue || "",
+        eligibilityType: initialData?.item?.eligibilityType || "",
+        eligibilityValue: initialData?.item?.eligibilityValue || "",
+        currency: initialData?.item?.currency || "",
+        expireDate: normalizeDateValue(initialData?.item?.expireDate),
+        usageLimit: initialData?.item?.usageLimit || "",
+        active: initialData?.item?.status ? initialData.item?.status === "ACTIVE" : true,
+        DiscountTypesOptions : initialData?.discountTypesOptions || [],
+        EligibilityTypesOptions : initialData?.eligibilityTypesOptions || [],
       });
       setDiscountForm(defaultDiscountForm);
       return;
@@ -166,7 +172,7 @@ export function CreateCouponDiscountDialog({
           </TabsList>
           <TabsContent value="coupon">
             <div className="grid grid-cols-2 gap-4 py-4">
-              <div className="space-y-2">
+              <div className="space-y-2 col-span-2">
                 <Label>Coupon Code</Label>
                 <InputField
                   placeholder="e.g. SUMMER60"
@@ -179,18 +185,20 @@ export function CreateCouponDiscountDialog({
               <div className="space-y-2">
                 <Label>Discount Type</Label>
                 <Select
-                  value={couponForm.type}
+                  value={couponForm.discountType}
                   onValueChange={(value) =>
-                    setCouponForm((prev) => ({ ...prev, type: value }))
+                    setCouponForm((prev) => ({ ...prev, discountType: value }))
                   }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="percentage">Percentage</SelectItem>
-                    <SelectItem value="fixed">Fixed Amount</SelectItem>
-                    <SelectItem value="shipping">Free Shipping</SelectItem>
+                    {couponForm?.DiscountTypesOptions?.map((option) => (
+                      <SelectItem key={option} value={option}>
+                        {option}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -199,25 +207,45 @@ export function CreateCouponDiscountDialog({
                 <InputField
                   type="number"
                   placeholder="0"
-                  value={couponForm.value}
+                  value={couponForm.discountValue}
                   onChange={(e) =>
                     setCouponForm((prev) => ({
                       ...prev,
-                      value: e.target.value,
+                      discountValue: e.target.value,
                     }))
                   }
                 />
               </div>
               <div className="space-y-2">
-                <Label>Minimum Order</Label>
+                <Label>Eligibility Type</Label>
+                <Select
+                  value={couponForm.eligibilityType}
+                  onValueChange={(value) =>
+                    setCouponForm((prev) => ({ ...prev, eligibilityType: value }))
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {couponForm?.EligibilityTypesOptions?.map((option) => (
+                      <SelectItem key={option} value={option}>
+                        {option}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Eligibility Value</Label>
                 <InputField
                   type="number"
                   placeholder="0.00"
-                  value={couponForm.minOrder}
+                  value={couponForm.eligibilityValue}
                   onChange={(e) =>
                     setCouponForm((prev) => ({
                       ...prev,
-                      minOrder: e.target.value,
+                      eligibilityValue: e.target.value,
                     }))
                   }
                 />

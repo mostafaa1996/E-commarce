@@ -24,6 +24,7 @@ export default function CartPage() {
     appliedPromo,
     setAppliedPromo,
     savings,
+    couponInfo,
   } = useCart();
 
   if (isLoadingCart && !cart) {
@@ -84,6 +85,7 @@ export default function CartPage() {
               onPromoChange={setPromo}
               onApplyPromo={setAppliedPromo}
               goToCheckout={handleCheckout}
+              couponInfo={couponInfo}
               formatPrice={format}
               rate={rate}
             />

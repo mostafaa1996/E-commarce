@@ -62,7 +62,33 @@ exports.getUserProfile = async (req, res, next) => {
       avatar: user.PersonalInfo?.avatar?.url,
     };
     const Addresses = user.Addresses;
-    const wishlist = user.wishlist;
+    const wishlistItems = (user.wishlist || []).slice(0, 3);
+    const wishlistProductIds = wishlistItems.map((item) => item.productId);
+    const wishlistProducts = await Product.find({
+      _id: { $in: wishlistProductIds },
+      isActive: true,
+    })
+      .select("_id title images mainImage variants sourceCategoryName")
+      .lean();
+    const wishlist = wishlistItems.map((item) => {
+      const product = wishlistProducts.find(
+        (p) => String(p._id) === String(item.productId),
+      );
+      const selectedVariant = product?.variants.find(
+        (variant) => String(variant._id) === String(item.variantId),
+      );
+
+      return {
+        productId: item.productId,
+        variantId: item.variantId,
+        title: product?.title,
+        image: product?.images?.[0]?.url || product?.mainImage?.url,
+        category: product?.sourceCategoryName,
+        variant: selectedVariant,
+        price: selectedVariant?.price,
+        compareAtPrice: selectedVariant?.compareAtPrice,
+      };
+    });
     // const notifications = user.notifications;
     // const paymentMethods = user.paymentMethods;
     const StatsData = {
@@ -138,6 +164,7 @@ exports.getUserProfile = async (req, res, next) => {
         updatedAt: 1,
       },
     });
+    console.log(wishlist);
     res.status(200).json({
       contacts,
       Addresses,

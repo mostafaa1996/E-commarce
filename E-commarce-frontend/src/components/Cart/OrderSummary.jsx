@@ -11,6 +11,54 @@ function SummaryRow({ label, value, accent }) {
   );
 }
 
+function isPercentageDiscount(discountType) {
+  return String(discountType || "")
+    .toLowerCase()
+    .includes("percent");
+}
+
+function formatCouponValue(couponInfo, formatPrice, rate) {
+  const discountValue = Number(couponInfo?.discountValue);
+
+  if (!Number.isFinite(discountValue) || discountValue <= 0) {
+    return null;
+  }
+
+  if (isPercentageDiscount(couponInfo?.discountType)) {
+    return `${discountValue}% off`;
+  }
+
+  return `- ${formatPrice(discountValue * rate)}`;
+}
+
+function CouponSummaryLine({ couponInfo, formatPrice, rate }) {
+  const couponValue = formatCouponValue(couponInfo, formatPrice, rate);
+  const shouldShowCouponValue = couponInfo?.isEligible && couponValue;
+
+  if (shouldShowCouponValue) {
+    return (
+      <div className="flex items-start justify-between gap-4 rounded-xl bg-emerald-50 px-3 py-2 text-sm">
+        <span className="font-medium text-emerald-700">
+          Coupon{couponInfo?.code ? ` (${couponInfo.code})` : ""}
+        </span>
+        <span className="text-right font-semibold text-emerald-700">
+          {couponValue}
+        </span>
+      </div>
+    );
+  }
+
+  if (couponInfo?.message) {
+    return (
+      <p className="rounded-xl bg-primary/5 px-3 py-2 text-sm font-medium text-primary">
+        {couponInfo.message}
+      </p>
+    );
+  }
+
+  return null;
+}
+
 export default function OrderSummary({
   promo,
   appliedPromo,
@@ -23,12 +71,18 @@ export default function OrderSummary({
   onPromoChange,
   onApplyPromo,
   goToCheckout,
+  couponInfo,
   formatPrice = (price) => price.toFixed(2),
   rate = 1,
 }) {
   return (
     <aside className="h-fit space-y-4 rounded-2xl border border-border bg-card p-4 shadow-sm sm:space-y-5 sm:p-6 lg:sticky lg:top-6">
       <h2 className="text-lg font-semibold text-foreground">Order Summary</h2>
+      <CouponSummaryLine
+        couponInfo={couponInfo}
+        formatPrice={formatPrice}
+        rate={rate}
+      />
 
       <div>
         <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
@@ -45,7 +99,7 @@ export default function OrderSummary({
             />
           </div>
           <button
-            onClick={onApplyPromo}
+            onClick={() => onApplyPromo(promo)}
             className="rounded-lg bg-foreground px-4 py-2 text-sm font-medium text-background transition-opacity hover:opacity-90 min-[420px]:py-0"
           >
             Apply

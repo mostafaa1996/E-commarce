@@ -76,6 +76,8 @@ export default function useAdminCouponsPage() {
   const currentProductsPage = data?.pagination?.discounts?.page || 1;
   const totalPagesOfCoupons = data?.pagination?.coupons?.totalPages || 1;
   const totalPagesOfProducts = data?.pagination?.discounts?.totalPages || 1;
+  const discountTypesOptions = data?.discountEnum || []; // discount type options
+  const eligibilityTypesOptions = data?.eligibilityEnum || []; // eligibility type options
   const deleteTargetLabel =
     deleteMode === "coupon"
       ? selectedItem?.code
@@ -83,7 +85,7 @@ export default function useAdminCouponsPage() {
 
   const openEditDialog = (item, mode) => {
     setEditDialogOpen(true);
-    setSelectedItem(item);
+    setSelectedItem({item , discountTypesOptions, eligibilityTypesOptions});
     setEditMode(mode);
   };
 

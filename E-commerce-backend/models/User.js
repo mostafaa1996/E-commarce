@@ -83,6 +83,27 @@ const UserSchema = new mongoose.Schema({
       expiryYear: Number,
     },
   ],
+  coupons: [
+    {
+      couponId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Coupon",
+      },
+      code: String,
+      status: {
+        type: String,
+        enum: ["ASSIGNED", "SUGGESTED", "APPLIED", "USED", "EXPIRED"],
+        default: "SUGGESTED",
+      },
+      timesSuggested: {
+        type: Number,
+        default: 0,
+      },
+      lastSuggestedAt: Date,
+      appliedAt: Date,
+      usedAt: Date,
+    },
+  ],
 
   Addresses: [
     {

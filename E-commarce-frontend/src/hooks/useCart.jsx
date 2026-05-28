@@ -3,6 +3,61 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { getCart, syncCart } from "@/APIs/CartService";
 import { queryClient } from "@/queryClient";
 import { useMemo , useState } from "react";
+
+function getFirstValue(...values) {
+  return values.find(
+    (value) => value !== undefined && value !== null && value !== "",
+  );
+}
+
+function normalizeCouponInfo(cart) {
+  const source = getFirstValue(
+    cart?.coupon,
+    cart?.couponInfo,
+    cart?.eligibleCoupon,
+    cart?.promotion,
+    cart?.promo,
+  );
+
+  const couponSource = typeof source === "object" ? source : {};
+  const discountValue = getFirstValue(
+    couponSource.discountValue,
+    couponSource.value,
+    couponSource.amount,
+    cart?.couponValue,
+    cart?.couponDiscount,
+    cart?.discount,
+  );
+  const message = getFirstValue(
+    couponSource.message,
+    couponSource.description,
+    couponSource.encouragement,
+    couponSource.eligibilityMessage,
+    cart?.couponMessage,
+    cart?.promotionMessage,
+    cart?.discountMessage,
+  );
+  const isEligible = getFirstValue(
+    couponSource.isEligible,
+    couponSource.eligible,
+    couponSource.canApply,
+    cart?.isCouponEligible,
+    cart?.eligibleForCoupon,
+  );
+
+  return {
+    code: getFirstValue(couponSource.code, cart?.couponCode),
+    discountType: getFirstValue(
+      couponSource.discountType,
+      couponSource.type,
+      cart?.couponDiscountType,
+    ),
+    discountValue,
+    message,
+    isEligible: isEligible ?? discountValue > 0,
+  };
+}
+
 export default function useCart() {
   const navigate = useNavigate();
   const [promo, setPromo] = useState("");
@@ -142,6 +197,7 @@ export default function useCart() {
     [cart?.items],
   );
 
+  const couponInfo = useMemo(() => normalizeCouponInfo(cart), [cart]);
 
   return {
     cart, isLoadingCart, cartError,
@@ -154,5 +210,6 @@ export default function useCart() {
     appliedPromo,
     setAppliedPromo,
     savings,
+    couponInfo,
   };
 }

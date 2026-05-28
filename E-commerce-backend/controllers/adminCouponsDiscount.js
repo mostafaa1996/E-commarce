@@ -2,8 +2,16 @@ const mongoose = require("mongoose");
 const { Coupon, Discount } = require("../models/Coupons");
 const Product = require("../models/Product");
 const createActivityLog = require("../utils/CreateActivityLogs");
+const { schema } = require("../models/ExchangeRate");
 
 const COUPON_TYPES = ["PERCENTAGE", "FIXED", "FREE_SHIPPING"];
+const ELIGIBILITY_TYPES = [
+  "MIN_ORDER_VALUE",
+  "MIN_ORDERS_COUNT",
+  "MIN_TOTAL_SPENT",
+  "FIRST_ORDER",
+  "SPECIFIC_USERS",
+];
 const DISCOUNT_TYPES = ["PERCENTAGE", "FIXED"];
 const STATUSES = ["ACTIVE", "INACTIVE", "EXPIRED", "USED"];
 
@@ -83,7 +91,7 @@ function resolveCouponStatus(coupon) {
     return "EXPIRED";
   }
 
-  if (coupon.usageLimit > 0 && coupon.Usages >= coupon.usageLimit) {
+  if (coupon.usageLimit > 0 && coupon.usageCount >= coupon.usageLimit) {
     return "USED";
   }
 
@@ -99,7 +107,7 @@ function resolveDiscountStatus(discount) {
     return "EXPIRED";
   }
 
-  if (discount.usageLimit > 0 && discount.Usages >= discount.usageLimit) {
+  if (discount.usageLimit > 0 && discount.usageCount >= discount.usageLimit) {
     return "USED";
   }
 
@@ -265,18 +273,28 @@ exports.createCouponForCustomer = async (req, res, next) => {
     const code = String(body.code || "")
       .trim()
       .toUpperCase();
-    const type = normalizeEnum(body.type, COUPON_TYPES, "PERCENTAGE");
+    const discountType = normalizeEnum(
+      body.discountType,
+      COUPON_TYPES,
+      "PERCENTAGE",
+    );
     const expireDate = parseRequiredDate(body.expireDate);
-    const value = parseNonNegativeNumber(body.value ?? 0);
+    const discountValue = parseNonNegativeNumber(body.discountValue ?? 0);
     const usageLimit = parseNonNegativeNumber(body.usageLimit ?? 0);
-    const minOrder = parseNonNegativeNumber(body.minOrder ?? 0);
-    const usages = parseNonNegativeNumber(body.usages ?? 0);
+    const eligibilityValue = parseNonNegativeNumber(body.eligibilityValue ?? 0);
+    const eligibilityType = normalizeEnum(
+      body.eligibilityType,
+      ELIGIBILITY_TYPES,
+      "MIN_ORDER_VALUE",
+    );
+     
+    const active  = body.active?? false;
 
     if (!code) {
       return res.status(400).json({ message: "Coupon code is required." });
     }
 
-    if (!type) {
+    if (!discountType) {
       return res.status(400).json({ message: "Invalid coupon type." });
     }
 
@@ -286,25 +304,25 @@ exports.createCouponForCustomer = async (req, res, next) => {
         .json({ message: "A valid expireDate is required." });
     }
 
-    if (value === null) {
+    if (discountValue === null) {
       return res
         .status(400)
         .json({ message: "Coupon value must be a non-negative number." });
     }
 
-    if (usageLimit === null || minOrder === null || usages === null) {
+    if (eligibilityValue === null || eligibilityType === null) {
       return res
         .status(400)
-        .json({ message: "Coupon numeric fields must be non-negative." });
+        .json({ message: "Eligibility value and type are required." });
     }
 
-    if (type === "PERCENTAGE" && value > 100) {
+    if (discountType === "PERCENTAGE" && value > 100) {
       return res
         .status(400)
         .json({ message: "Percentage coupon value cannot exceed 100." });
     }
 
-    if (type === "FREE_SHIPPING" && value !== 0) {
+    if (discountType === "FREE_SHIPPING" && value !== 0) {
       return res
         .status(400)
         .json({ message: "FREE_SHIPPING coupons must have value 0." });
@@ -318,17 +336,15 @@ exports.createCouponForCustomer = async (req, res, next) => {
 
     coupon = await Coupon.create({
       code,
-      type,
-      value,
+      discountType,
+      discountValue,
+      eligibilityType,
+      eligibilityValue,
       expireDate,
-      usages: usages,
+      startDate: new Date(),
+      usageCount: 0,
       usageLimit,
-      minOrder,
-      status: resolveCouponStatus({
-        expireDate,
-        Usages: usages,
-        usageLimit,
-      }),
+      status: active ? "ACTIVE" : "INACTIVE",
     });
 
     return res.status(201).json({
@@ -337,19 +353,19 @@ exports.createCouponForCustomer = async (req, res, next) => {
     });
   } catch (err) {
     next(err);
-  }finally {
+  } finally {
     if (coupon) {
       createActivityLog({
         type: "COUPON_CREATED",
         title: `Coupon created`,
         message: `Created a new coupon with code ${coupon.code}`,
-      }); 
-    }else{
+      });
+    } else {
       createActivityLog({
         type: "COUPON_CREATED",
         title: `Coupon creation failed`,
         message: `Failed to create a new coupon`,
-      }); 
+      });
     }
   }
 };
@@ -416,19 +432,19 @@ exports.createDiscountForProduct = async (req, res, next) => {
     });
   } catch (err) {
     next(err);
-  }finally {
+  } finally {
     if (result.discount) {
       createActivityLog({
         type: "DISCOUNT_CREATED",
         title: `Discount created`,
         message: `Created a new discount with title ${result.discount.title}`,
-      }); 
-    }else{
+      });
+    } else {
       createActivityLog({
         type: "DISCOUNT_CREATED",
         title: `Discount creation `,
         message: `Failed to create a new discount`,
-      }); 
+      });
     }
   }
 };
@@ -456,19 +472,19 @@ exports.deleteCouponForCustomer = async (req, res, next) => {
     });
   } catch (err) {
     next(err);
-  }finally {
+  } finally {
     if (deletedCoupon) {
       createActivityLog({
         type: "COUPON_DELETED",
         title: `Coupon deleted`,
         message: `Deleted a coupon with code ${coupon.code}`,
-      }); 
-    }else{
+      });
+    } else {
       createActivityLog({
         type: "COUPON_DELETED",
         title: `Coupon deletion`,
         message: `Failed to delete a coupon`,
-      }); 
+      });
     }
   }
 };
@@ -499,19 +515,19 @@ exports.deleteDiscountForProduct = async (req, res, next) => {
     });
   } catch (err) {
     next(err);
-  }finally {
+  } finally {
     if (discount) {
       createActivityLog({
         type: "DISCOUNT_DELETED",
         title: `Discount deletion`,
         message: `Deleted a discount with code ${discount.code}`,
-      }); 
-    }else{
+      });
+    } else {
       createActivityLog({
         type: "DISCOUNT_DELETED",
         title: `Discount deletion`,
         message: `Failed to delete a discount`,
-      }); 
+      });
     }
   }
 };
@@ -559,14 +575,14 @@ exports.updateCouponForCustomer = async (req, res, next) => {
       coupon.code = nextCode;
     }
 
-    if (body.type !== undefined) {
-      const nextType = normalizeEnum(body.type, COUPON_TYPES, coupon.type);
+    if (body.discountType !== undefined) {
+      const nextType = normalizeEnum(body.discountType, COUPON_TYPES, coupon.discountType);
 
       if (!nextType) {
         return res.status(400).json({ message: "Invalid coupon type." });
       }
 
-      coupon.type = nextType;
+      coupon.discountType = nextType;
     }
 
     if (body.expireDate !== undefined) {
@@ -581,8 +597,8 @@ exports.updateCouponForCustomer = async (req, res, next) => {
       coupon.expireDate = nextExpireDate;
     }
 
-    if (body.value !== undefined) {
-      const nextValue = parseNonNegativeNumber(body.value);
+    if (body.discountValue !== undefined) {
+      const nextValue = parseNonNegativeNumber(body.discountValue);
 
       if (nextValue === null) {
         return res
@@ -590,7 +606,7 @@ exports.updateCouponForCustomer = async (req, res, next) => {
           .json({ message: "Coupon value must be a non-negative number." });
       }
 
-      coupon.value = nextValue;
+      coupon.discountValue = nextValue;
     }
 
     if (body.usageLimit !== undefined) {
@@ -601,33 +617,42 @@ exports.updateCouponForCustomer = async (req, res, next) => {
           .status(400)
           .json({ message: "usageLimit must be a non-negative number." });
       }
-      console.log(nextusageLimit);
       coupon.usageLimit = nextusageLimit;
     }
 
-    if (body.minOrder !== undefined) {
-      const nextMinOrder = parseNonNegativeNumber(body.minOrder);
+    if (body.eligibilityValue !== undefined) {
+      const nextEligibilityValue = parseNonNegativeNumber(body.eligibilityValue);
 
-      if (nextMinOrder === null) {
+      if (nextEligibilityValue === null) {
         return res
           .status(400)
           .json({ message: "minOrder must be a non-negative number." });
       }
 
-      coupon.minOrder = nextMinOrder;
+      coupon.eligibilityValue = nextEligibilityValue;
     }
 
-    if (coupon.type === "PERCENTAGE" && coupon.value > 100) {
+    if (body.eligibilityType !== undefined) {
+      const nextType = normalizeEnum(body.eligibilityType, ELIGIBILITY_TYPES , coupon.eligibilityType);
+
+      if (!nextType) {
+        return res.status(400).json({ message: "Invalid coupon type." });
+      }
+
+      coupon.eligibilityType = nextType;
+    }
+
+    if (coupon.discountType === "PERCENTAGE" && coupon.discountValue > 100) {
       return res
         .status(400)
         .json({ message: "Percentage coupon value cannot exceed 100." });
     }
 
-    // if (coupon.type === "FREE_SHIPPING") {
-    //   coupon.value = 0;
-    // }
+    if (coupon.discountType === "FREE_SHIPPING") {
+      coupon.discountValue = 0;
+    }
 
-    if (body.active !== undefined ) {
+    if (body.active !== undefined) {
       const reqStatus = body.active ? "ACTIVE" : "INACTIVE";
       const nextStatus = normalizeEnum(reqStatus, STATUSES, coupon.status);
 
@@ -648,19 +673,19 @@ exports.updateCouponForCustomer = async (req, res, next) => {
     });
   } catch (err) {
     next(err);
-  }finally {
+  } finally {
     if (coupon) {
       createActivityLog({
         type: "COUPON_UPDATED",
         title: `Coupon update`,
         message: `Updated a coupon with code ${coupon.code}`,
-      }); 
-    }else{
+      });
+    } else {
       createActivityLog({
         type: "COUPON_UPDATED",
         title: `Coupon update`,
         message: `Failed to update a coupon`,
-      }); 
+      });
     }
   }
 };
@@ -784,19 +809,19 @@ exports.updateDiscountForProduct = async (req, res, next) => {
     });
   } catch (err) {
     next(err);
-  }finally {
+  } finally {
     if (result.discount) {
       createActivityLog({
         type: "DISCOUNT_UPDATED",
         title: `Discount update`,
         message: `discount updated for product ${discount.title}`,
-      }); 
-    }else{
+      });
+    } else {
       createActivityLog({
         type: "DISCOUNT_UPDATED",
         title: `Discount update`,
         message: `Failed to update a discount`,
-      }); 
+      });
     }
   }
 };
@@ -831,7 +856,7 @@ exports.getCouponsAndDiscounts = async (req, res, next) => {
         $expr: {
           $or: [
             { $eq: ["$usageLimit", 0] },
-            { $gt: ["$usageLimit", "$Usages"] },
+            { $gt: ["$usageLimit", "$usageCount"] },
           ],
         },
       }),
@@ -893,6 +918,8 @@ exports.getCouponsAndDiscounts = async (req, res, next) => {
       },
       coupons: pagedCoupons,
       discounts: pagedDiscounts,
+      discountEnum: Coupon.schema.path("discountType").enumValues,
+      eligibilityEnum: Coupon.schema.path("eligibilityType").enumValues,
     });
   } catch (err) {
     next(err);
