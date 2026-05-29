@@ -32,17 +32,16 @@ function formatCouponValue(couponInfo, formatPrice, rate) {
 }
 
 function CouponSummaryLine({ couponInfo, formatPrice, rate }) {
-  const couponValue = formatCouponValue(couponInfo, formatPrice, rate);
-  const shouldShowCouponValue = couponInfo?.isEligible && couponValue;
+  const shouldShowCouponValue = couponInfo?.isEligible && couponInfo.discountValue > 0;
 
   if (shouldShowCouponValue) {
     return (
       <div className="flex items-start justify-between gap-4 rounded-xl bg-emerald-50 px-3 py-2 text-sm">
         <span className="font-medium text-emerald-700">
-          Coupon{couponInfo?.code ? ` (${couponInfo.code})` : ""}
+          Coupon <br />{couponInfo?.code ? ` ${couponInfo.code}` : ""}
         </span>
         <span className="text-right font-semibold text-emerald-700">
-          {couponValue}
+          -{formatPrice(couponInfo.discountValue * rate)}
         </span>
       </div>
     );
@@ -78,12 +77,13 @@ export default function OrderSummary({
   return (
     <aside className="h-fit space-y-4 rounded-2xl border border-border bg-card p-4 shadow-sm sm:space-y-5 sm:p-6 lg:sticky lg:top-6">
       <h2 className="text-lg font-semibold text-foreground">Order Summary</h2>
-      <CouponSummaryLine
-        couponInfo={couponInfo}
-        formatPrice={formatPrice}
-        rate={rate}
-      />
-
+      {couponInfo && (
+        <CouponSummaryLine
+          couponInfo={couponInfo}
+          formatPrice={formatPrice}
+          rate={rate}
+        />
+      )}
       <div>
         <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
           Promo code
@@ -107,7 +107,7 @@ export default function OrderSummary({
         </div>
         {appliedPromo && (
           <p className="mt-2 text-xs font-medium text-primary">
-            {appliedPromo} applied (10% off)
+            {appliedPromo} applied ({formatCouponValue(couponInfo, formatPrice, rate)})
           </p>
         )}
       </div>
@@ -121,7 +121,7 @@ export default function OrderSummary({
             accent="text-emerald-600"
           />
         )}
-        {discount > 0 && (
+        {appliedPromo && (
           <SummaryRow
             label="Promo discount"
             value={`- ${formatPrice(discount * rate)}`}
@@ -138,12 +138,14 @@ export default function OrderSummary({
       <div className="flex items-baseline justify-between gap-4 border-t border-border pt-5">
         <span className="text-base font-semibold text-foreground">Total</span>
         <span className="text-right text-xl font-bold text-foreground sm:text-2xl">
-          {formatPrice(total * rate)}
+          {appliedPromo ? formatPrice((total - discount) * rate) :  formatPrice(total * rate)}
         </span>
       </div>
 
       <button
-        onClick={() => {goToCheckout()}}
+        onClick={() => {
+          goToCheckout();
+        }}
         className="group flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3.5 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:bg-primary/90 hover:shadow-md"
       >
         Proceed to Checkout

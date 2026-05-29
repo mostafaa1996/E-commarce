@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { queryClient } from "./queryClient";
 import { getShopProducts, getProductById } from "./APIs/shopProductsService";
 import { loginAction, SignupAction, logoutAction } from "./APIs/AuthService";
-import { getCart } from "@/APIs/CartService";
+import { getCart , getCartPage } from "@/APIs/CartService";
 import { getCartData } from "./APIs/checkoutService";
 import {
   getUserProfileData,
@@ -115,7 +115,7 @@ export const router = createBrowserRouter([
         loader: async () => {
           return queryClient.ensureQueryData({
             queryKey: ["cart"],
-            queryFn: getCart,
+            queryFn: getCartPage,
             staleTime: 1000 * 60 * 5,
           });
         },

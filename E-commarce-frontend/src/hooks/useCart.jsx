@@ -4,58 +4,35 @@ import { getCart, syncCart } from "@/APIs/CartService";
 import { queryClient } from "@/queryClient";
 import { useMemo , useState } from "react";
 
-function getFirstValue(...values) {
-  return values.find(
-    (value) => value !== undefined && value !== null && value !== "",
-  );
-}
-
 function normalizeCouponInfo(cart) {
-  const source = getFirstValue(
-    cart?.coupon,
-    cart?.couponInfo,
-    cart?.eligibleCoupon,
-    cart?.promotion,
-    cart?.promo,
-  );
-
-  const couponSource = typeof source === "object" ? source : {};
-  const discountValue = getFirstValue(
-    couponSource.discountValue,
-    couponSource.value,
-    couponSource.amount,
-    cart?.couponValue,
-    cart?.couponDiscount,
-    cart?.discount,
-  );
-  const message = getFirstValue(
-    couponSource.message,
-    couponSource.description,
-    couponSource.encouragement,
-    couponSource.eligibilityMessage,
-    cart?.couponMessage,
-    cart?.promotionMessage,
-    cart?.discountMessage,
-  );
-  const isEligible = getFirstValue(
-    couponSource.isEligible,
-    couponSource.eligible,
-    couponSource.canApply,
-    cart?.isCouponEligible,
-    cart?.eligibleForCoupon,
-  );
+  const couponOffer = cart?.couponOffer || {};
+  const discountType = couponOffer?.coupon?.discountType || "";
+  const discountValue = couponOffer?.coupon?.discountValue || 0;
+  const message = couponOffer?.message || "";  
+  const code = couponOffer?.coupon?.code || "";
+  const isEligible = typeof(couponOffer?.type) === "string" && couponOffer?.type?.toLowerCase() === "eligible";
 
   return {
-    code: getFirstValue(couponSource.code, cart?.couponCode),
-    discountType: getFirstValue(
-      couponSource.discountType,
-      couponSource.type,
-      cart?.couponDiscountType,
-    ),
+    code,
+    discountType,
     discountValue,
     message,
-    isEligible: isEligible ?? discountValue > 0,
+    isEligible,
   };
+}
+
+function calculateDiscount(couponInfo , totalCost) {
+  const discountValue = Number(couponInfo?.discountValue);
+
+  if (!Number.isFinite(discountValue) || discountValue <= 0) {
+    return 0;
+  }
+
+  if ((couponInfo?.discountType).toLowerCase().trim().includes("percent")) {
+    return (totalCost * (discountValue / 100)).toFixed(2);
+  }
+
+  return discountValue;
 }
 
 export default function useCart() {
@@ -198,6 +175,7 @@ export default function useCart() {
   );
 
   const couponInfo = useMemo(() => normalizeCouponInfo(cart), [cart]);
+  const discountInMoney = useMemo(() => calculateDiscount(couponInfo, cart.totalPrice), [couponInfo, cart.totalPrice]);
 
   return {
     cart, isLoadingCart, cartError,
@@ -210,6 +188,7 @@ export default function useCart() {
     appliedPromo,
     setAppliedPromo,
     savings,
+    discountInMoney,
     couponInfo,
   };
 }

@@ -86,3 +86,17 @@ export async function syncCart({ ActionType, productId , variantId , quantity })
 
   return null;
 }
+
+export async function getCartPage(){
+  const res = await authFetch(`${URL}/cart/cartPage`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!res.ok) {
+    throw new Error("Failed to fetch cart");
+  }
+  const cart = await res.json();
+  return cart;
+}

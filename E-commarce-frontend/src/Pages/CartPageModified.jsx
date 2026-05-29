@@ -24,6 +24,7 @@ export default function CartPage() {
     appliedPromo,
     setAppliedPromo,
     savings,
+    discountInMoney,
     couponInfo,
   } = useCart();
 
@@ -78,10 +79,10 @@ export default function CartPage() {
               appliedPromo={appliedPromo}
               subtotal={cart?.items?.reduce((acc, item) => acc + item.subtotal, 0) ?? 0}
               savings={savings}
-              vat={cart?.items?.reduce((acc, item) => acc + item.vat, 0) ?? 0}
-              shipping={cart?.items?.reduce((acc, item) => acc + item.shippingCost, 0) ?? 0}
-              total={cart?.totalPrice ?? 0}
-              discount = {0}
+              vat={cart?.vat ?? 0}
+              shipping={cart?.shipping ?? 0}
+              total={cart?.totalCost ?? 0}
+              discount = {discountInMoney}
               onPromoChange={setPromo}
               onApplyPromo={setAppliedPromo}
               goToCheckout={handleCheckout}
