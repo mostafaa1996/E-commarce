@@ -287,7 +287,3 @@ exports.generateCouponOffer = async(req, res, next) => {
       next(err)
   } 
 }
-
-exports.ApplyCoupon = async(req,res,next) => {
-    
-}

@@ -22,7 +22,7 @@ export default function CartPage() {
     promo,
     setPromo,
     appliedPromo,
-    setAppliedPromo,
+    onApplyPromo,
     savings,
     discountInMoney,
     couponInfo,
@@ -84,7 +84,7 @@ export default function CartPage() {
               total={cart?.totalCost ?? 0}
               discount = {discountInMoney}
               onPromoChange={setPromo}
-              onApplyPromo={setAppliedPromo}
+              onApplyPromo={onApplyPromo}
               goToCheckout={handleCheckout}
               couponInfo={couponInfo}
               formatPrice={format}

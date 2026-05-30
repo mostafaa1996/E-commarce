@@ -32,7 +32,6 @@ const adminAnaliticsRoute = require("./routes/adminAnalitics");
 const adminActivityLogsRoute = require("./routes/ActivityLog");
 const adminSettingsRoute = require("./routes/adminSettings");
 const HomeRoute = require("./routes/Home");
-const couponRoute = require("./routes/coupon");
 
 const app = express();
 app.use("/api", stripeWebhookRoute);
@@ -72,7 +71,6 @@ app.use("/admin/analitics", adminAnaliticsRoute);
 app.use("/admin/activity-logs", adminActivityLogsRoute);
 app.use("/admin/settings", adminSettingsRoute);
 app.use("/home", HomeRoute);
-app.use("/coupon", couponRoute);
 
 app.use((error, req, res, next) => {
   console.log(error);

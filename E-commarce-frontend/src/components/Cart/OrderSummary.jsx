@@ -100,14 +100,15 @@ export default function OrderSummary({
           </div>
           <button
             onClick={() => onApplyPromo(promo)}
-            className="rounded-lg bg-foreground px-4 py-2 text-sm font-medium text-background transition-opacity hover:opacity-90 min-[420px]:py-0"
+            className="rounded-lg bg-foreground px-4 py-2 text-sm font-medium text-background transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:opacity-60 min-[420px]:py-0"
+            disabled={appliedPromo}
           >
-            Apply
+            {appliedPromo? "Applied" : "Apply" } 
           </button>
         </div>
         {appliedPromo && (
           <p className="mt-2 text-xs font-medium text-primary">
-            {appliedPromo} applied ({formatCouponValue(couponInfo, formatPrice, rate)})
+            {promo} applied ({formatCouponValue(couponInfo, formatPrice, rate)})
           </p>
         )}
       </div>
@@ -138,7 +139,7 @@ export default function OrderSummary({
       <div className="flex items-baseline justify-between gap-4 border-t border-border pt-5">
         <span className="text-base font-semibold text-foreground">Total</span>
         <span className="text-right text-xl font-bold text-foreground sm:text-2xl">
-          {appliedPromo ? formatPrice((total - discount) * rate) :  formatPrice(total * rate)}
+          {formatPrice(total * rate)}
         </span>
       </div>
 

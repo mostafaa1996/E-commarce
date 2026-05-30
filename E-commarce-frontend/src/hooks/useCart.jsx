@@ -2,15 +2,18 @@ import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { getCart, syncCart } from "@/APIs/CartService";
 import { queryClient } from "@/queryClient";
-import { useMemo , useState } from "react";
+import { useMemo, useState } from "react";
 
 function normalizeCouponInfo(cart) {
   const couponOffer = cart?.couponOffer || {};
-  const discountType = couponOffer?.coupon?.discountType || "";
-  const discountValue = couponOffer?.coupon?.discountValue || 0;
-  const message = couponOffer?.message || "";  
-  const code = couponOffer?.coupon?.code || "";
-  const isEligible = typeof(couponOffer?.type) === "string" && couponOffer?.type?.toLowerCase() === "eligible";
+  const coupon = couponOffer.coupon || couponOffer;
+  const discountType = coupon?.discountType || "";
+  const discountValue = Number(coupon?.discountValue || 0);
+  const message = couponOffer?.message || "";
+  const code = coupon?.code || "";
+  const isEligible =
+    typeof couponOffer?.type === "string"?
+    couponOffer?.type?.toLowerCase() === "eligible" : Boolean(coupon.code);
 
   return {
     code,
@@ -21,14 +24,14 @@ function normalizeCouponInfo(cart) {
   };
 }
 
-function calculateDiscount(couponInfo , totalCost) {
+function calculateDiscount(couponInfo, totalCost) {
   const discountValue = Number(couponInfo?.discountValue);
 
   if (!Number.isFinite(discountValue) || discountValue <= 0) {
     return 0;
   }
 
-  if ((couponInfo?.discountType).toLowerCase().trim().includes("percent")) {
+  if ((couponInfo.discountType).toLowerCase().trim().includes("percent")) {
     return (totalCost * (discountValue / 100)).toFixed(2);
   }
 
@@ -51,8 +54,8 @@ export default function useCart() {
   });
 
   const syncCartMutation = useMutation({
-    mutationFn: ({ ActionType, productId, variantId, quantity }) =>
-      syncCart({ ActionType, productId, variantId, quantity }),
+    mutationFn: ({ ActionType, productId, variantId, quantity, code = "" }) =>
+      syncCart({ ActionType, productId, variantId, quantity, code }),
     onMutate: ({ ActionType, productId, variantId, quantity }) => {
       //optimistic update
       queryClient.cancelQueries({ queryKey: ["cart"] });
@@ -79,7 +82,10 @@ export default function useCart() {
               return item;
             }),
             totalItems: oldCart.totalItems - oldItemQuantity + quantity,
-            totalPrice: (oldCart.totalPrice - itemPrice * oldItemQuantity) + itemPrice * quantity,
+            totalPrice:
+              oldCart.totalPrice -
+              itemPrice * oldItemQuantity +
+              itemPrice * quantity,
             updatedAt: new Date(),
           };
         });
@@ -99,7 +105,10 @@ export default function useCart() {
               (item) => item._id !== productId && item.variantId !== variantId,
             ),
             totalItems: oldCart.totalItems - oldItemQuantity + quantity,
-            totalPrice: (oldCart.totalPrice - itemPrice * oldItemQuantity) + itemPrice * quantity,
+            totalPrice:
+              oldCart.totalPrice -
+              itemPrice * oldItemQuantity +
+              itemPrice * quantity,
             updatedAt: new Date(),
           };
         });
@@ -161,6 +170,17 @@ export default function useCart() {
     });
   }
 
+  function onApplyPromo(code) {
+    setAppliedPromo(true);
+    syncCartMutation.mutate({
+      ActionType: "applyPromo",
+      productId: null,
+      variantId: null,
+      quantity: 0,
+      code,
+    });
+  }
+
   const savings = useMemo(
     () =>
       cart?.items?.reduce(
@@ -175,10 +195,17 @@ export default function useCart() {
   );
 
   const couponInfo = useMemo(() => normalizeCouponInfo(cart), [cart]);
-  const discountInMoney = useMemo(() => calculateDiscount(couponInfo, cart.totalPrice), [couponInfo, cart.totalPrice]);
+  const discountInMoney = useMemo(
+    () => calculateDiscount(couponInfo, cart.totalPrice),
+    [couponInfo, cart.totalPrice],
+  );
+
+  console.log(couponInfo , "couponInfo" , discountInMoney , "discountInMoney");
 
   return {
-    cart, isLoadingCart, cartError,
+    cart,
+    isLoadingCart,
+    cartError,
     handleCheckout,
     handleClearCart,
     updateItem,
@@ -186,7 +213,7 @@ export default function useCart() {
     promo,
     setPromo,
     appliedPromo,
-    setAppliedPromo,
+    onApplyPromo,
     savings,
     discountInMoney,
     couponInfo,

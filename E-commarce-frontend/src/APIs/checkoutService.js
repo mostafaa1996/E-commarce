@@ -21,8 +21,6 @@ export async function getCartData() {
 }
 
 export async function placeOrder({
-  cart,
-  shippingDetails,
   orderNotes,
   selectedCard,
 }) {
@@ -31,7 +29,7 @@ export async function placeOrder({
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ cart, shippingDetails, orderNotes, selectedCard }),
+    body: JSON.stringify({ orderNotes, selectedCard }),
   });
   const data = await res.json();
   
