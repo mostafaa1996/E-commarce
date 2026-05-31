@@ -22,7 +22,10 @@ export default function CartwithPaymentSection({ cart }) {
       <CartTotals
         Items={cart.items}
         TotalItems={cart.totalItems}
-        total={cart.totalPrice}
+        itemsPrice={cart.itemsPrice}
+        priceAfterPromo={cart.PriceAfterCoupon}
+        tax={cart.TAX}
+        totalPrice={cart.totalPrice}
         promo={cart.promo?.discountInMoney}
         promoCode={cart.promo?.code}
         className={"w-full"}

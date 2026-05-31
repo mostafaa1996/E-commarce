@@ -17,6 +17,6 @@ exports.getCartData = async (req, res) => {
 
   res.status(200).json({
     message: "Cart found",
-    cart: reqCart
+    cart: {...reqCart.toObject() , PriceAfterCoupon: reqCart.itemsPrice - reqCart.promo.discountInMoney},
   });
 };

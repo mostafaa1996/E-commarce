@@ -45,6 +45,7 @@ const useCheckoutStore = create((set) => ({
         return set({ paymentType });
     },
     setOrderState: (orderState) => {
+        if(!orderState) orderState = "Error";
         return set({ orderState });
     },
     setOrderId: (orderId) => {

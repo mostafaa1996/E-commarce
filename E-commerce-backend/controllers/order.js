@@ -55,15 +55,22 @@ exports.createOrder = async (req, res, next) => {
         .status(400)
         .json({ message: "Cart not found", nextAction: "Error" });
     }
+    const orderItems = cart.products.map((product) => ({
+      quantity: product.quantity,
+      subtotal: product.subtotal,
+      price: product.price,
+      product: product.productId,
+      variant: product.variantId,
+    }));
 
     const selectedCardId = req.body.selectedCard || "";
     // ***************** create the order *****************
     const order = await Order.create({
-      orderItems : cart.products || [],
+      orderItems : orderItems || [],
       notes,
       shippingAddress,
       paymentMethod,
-      status: paymentMethod === "cod" ? "orderPlaced" : "pending_payment",
+      status: paymentMethod === "cod" ? "orderPlaced" : "pending",
       paymentStatus: paymentMethod === "cod" ? "not_required" : "pending",
       itemsPrice : cart.itemsPrice || 0,
       shippingPrice : cart.shippingCost || 0,

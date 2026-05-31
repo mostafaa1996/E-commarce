@@ -15,7 +15,10 @@ function TotalsRow({ label, value, labelClassName, valueClassName }) {
 export default function CartTotals({
   TotalItems,
   Items,
-  total,
+  itemsPrice = 0,
+  priceAfterPromo = 0,
+  tax = 0,  
+  totalPrice = 0,
   promo = 0,
   promoCode,
   VAT = 0,
@@ -26,9 +29,6 @@ export default function CartTotals({
 }) {
   const promoValue = Number(promo) || 0;
   const hasPromo = promoValue > 0;
-  const discountedSubtotal = Math.max(total, 0);
-  const vatAmount = VAT ;
-  const totalPrice = discountedSubtotal + vatAmount + shipping;
   
   return (
     <div className={clsx("", className)}>
@@ -57,7 +57,7 @@ export default function CartTotals({
         <div className="rounded-xl border border-zinc-200 bg-zinc-50/80 px-4 py-3">
           <TotalsRow
             label="Subtotal before promo"
-            value={format((total+promoValue) * rate)}
+            value={format(itemsPrice * rate)}
             valueClassName="text-[#FF6543]"
           />
 
@@ -81,7 +81,7 @@ export default function CartTotals({
               <div className="my-3 border-t border-zinc-200" />
               <TotalsRow
                 label="Subtotal after promo"
-                value={format(discountedSubtotal * rate)}
+                value={format(priceAfterPromo * rate)}
                 labelClassName="text-zinc-800"
                 valueClassName="text-[#FF6543]"
               />
@@ -91,7 +91,7 @@ export default function CartTotals({
       </div>
       <div className="grid grid-cols-2 gap-3 border-b border-zinc-300 py-3 text-base font-light sm:py-2">
         <span>VAT</span>
-        <span className="text-right text-[#FF6543]">{format(vatAmount * rate)}</span>
+        <span className="text-right text-[#FF6543]">{format(tax * rate)}</span>
       </div>
       <div className="grid grid-cols-2 gap-3 border-b border-zinc-300 py-3 text-base font-light sm:py-2">
         <span>Shipping</span>
