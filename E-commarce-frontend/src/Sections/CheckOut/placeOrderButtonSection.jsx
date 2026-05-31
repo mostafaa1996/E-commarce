@@ -20,8 +20,12 @@ export default function CheckoutPaymentSection({ orderNotes }) {
     onMutate: () => {
       setOrderState("Loading");
     },
-    onError: () => {
-      setOrderState("Error");
+    onError: (error) => {
+      if (error.data?.blocked) {
+        setOrderState("userBlocked");
+      } else {
+        setOrderState("Error");
+      }
     },
   });
 

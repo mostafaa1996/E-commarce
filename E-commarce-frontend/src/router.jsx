@@ -130,13 +130,13 @@ export const router = createBrowserRouter([
             queryFn: async () => {
               const {
                 cart,
-                VAT_shipping,
-                message: cartMessage,
+                message,
+                blocked,
               } = await getCartData();
               return {
                 cart,
-                VAT_shipping,
-                cartMessage,
+                message,
+                blocked,
               };
             },
           });

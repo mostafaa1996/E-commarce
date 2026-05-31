@@ -145,7 +145,18 @@ export default function CheckoutPage() {
     );
   }
 
-  if (checkoutData) {
+  if (checkoutData?.blocked) {
+    console.log("checkoutData", checkoutData);
+    content = (
+      <div className="mx-auto mt-20 mb-70 w-[90%] max-w-3xl">
+        <ProfilePageState
+          type="error"
+          title="PROFILE BLOCKED"
+          message={checkoutData?.message}
+        />
+      </div>
+    );
+  } else if (checkoutData) {
     content = (
       <main className="mx-auto w-full max-w-[1600px] px-4 py-10 sm:px-6 lg:px-8">
         <div className="mb-8">
@@ -184,14 +195,12 @@ export default function CheckoutPage() {
           </div>
 
           <aside className="space-y-6 lg:sticky lg:top-24">
-            {checkoutData.cartMessage === "Cart found" && checkoutData.cart ? (
+            {checkoutData.message === "Cart found" && checkoutData.cart ? (
               <CheckoutPanel
                 title="Order summary"
                 description="Confirm your cart totals and payment method."
               >
-                <CartwithPaymentSection
-                  cart={checkoutData.cart}
-                />
+                <CartwithPaymentSection cart={checkoutData.cart} />
                 <div className="mt-6 border-t border-zinc-200 pt-6">
                   <StripeElementsWrapper
                     open={orderState === "InProgress"}
@@ -203,7 +212,7 @@ export default function CheckoutPage() {
               </CheckoutPanel>
             ) : (
               <ProfilePageState
-                title={checkoutData.cartMessage || "Cart not found"}
+                title={checkoutData.message || "Cart not found"}
                 message="Add products to your cart before checking out."
               />
             )}

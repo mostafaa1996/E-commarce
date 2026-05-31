@@ -12,10 +12,12 @@ export default function useCheckoutPage() {
   const checkoutQuery = useQuery({
     queryKey: ["checkout"],
     queryFn: async () => {
-      const { cart, message: cartMessage } = await getCartData();
+      const response = await getCartData();
+      console.log(response);
       return {
-        cart,
-        cartMessage,
+        cart: response.cart,
+        message: response.message,
+        blocked: response.blocked,
       };
     },
     initialData,

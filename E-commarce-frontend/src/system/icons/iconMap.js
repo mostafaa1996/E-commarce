@@ -49,6 +49,7 @@ import {
   Euro,
   Trash2,
   X,
+  UserX,
 } from "lucide-react";
 
 export const iconMap = {
@@ -103,4 +104,5 @@ export const iconMap = {
   euro: Euro,
   trash2: Trash2,
   x: X,
+  userX: UserX,
 };

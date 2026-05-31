@@ -137,4 +137,4 @@ const UserSchema = new mongoose.Schema({
   totalSpent: { type: Number, default: 0 },
 });
 
-module.exports = mongoose.model("User", UserSchema);
+module.exports = mongoose.models.User || mongoose.model("User", UserSchema);
