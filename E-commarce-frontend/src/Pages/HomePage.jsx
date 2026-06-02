@@ -1,4 +1,3 @@
-import Footer from "@/components/Landing/Footer";
 import BenefitsSection from "@/components/Landing/BenefitsSection";
 import CategoriesSection from "@/components/Landing/CategoriesSection";
 import DealsBannerSection from "@/components/Landing/DealsBannerSection";
@@ -32,24 +31,24 @@ export default function HomePage() {
   if (error || isError) {
     content = (
       <div className="min-h-screen bg-background">
-        <Header />
         <section className="container mx-auto px-4 py-16 md:py-24">
           <div className="rounded-2xl border border-destructive/20 bg-destructive/5 p-6 text-destructive">
             <p className="font-semibold">Failed to load data.</p>
             <p className="mt-2 text-sm">{error.message}</p>
           </div>
         </section>
-        <Footer />
       </div>
     );
   } else {
     content = (
       <div className="min-h-screen bg-background">
-        <HeroSection />
-        <CategoriesSection
-          categories={data?.categories}
-          icons={categoriesIcons}
-        />
+        <div id="hero"><HeroSection /></div>
+        <div className="py-10" id="categories">
+          <CategoriesSection
+            categories={data?.categories}
+            icons={categoriesIcons}
+          />
+        </div>
         <LandingProductsSection
           products={data?.bestSellers}
           title="Best Sellers"
@@ -78,7 +77,6 @@ export default function HomePage() {
         <BenefitsSection />
         <TestimonialsSection testimonials={data?.testimonials} />
         <NewsletterSection />
-        <Footer />
       </div>
     );
   }
