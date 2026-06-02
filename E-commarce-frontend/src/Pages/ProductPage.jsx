@@ -1,23 +1,23 @@
-import ImageGallery from "@/components/ProductDetailsModified/ImageGallery";
-import ProductInfo from "@/components/ProductDetailsModified/ProductInfo";
-import VariantSelector from "@/components/ProductDetailsModified/VariantSelector";
-import PurchaseCard from "@/components/ProductDetailsModified/PurchaseCard";
-import ShippingCard from "@/components/ProductDetailsModified/ShippingCard";
-import ReturnPolicyCard from "@/components/ProductDetailsModified/ReturnPolicyCard";
-import ProductTabs from "@/components/ProductDetailsModified/ProductTabs";
-import ReviewsSection from "@/components/ProductDetailsModified/ReviewsSection";
-import RelatedProducts from "@/components/ProductDetailsModified/RelatedProducts";
-import StickyMobileBuyBar from "@/components/ProductDetailsModified/StickyMobileBuyBar";
+import ImageGallery from "@/components/ProductDetails/ImageGallery";
+import ProductInfo from "@/components/ProductDetails/ProductInfo";
+import VariantSelector from "@/components/ProductDetails/VariantSelector";
+import PurchaseCard from "@/components/ProductDetails/PurchaseCard";
+import ShippingCard from "@/components/ProductDetails/ShippingCard";
+import ReturnPolicyCard from "@/components/ProductDetails/ReturnPolicyCard";
+import ProductTabs from "@/components/ProductDetails/ProductTabs";
+import ReviewsSection from "@/components/ProductDetails/ReviewsSection";
+import RelatedProducts from "@/components/ProductDetails/RelatedProducts";
+import StickyMobileBuyBar from "@/components/ProductDetails/StickyMobileBuyBar";
 import { useParams } from "react-router-dom";
 import { useLoaderData } from "react-router-dom";
 import { useLoggedInEmail } from "@/zustand_loggedIn/loggedInEmail";
 import { useCurrencyStore } from "@/zustand_preferences/currency";
 import useCurrency from "@/hooks/CurrencyChange";
-import  useProductWishlist  from "@/hooks/useProductWishlist";
-import  useProductCart  from "@/hooks/useProductCart";
-import  useProductDetails from "@/hooks/useProductDetails";
-import  useProductReviews from "@/hooks/useProductReviews";
-import {formatTime} from "@/utils/utils";
+import useProductWishlist from "@/hooks/useProductWishlist";
+import useProductCart from "@/hooks/useProductCart";
+import useProductDetails from "@/hooks/useProductDetails";
+import useProductReviews from "@/hooks/useProductReviews";
+import { formatTime } from "@/utils/utils";
 import Loading from "@/components/genericComponents/Loading";
 import { useState } from "react";
 
@@ -25,9 +25,9 @@ const ProductPage = () => {
   let content = null;
 
   const { id } = useParams();
-  const { preloadedProduct , cart } = useLoaderData();
+  const { preloadedProduct, cart } = useLoaderData();
   const { loggedInEmail } = useLoggedInEmail();
-  const { currency , locale , conversion_rate } = useCurrencyStore();
+  const { currency, locale, conversion_rate } = useCurrencyStore();
   const format = useCurrency(currency, locale);
   const rate = conversion_rate[currency] ?? 1;
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -39,32 +39,26 @@ const ProductPage = () => {
     selectedVariant,
     setSelectedVariant,
     galleryImages,
-    handleBuyNow
+    handleBuyNow,
   } = useProductDetails(id, preloadedProduct);
-  const {
-      initialCartQty,
-      addToCart,
-      removeFromCart,
-      isInCart
-    } = useProductCart(product, selectedVariant, cart);
-    const {
-    isInWishlist,
-    toggleWishlist,
-  } = useProductWishlist(product?._id , selectedVariant?._id);
-  const {
-    submitReview,
-    isSubmittingReview,
-    reviewError,
-  } = useProductReviews(product?._id, {
-    onSuccess: () => {
-      setDialogOpen(false);
+  const { initialCartQty, addToCart, removeFromCart, isInCart } =
+    useProductCart(product, selectedVariant, cart);
+  const { isInWishlist, toggleWishlist } = useProductWishlist(
+    product?._id,
+    selectedVariant?._id,
+  );
+  const { submitReview, isSubmittingReview, reviewError } = useProductReviews(
+    product?._id,
+    {
+      onSuccess: () => {
+        setDialogOpen(false);
+      },
+      onError: () => {
+        setDialogOpen(false);
+      },
     },
-    onError: () => {
-      setDialogOpen(false);
-    },
-  });
-  
-  
+  );
+
   if (productQuery.isLoading || productQuery.isFetching)
     content = <Loading message="Loading product" fullPage />;
   if (productQuery.isError) {
@@ -83,7 +77,7 @@ const ProductPage = () => {
 
   if (product) {
     content = (
-      <div className="flex flex-col items-center min-h-screen bg-background pb-24 md:pb-0"> 
+      <div className="flex flex-col items-center min-h-screen bg-background pb-24 md:pb-0">
         {/* HERO */}
         <section className="container py-20 animate-fade-in">
           <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
@@ -186,8 +180,10 @@ const ProductPage = () => {
         {/* Related */}
         <RelatedProducts
           items={relatedProducts}
-          loading={relatedProductsQuery.isFetching || relatedProductsQuery.isLoading}
-          error={relatedProductsQuery.isError}  
+          loading={
+            relatedProductsQuery.isFetching || relatedProductsQuery.isLoading
+          }
+          error={relatedProductsQuery.isError}
           formatCurrency={format}
           rate={rate}
         />

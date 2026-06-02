@@ -288,11 +288,4 @@ export const router = createBrowserRouter([
     path: "/logout",
     action: async () => await logoutAction(),
   },
-  {
-    path: "/shop/cc",
-    element: <ProductPage />,
-    loader: async ({ params }) => {
-      return null;
-    },
-  },
 ]);
