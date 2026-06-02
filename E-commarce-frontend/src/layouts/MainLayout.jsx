@@ -5,8 +5,10 @@ import Breadcrumbs from "@/components/genericComponents/Breadcrumbs";
 import { useMatches } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getCart } from "@/APIs/CartService";
+import {useScrollTo} from "@/hooks/useScrollTo";
 
 export default function MainLayout() {
+  useScrollTo();
   const matches = useMatches();
   const currentMatch = matches[matches.length - 1];
   const items =

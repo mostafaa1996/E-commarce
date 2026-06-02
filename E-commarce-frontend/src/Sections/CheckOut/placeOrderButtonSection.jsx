@@ -4,21 +4,15 @@ import useCheckoutStore from "@/zustand_checkout/checkoutStore";
 import { useMutation } from "@tanstack/react-query";
 import { placeOrder } from "@/APIs/checkoutService";
 
-export default function CheckoutPaymentSection({
-  cart,
-  shippingDetailsModified,
-  orderNotes,
-}) {
+export default function CheckoutPaymentSection({ orderNotes }) {
   const stripe = useStripe();
   const elements = useElements();
   const { PaymentMethodState, setOrderState, selectedCard } =
     useCheckoutStore();
 
   const OrderMutation = useMutation({
-    mutationFn: ({ cart, shippingDetails, orderNotes, selectedCard }) => {
+    mutationFn: ({ orderNotes, selectedCard }) => {
       return placeOrder({
-        cart,
-        shippingDetails,
         orderNotes,
         selectedCard,
       });
@@ -26,19 +20,17 @@ export default function CheckoutPaymentSection({
     onMutate: () => {
       setOrderState("Loading");
     },
-    onError: () => {
-      setOrderState("Error");
+    onError: (error) => {
+      if (error.data?.blocked) {
+        setOrderState("userBlocked");
+      } else {
+        setOrderState("Error");
+      }
     },
   });
 
   async function handlePlaceOrder() {
-    // console.log(shippingDetailsModified);
     const res = await OrderMutation.mutateAsync({
-      cart: cart.products.map((product) => ({
-        productId: product.productId,
-        quantity: product.quantity,
-      })),
-      shippingDetails: shippingDetailsModified,
       orderNotes,
       selectedCard,
     });

@@ -1,4 +1,4 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Search, Heart, ShoppingCart, User, Menu, X, Zap } from "lucide-react";
 import { useState } from "react";
 import { AdminButton } from "@/components/adminUI/AdminButton";
@@ -7,17 +7,30 @@ import { useNavigate } from "react-router-dom";
 import logout from "/logout.jpg";
 
 const links = [
-  { to: "/home", label: "Home" },
-  { to: "/home/categories", label: "Categories" },
-  { to: "/deals", label: "Deals" },
-  { to: "/new-arrivals", label: "New Arrivals" },
+  { to: "/home#hero", label: "Home" },
+  { to: "/home#categories", label: "Categories" },
+  { to: "/shop?onDeal=true", label: "Deals" },
+  { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },
 ];
+
+function isActiveLink(to, location) {
+  const url = new URL(to, window.location.origin);
+
+  const samePath = location.pathname === url.pathname;
+  const sameSearch = location.search === url.search;
+  const sameHash = location.hash === url.hash;
+
+  if (url.hash) return samePath && sameHash;
+  if (url.search) return samePath && sameSearch;
+
+  return samePath && !location.hash && !location.search;
+}
 
 export default function Header({ cartTotal = 0, loggedIn = false }) {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-
+  const location = useLocation();
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/80 backdrop-blur-lg">
       <div className="container mx-auto flex h-16 items-center gap-4 px-4">
@@ -35,22 +48,24 @@ export default function Header({ cartTotal = 0, loggedIn = false }) {
         </Link>
 
         <nav className="hidden lg:flex items-center gap-1 ml-4">
-          {links.map((l) => (
-            <NavLink
-              key={l.to}
-              to={l.to}
-              className={({ isActive }) =>
-                `px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                  isActive
-                    ? "bg-accent text-primary"
-                    : "text-muted-foreground hover:text-foreground hover:bg-accent"
-                }`
-              }
-              end={l.to === "/"}
-            >
-              {l.label}
-            </NavLink>
-          ))}
+          {links.map((l) => {
+            const active = isActiveLink(l.to, location);
+
+            return (
+              <Link
+                key={l.to}
+                to={l.to}
+                onClick={() => setOpen(false)}
+                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                  active
+                    ? "bg-primary/10 text-primary"
+                    : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                }`}
+              >
+                {l.label}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="hidden md:flex flex-1 max-w-md mx-4">
@@ -94,12 +109,14 @@ export default function Header({ cartTotal = 0, loggedIn = false }) {
           >
             <User className="h-5 w-5" />
           </AdminButton>
-          {!loggedIn && <AdminButton
-            onClick={() => navigate("/login")}
-            className="hidden md:inline-flex ml-2"
-          >
-            Login
-          </AdminButton>}
+          {!loggedIn && (
+            <AdminButton
+              onClick={() => navigate("/login")}
+              className="hidden md:inline-flex ml-2"
+            >
+              Login
+            </AdminButton>
+          )}
           {loggedIn && (
             <Link
               to="/logout"

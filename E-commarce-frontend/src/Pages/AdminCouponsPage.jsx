@@ -83,24 +83,31 @@ export default function AdminCouponsPage() {
       ),
     },
     {
-      key: "type",
-      header: "Type",
+      key: "disCountType",
+      header: "Discount Type",
       render: (item) => (
-        <span className="font-semibold text-primary">{item.type}</span>
+        <span className="font-semibold text-primary">{item.discountType}</span>
       ),
     },
     {
       key: "value",
       header: "Value",
       render: (item) => (
-        <span className="font-semibold text-primary">{item.value}</span>
+        <span className="font-semibold text-primary">{item.discountValue}</span>
       ),
     },
     {
-      key: "minOrder",
-      header: "Min Order",
+      key: "eligibilityType",
+      header: "Eligibility Type",
       render: (item) => (
-        <span className="font-semibold text-primary">{item.minOrder}</span>
+        <span className="font-semibold text-primary">{item.eligibilityType}</span>
+      ),
+    },
+    {
+      key: "eligibilityValue",
+      header: "Eligibility Value",
+      render: (item) => (
+        <span className="font-semibold text-primary">{item.eligibilityValue}</span>
       ),
     },
     {
@@ -114,7 +121,7 @@ export default function AdminCouponsPage() {
       key: "usage",
       header: "Usage",
       render: (item) => (
-        <span className="font-semibold text-primary">{item.usages}/{item.usageLimit}</span>
+        <span className="font-semibold text-primary">{item.usageCount}/{item.usageLimit}</span>
       ),
     },
     {

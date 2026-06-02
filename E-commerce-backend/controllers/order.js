@@ -5,10 +5,11 @@ const Product = require("../models/Product");
 const VAT_shipping = require("../models/VAT");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const getOrCreateCustomer = require("../utils/StripeCustomer");
+const Address = require("../models/Address");
+const Cart = require("../models/Cart");
 exports.createOrder = async (req, res, next) => {
   try {
     // console.log(req.body);
-    const orderItems = [];
     const userId = req.user.id;
     const user = await User.findById(userId);
     if (!user)
@@ -18,21 +19,28 @@ exports.createOrder = async (req, res, next) => {
     // ***************** populate the order details from the request body *****************
     const notes = req.body.orderNotes || "";
     const paymentMethod = req.body.selectedCard ? "card" : "cod";
+    /** Find the shipping details */
+    const addresses = await Address.find({ user: userId });
+    let reqAddress = null;
+    if(addresses && addresses.length > 0){
+      reqAddress = addresses.find((address) => address.isDefault === true);
+      if(reqAddress === undefined) reqAddress = addresses[0];
+    }
     //sanitize the shipping details
-    const shippingAddress = {
-      firstName: req.body.shippingDetails?.firstName || "",
-      lastName: req.body.shippingDetails?.lastName || "",
-      companyName: req.body.shippingDetails?.companyName || "",
-      country: req.body.shippingDetails?.country || "",
-      city: req.body.shippingDetails?.city || "",
-      state: req.body.shippingDetails?.state || "",
-      postalCode: req.body.shippingDetails?.postalCode || "",
-      street: req.body.shippingDetails?.street || "",
-      phone: req.body.shippingDetails?.phone || "",
-      email: req.body.shippingDetails?.email || "",
-      Apartment: req.body.shippingDetails?.Apartment || "",
+    shippingAddress = {
+      firstName: reqAddress.name.split(" ")[0] || "",
+      lastName: reqAddress.name.split(" ")[1] || "",
+      label: reqAddress.label || "Home",
+      country: reqAddress.country || "",
+      city: reqAddress.city || "",
+      state: reqAddress.state || "",
+      postalCode: reqAddress.zipCode || "",
+      street: reqAddress.street || "",
+      phone: reqAddress.phone || "",
+      email: reqAddress.email || "",
+      Apartment: reqAddress.street.split(",").slice(2).join(",") || "",
     };
-
+    /** end of the shipping details */
     const vatConfig = await VAT_shipping.findOne();
     if (!vatConfig) {
       return res.status(500).json({
@@ -40,53 +48,35 @@ exports.createOrder = async (req, res, next) => {
         nextAction: "Error",
       });
     }
-
-    //sanitize the order items
-    const cartItems = req.body.cart?.map((item) => ({
-      product: item.productId,
-      quantity: Number(item.quantity) || 0,
-    }));
-
-    if (!cartItems?.length) {
+    /** get the cart */
+    const cart = await Cart.findOne({ userId });
+    if (!cart) {
       return res
         .status(400)
-        .json({ message: "Cart is empty", nextAction: "Error" });
+        .json({ message: "Cart not found", nextAction: "Error" });
     }
-    for (let item of cartItems) {
-      const product = await Product.findById(item.product);
-      if (!product)
-        return res.status(404).json({
-          message: `Product not found: ${item.product}`,
-          nextAction: "Error",
-        });
-      const price = product.price;
-      const subtotal = price * item.quantity;
-      orderItems.push({
-        product: product._id,
-        quantity: item.quantity,
-        price,
-        subtotal,
-      });
-    }
-    const itemsPrice = orderItems.reduce((a, item) => a + item.subtotal, 0);
-    const totalItems = orderItems.reduce((a, item) => a + item.quantity, 0);
-    const shippingPrice = vatConfig.shipping * itemsPrice;
-    const taxPrice = vatConfig.VAT * itemsPrice;
-    const totalPrice = itemsPrice + shippingPrice + taxPrice;
+    const orderItems = cart.products.map((product) => ({
+      quantity: product.quantity,
+      subtotal: product.subtotal,
+      price: product.price,
+      product: product.productId,
+      variant: product.variantId,
+    }));
+
     const selectedCardId = req.body.selectedCard || "";
     // ***************** create the order *****************
     const order = await Order.create({
-      orderItems,
+      orderItems : orderItems || [],
       notes,
       shippingAddress,
       paymentMethod,
-      status: paymentMethod === "cod" ? "orderPlaced" : "pending_payment",
+      status: paymentMethod === "cod" ? "orderPlaced" : "pending",
       paymentStatus: paymentMethod === "cod" ? "not_required" : "pending",
-      itemsPrice,
-      shippingPrice,
-      taxPrice,
-      totalPrice,
-      totalItems,
+      itemsPrice : cart.itemsPrice || 0,
+      shippingPrice : cart.shippingCost || 0,
+      taxPrice : cart.TAX || 0,
+      totalPrice : cart.totalPrice || 0,
+      totalItems : cart.totalItems || 0,
       selectedCardId,
       userId,
       createdAt: new Date().toISOString(),
@@ -116,7 +106,7 @@ exports.createOrder = async (req, res, next) => {
     if (paymentMethod === "card") {
       const customerId = await getOrCreateCustomer(userId);
       const paymentIntent = await stripe.paymentIntents.create({
-        amount: Math.round(totalPrice * 100),
+        amount: Math.round(order.totalPrice * 100),
         currency: "usd",
         customer: customerId,
         payment_method: selectedCardId,

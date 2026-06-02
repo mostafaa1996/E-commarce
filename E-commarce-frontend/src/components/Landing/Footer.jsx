@@ -2,9 +2,44 @@ import { Link } from "react-router-dom";
 import { Zap, Facebook, Twitter, Instagram, Youtube } from "lucide-react";
 
 const cols = [
-  { title: "Shop", links: ["Laptops", "Smartphones", "Accessories", "Smart Watches", "Deals"] },
-  { title: "Support", links: ["Contact Us", "Shipping", "Returns", "FAQs", "Warranty"] },
-  { title: "Company", links: ["About", "Privacy Policy", "Terms"] },
+  {
+    title: "Shop",
+    links: [
+      { label: "Laptops", to: "/shop?category=Laptops" },
+      { label: "Smartphones", to: "/shop?category=Smartphones" },
+      { label: "Tablets", to: "/shop?category=Tablets" },
+      { label: "Smart Watches", to: "/shop?category=Smart%20Watches" },
+      {
+        label: "Computer Accessories",
+        to: "/shop?category=Computer%20Accessories",
+      },
+      {
+        label: "Gaming Accessories",
+        to: "/shop?category=Gaming%20Accessories",
+      },
+      { label: "Smart Home", to: "/shop?category=Smart%20Home" },
+      { label: "Monitors", to: "/shop?category=Monitors" },
+      { label: "Cameras", to: "/shop?category=Cameras" },
+    ],
+  },
+  {
+    title: "Support",
+    links: [
+      { label: "Contact Us", to: "/contact" },
+      { label: "Shipping", to: "/about#shipping" },
+      { label: "Returns", to: "/about#returns" },
+      { label: "FAQs", to: "/about#faqs" },
+      { label: "Warranty", to: "/about#warranty" },
+    ],
+  },
+  {
+    title: "Company",
+    links: [
+      { label: "About", to: "/about" },
+      { label: "Privacy Policy", to: "/about#privacy" },
+      { label: "Terms", to: "/about#terms" },
+    ],
+  },
 ];
 
 export default function Footer() {
@@ -36,8 +71,8 @@ export default function Footer() {
               <h4 className="font-semibold text-sm mb-4">{c.title}</h4>
               <ul className="space-y-2.5">
                 {c.links.map((l) => (
-                  <li key={l}>
-                    <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">{l}</a>
+                  <li key={l.label}>
+                    <Link to={l.to} className="text-sm text-muted-foreground hover:text-primary transition-colors">{l.label}</Link>
                   </li>
                 ))}
               </ul>

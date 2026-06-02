@@ -7,7 +7,7 @@ import useCheckoutStore from "@/zustand_checkout/checkoutStore";
 import OrderFeedBack from "@/components/genericComponents/OrderFeedBack";
 import { useNavigate } from "react-router-dom";
 import {OrderStatesUIData} from "@/system/Data/OrderStatesUIData";
-export default function CartwithPaymentSection({ cart, VAT_shipping }) {
+export default function CartwithPaymentSection({ cart }) {
   // console.log(cart);
   const { currency, locale, conversion_rate } = useCurrencyStore();
   const format = useCurrency(currency, locale);
@@ -22,10 +22,15 @@ export default function CartwithPaymentSection({ cart, VAT_shipping }) {
       <CartTotals
         Items={cart.items}
         TotalItems={cart.totalItems}
-        total={cart.totalPrice}
+        itemsPrice={cart.itemsPrice}
+        priceAfterPromo={cart.PriceAfterCoupon}
+        tax={cart.TAX}
+        totalPrice={cart.totalPrice}
+        promo={cart.promo?.discountInMoney}
+        promoCode={cart.promo?.code}
         className={"w-full"}
-        VAT={VAT_shipping.vat}
-        shipping={VAT_shipping.shippingCost}
+        VAT={cart.TAX}
+        shipping={cart.shippingCost}
         format={format}
         rate={rate}
       />

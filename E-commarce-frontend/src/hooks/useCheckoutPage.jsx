@@ -7,17 +7,17 @@ import { useLoaderData } from "react-router-dom";
 export default function useCheckoutPage() {
   const initialData = useLoaderData();
   const [orderNotes, setOrderNotes] = useState("");
-  const [shippingDetailsModified] = useState(null);
   const { orderState } = useCheckoutStore();
 
   const checkoutQuery = useQuery({
     queryKey: ["checkout"],
     queryFn: async () => {
-      const { cart, VAT_shipping, message: cartMessage } = await getCartData();
+      const response = await getCartData();
+      console.log(response);
       return {
-        cart,
-        VAT_shipping,
-        cartMessage,
+        cart: response.cart,
+        message: response.message,
+        blocked: response.blocked,
       };
     },
     initialData,
@@ -33,7 +33,6 @@ export default function useCheckoutPage() {
     checkoutError: checkoutQuery.error,
     orderState,
     orderNotes,
-    shippingDetailsModified,
     setNotes,
   };
 }

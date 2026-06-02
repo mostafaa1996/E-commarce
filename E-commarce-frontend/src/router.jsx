@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { queryClient } from "./queryClient";
 import { getShopProducts, getProductById } from "./APIs/shopProductsService";
 import { loginAction, SignupAction, logoutAction } from "./APIs/AuthService";
-import { getCart } from "@/APIs/CartService";
+import { getCart, getCartPage } from "@/APIs/CartService";
 import { getCartData } from "./APIs/checkoutService";
 import {
   getUserProfileData,
@@ -14,9 +14,8 @@ import {
   changePassword,
 } from "./APIs/UserProfileService";
 
-import ShopPage from "./pages/ShopPage";
-import ProductDetailsPage from "./pages/ProductDetailsPage";
-import CartPage from "./Pages/CartPageModified";
+import ShopPage from "./Pages/ShopPage";
+import CartPage from "./Pages/CartPage";
 import LoginPage from "./Pages/loginPage";
 import SignupPage from "./Pages/SignupPage";
 import CheckoutPage from "./Pages/checkoutPage";
@@ -47,6 +46,7 @@ import AdminSettingsPage from "./Pages/AdminSettingsPage";
 import ProductPage from "./Pages/ProductPage";
 import HomePage from "./Pages/HomePage";
 import ContactPage from "./Pages/ContactPage";
+import AboutPage from "./Pages/AboutPage";
 import { shortenText } from "./utils/utils";
 import { useLoggedInEmail } from "./zustand_loggedIn/loggedInEmail";
 
@@ -115,7 +115,7 @@ export const router = createBrowserRouter([
         loader: async () => {
           return queryClient.ensureQueryData({
             queryKey: ["cart"],
-            queryFn: getCart,
+            queryFn: getCartPage,
             staleTime: 1000 * 60 * 5,
           });
         },
@@ -128,15 +128,11 @@ export const router = createBrowserRouter([
           return queryClient.ensureQueryData({
             queryKey: ["checkout"],
             queryFn: async () => {
-              const {
-                cart,
-                VAT_shipping,
-                message: cartMessage,
-              } = await getCartData();
+              const { cart, message, blocked } = await getCartData();
               return {
                 cart,
-                VAT_shipping,
-                cartMessage,
+                message,
+                blocked,
               };
             },
           });
@@ -216,11 +212,15 @@ export const router = createBrowserRouter([
         },
         action: async ({ request }) => await UpdatePersonalInfo(request),
       },
+      {
+        path: "/home",
+        element: <HomePage />,
+      },
+      {
+        path: "/about",
+        element: <AboutPage />,
+      },
     ],
-  },
-  {
-    path: "/home",
-    element: <HomePage />,
   },
   {
     path: "/contact",

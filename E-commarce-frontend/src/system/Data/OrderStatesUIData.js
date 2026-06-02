@@ -60,4 +60,13 @@ export const OrderStatesUIData = [
     message:
       "Something went wrong while processing your order. Please try again or contact support if the issue persists.",
   },
+
+  //user was blocked
+  {
+    state: "userBlocked",
+    header: "Account Suspended",
+    IconName: "userX",
+    message:
+      "Your account has been suspended. Please contact support for further assistance.",
+  },
 ];

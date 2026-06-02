@@ -25,11 +25,11 @@ export default function WishListSection({ WishList }) {
           WishList.length > 0 &&
           WishList.map((product) => (
             <ProductCard
-              key={product._id}
-              image={product.images[0].url}
-              title={product.title}
-              price={format(product.price)}
-              NavigationLink={`/shop/products/${product._id}`}
+              key={product?.productId}
+              image={product?.image}
+              title={product?.title}
+              price={format(product?.price)}
+              NavigationLink={`/shop/products/${product?.productId}?variantId=${product?.variantId}`}
               variant={"ShowNameAndPrice"}
             />
           ))}

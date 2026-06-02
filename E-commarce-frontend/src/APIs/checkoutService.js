@@ -21,8 +21,6 @@ export async function getCartData() {
 }
 
 export async function placeOrder({
-  cart,
-  shippingDetails,
   orderNotes,
   selectedCard,
 }) {
@@ -31,12 +29,14 @@ export async function placeOrder({
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ cart, shippingDetails, orderNotes, selectedCard }),
+    body: JSON.stringify({ orderNotes, selectedCard }),
   });
   const data = await res.json();
   
   if (!res.ok) {
-    console.error(data.message || "Request failed");
+    const error = new Error(data.message || "Request failed");
+    error.data = data;
+    throw error;
   }
 
   console.log(data.nextAction);
