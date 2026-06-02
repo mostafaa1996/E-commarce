@@ -1,27 +1,4 @@
-import { Clock, Mail, MapPin, Phone } from "lucide-react";
-
-const infoCards = [
-  {
-    icon: Mail,
-    title: "Email Support",
-    value: "support@shoplite.com",
-    href: "mailto:support@shoplite.com",
-  },
-  {
-    icon: Phone,
-    title: "Phone",
-    value: "+20 128 220 2531",
-    href: "tel:+201282202531",
-  },
-  { icon: MapPin, title: "Location", value: "Alexandria, Egypt" },
-  {
-    icon: Clock,
-    title: "Working Hours",
-    value: "Sat - Thu, 10:00 AM - 8:00 PM",
-  },
-];
-
-export default function ContactInfoCardsSection() {
+export default function ContactInfoCardsSection({ infoCards }) {
   return (
     <section className="relative z-10 container mx-auto -mt-12 px-4">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

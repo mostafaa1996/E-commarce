@@ -1,4 +1,4 @@
-export default function ContactHeroSection() {
+export default function ContactHeroSection({ storeInfo }) {
   return (
     <section className="relative overflow-hidden border-b border-border">
       <div className="absolute inset-0 bg-gradient-to-br from-orange-50 via-background to-amber-50/40" />
@@ -10,7 +10,7 @@ export default function ContactHeroSection() {
         <h1 className="mt-5 text-4xl font-bold tracking-tight md:text-6xl">
           Contact{" "}
           <span className="bg-gradient-to-r from-primary to-orange-500 bg-clip-text text-transparent">
-            ShopLite
+            {storeInfo.name}
           </span>
         </h1>
         <p className="mt-5 text-lg text-muted-foreground">

@@ -5,6 +5,7 @@ import  Textarea  from "@/components/genericComponents/Textarea";
 import ContactField from "./ContactField";
 
 export default function ContactFormSection({
+  storeInfo,
   submitted,
   errors,
   form,
@@ -121,21 +122,21 @@ export default function ContactFormSection({
               <div className="mx-auto flex h-16 w-16 animate-pulse items-center justify-center rounded-full bg-gradient-to-br from-primary to-orange-400 text-primary-foreground shadow-xl">
                 <MapPin className="h-7 w-7" />
               </div>
-              <p className="mt-4 font-bold">ShopLite HQ</p>
-              <p className="text-sm text-muted-foreground">Alexandria, Egypt</p>
+              <p className="mt-4 font-bold">{storeInfo.address}</p>
+              <p className="text-sm text-muted-foreground">{storeInfo.city}, {storeInfo.country}</p>
             </div>
           </div>
           <div className="border-t border-border p-5">
             <p className="text-sm font-semibold">Visit our office</p>
             <p className="mt-1 text-xs text-muted-foreground">
-              Open Sat - Thu, 10:00 AM - 8:00 PM. Closed on Fridays.
+              Open {storeInfo.workingDays} - {storeInfo.workingHours}. Closed on {storeInfo.holidays}.
             </p>
           </div>
         </div>
 
         <div className="rounded-3xl bg-gradient-to-br from-primary to-orange-500 p-6 text-primary-foreground">
           <p className="text-sm font-semibold opacity-90">Need urgent help?</p>
-          <p className="mt-1 text-2xl font-bold">+20 128 220 2531</p>
+          <p className="mt-1 text-2xl font-bold">{storeInfo.phone}</p>
           <p className="mt-2 text-xs opacity-90">
             Call our support line during working hours.
           </p>
