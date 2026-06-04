@@ -9,6 +9,8 @@ export default function ContactFormSection({
   submitted,
   errors,
   form,
+  messageTypeOptions,
+  isSubmitting,
   setField,
   onSubmit,
 }) {
@@ -71,6 +73,27 @@ export default function ContactFormSection({
           </ContactField>
 
           <div className="sm:col-span-2">
+            <ContactField
+              label="Message Type"
+              required
+              error={errors.messageType}
+            >
+              <select
+                value={form.messageType}
+                onChange={setField("messageType")}
+                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+              >
+                <option value="">Select message type</option>
+                {messageTypeOptions?.map((option) => (
+                  <option key={option || "empty"} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </ContactField>
+          </div>
+
+          <div className="sm:col-span-2">
             <ContactField label="Subject" required error={errors.subject}>
               <InputField
                 value={form.subject}
@@ -99,8 +122,13 @@ export default function ContactFormSection({
           </div>
 
           <div className="sm:col-span-2">
-            <AdminButton type="submit" size="lg" className="rounded-full px-8">
-              Send Message
+            <AdminButton
+              type="submit"
+              size="lg"
+              className="rounded-full px-8"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Sending..." : "Send Message"}
               <Send className="ml-2 h-4 w-4" />
             </AdminButton>
           </div>

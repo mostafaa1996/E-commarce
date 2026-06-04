@@ -18,7 +18,7 @@ export default function ContactField({
       <div
         className={
           error
-            ? "[&_input]:border-destructive [&_textarea]:border-destructive"
+            ? "[&_input]:border-destructive [&_select]:border-destructive [&_textarea]:border-destructive"
             : ""
         }
       >

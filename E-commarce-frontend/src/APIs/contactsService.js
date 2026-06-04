@@ -14,3 +14,22 @@ export const getStoreInfo = async () => {
     console.log(data);
     return data;
 };
+
+export const createSupportTicket = async (form) => {
+    const res = await fetch(`${URL}/contacts/`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+        const error = new Error(data.message || "Request failed");
+        error.data = data;
+        throw error;
+    }
+
+    return data;
+}

@@ -15,6 +15,8 @@ export default function ContactPage() {
     submitted,
     errors,
     infoCards,
+    messageTypeOptions,
+    isSubmitting,
     setOpenFaq,
     onSubmit,
     setField,
@@ -37,6 +39,8 @@ export default function ContactPage() {
         submitted={submitted}
         errors={errors}
         form={form}
+        messageTypeOptions={messageTypeOptions}
+        isSubmitting={isSubmitting}
         setField={setField}
         onSubmit={onSubmit}
       />
