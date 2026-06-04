@@ -1,6 +1,6 @@
 import { redirect } from "react-router-dom";
 const URL = import.meta.env.VITE_API_URL;
-import { setAccessToken } from "./AuthFetch";
+import { authFetch, setAccessToken } from "./AuthFetch";
 import { useLoggedInEmail } from "@/zustand_loggedIn/loggedInEmail";
 export async function loginAction({ request }) {
   const formData = await request.formData();
@@ -68,20 +68,21 @@ export async function SignupAction({ request }) {
 
 export async function logoutAction() {
   try {
-    const res = await fetch(`${URL}/auth/logout`, {
+    const res = await authFetch(`${URL}/auth/logout`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({}),
     });
-
+    const data = await res.json();
     if (!res.ok) {
-      return "something went wrong not able to logout, try again";
+      const error = new Error(data.message || "Request failed");
+      error.data = data;
+      throw error;
     }
     // redirect after success
     useLoggedInEmail.setState({ loggedInEmail: null });
-    return redirect("/login");
+    setAccessToken(null);
+    return data;
   } catch (error) {
     console.error(error);
-    return "Something went wrong, try again";
+    throw error;
   }
 }

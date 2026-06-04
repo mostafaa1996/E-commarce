@@ -5,7 +5,7 @@ const Token = require("../models/token");
 const { generateAccessToken, generateRefreshToken } = require("../utils/token");
 const User = require("../models/User");
 
-exports.postSignup = async (req, res , next) => {
+exports.postSignup = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
     console.log(name, email, password);
@@ -73,13 +73,28 @@ exports.postLogin = async (req, res) => {
     });
 };
 
-exports.logout = (req, res) => {
-  const refreshToken = req.cookies.refreshToken;
-  if (!refreshToken) return res.sendStatus(401);
+exports.logout = async (req, res, next) => {
+  try {
+    const userId = req.user?.id;
 
-  const token = Token.findOneAndRemove({ token: refreshToken });
-  if (!token) return res.sendStatus(401);
-  res.sendStatus(204);
+    console.log(userId);
+
+    if (!userId) {
+      return res.status(401).json({ message: "User not found or not signed in" });
+    }
+
+    await Token.deleteMany({ userId });
+
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
+
+    res.status(200).json({ message: "Logout successful" });
+  } catch (err) {
+    next(err);
+  }
 };
 
 exports.refresh = async (req, res) => {
@@ -90,11 +105,10 @@ exports.refresh = async (req, res) => {
   if (!token) return res.sendStatus(401);
   const Info = await jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
   if (!Info) return res.sendStatus(401);
-  
-  const user  = await User.findById(Info.id);
+
+  const user = await User.findById(Info.id);
 
   const accessToken = generateAccessToken(user);
 
   res.status(200).json({ accessToken });
-  
 };
