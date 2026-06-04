@@ -19,6 +19,7 @@ const OrderSchema = new mongoose.Schema(
         },
       },
     ],
+    orderNumber: { type: String, required: true },
     Notes: { type: String },
     shippingAddress: {
       type: Object,

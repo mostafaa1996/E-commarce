@@ -2,8 +2,79 @@ const Product = require("../models/Product");
 const categories = require("../getBaseProductsByRapidAPI/categories");
 const Review = require("../models/Review");
 const User = require("../models/User");
+const {createNotifications} = require("../utils/createNotifications");
 
 const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const createReviewNotification = async (userName, rating, isUpdated) => {
+  try {
+    if (!userName) {
+      if (rating < 3) {
+        await createNotifications({
+          type: "NEGATIVE_REVIEW",
+          title: "Negative review",
+          message:
+            "Non-registered user review has been submitted with negative rating and is waiting for approval",
+          priority: "URGENT",
+          isRead: false,
+          entityType: "REVIEW",
+          entityId: newReview._id,
+          link: `/profile/admin/reviews/${newReview._id}`,
+        });
+      }
+      await createNotifications({
+        type: "REVIEW_REQUIRES_APPROVAL",
+        title: "Review requires approval",
+        message:
+          "Non-registered user review has been submitted and is waiting for approval",
+        priority: "HIGH",
+        isRead: false,
+        entityType: "REVIEW",
+        entityId: newReview._id,
+        link: `/profile/admin/reviews/${newReview._id}`,
+      });
+      return;
+    }
+    if (rating < 3) {
+      await createNotifications({
+        type: "NEGATIVE_REVIEW",
+        title: "Negative review",
+        message: `customer review has been submitted with negative rating from ${userName}`,
+        priority: "URGENT",
+        isRead: false,
+        entityType: "REVIEW",
+        entityId: newReview._id,
+        link: `/profile/admin/reviews/${newReview._id}`,
+      });
+    } else {
+      if (isUpdated) {
+        await createNotifications({
+          type: "NEW_REVIEW",
+          title: "New review",
+          message: `customer review has been updated from ${userName}`,
+          priority: "NORMAL",
+          isRead: false,
+          entityType: "REVIEW",
+          entityId: newReview._id,
+          link: `/profile/admin/reviews/${newReview._id}`,
+        });
+      }
+      await createNotifications({
+        type: "NEW_REVIEW",
+        title: "New review",
+        message: `customer review has been submitted from ${userName}`,
+        priority: "NORMAL",
+        isRead: false,
+        entityType: "REVIEW",
+        entityId: newReview._id,
+        link: `/profile/admin/reviews/${newReview._id}`,
+      });
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 const isEnabled = (value) =>
   value === true ||
   value === "true" ||
@@ -43,7 +114,7 @@ exports.getProducts = async (req, res, next) => {
   let sortOptions = {};
 
   if (category && category !== "null" && category !== "") {
-    api_params.sourceCategoryName  = { $regex: category, $options: "i" };
+    api_params.sourceCategoryName = { $regex: category, $options: "i" };
   }
   if (brands && Array.isArray(brands) && brands.length > 0) {
     api_params.brand = { $in: brands.map((brand) => new RegExp(brand, "i")) };
@@ -122,10 +193,12 @@ exports.getProducts = async (req, res, next) => {
     if (sort === "rating") sortOptions["reviewSummary.averageRating"] = -1;
     if (sort === "Alphabetical") sortOptions.title = 1;
     if (sort === "ReverseAlphabetical") sortOptions.title = -1;
-  } if (isEnabled(bestSeller)) {
+  }
+  if (isEnabled(bestSeller)) {
     sortOptions.soldCount = -1;
     sortOptions.createdAt = -1;
-  } if (isEnabled(topRated)) {
+  }
+  if (isEnabled(topRated)) {
     sortOptions["reviewSummary.reviewsCount"] = -1;
     sortOptions["reviewSummary.averageRating"] = -1;
     sortOptions.createdAt = -1;
@@ -142,7 +215,9 @@ exports.getProducts = async (req, res, next) => {
     const products = await Product.find({
       ...productFilter,
     })
-      .select("_id title price mainImage images reviewSummary sourceCategoryName")
+      .select(
+        "_id title price mainImage images reviewSummary sourceCategoryName",
+      )
       .lean()
       .sort(sortOptions)
       .skip((pageNumber - 1) * limitNumber)
@@ -159,13 +234,13 @@ exports.getProducts = async (req, res, next) => {
         sourceCategoryName: { $regex: req.query.category || "", $options: "i" },
       }).distinct("price");
       res.status(200).json({
-        products : products.map((product) => {
+        products: products.map((product) => {
           return {
             ...product,
             image: product?.images[0]?.url || product?.mainImage?.url,
             rating: product.reviewSummary?.averageRating || 0,
-            category: product.sourceCategoryName
-          }
+            category: product.sourceCategoryName,
+          };
         }),
         pagination: {
           totalItems,
@@ -179,13 +254,13 @@ exports.getProducts = async (req, res, next) => {
       });
     } else {
       res.status(200).json({
-        products : products.map((product) => {
+        products: products.map((product) => {
           return {
             ...product,
             image: product?.images[0]?.url || product?.mainImage?.url,
             rating: product.reviewSummary?.averageRating || 0,
-            category: product.sourceCategoryName
-          }
+            category: product.sourceCategoryName,
+          };
         }),
         pagination: {
           totalItems,
@@ -261,6 +336,7 @@ exports.postReview = async (req, res, next) => {
         return res
           .status(500)
           .json({ message: "Failed to add review to product" });
+      await createReviewNotification(undefined, newReview.rating, false);
       return res
         .status(200)
         .json({ message: "Review created successfully", ok: true });
@@ -286,6 +362,7 @@ exports.postReview = async (req, res, next) => {
       );
       if (!updatedReview)
         return res.status(500).json({ message: "Failed to update review" });
+      await createReviewNotification(user.name, newReview.rating, true);
       return res
         .status(200)
         .json({ message: "Review updated successfully", ok: true });
@@ -315,6 +392,7 @@ exports.postReview = async (req, res, next) => {
     const updatedUser = await user.save();
     if (!updatedUser)
       return res.status(500).json({ message: "Failed to add review to user" });
+    await createReviewNotification(user.name, newReview.rating, false);
     res.status(200).json({ message: "Review added successfully", ok: true });
   } catch (err) {
     next(err);

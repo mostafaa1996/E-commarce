@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const Token = require("../models/token");
 const { generateAccessToken, generateRefreshToken } = require("../utils/token");
 const User = require("../models/User");
+const {createNotifications} = require("../utils/createNotifications");
 
 exports.postSignup = async (req, res, next) => {
   try {
@@ -24,6 +25,20 @@ exports.postSignup = async (req, res, next) => {
     });
 
     await user.save();
+    try {
+      await createNotifications({
+        type: "NEW_CUSTOMER_SIGNUP",
+        title: "New customer registered",
+        message: "New customer has been registered",
+        priority: "LOW",
+        isRead: false,
+        entityType: "USER",
+        entityId: user._id,
+        link: `/profile/admin/users/${user._id}`,
+      });
+    } catch (err) {
+      console.log(err);
+    }
     res.status(201).send("User created");
   } catch (err) {
     console.log("error");
@@ -80,7 +95,9 @@ exports.logout = async (req, res, next) => {
     console.log(userId);
 
     if (!userId) {
-      return res.status(401).json({ message: "User not found or not signed in" });
+      return res
+        .status(401)
+        .json({ message: "User not found or not signed in" });
     }
 
     await Token.deleteMany({ userId });
