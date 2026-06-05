@@ -50,10 +50,10 @@ exports.postLogin = async (req, res) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
-  if (!user) return res.send("Email not found");
+  if (!user) return res.status(401).json("Email not found");
 
   const isValid = await bcrypt.compare(password, user.password);
-  if (!isValid) return res.send("Wrong password");
+  if (!isValid) return res.status(401).json("Wrong password");
 
   const accessToken = generateAccessToken(user);
   const refreshToken = generateRefreshToken(user);
@@ -84,7 +84,7 @@ exports.postLogin = async (req, res) => {
     })
     .json({
       accessToken,
-      user: { id: user._id, email: user.email, role: user.role },
+      user: { id: user._id, email: user.email, role: user.role , status: user.status},
     });
 };
 

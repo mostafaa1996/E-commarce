@@ -4,6 +4,11 @@ let accessToken = null;
 export function setAccessToken(token) {
   accessToken = token;
 }
+
+export function getAccessToken() {
+  return accessToken;
+}
+
 export async function authFetch(url, options = {}) {
   let res = await fetch(url, {
     ...options,
