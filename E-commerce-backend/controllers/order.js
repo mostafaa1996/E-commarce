@@ -7,6 +7,9 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const getOrCreateCustomer = require("../utils/StripeCustomer");
 const Address = require("../models/Address");
 const Cart = require("../models/Cart");
+const formatOrderId = require("../utils/formatOrderNumber");
+const {createNotifications} = require("../utils/createNotifications");
+const { link } = require("../routes/shop");
 exports.createOrder = async (req, res, next) => {
   try {
     // console.log(req.body);
@@ -22,9 +25,9 @@ exports.createOrder = async (req, res, next) => {
     /** Find the shipping details */
     const addresses = await Address.find({ user: userId });
     let reqAddress = null;
-    if(addresses && addresses.length > 0){
+    if (addresses && addresses.length > 0) {
       reqAddress = addresses.find((address) => address.isDefault === true);
-      if(reqAddress === undefined) reqAddress = addresses[0];
+      if (reqAddress === undefined) reqAddress = addresses[0];
     }
     //sanitize the shipping details
     shippingAddress = {
@@ -66,17 +69,17 @@ exports.createOrder = async (req, res, next) => {
     const selectedCardId = req.body.selectedCard || "";
     // ***************** create the order *****************
     const order = await Order.create({
-      orderItems : orderItems || [],
+      orderItems: orderItems || [],
       notes,
       shippingAddress,
       paymentMethod,
       status: paymentMethod === "cod" ? "orderPlaced" : "pending",
       paymentStatus: paymentMethod === "cod" ? "not_required" : "pending",
-      itemsPrice : cart.itemsPrice || 0,
-      shippingPrice : cart.shippingCost || 0,
-      taxPrice : cart.TAX || 0,
-      totalPrice : cart.totalPrice || 0,
-      totalItems : cart.totalItems || 0,
+      itemsPrice: cart.itemsPrice || 0,
+      shippingPrice: cart.shippingCost || 0,
+      taxPrice: cart.TAX || 0,
+      totalPrice: cart.totalPrice || 0,
+      totalItems: cart.totalItems || 0,
       selectedCardId,
       userId,
       createdAt: new Date().toISOString(),
@@ -88,6 +91,14 @@ exports.createOrder = async (req, res, next) => {
         .status(400)
         .json({ message: "Order not created", nextAction: "Error" });
 
+    order.orderNumber = formatOrderId(order);
+    const updatedOrder = await order.save();
+    if (!updatedOrder)
+      return res.status(500).json({
+        message: "Failed to update order with order number",
+        nextAction: "Error",
+      });
+
     user.orders.push(order._id);
     const updatedUser = await user.save();
     if (!updatedUser)
@@ -97,6 +108,21 @@ exports.createOrder = async (req, res, next) => {
       });
 
     if (paymentMethod === "cod") {
+      try {
+        await createNotifications({
+          type: "NEW_ORDER",
+          title: "New Order",
+          message:
+            `A new order ${order.orderNumber} has been placed from ${user.name} and payment method is cash on delivery - ${order.totalPrice}`,
+          priority: "NORMAL",
+          isRead: false,
+          entityType: "ORDER",
+          entityId: order._id,
+          link: `/profile/admin/orders/${order._id}`,
+        });
+      } catch (err) {
+        console.log(err);
+      }
       return res.status(201).json({
         orderId: order._id,
         nextAction: "orderPlaced",
@@ -119,11 +145,27 @@ exports.createOrder = async (req, res, next) => {
         return_url: `${process.env.CLIENT_URL}/payment/complete/${order._id}`,
       });
 
-      if (!paymentIntent)
+      if (!paymentIntent) {
+        try {
+          await createNotifications({
+            type: "PAYMENT_FAILED",
+            title: "New Order with payment failed",
+            message:
+              `A new order has been placed and payment failed by card payment method - ${order.totalPrice}`,
+            priority: "URGENT",
+            isRead: false,
+            entityType: "ORDER",
+            entityId: order._id,
+            link: `/profile/admin/orders/${order._id}`,
+          });
+        } catch (err) {
+          console.log(err);
+        }
         return res.status(500).json({
           message: "Failed to create payment intent",
           nextAction: "Error",
         });
+      }
 
       order.paymentIntentId = paymentIntent.id;
       const updatedOrder = await order.save();
@@ -139,6 +181,21 @@ exports.createOrder = async (req, res, next) => {
         });
       }
       if (paymentIntent.status === "succeeded") {
+        try {
+          await createNotifications({
+            type: "NEW_ORDER",
+            title: "New Order with payment succeeded",
+            message:
+              `A new order ${order.orderNumber} has been placed from ${user.name} and payment succeeded by card payment method - ${order.totalPrice}`,
+            priority: "NORMAL",
+            isRead: false,
+            entityType: "ORDER",
+            entityId: order._id,
+            link: `/profile/admin/orders/${order._id}`,
+          });
+        } catch (err) {
+          console.log(err);
+        }
         return res.status(201).json({
           orderId: order._id,
           nextAction: "paid",

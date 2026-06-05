@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Order = require("../models/Order");
 const createActivityLog = require("../utils/CreateActivityLogs");
+const formatOrderId = require("../utils/formatOrderNumber");
 
 function escapeRegex(value = "") {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -14,16 +15,6 @@ function normalizePositiveNumber(value, fallback) {
   }
 
   return Math.floor(parsed);
-}
-
-function formatOrderId(order) {
-  const date = new Date(order.createdAt || order.date || Date.now())
-    .toISOString()
-    .slice(0, 10)
-    .replace(/-/g, "");
-  const suffix = String(order._id).slice(-6).toUpperCase();
-
-  return `#ORD-${date}-${suffix}`;
 }
 
 function formatDate(date) {

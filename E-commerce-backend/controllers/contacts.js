@@ -1,5 +1,6 @@
 const Store = require("../models/storeInfo");
 const ContactMessage = require("../models/contactMessage");
+const {createNotifications} = require("../utils/createNotifications");
 
 const issuesPriority = [
   { type: "ORDER_ISSUE", priority: "HIGH" },
@@ -58,8 +59,23 @@ exports.createSupportTicket = async (req, res, next) => {
       subject,
       message,
       priority,
-      status : "NEW",
+      status: "NEW",
     });
+    
+    try {
+      await createNotifications({
+        type: "NEW_CONTACT_MESSAGE",
+        title: "New contact message",
+        message: `New contact message has been submitted from email: ${email}`,
+        priority: "HIGH",
+        isRead: false,
+        entityType: "CONTACT_MESSAGE",
+        entityId: contactMessage._id,
+        link: `/profile/admin/support-messages/${contactMessage._id}`,
+      });
+    } catch (err) {
+      console.log(err);
+    }
 
     res.status(201).json({
       success: true,
