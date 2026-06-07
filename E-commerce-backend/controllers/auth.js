@@ -127,5 +127,8 @@ exports.refresh = async (req, res) => {
 
   const accessToken = generateAccessToken(user);
 
-  res.status(200).json({ accessToken });
+  res.status(200).json({
+    accessToken,
+    user: { id: user._id, email: user.email, role: user.role , status: user.status},
+  });
 };

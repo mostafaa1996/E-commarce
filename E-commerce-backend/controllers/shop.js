@@ -39,7 +39,7 @@ const createReviewNotification = async (userName, rating, isUpdated) => {
       await createNotifications({
         type: "NEGATIVE_REVIEW",
         title: "Negative review",
-        message: `customer review has been submitted with negative rating from ${userName}`,
+        message: `customer review has been submitted with negative rating from ${userName} and is waiting for approval`,
         priority: "URGENT",
         isRead: false,
         entityType: "REVIEW",
@@ -51,7 +51,7 @@ const createReviewNotification = async (userName, rating, isUpdated) => {
         await createNotifications({
           type: "NEW_REVIEW",
           title: "New review",
-          message: `customer review has been updated from ${userName}`,
+          message: `customer review has been updated from ${userName} and is waiting for approval`,
           priority: "NORMAL",
           isRead: false,
           entityType: "REVIEW",
@@ -62,7 +62,7 @@ const createReviewNotification = async (userName, rating, isUpdated) => {
       await createNotifications({
         type: "NEW_REVIEW",
         title: "New review",
-        message: `customer review has been submitted from ${userName}`,
+        message: `customer review has been submitted from ${userName} and is waiting for approval`,
         priority: "NORMAL",
         isRead: false,
         entityType: "REVIEW",
@@ -305,12 +305,13 @@ exports.getProduct = async (req, res, next) => {
 
 exports.postReview = async (req, res, next) => {
   try {
-    const userId = req.user.id;
-    console.log("user>>>>>>>", userId);
+    const userId = req.user?.id;
+    const productId = req.params?.id;
+    const review = req.body;
+    if(!productId) return res.status(400).json({ message: "Product id is required" });
     const user = await User.findById(userId);
     if (!user) {
       //anonymous user
-      const review = req.body;
       if (!review.rating || !review.comment)
         return res.status(400).json({ message: "Missing required fields" });
       const newReview = await Review.create({
@@ -320,8 +321,8 @@ exports.postReview = async (req, res, next) => {
         updatedAt: new Date(),
         date: new Date(Date.now()),
         verified: false,
-        isApproved: true,
-        productId: req.params.id,
+        isApproved: false,
+        productId,
         userId: null,
         username: review.username,
       });
@@ -339,10 +340,10 @@ exports.postReview = async (req, res, next) => {
       await createReviewNotification(undefined, newReview.rating, false);
       return res
         .status(200)
-        .json({ message: "Review created successfully", ok: true });
+        .json({ message: "Review created successfully", status: "pending" });
     }
-    const productId = req.params.id;
-    const review = req.body;
+    
+    if(user.status === "blocked") return res.status(403).json({ message: "Your account has been blocked by the admin." });
     if (!review.rating || !review.comment)
       return res.status(400).json({ message: "Missing required fields" });
     const existedReview = await Review.findOne({
@@ -356,7 +357,7 @@ exports.postReview = async (req, res, next) => {
           rating: review.rating,
           comment: review.comment,
           verified: true,
-          isApproved: true,
+          isApproved: false,
           date: new Date(Date.now()),
         },
       );
@@ -365,7 +366,7 @@ exports.postReview = async (req, res, next) => {
       await createReviewNotification(user.name, newReview.rating, true);
       return res
         .status(200)
-        .json({ message: "Review updated successfully", ok: true });
+        .json({ message: "Review updated successfully", status: "pending" });
     }
     const newReview = await Review.create({
       userId: userId,
@@ -376,7 +377,7 @@ exports.postReview = async (req, res, next) => {
       updatedAt: new Date(),
       date: new Date(Date.now()),
       verified: true,
-      isApproved: true,
+      isApproved: false,
     });
     if (!newReview)
       return res.status(500).json({ message: "Failed to create review" });
@@ -393,7 +394,7 @@ exports.postReview = async (req, res, next) => {
     if (!updatedUser)
       return res.status(500).json({ message: "Failed to add review to user" });
     await createReviewNotification(user.name, newReview.rating, false);
-    res.status(200).json({ message: "Review added successfully", ok: true });
+    res.status(200).json({ message: "Review added successfully", status: "pending" });
   } catch (err) {
     next(err);
   }
