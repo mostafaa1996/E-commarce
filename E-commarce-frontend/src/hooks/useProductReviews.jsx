@@ -26,7 +26,7 @@ export default function useProductReviews(productId = null , options = {}) {
       queryClient.invalidateQueries({ queryKey: ["product", productId] });
       toast({
         title: "Review submitted",
-        description: "Thanks for sharing your feedback.",
+        description: "Thanks for sharing your feedback. it will be reviewed soon.",
       });
       options.onSuccess?.();
     },

@@ -289,7 +289,7 @@ exports.getProduct = async (req, res, next) => {
       return res
         .status(404)
         .json({ message: "Product not found", product: {} });
-    const reviews = await Review.find({ product: req.params.id });
+    const reviews = await Review.find({ product: req.params.id , status: "approved" });
     if (!reviews)
       return res
         .status(404)
@@ -321,7 +321,7 @@ exports.postReview = async (req, res, next) => {
         updatedAt: new Date(),
         date: new Date(Date.now()),
         verified: false,
-        isApproved: false,
+        status: "pending",
         productId,
         userId: null,
         username: review.username,
@@ -357,7 +357,7 @@ exports.postReview = async (req, res, next) => {
           rating: review.rating,
           comment: review.comment,
           verified: true,
-          isApproved: false,
+          status: "pending",
           date: new Date(Date.now()),
         },
       );
@@ -377,7 +377,8 @@ exports.postReview = async (req, res, next) => {
       updatedAt: new Date(),
       date: new Date(Date.now()),
       verified: true,
-      isApproved: false,
+      status: "pending",
+      username: user.name,
     });
     if (!newReview)
       return res.status(500).json({ message: "Failed to create review" });
