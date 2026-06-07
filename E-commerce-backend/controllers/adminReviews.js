@@ -15,7 +15,7 @@ async function recalculateProductReviewSummary(productId) {
     {
       $match: {
         product: new mongoose.Types.ObjectId(productId),
-        isApproved: true,
+        status: "approved",
       },
     },
     {
@@ -403,6 +403,14 @@ exports.deleteReview = async (req, res, next) => {
     }
 
     deletedReview = await Review.findByIdAndDelete(id);
+
+    if (!deletedReview) {
+      return res.status(500).json({
+        message: "Failed to delete review",
+      });
+    }
+
+    await recalculateProductReviewSummary(review.product);
 
     return res.status(200).json({
       message: "Review deleted successfully",

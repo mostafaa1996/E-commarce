@@ -54,7 +54,7 @@ const PurchaseCard = ({
         <span className="text-3xl font-bold tracking-tight text-foreground">
           {formatCurrency(variant?.price * rate)}
         </span>
-        {variant?.compareAtPrice && (
+        {variant?.compareAtPrice > variant?.price && (
           <>
             <span className="text-base text-muted-foreground line-through">
               {formatCurrency(variant?.compareAtPrice * rate)}
@@ -65,7 +65,7 @@ const PurchaseCard = ({
           </>
         )}
       </div>
-      {variant?.compareAtPrice && expireDate && (
+      {variant?.compareAtPrice > variant?.price && expireDate && (
         <div className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1 text-xs font-medium text-muted-foreground">
           <Clock className="h-3.5 w-3.5" />
           <span>Offer ends {expireDate}</span>

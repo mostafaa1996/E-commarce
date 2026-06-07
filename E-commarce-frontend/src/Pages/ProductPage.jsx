@@ -10,7 +10,7 @@ import RelatedProducts from "@/components/ProductDetails/RelatedProducts";
 import StickyMobileBuyBar from "@/components/ProductDetails/StickyMobileBuyBar";
 import { useParams } from "react-router-dom";
 import { useLoaderData } from "react-router-dom";
-import { useLoggedInEmail } from "@/zustand_loggedIn/loggedInEmail";
+import { useAuthStore } from "@/zustand_auth/authStore";
 import { useCurrencyStore } from "@/zustand_preferences/currency";
 import useCurrency from "@/hooks/CurrencyChange";
 import useProductWishlist from "@/hooks/useProductWishlist";
@@ -26,7 +26,7 @@ const ProductPage = () => {
 
   const { id } = useParams();
   const { preloadedProduct, cart } = useLoaderData();
-  const { loggedInEmail } = useLoggedInEmail();
+  const { user , isLoggedIn } = useAuthStore();
   const { currency, locale, conversion_rate } = useCurrencyStore();
   const format = useCurrency(currency, locale);
   const rate = conversion_rate[currency] ?? 1;
@@ -168,8 +168,8 @@ const ProductPage = () => {
         <ReviewsSection
           summary={product.reviewSummary}
           reviews={product.reviews}
-          isLoggedIn={loggedInEmail !== null}
-          currentUser={loggedInEmail}
+          isLoggedIn={isLoggedIn}
+          currentUser={user}
           submitReview={submitReview}
           isSubmittingReview={isSubmittingReview}
           reviewError={reviewError}

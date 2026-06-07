@@ -61,7 +61,7 @@ function NavSection({ items, label, collapsed }) {
   );
 }
 
-export function AdminSidebar() {
+export function AdminSidebar({ onLogout }) {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
 
@@ -93,7 +93,9 @@ export function AdminSidebar() {
       <SidebarFooter className="p-3 border-t border-sidebar-border">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton className="text-destructive hover:bg-destructive/10 gap-3 px-3 py-2">
+            <SidebarMenuButton 
+              onClick={() => {onLogout()}}
+              className="text-destructive hover:bg-destructive/10 gap-3 px-3 py-2">
               <LogOut className="h-4 w-4" />
               {!collapsed && <span className="text-sm font-medium">Sign Out</span>}
             </SidebarMenuButton>

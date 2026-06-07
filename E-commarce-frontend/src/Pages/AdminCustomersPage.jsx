@@ -292,12 +292,18 @@ export default function AdminCustomersPage() {
                       {customerData.customer.phone}
                     </p>
                   </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground">Location</p>
-                    <p className="text-sm font-medium">
-                      {customerData.customer.defaultAddress}
-                    </p>
-                  </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">Location</p>
+                      <p className="text-sm font-medium">
+                        {[
+                          customerData.customer.defaultAddress?.city,
+                          customerData.customer.defaultAddress?.state,
+                          customerData.customer.defaultAddress?.country,
+                        ]
+                          .filter(Boolean)
+                          .join(", ") || "No default address"}
+                      </p>
+                    </div>
                   <div>
                     <p className="text-xs text-muted-foreground">Status</p>
                     <StatusBadge

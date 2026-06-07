@@ -1,7 +1,7 @@
 import { redirect } from "react-router-dom";
 const URL = import.meta.env.VITE_API_URL;
 import { authFetch, setAccessToken } from "./AuthFetch";
-import { useLoggedInEmail } from "@/zustand_loggedIn/loggedInEmail";
+import { useAuthStore } from "@/zustand_auth/authStore";
 export async function loginAction({ request }) {
   const formData = await request.formData();
   const email = formData.get("email");
@@ -26,7 +26,7 @@ export async function loginAction({ request }) {
 
     // store access-token
     setAccessToken(data.accessToken);
-    useLoggedInEmail.setState({ loggedInEmail: data.user.email });
+    useAuthStore.getState().setUser(data.user);
     // redirect after success
     return redirect("/shop");
   } catch (error) {
@@ -78,7 +78,7 @@ export async function logoutAction() {
       throw error;
     }
     // redirect after success
-    useLoggedInEmail.setState({ loggedInEmail: null });
+    useAuthStore.getState().logoutUser();
     setAccessToken(null);
     return data;
   } catch (error) {

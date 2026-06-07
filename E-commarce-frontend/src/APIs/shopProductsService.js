@@ -88,7 +88,9 @@ export async function addProductReview(review) {
   });
   const data = await response.json();
   if (!response.ok) {
-    throw new Error(data.message || "Failed to add review");
+    const error = new Error(data.message || "Failed to add review");
+    error.data = data;
+    throw error;
   }
   console.log(data);
   return data;

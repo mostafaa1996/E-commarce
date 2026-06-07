@@ -1,9 +1,15 @@
 const URL = import.meta.env.VITE_API_URL;
 let accessToken = null;
+import { useAuthStore } from "@/zustand_auth/authStore";
 
 export function setAccessToken(token) {
   accessToken = token;
 }
+
+export function getAccessToken() {
+  return accessToken;
+}
+
 export async function authFetch(url, options = {}) {
   let res = await fetch(url, {
     ...options,
@@ -27,7 +33,8 @@ export async function authFetch(url, options = {}) {
     }
     
     const data = await refreshRes.json();
-    accessToken = data.accessToken;
+    setAccessToken(data.accessToken);
+    useAuthStore.getState().setUser(data.user);
 
     console.log(accessToken);
 

@@ -48,7 +48,7 @@ import HomePage from "./Pages/HomePage";
 import ContactPage from "./Pages/ContactPage";
 import AboutPage from "./Pages/AboutPage";
 import { shortenText } from "./utils/utils";
-import { useLoggedInEmail } from "./zustand_loggedIn/loggedInEmail";
+import { useAuthStore } from "./zustand_auth/authStore";
 
 export const router = createBrowserRouter([
   {
@@ -98,7 +98,7 @@ export const router = createBrowserRouter([
 
           let cart = null;
           // get the cart to know if the product is in the cart or not and based on that start quantity from cart number
-          if (useLoggedInEmail.getState().loggedInEmail) {
+          if (useAuthStore.getState().isLoggedIn) {
             cart = await queryClient.ensureQueryData({
               queryKey: ["cart"],
               queryFn: getCart,

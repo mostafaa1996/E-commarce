@@ -5,13 +5,12 @@ import {
   updateUserWishlist,
 } from "@/APIs/UserProfileService";
 import { queryClient } from "@/queryClient";
-import { useLoggedInEmail } from "@/zustand_loggedIn/loggedInEmail";
+import { useAuthStore } from "@/zustand_auth/authStore";
 import { useToast } from "@/hooks/use-toast";
 
 export default function useProductWishlist(productId, variantId) {
   const { toast } = useToast();
-  const { loggedInEmail } = useLoggedInEmail();
-  const isLoggedIn = Boolean(loggedInEmail);
+  const { isLoggedIn } = useAuthStore();
 
   const wishlistQuery = useQuery({
     queryKey: ["profile-wishlist"],

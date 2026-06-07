@@ -105,7 +105,7 @@ const WriteReviewDialog = ({
           {isLoggedIn ? (
             <div className="inline-flex items-center gap-2 rounded-full bg-success/10 px-3 py-1.5 text-xs font-semibold text-success">
               <ShieldCheck className="h-3.5 w-3.5" />
-              Signed in as {currentUser || "you"} · Verified buyer
+              Signed in as {currentUser.email || "you"} · Verified buyer
             </div>
           ) : (
             <div className="inline-flex items-center gap-2 rounded-full bg-secondary px-3 py-1.5 text-xs font-semibold text-muted-foreground">
