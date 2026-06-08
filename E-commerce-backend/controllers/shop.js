@@ -6,7 +6,7 @@ const {createNotifications} = require("../utils/createNotifications");
 
 const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-const createReviewNotification = async (userName, rating, isUpdated) => {
+const createReviewNotification = async (userName, rating, isUpdated , Review) => {
   try {
     if (!userName) {
       if (rating < 3) {
@@ -66,8 +66,8 @@ const createReviewNotification = async (userName, rating, isUpdated) => {
         priority: "NORMAL",
         isRead: false,
         entityType: "REVIEW",
-        entityId: newReview._id,
-        link: `/profile/admin/reviews/${newReview._id}`,
+        entityId: Review._id,
+        link: `/profile/admin/reviews/${Review._id}`,
       });
     }
   } catch (e) {
@@ -337,7 +337,7 @@ exports.postReview = async (req, res, next) => {
         return res
           .status(500)
           .json({ message: "Failed to add review to product" });
-      await createReviewNotification(undefined, newReview.rating, false);
+      await createReviewNotification(undefined, newReview.rating, false , newReview);
       return res
         .status(200)
         .json({ message: "Review created successfully", status: "pending" });
@@ -363,7 +363,7 @@ exports.postReview = async (req, res, next) => {
       );
       if (!updatedReview)
         return res.status(500).json({ message: "Failed to update review" });
-      await createReviewNotification(user.name, newReview.rating, true);
+      await createReviewNotification(user.name, existedReview.rating, true , existedReview);
       return res
         .status(200)
         .json({ message: "Review updated successfully", status: "pending" });
@@ -394,7 +394,7 @@ exports.postReview = async (req, res, next) => {
     const updatedUser = await user.save();
     if (!updatedUser)
       return res.status(500).json({ message: "Failed to add review to user" });
-    await createReviewNotification(user.name, newReview.rating, false);
+    await createReviewNotification(user.name, newReview.rating, false , newReview);
     res.status(200).json({ message: "Review added successfully", status: "pending" });
   } catch (err) {
     next(err);

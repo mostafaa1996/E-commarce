@@ -1,6 +1,7 @@
 const Notification = require("../models/Notification");
+const User = require("../models/User");
 const ADMIN_NOTIFICATION_TYPES = [
-  {type : "NEW_ORDER", priority : "NORMAL"},
+  { type: "NEW_ORDER", priority: "NORMAL" },
   { type: "PAYMENT_FAILED", priority: "URGENT" },
   { type: "PAYMENT_REFUNDED", priority: "NORMAL" },
 
@@ -20,6 +21,12 @@ const ADMIN_NOTIFICATION_TYPES = [
 
 async function createNotifications(notificationData) {
   try {
+    //notification by default is for admin unless the userId of customer is provided
+    if (!notificationData.userId) {
+      const adminUser = await User.findOne({ role: "admin" });
+      if (!adminUser) return;
+      notificationData.userId = adminUser._id;
+    }
     await Notification.create(notificationData);
   } catch (error) {
     console.error("Error creating notifications:", error);
@@ -46,4 +53,4 @@ async function checkExistingNotifications(notificationData) {
   }
 }
 
-module.exports = { createNotifications , checkExistingNotifications };
+module.exports = { createNotifications, checkExistingNotifications };
