@@ -1,18 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
-import { Search, Heart, ShoppingCart, User, Menu, X, Zap } from "lucide-react";
+import { Search, Heart, ShoppingCart, User, Menu, X, Zap , LogOut } from "lucide-react";
 import { useState } from "react";
 import { AdminButton } from "@/components/adminUI/AdminButton";
 import InputField from "@/components/genericComponents/InputField";
 import { useNavigate } from "react-router-dom";
-import logout from "/logout.jpg";
-
-const links = [
-  { to: "/home#hero", label: "Home" },
-  { to: "/home#categories", label: "Categories" },
-  { to: "/shop?onDeal=true", label: "Deals" },
-  { to: "/about", label: "About" },
-  { to: "/contact", label: "Contact" },
-];
 
 function isActiveLink(to, location) {
   const url = new URL(to, window.location.origin);
@@ -27,7 +18,7 @@ function isActiveLink(to, location) {
   return samePath && !location.hash && !location.search;
 }
 
-export default function Header({ cartTotal = 0, loggedIn = false }) {
+export default function Header({ cartTotal = 0, loggedIn = false , links , logoutAction}) {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -118,14 +109,18 @@ export default function Header({ cartTotal = 0, loggedIn = false }) {
             </AdminButton>
           )}
           {loggedIn && (
-            <Link
-              to="/logout"
+            <AdminButton
+              onClick={() => {
+                logoutAction();
+                navigate("/login");
+              }}
+              variant="ghost"
               className={`w-[30px] aspect-square cursor-pointer
            hover:scale-110 transition duration-200 ease-in-out
           `}
             >
-              <img src={logout} alt="logout" />
-            </Link>
+              <LogOut className="h-10 w-10" />
+            </AdminButton>
           )}
           <AdminButton
             variant="ghost"
