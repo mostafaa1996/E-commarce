@@ -18,7 +18,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { getAdminUserForTopBar } from "@/APIs/adminSettingsService";
 import { useNavigate } from "react-router-dom";
-import { logoutAction } from "@/APIs/AuthService";
 
 function getInitials(firstName, lastName, email) {
   const fullName = [firstName, lastName].filter(Boolean).join(" ").trim();
@@ -34,7 +33,7 @@ function getInitials(firstName, lastName, email) {
   return email?.slice(0, 2).toUpperCase() || "AD";
 }
 
-export function AdminTopbar() {
+export function AdminTopbar({ unreadNotifications, logoutAction }) {
   const navigate = useNavigate();
   const { data: profileForm } = useQuery({
     queryKey: ["AdminUserForTopBar"],
@@ -71,13 +70,14 @@ export function AdminTopbar() {
 
       <div className="flex items-center gap-2">
         <AdminButton
+          onClick={() => navigate(unreadNotifications?.link || "/")}
           variant="ghost"
           size="icon"
           className="relative text-muted-foreground"
         >
           <Icon name="notifications" className="h-5 w-5" />
           <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-primary text-[10px] font-bold text-primary-foreground flex items-center justify-center">
-            3
+            {unreadNotifications?.count || 0}
           </span>
         </AdminButton>
 
@@ -119,10 +119,7 @@ export function AdminTopbar() {
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={() => {
-                logoutAction();
-                navigate("/login")
-              }}
+              onClick={logoutAction}
               className="text-destructive"
             >
               Sign Out

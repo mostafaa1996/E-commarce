@@ -30,7 +30,7 @@ export async function updateAdminNotificationStatus(id) {
     error.data = data;
     throw error;
   }
-  
+
   console.log(data);
   return data;
 }
@@ -48,7 +48,25 @@ export async function updateAllAdminNotificationStatus() {
     error.data = data;
     throw error;
   }
-  
+
   console.log(data);
   return data;
-}   
+}
+
+export async function getImportantUnreadNotificationsNumber() {
+  const res = await authFetch(`${URL}/admin/notifications/ImportantUnreadNotificationsNumber`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    const error = new Error(data.message || "Request failed");
+    error.data = data;
+    throw error;
+  }
+
+  console.log(data);
+  return data;
+}

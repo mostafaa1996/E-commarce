@@ -1,22 +1,27 @@
-import {
-  SidebarProvider,
-  SidebarInset,
-} from "@/components/adminUI/sidebar";
+import { SidebarProvider, SidebarInset } from "@/components/adminUI/sidebar";
 import { AdminSidebar } from "./AdminSidebar";
 import { AdminTopbar } from "./AdminTopbar";
-import { logoutAction } from "@/APIs/AuthService";
-import { useNavigate } from "react-router-dom";
+import useLogoutAction from "@/hooks/useLogoutAction";
+import { getImportantUnreadNotificationsNumber } from "@/APIs/adminNotificationsService";
+import { useQuery } from "@tanstack/react-query";
 
 export function AdminLayout({ children }) {
-  const navigate = useNavigate();
+  const { Logout } = useLogoutAction();
+  const { data } = useQuery({
+    queryKey: ["unreadNotifications"],
+    queryFn: getImportantUnreadNotificationsNumber,
+  });
   return (
     <SidebarProvider defaultOpen={true}>
-      <AdminSidebar onLogout={() => {
-        logoutAction();
-        navigate("/login");
-      }} />
+      <AdminSidebar onLogout={Logout} />
       <SidebarInset>
-        <AdminTopbar />
+        <AdminTopbar
+          unreadNotifications={{
+            link: "/profile/admin/notifications",
+            count: data?.unreadNotificationsNumber || 0,
+          }}
+          logoutAction={Logout}
+        />
         <main className="flex-1 p-4 md:p-6 lg:p-8 overflow-auto">
           {children}
         </main>

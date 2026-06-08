@@ -61,3 +61,19 @@ exports.updateAllNotificationStatus = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.getImportantUnreadNotificationsNumber = async (req, res, next) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ message: "user not found" });
+    const unreadNotificationsNumber = await Notification.countDocuments({
+      userId,
+      isRead: false,
+      priority: { $in: ["HIGH", "URGENT"] },
+    });
+    res.status(200).json({ unreadNotificationsNumber });
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};

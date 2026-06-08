@@ -8,6 +8,7 @@ import { getCart } from "@/APIs/CartService";
 import { useScrollTo } from "@/hooks/useScrollTo";
 import { useAuthStore } from "@/zustand_auth/authStore";
 import { logoutAction } from "@/APIs/AuthService";
+import useLogoutAction from "@/hooks/useLogoutAction";
 
 const links = [
   { to: "/home#hero", label: "Home" },
@@ -21,6 +22,7 @@ export default function MainLayout() {
   useScrollTo();
   const matches = useMatches();
   const { isLoggedIn, user } = useAuthStore();
+  const { Logout } = useLogoutAction();
   const currentMatch = matches[matches.length - 1];
   const items =
     typeof currentMatch?.handle?.breadcrumb === "function"
@@ -33,7 +35,13 @@ export default function MainLayout() {
   const CartTotal = cart?.totalItems ?? 0;
   return (
     <>
-      <Header cartTotal={CartTotal} loggedIn={isLoggedIn} links={links} logoutAction={logoutAction} />
+      <Header
+        cartTotal={CartTotal}
+        loggedIn={isLoggedIn}
+        links={links}
+        logoutAction={Logout}
+        userLink={user?.role === "admin" ? "/profile/admin/dashboard" : "/profile"}
+      />
       <Breadcrumbs items={items || [{ label: "Home", href: "/" }]} />
       <Outlet />
       <Footer />

@@ -1,5 +1,14 @@
 import { Link, useLocation } from "react-router-dom";
-import { Search, Heart, ShoppingCart, User, Menu, X, Zap , LogOut } from "lucide-react";
+import {
+  Search,
+  Heart,
+  ShoppingCart,
+  User,
+  Menu,
+  X,
+  Zap,
+  LogOut,
+} from "lucide-react";
 import { useState } from "react";
 import { AdminButton } from "@/components/adminUI/AdminButton";
 import InputField from "@/components/genericComponents/InputField";
@@ -18,7 +27,13 @@ function isActiveLink(to, location) {
   return samePath && !location.hash && !location.search;
 }
 
-export default function Header({ cartTotal = 0, loggedIn = false , links , logoutAction}) {
+export default function Header({
+  cartTotal = 0,
+  loggedIn = false,
+  links,
+  logoutAction,
+  userLink = "/profile",
+}) {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -92,7 +107,7 @@ export default function Header({ cartTotal = 0, loggedIn = false , links , logou
             </span>
           </AdminButton>
           <AdminButton
-            onClick={() => navigate("/profile")}
+            onClick={() => navigate(userLink)}
             variant="ghost"
             size="icon"
             className="hidden sm:inline-flex"
@@ -110,10 +125,7 @@ export default function Header({ cartTotal = 0, loggedIn = false , links , logou
           )}
           {loggedIn && (
             <AdminButton
-              onClick={() => {
-                logoutAction();
-                navigate("/login");
-              }}
+              onClick={logoutAction}
               variant="ghost"
               className={`w-[30px] aspect-square cursor-pointer
            hover:scale-110 transition duration-200 ease-in-out
