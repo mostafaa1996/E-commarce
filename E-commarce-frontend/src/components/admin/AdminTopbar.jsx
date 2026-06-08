@@ -18,6 +18,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { getAdminUserForTopBar } from "@/APIs/adminSettingsService";
 import { useNavigate } from "react-router-dom";
+import { logoutAction } from "@/APIs/AuthService";
 
 function getInitials(firstName, lastName, email) {
   const fullName = [firstName, lastName].filter(Boolean).join(" ").trim();
@@ -117,7 +118,13 @@ export function AdminTopbar() {
               Settings
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive">
+            <DropdownMenuItem
+              onClick={() => {
+                logoutAction();
+                navigate("/login")
+              }}
+              className="text-destructive"
+            >
               Sign Out
             </DropdownMenuItem>
           </DropdownMenuContent>
