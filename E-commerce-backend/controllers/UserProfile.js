@@ -8,16 +8,6 @@ const { createOrder } = require("./order");
 const mongoose = require("mongoose");
 const { compare } = require("bcryptjs");
 
-function formatOrderId(order) {
-  const date = new Date(order.createdAt || order.date || Date.now())
-    .toISOString()
-    .slice(0, 10)
-    .replace(/-/g, "");
-  const suffix = String(order._id).slice(-6).toUpperCase();
-
-  return `#ORD-${date}-${suffix}`;
-}
-
 function UploadToCloudinary(fileBuffer, userId) {
   return new Promise((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
@@ -162,6 +152,7 @@ exports.getUserProfile = async (req, res, next) => {
         totalPrice: 1,
         createdAt: 1,
         updatedAt: 1,
+        orderNumber: 1,
       },
     });
     console.log(wishlist);
@@ -365,10 +356,7 @@ exports.getUserOrders = async (req, res, next) => {
         },
       },
     ]);
-    const orders = (result[0]?.data || []).map((order) => ({
-      ...order,
-      orderId: formatOrderId(order),
-    }));
+    const orders = (result[0]?.data || []);
     const totalCount = result[0]?.totalCount[0]?.count || 0;
     res.status(200).json({
       orders,
