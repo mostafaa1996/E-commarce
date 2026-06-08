@@ -153,7 +153,7 @@ function OrderItem({
                 Order
               </span>
               <h3 className="max-w-full truncate text-sm font-semibold text-[#272727] sm:text-base">
-                #{displayValue(orderId, "Unknown")}
+                {displayValue(orderId, "Unknown")}
               </h3>
             </div>
             <p className="mt-1 text-sm text-zinc-500">

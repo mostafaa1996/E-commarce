@@ -15,7 +15,7 @@ export default function OrderFeedBack({orderId, IconName, header ,  message, okH
       <h3 className="text-2xl font-bold text-foreground">{header}</h3>
       <p className="text-muted-foreground text-center max-w-sm">{message}</p>
       {orderId && (
-        <p className="text-sm text-muted-foreground">Order #ORD-{orderId}</p>
+        <p className="text-sm text-muted-foreground">Order {orderId}</p>
       )}
       <Button
         type="button"

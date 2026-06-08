@@ -1,29 +1,5 @@
 import { create } from "zustand";
 
-// PaymentMethodState = [
-//     "CashOnDelivery",
-//     "CardSelected",
-//     "AddingNewCard",
-// ]
-
-// orderState = [
-//     "InProgress",
-//     "orderPlaced",
-//     "pending_payment",
-//     "paid",
-//     "payment_failed",
-//     "cancelled"
-//     "Loading",
-//     "Error",
-// ]
-
-// paymentType = [
-//     "cod",
-//     "card",
-// ]
-
-// selectedCard = cardID in case of card payment
-
 const useCheckoutStore = create((set) => ({
     PaymentMethodState: "CashOnDelivery",
     selectedCard: null,

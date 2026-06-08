@@ -22,7 +22,7 @@ export default function OrderHistoryList({ orders , getStatusColor, getPaymentSt
           <OrderItem
             key={order?._id}
             items={order?.orderItems}
-            orderId={order?.orderId}
+            orderId={order?.orderNumber}
             status={order?.status}
             statusColor={getStatusColor(order?.status)}
             createdAt={order?.createdAt}
