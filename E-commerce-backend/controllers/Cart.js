@@ -261,17 +261,17 @@ exports.deleteCartItem = async (req, res, next) => {
 exports.applyPromoCode = async (req, res, next) => {
   try {
     const userId = req.user.id;
-    if (!userId) return res.sendStatus(401).json({ message: "Unauthorized" });
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
     const user = await User.findById(userId);
-    if (!user) return res.sendStatus(401).json({ message: "User not found" });
+    if (!user) return res.status(401).json({ message: "User not found" });
     const cart = await Cart.findOne({ userId });
-    if (!cart) return res.sendStatus(404).json({ message: "Cart not found" });
+    if (!cart) return res.status(404).json({ message: "Cart not found" });
     const { promoCode } = req.body;
     if (!promoCode)
-      return res.sendStatus(400).json({ message: "Promo code is required" });
+      return res.status(400).json({ message: "Promo code is required" });
     if (typeof promoCode !== "string")
       return res
-        .sendStatus(400)
+        .status(400)
         .json({ message: "Promo code must be a string" });
     cart.promo.code = promoCode;
     cart.promo.appliedAt = Date.now();

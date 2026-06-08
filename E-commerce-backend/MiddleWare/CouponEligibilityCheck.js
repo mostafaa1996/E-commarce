@@ -271,13 +271,13 @@ async function recordCouponSuggestion(user, couponOffer) {
 exports.generateCouponOffer = async(req, res, next) => {
   try{
     const userId = req.user.id;
-    if(!userId) return res.sendStatus(401).json({message: "Unauthorized"});
+    if(!userId) return res.status(401).json({message: "Unauthorized"});
     const user = await User.findById(userId);
-    if(!user) return res.sendStatus(401).json({message: "User not found"});
+    if(!user) return res.status(401).json({message: "User not found"});
     const cart = await Cart.findOne({userId});
-    if(!cart) return res.sendStatus(404).json({message: "Cart not found"});
+    if(!cart) return res.status(404).json({message: "Cart not found"});
     const coupon = await evaluateCouponEligibility(user , cart);
-    if(!coupon) return res.sendStatus(404).json({message: "Coupon not found"});
+    if(!coupon) return res.status(404).json({message: "Coupon not found"});
     await recordCouponSuggestion(user, coupon);
     console.log("coupon .............. ", coupon);
     req.coupon = coupon;

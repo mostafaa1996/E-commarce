@@ -7,7 +7,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const getOrCreateCustomer = require("../utils/StripeCustomer");
 const Address = require("../models/Address");
 const Cart = require("../models/Cart");
-const formatOrderId = require("../utils/formatOrderNumber");
+const {formatOrderId} = require("../utils/formatOrderNumber");
 const {createNotifications} = require("../utils/createNotifications");
 const { link } = require("../routes/shop");
 exports.createOrder = async (req, res, next) => {
@@ -82,6 +82,7 @@ exports.createOrder = async (req, res, next) => {
       totalItems: cart.totalItems || 0,
       selectedCardId,
       userId,
+      orderNumber: "order",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });
@@ -123,6 +124,11 @@ exports.createOrder = async (req, res, next) => {
       } catch (err) {
         console.log(err);
       }
+      user.totalOrders += 1;
+      user.totalSpent += order.totalPrice;
+      user.cart = null;
+      await user.save();
+      await Cart.findOneAndDelete({ userId });
       return res.status(201).json({
         orderId: order._id,
         nextAction: "orderPlaced",
@@ -196,6 +202,11 @@ exports.createOrder = async (req, res, next) => {
         } catch (err) {
           console.log(err);
         }
+      user.totalOrders += 1;
+      user.totalSpent += order.totalPrice;
+      user.cart = null;
+      await user.save();
+      await Cart.findOneAndDelete({ userId });
         return res.status(201).json({
           orderId: order._id,
           nextAction: "paid",
