@@ -7,45 +7,55 @@ import { placeOrder } from "@/APIs/checkoutService";
 export default function CheckoutPaymentSection({ orderNotes }) {
   const stripe = useStripe();
   const elements = useElements();
-  const { PaymentMethodState, setOrderState, selectedCard } =
-    useCheckoutStore();
+  const {
+    PaymentMethodState,
+    setOrderState,
+    selectedCard,
+    paymentType,
+    setOrderId,
+  } = useCheckoutStore();
 
   const OrderMutation = useMutation({
-    mutationFn: ({ orderNotes, selectedCard }) => {
+    mutationFn: ({ orderNotes, selectedCard, paymentType }) => {
       return placeOrder({
         orderNotes,
         selectedCard,
+        paymentType,
       });
     },
     onMutate: () => {
       setOrderState("Loading");
     },
+    onSuccess: async(data) => {
+      if (data.nextAction === "requires_action") {
+        const result = await stripe.handleNextAction({
+          clientSecret: data.clientSecret,
+        });
+        if (result.error) {
+          setOrderState("failed");
+        }
+        setOrderId(data.orderNumber);
+        setOrderState(result.paymentIntent?.status || "pending_payment");
+        return;
+      }
+      setOrderId(data.orderNumber);
+      setOrderState(data.nextAction);
+    },
     onError: (error) => {
       if (error.data?.blocked) {
         setOrderState("userBlocked");
       } else {
-        setOrderState("Error");
+        setOrderState(error.data?.nextAction || "Error");
       }
     },
   });
 
   async function handlePlaceOrder() {
-    const res = await OrderMutation.mutateAsync({
+    await OrderMutation.mutateAsync({
       orderNotes,
       selectedCard,
+      paymentType,
     });
-
-    if (res.nextAction === "requires_action") {
-      const result = await stripe.handleNextAction({
-        clientSecret: res.clientSecret,
-      });
-      if (result.error) {
-        setOrderState("Error");
-      }
-      setOrderState("pending_payment");
-      return;
-    }
-    setOrderState(res.nextAction);
   }
 
   return (

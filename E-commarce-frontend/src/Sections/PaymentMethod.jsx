@@ -39,11 +39,11 @@ const PaymentMethod = () => {
   const cards = useMemo(() => loadedCards || [], [loadedCards]);
 
   useEffect(() => {
-  if (cards?.length > 0 && !selectedCard) {
+    if (paymentType !== "card" || selectedCard || !cards?.length) return;
+
     const defaultCard = cards.find((card) => card.isDefault);
     setSelectedCard(defaultCard?.id || cards[0].id);
-  }
-}, [cards, selectedCard , setSelectedCard]);
+  }, [paymentType, cards, selectedCard, setSelectedCard]);
 
   return (
     <div className="space-y-5">
@@ -232,7 +232,7 @@ const PaymentMethod = () => {
               {cards.length > 0 && (
                 <button
                   type="button"
-                  onClick={()=> {
+                  onClick={() => {
                     setUseNewCard(false);
                     setPaymentMethodState("CardSelected");
                   }}

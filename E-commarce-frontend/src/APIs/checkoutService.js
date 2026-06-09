@@ -23,13 +23,14 @@ export async function getCartData() {
 export async function placeOrder({
   orderNotes,
   selectedCard,
+  paymentType
 }) {
   const res = await authFetch(`${URL}/order/create`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ orderNotes, selectedCard }),
+    body: JSON.stringify({ orderNotes, selectedCard , paymentType }),
   });
   const data = await res.json();
   

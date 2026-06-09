@@ -27,7 +27,7 @@ export const OrderStatesUIData = [
 
   // payment_failed
   {
-    state: "payment_failed",
+    state: "failed",
     header: "Payment Failed!",
     IconName: "circleX",
     message:
@@ -47,7 +47,7 @@ export const OrderStatesUIData = [
   {
     state: "Loading",
     header: "Processing...",
-    IconName: "loader2",
+    IconName: "loader",
     message:
       "Please wait while we process your order and confirm the payment.",
   },
@@ -69,4 +69,28 @@ export const OrderStatesUIData = [
     message:
       "Your account has been suspended. Please contact support for further assistance.",
   },
+  //user didn`t provide specific address
+  {
+    state: "Address_missing",
+    header: "Address Required",
+    IconName: "userX",
+    message:
+      "Please provide a valid address to complete your order.",
+  },
+  // cart is empty 
+  {
+    state: "Cart_empty",
+    header: "Cart Required",
+    IconName: "cart",
+    message:
+      "Please add items to your cart to complete your order.",
+  },
+  // payment method is invalid
+  {
+    state: "payment_Invalid",
+    header: "Payment Method Required",
+    IconName: "userX",
+    message:
+      "Please select a valid payment method to complete your order.",
+  }
 ];
