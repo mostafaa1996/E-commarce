@@ -8,11 +8,14 @@ import { defaultShopQuery } from "@/Data/ShopQuery";
 import useURLQuery from "@/hooks/UrlQuery";
 import Loading from "@/components/genericComponents/Loading";
 import { Outlet, useNavigation } from "react-router-dom";
+import {useShopSearchStore} from "@/zustand_ShopPage/shopSearchStore";
+import { useEffect } from "react";
 
 export default function ShopSection() {
   const { MainQuery, updateUrlQuery, resetUrlQuery } =
     useURLQuery(defaultShopQuery);
   const navigation = useNavigation();
+  const { searchValue } = useShopSearchStore();
   const { data, error, isLoading, isFetching } = useQuery({
     queryKey: ["products", MainQuery],
     queryFn: () => getShopProducts(MainQuery),
@@ -21,6 +24,18 @@ export default function ShopSection() {
   const isShopRouteLoading =
     navigation.state !== "idle" &&
     navigation.location?.pathname.startsWith("/shop");
+
+useEffect(() => {
+  if (!searchValue) return;
+  if (MainQuery.search === searchValue) return;
+  const timeoutId = setTimeout(() => {
+    if (MainQuery.search !== searchValue) {
+      updateUrlQuery({ search: searchValue });
+    }
+  }, 400);
+
+  return () => clearTimeout(timeoutId);
+}, [searchValue, MainQuery.search, updateUrlQuery]);
 
   if ((isLoading || isFetching) && !data) {
     return <Loading message="Loading shop" fullPage />;

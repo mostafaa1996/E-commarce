@@ -28,11 +28,14 @@ function isActiveLink(to, location) {
 }
 
 export default function Header({
+  items,
   cartTotal = 0,
   loggedIn = false,
   links,
   logoutAction,
   userLink = "/profile",
+  searchValue = "",
+  setSearchValue = () => {},
 }) {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
@@ -75,13 +78,20 @@ export default function Header({
         </nav>
 
         <div className="hidden md:flex flex-1 max-w-md mx-4">
-          <div className="relative w-full">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <InputField
-              placeholder="Search for products, brands..."
-              className="pl-9 bg-muted/50 border-transparent focus-visible:bg-background"
-            />
-          </div>
+          {items?.length === 1 && items[0].label === "Shop" && (
+            <div className="relative w-full">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <InputField
+                onChange={(event) => {
+                  setSearchValue(event.target.value);
+                }}
+                value={searchValue}
+                type="search"
+                placeholder="Search for products, brands..."
+                className="pl-9 bg-muted/50 border-transparent focus-visible:bg-background"
+              />
+            </div>
+          )}
         </div>
 
         <div className="flex items-center gap-1 ml-auto">
@@ -149,10 +159,20 @@ export default function Header({
       {open && (
         <div className="lg:hidden border-t border-border bg-background">
           <div className="container mx-auto px-4 py-3 flex flex-col gap-1">
-            <div className="relative md:hidden mb-2">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <InputField placeholder="Search products..." className="pl-9" />
-            </div>
+            {items?.length === 1 && items[0].label === "Shop" && (
+              <div className="relative md:hidden mb-2">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <InputField
+                  onChange={(event) => {
+                    setSearchValue(event.target.value);
+                  }}
+                  value={searchValue}
+                  type="search"
+                  placeholder="Search products..."
+                  className="pl-9"
+                />
+              </div>
+            )}
             {links.map((l) => (
               <Link
                 key={l.to}

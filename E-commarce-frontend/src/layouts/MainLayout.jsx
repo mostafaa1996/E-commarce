@@ -7,8 +7,8 @@ import { useQuery } from "@tanstack/react-query";
 import { getCart } from "@/APIs/CartService";
 import { useScrollTo } from "@/hooks/useScrollTo";
 import { useAuthStore } from "@/zustand_auth/authStore";
-import { logoutAction } from "@/APIs/AuthService";
 import useLogoutAction from "@/hooks/useLogoutAction";
+import {useShopSearchStore} from "@/zustand_ShopPage/shopSearchStore";
 
 const links = [
   { to: "/home#hero", label: "Home" },
@@ -22,6 +22,7 @@ export default function MainLayout() {
   useScrollTo();
   const matches = useMatches();
   const { isLoggedIn, user } = useAuthStore();
+  const { searchValue , setShopSearchValue } = useShopSearchStore();
   const { Logout } = useLogoutAction();
   const currentMatch = matches[matches.length - 1];
   const items =
@@ -36,11 +37,14 @@ export default function MainLayout() {
   return (
     <>
       <Header
+        items = {items}
         cartTotal={CartTotal}
         loggedIn={isLoggedIn}
         links={links}
         logoutAction={Logout}
         userLink={user?.role === "admin" ? "/profile/admin/dashboard" : "/profile"}
+        searchValue={searchValue}
+        setSearchValue={setShopSearchValue}
       />
       <Breadcrumbs items={items || [{ label: "Home", href: "/" }]} />
       <Outlet />

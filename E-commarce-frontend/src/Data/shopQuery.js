@@ -2,6 +2,7 @@ export const defaultShopQuery = {
   page: 1,
   limit: 9,
   sort: "default",
+  search: null,
   category: null,
   tags: [],
   brands: [],
