@@ -90,7 +90,7 @@ mongoose
   .then(() => {
     console.log("Connected to database!");
     app.listen(3000, () => {
-      startStockNotificationsTask();
+      // startStockNotificationsTask();
     });
   })
   .catch((err) => {

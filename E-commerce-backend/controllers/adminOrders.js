@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Order = require("../models/Order");
 const createActivityLog = require("../utils/CreateActivityLogs");
-const formatOrderId = require("../utils/formatOrderNumber");
+const {formatOrderId} = require("../utils/formatOrderNumber");
 
 function escapeRegex(value = "") {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");

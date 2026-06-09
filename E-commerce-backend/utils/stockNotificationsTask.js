@@ -5,7 +5,7 @@ const {
   checkExistingNotifications,
 } = require("./createNotifications");
 
-const STOCK_NOTIFICATION_INTERVAL = 10 * 60 * 1000;
+const STOCK_NOTIFICATION_INTERVAL = 30 * 60 * 1000;
 
 let stockNotificationsTimer;
 

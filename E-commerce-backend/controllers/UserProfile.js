@@ -8,6 +8,18 @@ const { createOrder } = require("./order");
 const mongoose = require("mongoose");
 const { compare } = require("bcryptjs");
 
+
+const statusMap = {
+  pending: "pending",
+  processing: "processing",
+  failed: "failed",
+  cancelled: "cancelled",
+  orderplaced: "orderPlaced",
+  delivered: "delivered",
+  shipped: "shipped",
+  returned: "returned",
+};
+
 function UploadToCloudinary(fileBuffer, userId) {
   return new Promise((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
@@ -81,11 +93,6 @@ exports.getUserProfile = async (req, res, next) => {
     });
     // const notifications = user.notifications;
     // const paymentMethods = user.paymentMethods;
-    const StatsData = {
-      totalOrders: user.orders?.length,
-      totalWishlist: user.wishlist?.length,
-      totalReviews: user.reviews?.length,
-    };
     const matchStage = {
       userId: new mongoose.Types.ObjectId(userId),
     };
@@ -155,19 +162,21 @@ exports.getUserProfile = async (req, res, next) => {
         orderNumber: 1,
       },
     });
-    console.log(wishlist);
+    const StatsData = {
+      totalOrders: Orders?.length,
+      totalWishlist: user.wishlist?.length,
+      totalReviews: user.reviews?.length,
+      totalSpent: Orders?.reduce(
+          (total, order) => total + order.totalPrice,
+          0,
+        ).toFixed(2),
+    };
     res.status(200).json({
       contacts,
       Addresses,
       Orders,
       wishlist,
-      StatsData: {
-        ...StatsData,
-        totalSpent: Orders?.reduce(
-          (total, order) => total + order.totalPrice,
-          0,
-        ),
-      },
+      StatsData,
       statusStyles: {
         pending: "bg-red-200 text-red-600",
         processing: "bg-red-200 text-red-600",
@@ -265,8 +274,8 @@ exports.getUserOrders = async (req, res, next) => {
     const matchStage = {
       userId: new mongoose.Types.ObjectId(userId),
     };
-    if (status && status !== "All") {
-      matchStage.status = status;
+    if (status && status !== "All" && typeof status === "string") {
+      matchStage.status = statusMap[status.toLowerCase()];
     }
     const pipeline = [
       {
@@ -349,6 +358,7 @@ exports.getUserOrders = async (req, res, next) => {
                 totalPrice: 1,
                 createdAt: 1,
                 updatedAt: 1,
+                orderNumber: 1,
               },
             },
           ],

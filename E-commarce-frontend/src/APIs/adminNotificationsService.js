@@ -55,7 +55,7 @@ export async function updateAllAdminNotificationStatus() {
 
 export async function getImportantUnreadNotificationsNumber() {
   const res = await authFetch(`${URL}/admin/notifications/ImportantUnreadNotificationsNumber`, {
-    method: "PUT",
+    method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
