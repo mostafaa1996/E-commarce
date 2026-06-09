@@ -2,6 +2,7 @@ require("dotenv").config();
 const User = require("../models/User");
 const Order = require("../models/Order");
 const Product = require("../models/Product");
+const { Coupon } = require("../models/Coupons");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const getOrCreateCustomer = require("../utils/StripeCustomer");
 const Address = require("../models/Address");
@@ -134,6 +135,16 @@ exports.createOrder = async (req, res, next) => {
       }
       user.totalOrders += 1;
       user.totalSpent += order.totalPrice;
+      if (cart.promo?.code) {
+        const userCoupon = user.coupons.find(
+          (coupon) => coupon.code === cart.promo.code,
+        );
+        if (userCoupon) userCoupon.status = "USED";
+        await Coupon.findOneAndUpdate(
+          { code: cart.promo.code },
+          { $inc: { usageCount: 1 } },
+        );
+      }
       user.cart = null;
       await user.save();
       await Cart.findOneAndDelete({ userId });
@@ -255,6 +266,16 @@ exports.createOrder = async (req, res, next) => {
         }
         user.totalOrders += 1;
         user.totalSpent += order.totalPrice;
+        if (cart.promo?.code) {
+          const userCoupon = user.coupons.find(
+            (coupon) => coupon.code === cart.promo.code,
+          );
+          if (userCoupon) userCoupon.status = "USED";
+          await Coupon.findOneAndUpdate(
+            { code: cart.promo.code },
+            { $inc: { usageCount: 1 } },
+          );
+        }
         user.cart = null;
         await user.save();
         await Cart.findOneAndDelete({ userId });

@@ -279,7 +279,7 @@ exports.applyPromoCode = async (req, res, next) => {
     if (coupon) {
       if (coupon.discountType.toLowerCase() === "percentage") {
         promoDiscountInMoney =
-          reqCart.itemsPrice * (coupon.discountValue / 100);
+          cart.itemsPrice * (coupon.discountValue / 100);
       } else {
         promoDiscountInMoney = coupon.discountValue;
       }
