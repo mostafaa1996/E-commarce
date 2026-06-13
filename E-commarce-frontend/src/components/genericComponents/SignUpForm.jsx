@@ -13,16 +13,16 @@ export default function SignUpForm() {
           </h2>
 
           {/* Social signup */}
-          <div className="flex gap-4 justify-center">
+          {/* <div className="flex gap-4 justify-center">
             <SocialAuthButton label="Sign up with Google" type="submit" />
             <SocialAuthButton label="Sign up with Facebook" type="submit" />
-          </div>
+          </div> */}
 
-          <div className="flex items-center gap-4 my-6">
+          {/* <div className="flex items-center gap-4 my-6">
             <div className="flex-1 h-px bg-zinc-200" />
             <span className="text-sm text-zinc-400 tracking-widest">OR</span>
             <div className="flex-1 h-px bg-zinc-200" />
-          </div>
+          </div> */}
 
           {/* Inputs */}
           <InputField
