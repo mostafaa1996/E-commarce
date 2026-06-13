@@ -8,7 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 export default function useProductCart(product, selectedVariant, preloadedCart) {
   const { toast } = useToast();
   const cartQuery = useQuery({
-    queryKey: ["cart"],
+    queryKey: ["cart", { includeCouponEligibility: false }],
     queryFn: getCart,
     initialData: preloadedCart || undefined,
     enabled: Boolean(preloadedCart),

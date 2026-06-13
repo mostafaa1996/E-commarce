@@ -30,7 +30,7 @@ export default function MainLayout() {
       ? currentMatch.handle.breadcrumb(currentMatch.data)
       : currentMatch?.handle?.items;
   const { data: cart } = useQuery({
-    queryKey: ["cart"],
+    queryKey: ["cart", { includeCouponEligibility: false }],
     queryFn: getCart,
   });
   const CartTotal = cart?.totalItems ?? 0;

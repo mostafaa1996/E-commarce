@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { queryClient } from "./queryClient";
 import { getShopProducts, getProductById } from "./APIs/shopProductsService";
 import { loginAction, SignupAction } from "./APIs/AuthService";
-import { getCart, getCartPage } from "@/APIs/CartService";
+import { getCart } from "@/APIs/CartService";
 import { getCartData } from "./APIs/checkoutService";
 import {
   getUserProfileData,
@@ -100,7 +100,7 @@ export const router = createBrowserRouter([
           // get the cart to know if the product is in the cart or not and based on that start quantity from cart number
           if (useAuthStore.getState().isLoggedIn) {
             cart = await queryClient.ensureQueryData({
-              queryKey: ["cart"],
+              queryKey: ["cart", { includeCouponEligibility: false }],
               queryFn: getCart,
             });
           }
@@ -114,9 +114,8 @@ export const router = createBrowserRouter([
         handle: { items: [{ label: "Cart", href: "/cart" }] },
         loader: async () => {
           return queryClient.ensureQueryData({
-            queryKey: ["cart"],
-            queryFn: getCartPage,
-            staleTime: 1000 * 60 * 5,
+            queryKey: ["cart", { includeCouponEligibility: true }],
+            queryFn: () => getCart({ includeCouponEligibility: true }),
           });
         },
       },

@@ -12,8 +12,9 @@ function normalizeCouponInfo(cart) {
   const message = couponOffer?.message || "";
   const code = coupon?.code || "";
   const isEligible =
-    typeof couponOffer?.type === "string"?
-    couponOffer?.type?.toLowerCase() === "eligible" : Boolean(coupon.code);
+    typeof couponOffer?.type === "string"
+      ? couponOffer?.type?.toLowerCase() === "eligible"
+      : Boolean(coupon.code);
 
   return {
     code,
@@ -31,7 +32,7 @@ function calculateDiscount(couponInfo, totalCost) {
     return 0;
   }
 
-  if ((couponInfo.discountType).toLowerCase().trim().includes("percent")) {
+  if (couponInfo.discountType.toLowerCase().trim().includes("percent")) {
     return (totalCost * (discountValue / 100)).toFixed(2);
   }
 
@@ -48,8 +49,8 @@ export default function useCart() {
     isLoading: isLoadingCart,
     error: cartError,
   } = useQuery({
-    queryKey: ["cart"],
-    queryFn: () => getCart(),
+    queryKey: ["cart", { includeCouponEligibility: true }],
+    queryFn: () => getCart({ includeCouponEligibility: true }),
     placeholderData: (previousData) => previousData,
   });
 
@@ -57,75 +58,85 @@ export default function useCart() {
     mutationFn: ({ ActionType, productId, variantId, quantity, code = "" }) =>
       syncCart({ ActionType, productId, variantId, quantity, code }),
     onMutate: ({ ActionType, productId, variantId, quantity }) => {
+      const cartQueryKeys = [
+        ["cart", { includeCouponEligibility: false }],
+        ["cart", { includeCouponEligibility: true }],
+      ];
       //optimistic update
       queryClient.cancelQueries({ queryKey: ["cart"] });
-      const previousCart = queryClient.getQueryData(["cart"]);
+      const previousCarts = queryClient.getQueriesData(cartQueryKeys);
       if (ActionType === "updateQuantity") {
-        queryClient.setQueryData(["cart"], (oldCart) => {
-          if (!oldCart) return null;
-          const itemPrice = oldCart.items.find(
-            (item) => item._id === productId && item.variantId === variantId,
-          )?.price;
-          const oldItemQuantity = oldCart.items.find(
-            (item) => item._id === productId && item.variantId === variantId,
-          )?.quantity;
-          return {
-            ...oldCart,
-            items: oldCart.items.map((item) => {
-              if (item._id === productId && item.variantId === variantId) {
-                return {
-                  ...item,
-                  quantity,
-                  subtotal: item.price * quantity,
-                };
-              }
-              return item;
-            }),
-            totalItems: oldCart.totalItems - oldItemQuantity + quantity,
-            totalPrice:
-              oldCart.totalPrice -
-              itemPrice * oldItemQuantity +
-              itemPrice * quantity,
-            updatedAt: new Date(),
-          };
+        cartQueryKeys.forEach((key) => {
+          queryClient.setQueryData(key, (oldCart) => {
+            if (!oldCart) return null;
+            const itemPrice = oldCart.items.find(
+              (item) => item._id === productId && item.variantId === variantId,
+            )?.price;
+            const oldItemQuantity = oldCart.items.find(
+              (item) => item._id === productId && item.variantId === variantId,
+            )?.quantity;
+            return {
+              ...oldCart,
+              items: oldCart.items.map((item) => {
+                if (item._id === productId && item.variantId === variantId) {
+                  return {
+                    ...item,
+                    quantity,
+                    subtotal: item.price * quantity,
+                  };
+                }
+                return item;
+              }),
+              totalItems: oldCart.totalItems - oldItemQuantity + quantity,
+              totalPrice:
+                oldCart.totalPrice -
+                itemPrice * oldItemQuantity +
+                itemPrice * quantity,
+              updatedAt: new Date(),
+            };
+          });
         });
       }
       if (ActionType === "remove") {
-        queryClient.setQueryData(["cart"], (oldCart) => {
-          if (!oldCart) return null;
-          const itemPrice = oldCart.items.find(
-            (item) => item._id === productId && item.variantId === variantId,
-          )?.price;
-          const oldItemQuantity = oldCart.items.find(
-            (item) => item._id === productId && item.variantId === variantId,
-          )?.quantity;
-          return {
-            ...oldCart,
-            items: oldCart.items.filter(
-              (item) => item._id !== productId && item.variantId !== variantId,
-            ),
-            totalItems: oldCart.totalItems - oldItemQuantity + quantity,
-            totalPrice:
-              oldCart.totalPrice -
-              itemPrice * oldItemQuantity +
-              itemPrice * quantity,
-            updatedAt: new Date(),
-          };
+        cartQueryKeys.forEach((key) => {
+          queryClient.setQueryData(key, (oldCart) => {
+            if (!oldCart) return null;
+            const itemPrice = oldCart.items.find(
+              (item) => item._id === productId && item.variantId === variantId,
+            )?.price;
+            const oldItemQuantity = oldCart.items.find(
+              (item) => item._id === productId && item.variantId === variantId,
+            )?.quantity;
+            return {
+              ...oldCart,
+              items: oldCart.items.filter(
+                (item) => item._id !== productId && item.variantId !== variantId,
+              ),
+              totalItems: oldCart.totalItems - oldItemQuantity + quantity,
+              totalPrice:
+                oldCart.totalPrice -
+                itemPrice * oldItemQuantity +
+                itemPrice * quantity,
+              updatedAt: new Date(),
+            };
+          });
         });
       }
       if (ActionType === "clear") {
-        queryClient.setQueryData(["cart"], (oldCart) => {
-          if (!oldCart) return null;
-          return {
-            ...oldCart,
-            items: [],
-            totalItems: 0,
-            totalPrice: 0,
-            updatedAt: new Date(),
-          };
+        cartQueryKeys.forEach((key) => {
+          queryClient.setQueryData(key, (oldCart) => {
+            if (!oldCart) return null;
+            return {
+              ...oldCart,
+              items: [],
+              totalItems: 0,
+              totalPrice: 0,
+              updatedAt: new Date(),
+            };
+          });
         });
       }
-      return { previousCart };
+      return { previousCarts };
     },
     onError: (context) => {
       if (context.previousCart)
@@ -196,11 +207,11 @@ export default function useCart() {
 
   const couponInfo = useMemo(() => normalizeCouponInfo(cart), [cart]);
   const discountInMoney = useMemo(
-    () => calculateDiscount(couponInfo, cart.totalPrice),
-    [couponInfo, cart.totalPrice],
+    () => calculateDiscount(couponInfo, cart?.totalPrice),
+    [couponInfo, cart?.totalPrice],
   );
 
-  console.log(couponInfo , "couponInfo" , discountInMoney , "discountInMoney");
+  console.log(couponInfo, "couponInfo", discountInMoney, "discountInMoney");
 
   return {
     cart,

@@ -23,7 +23,7 @@ export default function useWishlistPage() {
   });
 
   const cartQuery = useQuery({
-    queryKey: ["cart"],
+    queryKey: ["cart", { includeCouponEligibility: false }],
     queryFn: getCart,
     placeholderData: (previousData) => previousData,
   });

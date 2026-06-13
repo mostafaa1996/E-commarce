@@ -1,13 +1,23 @@
 import { authFetch } from "./AuthFetch";
 const URL = import.meta.env.VITE_API_URL;
-export async function getCart() {
+export async function getCart({ includeCouponEligibility = false }) {
+  let res = null;
   // get database cart
-  const res = await authFetch(`${URL}/cart/`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  if (includeCouponEligibility) {
+    res = await authFetch(`${URL}/cart/cartPage`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  } else {
+    res = await authFetch(`${URL}/cart/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
 
   if (!res.ok) {
     throw new Error("Failed to fetch cart");
@@ -98,19 +108,4 @@ export async function syncCart({
   const data = await res.json();
   console.log(data);
   return data;
-}
-
-export async function getCartPage() {
-  const res = await authFetch(`${URL}/cart/cartPage`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  if (!res.ok) {
-    throw new Error("Failed to fetch cart");
-  }
-  const cart = await res.json();
-  console.log(cart);
-  return cart;
 }
