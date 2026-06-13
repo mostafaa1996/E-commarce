@@ -40,7 +40,7 @@ export default function SortingSection() {
         <DropDownMenu
           onSelect={onSelect}
           results={sortingArray}
-          className="w-[200%] overflow-y-clip left-[-50%] max-h-auto"
+          className="left-0 w-56 max-w-[calc(100vw-2rem)] overflow-y-auto sm:left-auto sm:right-0"
           ref={MenuRef}
         />
       )}

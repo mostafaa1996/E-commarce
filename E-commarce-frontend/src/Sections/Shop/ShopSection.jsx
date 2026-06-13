@@ -53,15 +53,15 @@ useEffect(() => {
   }
 
   return (
-    <div className="relative my-10 flex gap-10 mt-10 justify-center">
+    <div className="relative mx-auto my-6 flex w-full max-w-7xl flex-col gap-6 px-4 lg:my-10 lg:flex-row lg:justify-center lg:gap-10 lg:px-6">
       {(isFetching || isShopRouteLoading) && (
         <div className="absolute inset-0 z-20 flex items-start justify-center bg-white/60 pt-20 backdrop-blur-[1px]">
           <Loading message="Updating shop" />
         </div>
       )}
-      <div className="w-[60%] mt-10 flex flex-col justify-start gap-10">
-        <div className="max-w-8xl flex items-center justify-between">
-          <div className="flex items-center gap-5">
+      <div className="mt-4 flex w-full min-w-0 flex-col justify-start gap-6 lg:mt-10 lg:w-[60%] lg:gap-10">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5">
             <CurrentRangeOfResults
               from={
                 data?.pagination?.currentPage * MainQuery.limit -
@@ -88,7 +88,7 @@ useEffect(() => {
           }}
         />
       </div>
-      <aside className="w-[25%] mt-10 ml-10 flex flex-col gap-10">
+      <aside className="mt-2 flex w-full flex-col gap-6 lg:mt-10 lg:ml-4 lg:w-[25%] lg:gap-10">
         <SideBarFilterSection data={data} />
       </aside>
     </div>
