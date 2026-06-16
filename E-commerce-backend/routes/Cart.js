@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const CartController = require("../controllers/Cart");
 const isAuth = require("../MiddleWare/isauth");
-const CouponEligibilityCheck = require("../Middleware/CouponEligibilityCheck");
+const CouponEligibilityCheck = require("../MiddleWare/CouponEligibilityCheck");
 
 
 router.post("/", isAuth , CartController.SyncCart);

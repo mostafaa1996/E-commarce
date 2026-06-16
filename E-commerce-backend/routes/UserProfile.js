@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const UserProfileController = require("../controllers/UserProfile");
 const isAuth = require("../MiddleWare/isauth");
-const upload = require("../middleware/upload");
+const upload = require("../MiddleWare/upload");
 const {
   ValidatePersonalInfo,
 } = require("../Validation/UpdatePersonalInfoValidator");
