@@ -6,6 +6,13 @@ const { generateAccessToken, generateRefreshToken } = require("../utils/token");
 const User = require("../models/User");
 const {createNotifications} = require("../utils/createNotifications");
 
+const isProduction = process.env.NODE_ENV === "production";
+const refreshCookieOptions = {
+  httpOnly: true,
+  secure: isProduction,
+  sameSite: isProduction ? "none" : "lax",
+};
+
 exports.postSignup = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
@@ -77,9 +84,7 @@ exports.postLogin = async (req, res) => {
   res
     .status(200)
     .cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      ...refreshCookieOptions,
       maxAge: 7 * 24 * 60 * 60 * 1000,
     })
     .json({
@@ -103,9 +108,7 @@ exports.logout = async (req, res, next) => {
     await Token.deleteMany({ userId });
 
     res.clearCookie("refreshToken", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      ...refreshCookieOptions,
     });
 
     res.status(200).json({ message: "Logout successful" });

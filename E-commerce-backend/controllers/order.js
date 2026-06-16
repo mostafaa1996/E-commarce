@@ -233,7 +233,7 @@ exports.createOrder = async (req, res, next) => {
         paymentIntent.id,
         {
           payment_method: selectedCardId,
-          return_url: `${process.env.CLIENT_URL}/payment/complete/${order._id}`,
+          return_url: `${process.env.CLIENT_URL}/checkout/payment/complete/${order._id}`,
         },
       );
 

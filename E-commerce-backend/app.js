@@ -37,13 +37,30 @@ const ContactsRoute = require("./routes/contacts");
 const adminNotificationsRoute = require("./routes/adminNotifications");
 
 const app = express();
+const port = process.env.PORT || 3000;
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  "http://localhost:5173",
+].filter(Boolean);
+
+if (!process.env.MONGO_URI) {
+  console.error("MONGO_URI is required");
+  process.exit(1);
+}
+
 app.use("/api", stripeWebhookRoute);
 app.use(express.json()); // for parsing application/json
 app.use(cookieParser());
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -84,13 +101,12 @@ app.use((error, req, res, next) => {
 });
 
 mongoose
-  .connect(
-    "mongodb+srv://mostafahamdy:2201996220Mos@shoplite.ojxtkdz.mongodb.net/shoplite?",
-  )
+  .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("Connected to database!");
-    app.listen(3000, () => {
-      // startStockNotificationsTask();
+    app.listen(port, "0.0.0.0", () => {
+      console.log(`Server is running on port ${port}`);
+      startStockNotificationsTask();
     });
   })
   .catch((err) => {
