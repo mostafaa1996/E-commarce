@@ -2,8 +2,8 @@ import DropDownMenu from "@/components/genericComponents/DropDownMenu";
 import ProductsSortingOption from "@/components/genericComponents/ProductsSortingOption";
 import { useState , useRef , useEffect } from "react";
 import useURLQuery  from "@/hooks/UrlQuery";
-import { defaultShopQuery } from "@/Data/ShopQuery";
-import { sortingArray } from "@/Data/ShopQuery";
+import { defaultShopQuery } from "@/Data/shopQuery";
+import { sortingArray } from "@/Data/shopQuery";
 
 
 export default function SortingSection() {

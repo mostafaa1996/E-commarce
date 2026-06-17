@@ -1,4 +1,4 @@
-import SideBarFilter from "@/components/genericComponents/SideBarFilter";
+import SideBarFilter from "@/components/genericComponents/sideBarFilter";
 import PriceFilter from "@/Sections/Shop/PriceFilter";
 import ShowOnlyFilter from "@/Sections/Shop/ShowOnlyFilter";
 import useCurrency from "@/hooks/CurrencyChange";

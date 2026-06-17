@@ -50,7 +50,7 @@ import {
 } from "@/components/adminUI/card";
 import { Badge } from "@/components/adminUI/badge";
 import InputField from "@/components/genericComponents/InputField";
-import TextArea from "@/components/genericComponents/textarea";
+import TextArea from "@/components/genericComponents/TextArea";
 import { Label } from "@/components/genericComponents/Label";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/utils/utils";

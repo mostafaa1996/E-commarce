@@ -2,7 +2,7 @@ import {
   RadioGroup,
   RadioGroupItem,
 } from "@/components/genericComponents/RadioGroup";
-import { Label } from "@/components/genericComponents/label";
+import { Label } from "@/components/genericComponents/Label";
 import Icon from "@/system/icons/Icon";
 import { useQuery } from "@tanstack/react-query";
 import { getUserPaymentMethods } from "@/APIs/UserProfileService";

@@ -17,7 +17,7 @@ import {
 } from "@/components/adminUI/select";
 import InputField from "@/components/genericComponents/InputField";
 import { Label } from "@/components/genericComponents/Label";
-import Textarea from "@/components/genericComponents/textarea";
+import Textarea from "@/components/genericComponents/TextArea";
 
 const EMPTY_FORM = {
   name: "",

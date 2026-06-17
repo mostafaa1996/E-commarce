@@ -1,7 +1,7 @@
 import { CheckCircle2, MapPin, Send } from "lucide-react";
 import { AdminButton } from "@/components/adminUI/AdminButton";
 import  InputField  from "@/components/genericComponents/InputField";
-import  Textarea  from "@/components/genericComponents/Textarea";
+import  Textarea  from "@/components/genericComponents/TextArea";
 import ContactField from "./ContactField";
 
 export default function ContactFormSection({
