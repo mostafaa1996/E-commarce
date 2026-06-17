@@ -55,6 +55,21 @@ const allowedOrigins = [
   .map(normalizeOrigin)
   .filter(Boolean);
 
+const isAllowedVercelPreviewOrigin = (origin) => {
+  if (!origin) return false;
+
+  try {
+    const { protocol, hostname } = new URL(origin);
+    return (
+      protocol === "https:" &&
+      hostname.endsWith(".vercel.app") &&
+      hostname.startsWith("shoplite-")
+    );
+  } catch (error) {
+    return false;
+  }
+};
+
 if (!process.env.MONGO_URI) {
   console.error("MONGO_URI is required");
   process.exit(1);
@@ -69,7 +84,11 @@ app.use(
     origin(origin, callback) {
       const requestOrigin = normalizeOrigin(origin);
 
-      if (!requestOrigin || allowedOrigins.includes(requestOrigin)) {
+      if (
+        !requestOrigin ||
+        allowedOrigins.includes(requestOrigin) ||
+        isAllowedVercelPreviewOrigin(requestOrigin)
+      ) {
         return callback(null, true);
       }
 
@@ -120,6 +139,7 @@ mongoose
     console.log("Connected to database!");
     app.listen(port, "0.0.0.0", () => {
       console.log(`Server is running on port ${port}`);
+      console.log("Allowed CORS origins:", allowedOrigins);
       startStockNotificationsTask();
     });
   })
