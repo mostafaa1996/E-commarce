@@ -38,10 +38,22 @@ const adminNotificationsRoute = require("./routes/adminNotifications");
 
 const app = express();
 const port = process.env.PORT || 3000;
+const normalizeOrigin = (origin) => {
+  if (!origin) return null;
+
+  try {
+    return new URL(origin.trim()).origin;
+  } catch (error) {
+    return origin.trim().replace(/\/$/, "");
+  }
+};
+
 const allowedOrigins = [
-  process.env.CLIENT_URL,
+  ...(process.env.CLIENT_URL || "").split(","),
   "http://localhost:5173",
-].filter(Boolean);
+]
+  .map(normalizeOrigin)
+  .filter(Boolean);
 
 if (!process.env.MONGO_URI) {
   console.error("MONGO_URI is required");
@@ -55,7 +67,9 @@ app.use(cookieParser());
 app.use(
   cors({
     origin(origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
+      const requestOrigin = normalizeOrigin(origin);
+
+      if (!requestOrigin || allowedOrigins.includes(requestOrigin)) {
         return callback(null, true);
       }
 
