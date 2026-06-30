@@ -5,7 +5,11 @@ import { queryClient } from "@/queryClient";
 import { isError } from "react-query";
 import { useToast } from "@/hooks/use-toast";
 
-export default function useProductCart(product, selectedVariant, preloadedCart) {
+export default function useProductCart(
+  product,
+  selectedVariant,
+  preloadedCart,
+) {
   const { toast } = useToast();
   const cartQuery = useQuery({
     queryKey: ["cart", { includeCouponEligibility: false }],
@@ -40,7 +44,7 @@ export default function useProductCart(product, selectedVariant, preloadedCart) 
 
         const oldItems = oldCart.items || [];
 
-        if (ActionType === "add") {
+        if (ActionType === "updateQuantity") {
           return {
             ...oldCart,
             items: [...oldItems, { _id: productId, quantity, variantId }],
@@ -51,8 +55,7 @@ export default function useProductCart(product, selectedVariant, preloadedCart) 
           return {
             ...oldCart,
             items: oldItems.filter(
-              (item) =>
-                item._id !== productId || item.variantId !== variantId,
+              (item) => item._id !== productId || item.variantId !== variantId,
             ),
           };
         }
@@ -62,10 +65,31 @@ export default function useProductCart(product, selectedVariant, preloadedCart) 
 
       return { previousCart };
     },
+    onSuccess: (data) => {
+      if (data?.message == "Product deleted from cart successfully") {
+        toast({
+          title: "Removed from cart",
+          description: `${product.title} (${selectedVariant.sku})`,
+        });
+      } else if (
+        data?.message == "Cart updated successfully" ||
+        data?.message == "Cart created successfully"
+      ) {
+        toast({
+          title: "Added to cart",
+          description: `${product.title} (${selectedVariant.sku})`,
+        });
+      }
+    },
     onError: (_error, _variables, context) => {
       if (context?.previousCart) {
         queryClient.setQueryData(["cart"], context.previousCart);
       }
+      toast({
+        title: "Failed to update cart",
+        description: _error.message,
+        variant: "destructive",
+      });
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["cart"] });
@@ -74,10 +98,6 @@ export default function useProductCart(product, selectedVariant, preloadedCart) 
   });
 
   function addToCart(quantity) {
-    toast({
-      title: "Added to cart",
-      description: `${quantity} × ${product.title} (${selectedVariant.sku})`,
-    })
     cartMutation.mutate({
       ActionType: "updateQuantity",
       productId: product._id,
@@ -87,10 +107,6 @@ export default function useProductCart(product, selectedVariant, preloadedCart) 
   }
 
   function removeFromCart() {
-    toast({
-      title: "Removed from cart",
-      description: `${product.title} (${selectedVariant.sku})`,
-    })
     cartMutation.mutate({
       ActionType: "remove",
       productId: product._id,

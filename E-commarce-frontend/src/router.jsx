@@ -49,6 +49,7 @@ import ContactPage from "./Pages/ContactPage";
 import AboutPage from "./Pages/AboutPage";
 import { shortenText } from "./utils/utils";
 import { useAuthStore } from "./zustand_auth/authStore";
+import ProtectedRouteLayout from "@/layouts/protectedRouteLayout";
 
 export const router = createBrowserRouter([
   {
@@ -113,107 +114,92 @@ export const router = createBrowserRouter([
         },
       },
       {
-        path: "/cart",
-        element: <CartPage />,
-        handle: { items: [{ label: "Cart", href: "/cart" }] },
-        loader: async () => {
-          return queryClient.ensureQueryData({
-            queryKey: ["cart", { includeCouponEligibility: true }],
-            queryFn: () => getCart({ includeCouponEligibility: true }),
-          });
-        },
-      },
-      {
-        path: "/checkout",
-        element: <CheckoutPage />,
-        handle: { items: [{ label: "Checkout", href: "/checkout" }] },
-        loader: async () => {
-          return queryClient.ensureQueryData({
-            queryKey: ["checkout"],
-            queryFn: async () => {
-              const { cart, message, blocked } = await getCartData();
-              return {
-                cart,
-                message,
-                blocked,
-              };
+        element: <ProtectedRouteLayout />,
+        children: [
+          {
+            path: "/cart",
+            element: <CartPage />,
+            handle: { items: [{ label: "Cart", href: "/cart" }] },
+          },
+          {
+            path: "/checkout",
+            element: <CheckoutPage />,
+            handle: { items: [{ label: "Checkout", href: "/checkout" }] },
+            loader: async () => {
+              return queryClient.ensureQueryData({
+                queryKey: ["checkout"],
+                queryFn: async () => {
+                  const { cart, message, blocked } = await getCartData();
+                  return {
+                    cart,
+                    message,
+                    blocked,
+                  };
+                },
+              });
             },
-          });
-        },
-      },
-      {
-        path: "/profile",
-        element: <UserProfilePage />,
-        handle: { title: "Profile" },
-        loader: async () => {
-          return queryClient.ensureQueryData({
-            queryKey: ["profile"],
-            queryFn: getUserProfileData,
-            staleTime: 1000 * 60 * 5,
-          });
-        },
-      },
-      {
-        path: "/profile/orders",
-        element: <UserOrdersPage />,
-        handle: { title: "profile > Orders" },
-      },
-      {
-        path: "/profile/wishlist",
-        element: <WishListPage />,
-        handle: { title: "profile > WishList" },
-        loader: async () => {
-          return queryClient.ensureQueryData({
-            queryKey: ["profile-wishlist"],
-            queryFn: getUserWishlist,
-            staleTime: 1000 * 60 * 5,
-          });
-        },
-      },
-      {
-        path: "/profile/addresses",
-        element: <UserAddressesPage />,
-        handle: { title: "profile > Addresses" },
-        loader: async () => {
-          return queryClient.ensureQueryData({
-            queryKey: ["profile-addresses"],
-            queryFn: getUserAddresses,
-          });
-        },
-        action: async ({ request }) => await updateUserAddresses(request),
-      },
-      {
-        path: "/profile/payments",
-        element: <UserPaymentPage />,
-        handle: { title: "profile > Payments" },
-      },
-      {
-        path: "/profile/settings",
-        element: <UserSettingsPage />,
-        handle: { title: "profile > Settings" },
-        loader: async () => {
-          return queryClient.ensureQueryData({
-            queryKey: ["profile-settings"],
-            queryFn: () => {
-              return null;
+          },
+          {
+            path: "/profile",
+            element: <UserProfilePage />,
+            handle: { title: "Profile" },
+          },
+          {
+            path: "/profile/orders",
+            element: <UserOrdersPage />,
+            handle: { title: "profile > Orders" },
+          },
+          {
+            path: "/profile/wishlist",
+            element: <WishListPage />,
+            handle: { title: "profile > WishList" },
+          },
+          {
+            path: "/profile/addresses",
+            element: <UserAddressesPage />,
+            handle: { title: "profile > Addresses" },
+            loader: async () => {
+              return queryClient.ensureQueryData({
+                queryKey: ["profile-addresses"],
+                queryFn: getUserAddresses,
+              });
             },
-            staleTime: 1000 * 60 * 5,
-          });
-        },
-        action: async ({ request }) => await changePassword(request),
-      },
-      {
-        path: "/profile/edit-profile",
-        element: <EditUserProfilePage />,
-        handle: { title: "profile > Edit" },
-        loader: async () => {
-          return queryClient.ensureQueryData({
-            queryKey: ["profile-edit"],
-            queryFn: getPersonalInfo,
-            staleTime: 1000 * 60 * 5,
-          });
-        },
-        action: async ({ request }) => await UpdatePersonalInfo(request),
+            action: async ({ request }) => await updateUserAddresses(request),
+          },
+          {
+            path: "/profile/payments",
+            element: <UserPaymentPage />,
+            handle: { title: "profile > Payments" },
+          },
+          {
+            path: "/profile/settings",
+            element: <UserSettingsPage />,
+            handle: { title: "profile > Settings" },
+            loader: async () => {
+              return queryClient.ensureQueryData({
+                queryKey: ["profile-settings"],
+                queryFn: () => {
+                  return null;
+                },
+                staleTime: 1000 * 60 * 5,
+              });
+            },
+            action: async ({ request }) => await changePassword(request),
+          },
+          {
+            path: "/profile/edit-profile",
+            element: <EditUserProfilePage />,
+            handle: { title: "profile > Edit" },
+            loader: async () => {
+              return queryClient.ensureQueryData({
+                queryKey: ["profile-edit"],
+                queryFn: getPersonalInfo,
+                staleTime: 1000 * 60 * 5,
+              });
+            },
+            action: async ({ request }) => await UpdatePersonalInfo(request),
+          },
+        ],
       },
       {
         path: "/home",
