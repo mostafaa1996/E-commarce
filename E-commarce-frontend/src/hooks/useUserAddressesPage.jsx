@@ -36,6 +36,44 @@ export default function useUserAddressesPage() {
     [addressesQuery.data],
   );
 
+  const addressErrorForm = useMemo(() => {
+    if (!Array.isArray(actionData)) return {};
+    return {
+      name:
+        actionData
+          ?.filter((error) => error.path === "name")
+          .map((error) => error.msg) || [],
+      phone:
+        actionData
+          ?.filter((error) => error.path === "phone")
+          .map((error) => error.msg) || [],
+      street:
+        actionData
+          ?.filter((error) => error.path === "street")
+          .map((error) => error.msg) || [],
+      city:
+        actionData
+          ?.filter((error) => error.path === "city" || error.path === "state")
+          .map((error) => error.msg) || [],
+      country:
+        actionData
+          ?.filter((error) => error.path === "country")
+          .map((error) => error.msg) || [],
+      zipCode:
+        actionData
+          ?.filter((error) => error.path === "zipCode")
+          .map((error) => error.msg) || [],
+      email:
+        actionData
+          ?.filter((error) => error.path === "email")
+          .map((error) => error.msg) || [],
+      label:
+        actionData
+          ?.filter((error) => error.path === "label")
+          .map((error) => error.msg) || [],
+    };
+  }, [actionData]);
+
   const defaultAddressId =
     defaultAddressOverride ||
     addresses.find((address) => address.isDefault)?._id ||
@@ -113,6 +151,7 @@ export default function useUserAddressesPage() {
     editingAddress,
     shouldShowEditForm,
     shouldShowAddForm,
+    addressErrorForm,
     handleEdit,
     handleAdd,
     handleGoToAddAddress,

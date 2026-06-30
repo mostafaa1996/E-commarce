@@ -17,6 +17,7 @@ export default function UserAddressesPage() {
     editingAddress,
     shouldShowEditForm,
     shouldShowAddForm,
+    addressErrorForm,
     handleEdit,
     handleAdd,
     handleDelete,
@@ -56,6 +57,7 @@ export default function UserAddressesPage() {
             buttonIconName="save"
             onCancel={handleCancel}
             InitialFormData={editingAddress}
+            errorForm={addressErrorForm}
           />
         )}
         {shouldShowAddForm && (
@@ -64,6 +66,7 @@ export default function UserAddressesPage() {
             buttonText="Add"
             buttonIconName="plus"
             onCancel={handleCancel}
+            errorForm={addressErrorForm}
           />
         )}
         {addresses.length > 0 ? (
