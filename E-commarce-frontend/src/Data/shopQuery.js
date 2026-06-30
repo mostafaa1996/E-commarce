@@ -16,8 +16,6 @@ export const defaultShopQuery = {
 export const sortingArray = [
   "price-asc",
   "price-desc",
-  "newest",
-  "oldest",
   "rating",
   "Alphabetical",
   "ReverseAlphabetical",
