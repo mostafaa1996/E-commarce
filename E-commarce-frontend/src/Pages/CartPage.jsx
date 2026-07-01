@@ -26,6 +26,8 @@ export default function CartPage() {
     savings,
     discountInMoney,
     couponInfo,
+    cartLoading,
+    cartFetching,  
   } = useCart();
 
   if (isLoadingCart && !cart) {
@@ -92,6 +94,7 @@ export default function CartPage() {
             />
           </div>
         )}
+        {(cartLoading || cartFetching) && <Loading message="Updating cart" overlay />}
       </main>
     </div>
   );

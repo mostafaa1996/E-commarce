@@ -3,6 +3,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { getCart, syncCart } from "@/APIs/CartService";
 import { queryClient } from "@/queryClient";
 import { useMemo, useState } from "react";
+import {useToast} from "@/hooks/use-toast";
 
 function normalizeCouponInfo(cart) {
   const couponOffer = cart?.couponOffer || {};
@@ -41,12 +42,14 @@ function calculateDiscount(couponInfo, totalCost) {
 
 export default function useCart() {
   const navigate = useNavigate();
+  const toast = useToast();
   const [promo, setPromo] = useState("");
   const [appliedPromo, setAppliedPromo] = useState(false);
   const {
     //update cartStore from database
     data: cart,
     isLoading: isLoadingCart,
+    isFetching: cartFetching,
     error: cartError,
   } = useQuery({
     queryKey: ["cart", { includeCouponEligibility: true }],
@@ -124,9 +127,15 @@ export default function useCart() {
       }
       return { previousCarts };
     },
-    onError: (context) => {
+    onError: (context , _error) => {
       if (context.previousCart)
         queryClient.setQueryData(["cart"], context.previousCart);
+      if(_error.data?.message) toast({ 
+        title: "Failed to update cart",
+        description: _error.data.message,
+        variant: "destructive",
+        duration: 5000
+       });
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["cart"] });
@@ -214,5 +223,7 @@ export default function useCart() {
     savings,
     discountInMoney,
     couponInfo,
+    cartLoading : syncCartMutation.isPending,
+    cartFetching
   };
 }

@@ -87,7 +87,7 @@ export default function useProductCart(
       }
       toast({
         title: "Failed to update cart",
-        description: _error.message,
+        description: _error.data?.message,
         variant: "destructive",
       });
     },

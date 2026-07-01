@@ -26,9 +26,9 @@ exports.getCart = async (req, res, next) => {
     if (!cart) {
       return res.status(200).json({ message: "Cart not found" });
     }
-    
+
     if (cart.promo.code) {
-      couponInCart = await Coupon.findOne({ 
+      couponInCart = await Coupon.findOne({
         code: cart.promo.code,
         status: "ACTIVE",
         startDate: { $lte: Date.now() },
@@ -37,14 +37,14 @@ exports.getCart = async (req, res, next) => {
           { usageLimit: 0 },
           { $expr: { $lt: ["$usageCount", "$usageLimit"] } },
         ],
-       });
+      });
     }
 
     const totalPrice = cart.totalPrice;
     const discount = cart.promo?.discountInMoney || 0;
     const subtotalAfterDiscount = Math.max(cart.itemsPrice - discount, 0);
     cart.totalPrice = cart.TAX + cart.shippingCost + subtotalAfterDiscount;
-    if(cart.totalPrice !== totalPrice){
+    if (cart.totalPrice !== totalPrice) {
       await cart.save();
     }
 
@@ -53,7 +53,7 @@ exports.getCart = async (req, res, next) => {
       itemsPrice: cart.itemsPrice,
       createdAt: cart.createdAt,
       updatedAt: cart.updatedAt,
-      couponOffer: couponInCart? couponInCart : eligibility || null,
+      couponOffer: couponInCart ? couponInCart : eligibility || null,
       shippingCost: cart.shippingCost,
       vat: cart.TAX,
       totalPrice: cart.totalPrice,
@@ -98,6 +98,16 @@ exports.SyncCart = async (req, res, next) => {
     }
 
     const { product, Variant } = result;
+    if (!cartService.checkStock(Variant, Quantity)) {
+      return res
+        .status(400)
+        .json({ message: `Only ${Variant.stock} items are available` });
+    }
+    if (!cartService.checkVariantAvailability(Variant)) {
+      return res.status(409).json({
+        message: "This product variant is unavailable",
+      });
+    }
     const currentCart = await cartService.checkCartAvailability(user._id);
     //create new cart
     if (currentCart === null) {
@@ -157,7 +167,10 @@ exports.SyncCart = async (req, res, next) => {
         );
       }
       await cartService.calculateTax(currentCart);
-      const updatedCart = await currentCart.save();
+
+      cartService.recalculatePromoDiscount(currentCart);
+
+      await currentCart.save();
 
       return res.status(200).json({ message: "Cart updated successfully" });
     }
@@ -207,6 +220,8 @@ exports.deleteCartItem = async (req, res, next) => {
       0,
     );
 
+    cartService.recalculatePromoDiscount(cart);
+
     if (cart.products.length === 0) {
       await Cart.findByIdAndDelete(cart._id);
       user.cart = null;
@@ -249,17 +264,26 @@ exports.applyPromoCode = async (req, res, next) => {
         message: "Coupon is invalid or expired",
       });
     }
-    if (!eligibility || String(eligibility.coupon?._id) !== String(coupon._id)) {
+    if (
+      !eligibility ||
+      String(eligibility.coupon?._id) !== String(coupon._id)
+    ) {
       return res.status(400).json({ message: "Coupon is not eligible" });
     }
     if (coupon.discountType.toLowerCase() === "percentage") {
       promoDiscountInMoney = cart.itemsPrice * (coupon.discountValue / 100);
+      cart.promo.discountType = "PERCENTAGE";
+      cart.promo.discountValue = coupon.discountValue;
     } else if (coupon.discountType.toLowerCase() === "fixed") {
       promoDiscountInMoney = Math.min(coupon.discountValue, cart.itemsPrice);
+      cart.promo.discountType = "FIXED";
+      cart.promo.discountValue = coupon.discountValue;
     } else if (coupon.discountType.toLowerCase() === "free_shipping") {
       cart.promo.code = promoCode;
       cart.promo.appliedAt = Date.now();
       cart.promo.discountInMoney = 0;
+      cart.promo.discountValue = 0;
+      cart.promo.discountType = "FREE_SHIPPING";
       await cart.save();
       return res
         .status(200)

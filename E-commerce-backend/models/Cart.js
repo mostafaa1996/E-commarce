@@ -54,6 +54,15 @@ const CartSchema = new mongoose.Schema({
     discountInMoney: {
       type: Number,
       default: 0
+    },
+    discountType: {
+      type: String,
+      enum: ["PERCENTAGE", "FIXED", "FREE_SHIPPING"],
+      default: "PERCENTAGE"
+    },
+    discountValue: {
+      type: Number,
+      default: 0
     }
   },
   shippingCost: {

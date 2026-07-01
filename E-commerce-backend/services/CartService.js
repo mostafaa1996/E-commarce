@@ -79,6 +79,30 @@ async function addingNewProduct(cart, product , variant, Quantity) {
   cart.updatedAt = Date.now();
 }
 
+function recalculatePromoDiscount(cart) {
+  if (!cart.promo?.code) return;
+
+  if (cart.promo.discountType === "PERCENTAGE") {
+    cart.promo.discountInMoney =
+      cart.itemsPrice * (cart.promo.discountValue / 100);
+  } else if (cart.promo.discountType === "FIXED") {
+    cart.promo.discountInMoney = Math.min(
+      cart.promo.discountValue,
+      cart.itemsPrice,
+    );
+  }
+}
+
+function checkStock(variant, quantity) {
+  if (variant.stock < quantity) return false;
+  return true;
+}
+
+function checkVariantAvailability(variant) {
+  if (!variant.isActive || variant.availabilityStatus === "OUT_OF_STOCK") return false;
+  return true;
+}
+
 module.exports = {
   calculateTax,
   calculateShippingCost,
@@ -87,4 +111,7 @@ module.exports = {
   checkItemAvailability,
   UpdatingExistingItem,
   addingNewProduct,
+  recalculatePromoDiscount,
+  checkStock,
+  checkVariantAvailability
 };
