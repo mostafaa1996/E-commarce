@@ -1,0 +1,90 @@
+const VAT_shipping = require("../models/VAT");
+const User = require("../models/User");
+const Cart = require("../models/Cart");
+const Product = require("../models/Product");
+async function calculateTax(cart) {
+  const taxConfig = await VAT_shipping.findOne({}).select("vat").lean();
+  const vatRate = Number(taxConfig?.vat) || 0;
+  cart.TAX = cart.itemsPrice * vatRate;
+}
+
+function calculateShippingCost(address, shippingPlaces) {
+  const normalizedDelivery = (shippingPlaces || []).map((delivery) => ({
+    ...delivery,
+    place: String(delivery.place || "")
+      .trim()
+      .toLowerCase(),
+  }));
+
+  const locationParts = [
+    addressOfUser?.city,
+    addressOfUser?.state,
+    addressOfUser?.country,
+  ]
+    .filter(Boolean)
+    .map((part) => String(part).trim().toLowerCase());
+
+  const exactShippingLocation = normalizedDelivery.find((delivery) =>
+    locationParts.includes(delivery.place),
+  );
+
+  return exactShippingLocation?.cost || 0;
+}
+
+async function checkCartAvailability(userId) {
+  const cart = await Cart.findOne({ userId });
+  if (!cart) return null;
+  return cart;
+}
+async function getProductWithVariant(id, variantId) {
+  const product = await Product.findById(id);
+  if (!product) return null;
+  const Variant = product.variants.find(
+    (variant) => variant._id.toString() === variantId,
+  );
+  if (!Variant) return null;
+  return { product, Variant };
+}
+
+async function checkItemAvailability(cart, productId, variantId) {
+  const existingProduct = cart.products.find(
+    (item) =>
+      item.productId.toString() === productId &&
+      item.variantId.toString() === variantId,
+  );
+
+  if (existingProduct) return existingProduct;
+
+  return null;
+}
+async function UpdatingExistingItem(cart, existingProduct, Quantity) {
+  const subtotal = Quantity * existingProduct.price;
+  cart.totalItems += Quantity - existingProduct.quantity;
+  cart.itemsPrice += subtotal - existingProduct.subtotal;
+  existingProduct.quantity = Quantity;
+  existingProduct.subtotal = subtotal;
+  cart.updatedAt = Date.now();
+}
+
+async function addingNewProduct(cart, product , variant, Quantity) {
+  cart.products.push({
+    productId: product._id,
+    variantId: variant._id,
+    quantity: Quantity,
+    price: variant.price,
+    subtotal: variant.price * Quantity,
+  });
+  cart.totalItems += Quantity;
+  cart.itemsPrice += variant.price * Quantity;
+  cart.updatedAt = Date.now();
+}
+
+module.exports = {
+  calculateTax,
+  calculateShippingCost,
+  checkCartAvailability,
+  getProductWithVariant,
+  checkItemAvailability,
+  UpdatingExistingItem,
+  addingNewProduct,
+};

@@ -77,11 +77,11 @@ export default function CartPage() {
             <OrderSummary
               promo={promo}
               appliedPromo={appliedPromo}
-              subtotal={cart?.items?.reduce((acc, item) => acc + item.subtotal, 0) ?? 0}
+              subtotal={cart?.itemsPrice ?? 0}
               savings={savings}
               vat={cart?.vat ?? 0}
               shipping={cart?.shipping ?? 0}
-              total={cart?.totalCost ?? 0}
+              total={cart?.totalPrice ?? 0}
               discount = {discountInMoney}
               onPromoChange={setPromo}
               onApplyPromo={onApplyPromo}

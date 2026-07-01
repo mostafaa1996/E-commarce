@@ -69,9 +69,6 @@ export default function useCart() {
         cartQueryKeys.forEach((key) => {
           queryClient.setQueryData(key, (oldCart) => {
             if (!oldCart) return null;
-            const itemPrice = oldCart.items.find(
-              (item) => item._id === productId && item.variantId === variantId,
-            )?.price;
             const oldItemQuantity = oldCart.items.find(
               (item) => item._id === productId && item.variantId === variantId,
             )?.quantity;
@@ -88,10 +85,6 @@ export default function useCart() {
                 return item;
               }),
               totalItems: oldCart.totalItems - oldItemQuantity + quantity,
-              totalPrice:
-                oldCart.totalPrice -
-                itemPrice * oldItemQuantity +
-                itemPrice * quantity,
               updatedAt: new Date(),
             };
           });
@@ -101,9 +94,6 @@ export default function useCart() {
         cartQueryKeys.forEach((key) => {
           queryClient.setQueryData(key, (oldCart) => {
             if (!oldCart) return null;
-            const itemPrice = oldCart.items.find(
-              (item) => item._id === productId && item.variantId === variantId,
-            )?.price;
             const oldItemQuantity = oldCart.items.find(
               (item) => item._id === productId && item.variantId === variantId,
             )?.quantity;
@@ -113,10 +103,6 @@ export default function useCart() {
                 (item) => item._id !== productId && item.variantId !== variantId,
               ),
               totalItems: oldCart.totalItems - oldItemQuantity + quantity,
-              totalPrice:
-                oldCart.totalPrice -
-                itemPrice * oldItemQuantity +
-                itemPrice * quantity,
               updatedAt: new Date(),
             };
           });
@@ -211,7 +197,7 @@ export default function useCart() {
     [couponInfo, cart?.totalPrice],
   );
 
-  console.log(couponInfo, "couponInfo", discountInMoney, "discountInMoney");
+  console.log(couponInfo, "couponInfo", discountInMoney, "discountInMoney" , cart , "cart");
 
   return {
     cart,
