@@ -2,7 +2,7 @@ const { on } = require("../models/ExchangeRate");
 const Product = require("../models/Product");
 const Category = require("../models/Category");
 const mongoose = require("mongoose");
-const createActivityLog = require("../utils/CreateActivityLogs");
+const createActivityLog = require("../services/CreateActivityLogs");
 
 function escapeRegex(value = "") {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -176,7 +176,7 @@ exports.addProduct = async (req, res, next) => {
     if (!req.user || req.user.role !== "admin") {
       return res.status(403).json({ message: "Access denied. Admins only." });
     }
-    
+
     const body = req.body || {};
     const title = String(body.title || body.name || "").trim();
     const slug =
@@ -300,12 +300,13 @@ exports.addProduct = async (req, res, next) => {
           body.shipping.estimatedDeliveryMaxDate || "",
         ),
         shipsFrom: String(body.shipping.shipsFrom || ""),
-        costs: body?.shipping?.costs?.map((cost) => {
+        costs:
+          body?.shipping?.costs?.map((cost) => {
             return {
-                shipsTo: String(cost.shipsTo || ""),
-                cost: Number(cost.cost || 0),
-            }
-        }) || [],
+              shipsTo: String(cost.shipsTo || ""),
+              cost: Number(cost.cost || 0),
+            };
+          }) || [],
       },
       returnPolicy: {
         isReturnAccepted: String(body.returnPolicy.isReturnAccepted || ""),
@@ -316,13 +317,13 @@ exports.addProduct = async (req, res, next) => {
       reviewSummary: {
         averageRating: 5,
         reviewsCount: 0,
-        ratingBreakdown:{
-            one: 0,
-            two: 0,
-            three: 0,
-            four: 0,
-            five: 0,
-          },
+        ratingBreakdown: {
+          one: 0,
+          two: 0,
+          three: 0,
+          four: 0,
+          five: 0,
+        },
       },
       soldCount: 0,
       viewsCount: 0,
@@ -339,8 +340,8 @@ exports.addProduct = async (req, res, next) => {
     await createdProduct.save();
 
     await Category.updateOne(
-        { _id: product.category },
-        { $push: { attachedProducts: product._id } },
+      { _id: product.category },
+      { $push: { attachedProducts: product._id } },
     );
 
     return res.status(201).json({
@@ -349,14 +350,14 @@ exports.addProduct = async (req, res, next) => {
     });
   } catch (err) {
     next(err);
-  }finally {
-    if(createdProduct.title){
+  } finally {
+    if (createdProduct.title) {
       createActivityLog({
         type: "PRODUCT_CREATED",
         title: "Product created",
         message: `Product ${createdProduct.title} added to catalog`,
       });
-    }else{
+    } else {
       createActivityLog({
         type: "PRODUCT_CREATED",
         title: "Product creation",
@@ -375,7 +376,7 @@ exports.updateProduct = async (req, res, next) => {
 
     const product = await Product.findById(req.params.id);
     console.log(product);
-    
+
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
@@ -526,7 +527,9 @@ exports.updateProduct = async (req, res, next) => {
         ? product.tags
         : [];
     product.seo = {
-      metaTitle: String(body.seo?.metaTitle || product?.seo?.metaTitle || title),
+      metaTitle: String(
+        body.seo?.metaTitle || product?.seo?.metaTitle || title,
+      ),
       metaDescription: String(
         body.seo?.metaDescription || product?.seo?.metaDescription || "",
       ),
@@ -578,14 +581,14 @@ exports.updateProduct = async (req, res, next) => {
     });
   } catch (err) {
     next(err);
-  }finally {
-    if (updatedProduct.title){
+  } finally {
+    if (updatedProduct.title) {
       createActivityLog({
         type: "PRODUCT_UPDATED",
         title: "Product updated",
         message: `Product ${updatedProduct.title} was updated`,
       });
-    }else{
+    } else {
       createActivityLog({
         type: "PRODUCT_UPDATED",
         title: "Product update",
@@ -602,9 +605,7 @@ exports.deleteProduct = async (req, res, next) => {
       return res.status(403).json({ message: "Access denied. Admins only." });
     }
 
-    product = await Product.findById(req.params.id).select(
-      "_id category",
-    );
+    product = await Product.findById(req.params.id).select("_id category");
 
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
@@ -624,14 +625,14 @@ exports.deleteProduct = async (req, res, next) => {
     });
   } catch (err) {
     next(err);
-  }finally {
-    if(product.title){
+  } finally {
+    if (product.title) {
       createActivityLog({
         type: "PRODUCT_DELETED",
         title: "Product deleted",
         message: `Product ${product.title} was deleted`,
       });
-    }else{
+    } else {
       createActivityLog({
         type: "PRODUCT_DELETED",
         title: "Product deletion ",

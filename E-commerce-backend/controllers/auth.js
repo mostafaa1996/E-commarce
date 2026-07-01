@@ -2,9 +2,12 @@ require("dotenv").config();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Token = require("../models/token");
-const { generateAccessToken, generateRefreshToken } = require("../utils/token");
+const {
+  generateAccessToken,
+  generateRefreshToken,
+} = require("../services/token");
 const User = require("../models/User");
-const {createNotifications} = require("../utils/createNotifications");
+const { createNotifications } = require("../services/createNotifications");
 
 const isProduction = process.env.NODE_ENV === "production";
 const refreshCookieOptions = {
@@ -89,7 +92,12 @@ exports.postLogin = async (req, res) => {
     })
     .json({
       accessToken,
-      user: { id: user._id, email: user.email, role: user.role , status: user.status},
+      user: {
+        id: user._id,
+        email: user.email,
+        role: user.role,
+        status: user.status,
+      },
     });
 };
 
@@ -132,6 +140,11 @@ exports.refresh = async (req, res) => {
 
   res.status(200).json({
     accessToken,
-    user: { id: user._id, email: user.email, role: user.role , status: user.status},
+    user: {
+      id: user._id,
+      email: user.email,
+      role: user.role,
+      status: user.status,
+    },
   });
 };

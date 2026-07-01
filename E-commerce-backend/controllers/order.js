@@ -4,11 +4,11 @@ const Order = require("../models/Order");
 const Product = require("../models/Product");
 const { Coupon } = require("../models/Coupons");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-const getOrCreateCustomer = require("../utils/StripeCustomer");
+const getOrCreateCustomer = require("../services/StripeCustomer");
 const Address = require("../models/Address");
 const Cart = require("../models/Cart");
-const { formatOrderId } = require("../utils/formatOrderNumber");
-const { createNotifications } = require("../utils/createNotifications");
+const { formatOrderId } = require("../services/formatOrderNumber");
+const { createNotifications } = require("../services/createNotifications");
 const { link } = require("../routes/shop");
 exports.createOrder = async (req, res, next) => {
   try {

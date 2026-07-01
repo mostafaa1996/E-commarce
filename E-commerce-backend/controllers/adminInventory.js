@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Product = require("../models/Product");
-const createActivityLog = require("../utils/CreateActivityLogs");
+const createActivityLog = require("../services/CreateActivityLogs");
 function normalizePositiveNumber(value, fallback) {
   const parsed = Number(value);
 
@@ -307,7 +307,7 @@ exports.updateInventory = async (req, res, next) => {
         title: "Product Inventory Updated",
         message: `Updated stock of ${product.title}`,
       });
-    }else{
+    } else {
       createActivityLog({
         type: "PRODUCT_UPDATED",
         title: "Product Inventory Update",

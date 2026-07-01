@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { Coupon, Discount } = require("../models/Coupons");
 const Product = require("../models/Product");
-const createActivityLog = require("../utils/CreateActivityLogs");
+const createActivityLog = require("../services/CreateActivityLogs");
 const { schema } = require("../models/ExchangeRate");
 
 const COUPON_TYPES = ["PERCENTAGE", "FIXED", "FREE_SHIPPING"];
@@ -287,8 +287,8 @@ exports.createCouponForCustomer = async (req, res, next) => {
       ELIGIBILITY_TYPES,
       "MIN_ORDER_VALUE",
     );
-     
-    const active  = body.active?? false;
+
+    const active = body.active ?? false;
 
     if (!code) {
       return res.status(400).json({ message: "Coupon code is required." });
@@ -576,7 +576,11 @@ exports.updateCouponForCustomer = async (req, res, next) => {
     }
 
     if (body.discountType !== undefined) {
-      const nextType = normalizeEnum(body.discountType, COUPON_TYPES, coupon.discountType);
+      const nextType = normalizeEnum(
+        body.discountType,
+        COUPON_TYPES,
+        coupon.discountType,
+      );
 
       if (!nextType) {
         return res.status(400).json({ message: "Invalid coupon type." });
@@ -621,7 +625,9 @@ exports.updateCouponForCustomer = async (req, res, next) => {
     }
 
     if (body.eligibilityValue !== undefined) {
-      const nextEligibilityValue = parseNonNegativeNumber(body.eligibilityValue);
+      const nextEligibilityValue = parseNonNegativeNumber(
+        body.eligibilityValue,
+      );
 
       if (nextEligibilityValue === null) {
         return res
@@ -633,7 +639,11 @@ exports.updateCouponForCustomer = async (req, res, next) => {
     }
 
     if (body.eligibilityType !== undefined) {
-      const nextType = normalizeEnum(body.eligibilityType, ELIGIBILITY_TYPES , coupon.eligibilityType);
+      const nextType = normalizeEnum(
+        body.eligibilityType,
+        ELIGIBILITY_TYPES,
+        coupon.eligibilityType,
+      );
 
       if (!nextType) {
         return res.status(400).json({ message: "Invalid coupon type." });
