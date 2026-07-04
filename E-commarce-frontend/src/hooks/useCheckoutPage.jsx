@@ -2,10 +2,8 @@ import { getCartData } from "@/APIs/checkoutService";
 import useCheckoutStore from "@/zustand_checkout/checkoutStore";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { useLoaderData } from "react-router-dom";
 
 export default function useCheckoutPage() {
-  const initialData = useLoaderData();
   const [orderNotes, setOrderNotes] = useState("");
   const { orderState } = useCheckoutStore();
 
@@ -20,7 +18,6 @@ export default function useCheckoutPage() {
         blocked: response.blocked,
       };
     },
-    initialData,
   });
 
   function setNotes(event) {

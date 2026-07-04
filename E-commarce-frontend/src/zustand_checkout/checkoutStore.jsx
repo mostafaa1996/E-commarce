@@ -7,6 +7,12 @@ const useCheckoutStore = create((set) => ({
     paymentType :"cod",
     orderState: "InProgress",
     orderId: null,
+    orderResults:{
+      state: "",
+      message: "",
+      header: "",
+      IconName: "",
+    },
     setPaymentMethodState: (PaymentMethodState) => {
         return set({ PaymentMethodState });
     },
@@ -26,6 +32,9 @@ const useCheckoutStore = create((set) => ({
     },
     setOrderId: (orderId) => {
         return set({ orderId });
+    },
+    setOrderResults: (orderResults) => {
+        return set({ orderResults });
     },
 }));
 

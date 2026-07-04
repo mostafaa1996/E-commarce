@@ -1,45 +1,58 @@
-require("dotenv").config();
-const User = require("../models/User");
-const Order = require("../models/Order");
-const Product = require("../models/Product");
-const { Coupon } = require("../models/Coupons");
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-const getOrCreateCustomer = require("../services/StripeCustomer");
-const Address = require("../models/Address");
-const Cart = require("../models/Cart");
-const { formatOrderId } = require("../services/formatOrderNumber");
-const { createNotifications } = require("../services/createNotifications");
-const { link } = require("../routes/shop");
+const mongoose = require("mongoose");
+const PlaceOrderService = require("../services/PlaceOrderService");
+const checkoutService = require("../services/checkoutService");
 exports.createOrder = async (req, res, next) => {
   try {
     // console.log(req.body);
-    const userId = req.user?.id;
-    const user = await User.findById(userId);
-    if (!user)
-      return res
-        .status(401)
-        .json({ message: "User not found", nextAction: "Error" });
+    const user = req.user;
+    const userId = user._id;
     // ***************** populate the order details from the request body *****************
-    const Notes = req.body.orderNotes || "";
-    const paymentMethod = req.body.paymentType || "";
+    const Notes = req.body?.orderNotes || "";
+    const paymentMethod = req.body?.paymentType || "";
+    const selectedCardId = req.body?.selectedCard || "";
     if (paymentMethod !== "cod" && paymentMethod !== "card") {
-      return res.status(401).json({
-        message: "Invalid payment method",
+      return res.status(400).json({
+        message:
+          "Invalid payment method.Payment method must be 'cod' or 'card' so we need you to provide a valid payment method",
         nextAction: "payment_Invalid",
+        header: "payment Invalid",
+        IconName: "triangleAlert",
+      });
+    }
+    if (paymentMethod === "card" && !selectedCardId) {
+      return res.status(400).json({
+        message:
+          "A payment card is required. Please provide a valid payment card",
+        nextAction: "payment_Invalid",
+        header: "payment Invalid",
+        IconName: "triangleAlert",
       });
     }
     /** Find the shipping details */
-    const addresses = await Address.find({ user: userId });
-    let reqAddress = null;
-    if (addresses && addresses.length > 0) {
-      reqAddress = addresses.find((address) => address.isDefault === true);
-      if (reqAddress === undefined) reqAddress = addresses[0];
-    }
-    if (!reqAddress)
-      return res.status(401).json({
+    const reqAddress = await PlaceOrderService.handleAddressPreparation(userId);
+    if (reqAddress === "No default address found")
+      return res.status(422).json({
+        message:
+          "Can`t determine which address to use. Please add a default address",
+        nextAction: "Missing_Default_address",
+        header: "Missing Default address",
+        IconName: "userX",
+      });
+    if (Array.isArray(reqAddress) && reqAddress.length === 0)
+      return res.status(422).json({
         message: "Shipping address not found",
         nextAction: "Address_missing",
+        header: "Address Required",
+        IconName: "userX",
       });
+    if (reqAddress === null) {
+      return res.status(422).json({
+        message: "Shipping address is not found for this user",
+        nextAction: "Address_missing",
+        header: "Address Required",
+        IconName: "userX",
+      });
+    }
     //sanitize the shipping details
     const shippingAddress = {
       firstName: reqAddress.name?.split(" ")[0] || "",
@@ -52,279 +65,273 @@ exports.createOrder = async (req, res, next) => {
       street: reqAddress.street || "",
       phone: reqAddress.phone || "",
       email: reqAddress.email || "",
-      Apartment: reqAddress.street?.split(",").slice(2).join(",") || "",
+      Apartment: reqAddress.street?.split(",").slice(1).join(",") || "",
     };
 
-    /** get the cart */
-    const cart = await Cart.findOne({ userId });
-    if (!cart) {
-      return res
-        .status(401)
-        .json({ message: "Cart not found", nextAction: "Error" });
-    }
-    if (!cart.products.length) {
-      return res.status(401).json({
-        message: "Cart is empty",
-        nextAction: "Cart_empty",
+    /** get the cart and the cartItems */
+    const CartResult = await PlaceOrderService.getCartAndCartItems(userId);
+    if (CartResult === "No cart found") {
+      return res.status(404).json({
+        message: "Cart not found.something went wrong, Please try again",
+        nextAction: "Error",
+        header: "Cart not found",
+        IconName: "cart",
       });
     }
-    const orderItems = cart.products.map((product) => ({
-      quantity: product.quantity,
-      subtotal: product.subtotal,
-      price: product.price,
-      product: product.productId,
-      variant: product.variantId,
-    }));
+    if (CartResult === "cart is empty") {
+      return res.status(409).json({
+        message:
+          "Cart is empty and cannot be ordered. Please add items to the cart",
+        nextAction: "Cart_empty",
+        header: "Cart is empty",
+        IconName: "cart",
+      });
+    }
+    const { orderItems, cart } = CartResult;
 
-    const selectedCardId = req.body.selectedCard || "";
+    const cartItemValidation =
+      await PlaceOrderService.validateCartItemsForOrder(cart);
+    if (!cartItemValidation.valid) {
+      const messages = {
+        PRODUCT_NOT_FOUND: "A product or variant in the cart no longer exists",
+        PRODUCT_UNAVAILABLE: "A product or variant in the cart is unavailable",
+        INSUFFICIENT_STOCK: `Only ${cartItemValidation.availableStock} items are available`,
+        PRICE_CHANGED: "A product price changed. Review the updated cart total",
+      };
+
+      return res.status(409).json({
+        message:
+          messages[cartItemValidation.reason] ||
+          "The cart must be reviewed before ordering",
+        nextAction: "Error",
+        reason: cartItemValidation.reason,
+        header: "Cart Invalid",
+        IconName: "cart",
+      });
+    }
+
+    const couponValidation = await PlaceOrderService.validateAppliedCoupon(
+      cart,
+      user,
+    );
+    if (!couponValidation.valid) {
+      return res.status(409).json({
+        message: "The applied coupon is no longer available or invalid",
+        nextAction: "Error",
+        reason: "Coupon_invalid",
+        header: "Coupon Invalid",
+        IconName: "cart",
+      });
+    }
+
+    // ***************** calculate the shipping cost *****************
+    let shippingCost =
+      await PlaceOrderService.calculateShippingCost(reqAddress);
+    if (shippingCost === "Shipping location not supported") {
+      return res.status(422).json({
+        message: `Shipping location is out of service area. Please select another location within these locations: ${
+          await PlaceOrderService.getShippingLocations() || ""
+        }`,
+        nextAction: "Shipping_location_not_supported",
+        header: "Shipping location not supported",
+        IconName: "userX",
+      });
+    }
+    if (couponValidation.coupon?.discountType === "FREE_SHIPPING") {
+      shippingCost = 0;
+    }
+    const total = await checkoutService.updateFinalTotalPrice(
+      shippingCost,
+      cart,
+    );
+
     // ***************** create the order *****************
-    const order = await Order.create({
-      orderItems: orderItems || [],
+    const order = await PlaceOrderService.handleCreationOrder(
+      orderItems,
       Notes,
       shippingAddress,
       paymentMethod,
-      status: paymentMethod === "cod" ? "orderPlaced" : "pending",
-      paymentStatus: paymentMethod === "cod" ? "not_required" : "pending",
-      itemsPrice: cart.itemsPrice || 0,
-      shippingPrice: cart.shippingCost || 0,
-      taxPrice: cart.TAX || 0,
-      totalPrice: cart.totalPrice || 0,
-      totalItems: cart.totalItems || 0,
+      shippingCost,
+      cart,
       selectedCardId,
       userId,
-      orderNumber: "order",
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    });
-
+      total,
+    );
     if (!order)
       return res
         .status(500)
         .json({ message: "Order not created", nextAction: "Error" });
 
-    order.orderNumber = formatOrderId(order);
-    const updatedOrder = await order.save();
-    if (!updatedOrder)
-      return res.status(500).json({
-        message: "Failed to update order with order number",
-        nextAction: "Error",
-      });
-
-    user.orders.push(order._id);
-    const updatedUser = await user.save();
-    if (!updatedUser)
-      return res.status(500).json({
-        message: "Failed to update user with order",
-        nextAction: "Error",
-      });
-
+    // ***************** Carry out the payment cash on delivery *****************
     if (paymentMethod === "cod") {
+      await PlaceOrderService.HandleTransitionProcessOfPlacingOrder(
+        user,
+        order,
+        "not_required",
+      );
       try {
-        await createNotifications({
-          type: "NEW_ORDER",
-          title: "New Order",
-          message: `A new order ${order.orderNumber} has been placed from ${user.name} and payment method is cash on delivery - ${order.totalPrice}`,
-          priority: "NORMAL",
-          isRead: false,
-          entityType: "ORDER",
-          entityId: order._id,
-          link: `/profile/admin/orders/${order._id}`,
-        });
-      } catch (err) {
-        console.log(err);
+        await PlaceOrderService.handleNotificationCreation("cod", order, user);
+      } catch (error) {
+        console.error("Notification failed:", error);
       }
-      user.totalOrders += 1;
-      user.totalSpent += order.totalPrice;
-      if (cart.promo?.code) {
-        const userCoupon = user.coupons.find(
-          (coupon) => coupon.code === cart.promo.code,
-        );
-        if (userCoupon) userCoupon.status = "USED";
-        await Coupon.findOneAndUpdate(
-          { code: cart.promo.code },
-          { $inc: { usageCount: 1 } },
-        );
-      }
-      user.cart = null;
-      await user.save();
-      await Cart.findOneAndDelete({ userId });
-      if (orderItems.length > 0) {
-        const now = new Date();
-        await Product.bulkWrite(
-          orderItems.map((item) => ({
-            updateOne: {
-              filter: { _id: item.product, "variants._id": item.variant },
-              update: {
-                $inc: {
-                  "variants.$.stock": -item.quantity,
-                  "inventory.totalStock": -item.quantity,
-                  soldCount: item.quantity,
-                },
-                $set: {
-                  "variants.$.updatedAt": now,
-                  updatedAt: now,
-                },
-              },
-            },
-          })),
-        );
-      }
-
       return res.status(201).json({
         orderId: order._id,
         orderNumber: order.orderNumber,
         nextAction: "orderPlaced",
         message: "Order created and placed successfully",
+        header: "Order created",
+        IconName: "packageCheck",
       });
     }
+    // ***************** Carry out the payment card *****************
     if (paymentMethod === "card") {
-      const customerId = await getOrCreateCustomer(userId);
-      const paymentIntent = await stripe.paymentIntents.create({
-        amount: Math.round(order.totalPrice * 100),
-        currency: "usd",
-        customer: customerId,
-        metadata: {
-          orderId: String(order._id),
-          userId: String(userId),
-        },
-      });
-
-      if (!paymentIntent) {
-        try {
-          await createNotifications({
-            type: "PAYMENT_FAILED",
-            title: "New Order with payment failed",
-            message: `A new order has been placed and payment failed by card payment method - ${order.totalPrice}`,
-            priority: "URGENT",
-            isRead: false,
-            entityType: "ORDER",
-            entityId: order._id,
-            link: `/profile/admin/orders/${order._id}`,
-          });
-        } catch (err) {
-          console.log(err);
-        }
-        order.status = "failed";
-        order.paymentStatus = "failed";
-        await order.save();
+      let paymentIntent = null;
+      try {
+        paymentIntent = await PlaceOrderService.makePaymentIntentionInStripe(
+          order,
+          userId,
+          selectedCardId,
+        );
+      } catch (err) {
+        await PlaceOrderService.handleNotificationCreation(
+          "PaymentIntentionFailed",
+          order,
+          user,
+        );
+        await PlaceOrderService.recordPaymentFailure(
+          order._id,
+          "failed",
+          "failed",
+          null,
+          err,
+        );
         return res.status(500).json({
           orderId: order._id,
           orderNumber: order.orderNumber,
           message: "Failed to create payment intent",
           nextAction: "failed",
+          header: "Payment failed",
+          IconName: "circleX",
         });
       }
 
       try {
-        order.paymentIntentId = paymentIntent.id;
-        await order.save();
+        await PlaceOrderService.savePaymentIntentIdForUser(
+          order,
+          paymentIntent,
+        );
       } catch (err) {
-        await stripe.paymentIntents.cancel(paymentIntent.id);
-
+        const paymentIntentWasCancelled = err.paymentIntentCancelled === true;
+        await PlaceOrderService.recordPaymentFailure(
+          order._id,
+          paymentIntentWasCancelled ? "cancelled" : "failed",
+          paymentIntentWasCancelled ? "cancelled" : "pending",
+          paymentIntent,
+          err,
+        );
         return res.status(500).json({
           orderId: order._id,
           orderNumber: order.orderNumber,
-          message: "Failed to update order. Payment was cancelled.",
+          message: paymentIntentWasCancelled
+            ? "Failed to update order. Payment was cancelled."
+            : "Failed to update order or cancel the pending payment.",
           nextAction: "Error",
+          header: "Payment cancelled",
+          IconName: "ban",
         });
       }
 
-      const confirmedPaymentIntent = await stripe.paymentIntents.confirm(
-        paymentIntent.id,
-        {
-          payment_method: selectedCardId,
-          return_url: `${process.env.CLIENT_URL}/checkout/payment/complete/${order._id}`,
-        },
-      );
+      let confirmedPaymentIntent;
+      try {
+        confirmedPaymentIntent = await PlaceOrderService.confirmedPaymentIntent(
+          paymentIntent,
+          selectedCardId,
+          order,
+        );
+      } catch (err) {
+        await PlaceOrderService.recordPaymentFailure(
+          order._id,
+          "failed",
+          "failed",
+          err.payment_intent || paymentIntent,
+          err,
+        );
+        await PlaceOrderService.handleNotificationCreation(
+          "PaymentIntentionFailed",
+          order,
+          user,
+        );
+        return res.status(402).json({
+          orderId: order._id,
+          orderNumber: order.orderNumber,
+          message: err.message || "Payment confirmation failed",
+          nextAction: "failed",
+          header: "Payment failed",
+          IconName: "circleX",
+        });
+      }
 
       if (confirmedPaymentIntent.status === "requires_action") {
-        order.status = "pending";
-        order.paymentStatus = "pending";
-        await order.save();
+        await PlaceOrderService.updateOrderStatus(
+          order._id,
+          "pending",
+          "pending",
+        );
         return res.status(201).json({
           clientSecret: paymentIntent.client_secret,
           orderId: order._id,
           orderNumber: order.orderNumber,
-          nextAction: paymentIntent.status,
+          nextAction: confirmedPaymentIntent.status,
           message: "Authentication required for payment",
+          header: "Authentication required",
+          IconName: "loader",
         });
       }
       if (confirmedPaymentIntent.status === "succeeded") {
-        try {
-          await createNotifications({
-            type: "NEW_ORDER",
-            title: "New Order with payment succeeded",
-            message: `A new order ${order.orderNumber} has been placed from ${user.name} and payment succeeded by card payment method - ${order.totalPrice}`,
-            priority: "NORMAL",
-            isRead: false,
-            entityType: "ORDER",
-            entityId: order._id,
-            link: `/profile/admin/orders/${order._id}`,
-          });
-        } catch (err) {
-          console.log(err);
-        }
-        user.totalOrders += 1;
-        user.totalSpent += order.totalPrice;
-        if (cart.promo?.code) {
-          const userCoupon = user.coupons.find(
-            (coupon) => coupon.code === cart.promo.code,
-          );
-          if (userCoupon) userCoupon.status = "USED";
-          await Coupon.findOneAndUpdate(
-            { code: cart.promo.code },
-            { $inc: { usageCount: 1 } },
-          );
-        }
-        user.cart = null;
-        await user.save();
-        await Cart.findOneAndDelete({ userId });
-        order.status = "orderPlaced";
-        order.paymentStatus = "paid";
-        await order.save();
-        if (orderItems.length > 0) {
-          const now = new Date();
-          await Product.bulkWrite(
-            orderItems.map((item) => ({
-              updateOne: {
-                filter: { _id: item.product, "variants._id": item.variant },
-                update: {
-                  $inc: {
-                    "variants.$.stock": -item.quantity,
-                    "inventory.totalStock": -item.quantity,
-                    soldCount: item.quantity,
-                  },
-                  $set: {
-                    "variants.$.updatedAt": now,
-                    updatedAt: now,
-                  },
-                },
-              },
-            })),
-          );
-        }
-        return res.status(201).json({
+        return res.status(202).json({
           orderId: order._id,
           orderNumber: order.orderNumber,
           nextAction: "paid",
-          message: "Payment succeeded",
+          message: "Payment succeeded and the order is being finalized",
+          header: "Payment succeeded",
+          IconName: "badgeCheck",
         });
       }
-      if (confirmedPaymentIntent.status === "requires_payment_method") {
-        return res.status(201).json({
-          clientSecret: paymentIntent.client_secret,
+      if (confirmedPaymentIntent.status === "processing") {
+        await PlaceOrderService.updateOrderStatus(
+          order._id,
+          "pending",
+          "pending",
+        );
+        return res.status(202).json({
           orderId: order._id,
           orderNumber: order.orderNumber,
-          nextAction: "cancelled",
-          message: "Payment cancelled, please try again",
+          nextAction: "pending_payment",
+          message: "Payment is still processing",
+          header: "Payment processing",
+          IconName: "loader",
         });
       }
-      res.status(500).json({
+
+      const wasCancelled = confirmedPaymentIntent.status === "canceled";
+      await PlaceOrderService.recordPaymentFailure(
+        order._id,
+        wasCancelled ? "cancelled" : "failed",
+        wasCancelled ? "cancelled" : "failed",
+        confirmedPaymentIntent,
+        new Error(
+          `Unexpected payment status: ${confirmedPaymentIntent.status}`,
+        ),
+      );
+
+      return res.status(402).json({
         clientSecret: paymentIntent.client_secret,
         orderId: order._id,
         orderNumber: order.orderNumber,
         nextAction: "cancelled",
         message: "Payment cancelled, please try again",
+        header: "Payment Cancelled",
+        IconName: "ban",
       });
     }
   } catch (err) {

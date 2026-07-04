@@ -28,6 +28,7 @@ const variantSchema = new mongoose.Schema(
     },
     updatedAt: { type: Date, default: new Date(Date.now()) },
     expireDate: { type: Date, default: new Date(Date.now()) },
+    soldCount: { type: Number, default: 0 },
 
     images: [
       {
@@ -160,10 +161,8 @@ productSchema.pre("validate", function () {
 });
 
 // Indexes (critical)
-productSchema.index({ slug: 1 });
 productSchema.index({ category: 1 });
 productSchema.index({ brand: 1 });
-productSchema.index({ "variants.sku": 1 });
 productSchema.index({ "pricing.minPrice": 1, "pricing.maxPrice": 1 });
 
 const Product = mongoose.model("Product", productSchema);

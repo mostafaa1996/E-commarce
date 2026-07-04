@@ -3,6 +3,7 @@ import Button from "@/components/genericComponents/Button";
 import useCheckoutStore from "@/zustand_checkout/checkoutStore";
 import { useMutation } from "@tanstack/react-query";
 import { placeOrder } from "@/APIs/checkoutService";
+import {queryClient} from "@/queryClient";
 
 export default function CheckoutPaymentSection({ orderNotes }) {
   const stripe = useStripe();
@@ -10,6 +11,7 @@ export default function CheckoutPaymentSection({ orderNotes }) {
   const {
     PaymentMethodState,
     setOrderState,
+    setOrderResults,
     selectedCard,
     paymentType,
     setOrderId,
@@ -40,13 +42,26 @@ export default function CheckoutPaymentSection({ orderNotes }) {
       }
       setOrderId(data.orderNumber);
       setOrderState(data.nextAction);
+      setOrderResults({
+        message: data?.message || undefined,
+        header: data?.header || undefined,
+        IconName: data?.IconName || undefined,
+      });
     },
     onError: (error) => {
       if (error.data?.blocked) {
         setOrderState("userBlocked");
       } else {
         setOrderState(error.data?.nextAction || "Error");
+        setOrderResults({
+          message: error.data?.message,
+          header: error.data?.header,
+          IconName: error.data?.IconName,
+        });
       }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(["cart"]);
     },
   });
 

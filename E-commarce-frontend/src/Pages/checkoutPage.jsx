@@ -10,6 +10,7 @@ import useUserAddressesPage from "@/hooks/useUserAddressesPage";
 import ProfilePageState from "@/components/genericComponents/ProfilePageState";
 import useCheckoutPage from "@/hooks/useCheckoutPage";
 import Icon from "@/system/icons/Icon";
+import { queryClient } from "@/queryClient";
 
 function CheckoutPanel({ title, description, children }) {
   return (
@@ -62,7 +63,9 @@ export default function CheckoutPage() {
     handleGoToAddAddress,
     handleDelete,
     setAsDefault,
-  } = useUserAddressesPage();
+  } = useUserAddressesPage(() => {
+    queryClient.invalidateQueries({ queryKey: ["checkout"] });
+  });
 
   function renderAddresses() {
     if (isLoadingAddresses) {

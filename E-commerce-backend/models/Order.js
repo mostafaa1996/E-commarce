@@ -51,6 +51,21 @@ const OrderSchema = new mongoose.Schema(
     totalPrice: { type: Number, required: true },
     totalItems: { type: Number, required: true },
     selectedCardId: { type: String, default: null },
+    cartId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Cart",
+      default: null,
+    },
+    cartUpdatedAt: {
+      type: Date,
+      default: null,
+    },
+    promo: {
+      code: { type: String, default: null },
+      discountType: { type: String, default: null },
+      discountValue: { type: Number, default: 0 },
+      discountInMoney: { type: Number, default: 0 },
+    },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,

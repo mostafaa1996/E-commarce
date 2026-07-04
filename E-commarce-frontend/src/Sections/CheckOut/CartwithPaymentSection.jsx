@@ -6,16 +6,16 @@ import { useCurrencyStore } from "@/zustand_preferences/currency";
 import useCheckoutStore from "@/zustand_checkout/checkoutStore";
 import OrderFeedBack from "@/components/genericComponents/OrderFeedBack";
 import { useNavigate } from "react-router-dom";
-import {OrderStatesUIData} from "@/system/Data/OrderStatesUIData";
+import { OrderStatesUIData } from "@/system/Data/OrderStatesUIData";
 export default function CartwithPaymentSection({ cart }) {
   // console.log(cart);
   const { currency, locale, conversion_rate } = useCurrencyStore();
   const format = useCurrency(currency, locale);
   const rate = conversion_rate[currency] ?? 1;
-  const { orderState , orderId } = useCheckoutStore();
+  const { orderState, orderId, orderResults } = useCheckoutStore();
   const navigate = useNavigate();
   function okHandler() {
-   navigate("/shop");
+    navigate("/shop");
   }
   return (
     <div className="w-full flex flex-col gap-10 items-start justify-evenly">
@@ -41,13 +41,16 @@ export default function CartwithPaymentSection({ cart }) {
           <OrderFeedBack
             orderId={orderId}
             IconName={
-              OrderStatesUIData.find((state) => state.state === orderState).IconName
+              orderResults?.IconName ||
+              OrderStatesUIData?.find((state) => state.state === orderState).IconName
             }
             header={
-              OrderStatesUIData.find((state) => state.state === orderState).header
+              orderResults?.header ||
+              OrderStatesUIData?.find((state) => state.state === orderState).header
             }
             message={
-              OrderStatesUIData.find((state) => state.state === orderState).message
+              orderResults?.message ||
+              OrderStatesUIData?.find((state) => state.state === orderState).message
             }
             okHandler={okHandler}
           />

@@ -82,7 +82,7 @@ export default function CartPage() {
               subtotal={cart?.itemsPrice ?? 0}
               savings={savings}
               vat={cart?.vat ?? 0}
-              shipping={cart?.shipping ?? 0}
+              shipping={cart?.shippingCost ?? 0}
               total={cart?.totalPrice ?? 0}
               discount = {discountInMoney}
               onPromoChange={setPromo}

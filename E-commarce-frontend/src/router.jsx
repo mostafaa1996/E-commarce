@@ -125,19 +125,6 @@ export const router = createBrowserRouter([
             path: "/checkout",
             element: <CheckoutPage />,
             handle: { items: [{ label: "Checkout", href: "/checkout" }] },
-            loader: async () => {
-              return queryClient.ensureQueryData({
-                queryKey: ["checkout"],
-                queryFn: async () => {
-                  const { cart, message, blocked } = await getCartData();
-                  return {
-                    cart,
-                    message,
-                    blocked,
-                  };
-                },
-              });
-            },
           },
           {
             path: "/profile",

@@ -8,29 +8,6 @@ async function calculateTax(cart) {
   cart.TAX = cart.itemsPrice * vatRate;
 }
 
-function calculateShippingCost(address, shippingPlaces) {
-  const normalizedDelivery = (shippingPlaces || []).map((delivery) => ({
-    ...delivery,
-    place: String(delivery.place || "")
-      .trim()
-      .toLowerCase(),
-  }));
-
-  const locationParts = [
-    addressOfUser?.city,
-    addressOfUser?.state,
-    addressOfUser?.country,
-  ]
-    .filter(Boolean)
-    .map((part) => String(part).trim().toLowerCase());
-
-  const exactShippingLocation = normalizedDelivery.find((delivery) =>
-    locationParts.includes(delivery.place),
-  );
-
-  return exactShippingLocation?.cost || 0;
-}
-
 async function checkCartAvailability(userId) {
   const cart = await Cart.findOne({ userId });
   if (!cart) return null;
@@ -105,7 +82,6 @@ function checkVariantAvailability(variant) {
 
 module.exports = {
   calculateTax,
-  calculateShippingCost,
   checkCartAvailability,
   getProductWithVariant,
   checkItemAvailability,

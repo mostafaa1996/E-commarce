@@ -9,7 +9,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 
-export default function useUserAddressesPage() {
+export default function useUserAddressesPage(callBackFNAtChangeDefaultAddress) {
   const loaderData = useLoaderData();
   const fetcher = useFetcher();
   const actionData = useActionData();
@@ -141,6 +141,13 @@ export default function useUserAddressesPage() {
       { method: "post", action: "/profile/addresses" },
     );
   }
+
+  useEffect(() => {
+    if (fetcher.data?.ok) {
+      console.log("Address set as default successfully");
+      callBackFNAtChangeDefaultAddress?.();
+    }
+  }, [fetcher.state, fetcher.data, callBackFNAtChangeDefaultAddress]);
 
   return {
     addressesObj: addressesQuery.data,
