@@ -143,8 +143,11 @@ export default function useUserAddressesPage(callBackFNAtChangeDefaultAddress) {
   }
 
   useEffect(() => {
-    if (fetcher.data?.ok) {
-      console.log("Address set as default successfully");
+    if (
+      fetcher.state === "idle" &&
+      fetcher.data?.ok &&
+      fetcher.data?.message === "Address set as default successfully"
+    ) {
       callBackFNAtChangeDefaultAddress?.();
     }
   }, [fetcher.state, fetcher.data, callBackFNAtChangeDefaultAddress]);
