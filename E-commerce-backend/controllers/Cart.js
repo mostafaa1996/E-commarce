@@ -127,6 +127,7 @@ exports.SyncCart = async (req, res, next) => {
         totalItems: 0,
         totalPrice: 0,
         itemsPrice: 0,
+        cartType: "CART",
       });
       cart.totalItems = cart.products.reduce(
         (total, item) => total + item.quantity,

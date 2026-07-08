@@ -55,6 +55,9 @@ export default function useCart() {
     queryKey: ["cart", { includeCouponEligibility: true }],
     queryFn: () => getCart({ includeCouponEligibility: true }),
     placeholderData: (previousData) => previousData,
+    staleTime: 0,
+    refetchOnMount: "always",
+    gcTime: 0,
   });
 
   const syncCartMutation = useMutation({

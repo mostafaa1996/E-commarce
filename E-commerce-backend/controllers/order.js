@@ -10,6 +10,7 @@ exports.createOrder = async (req, res, next) => {
     const Notes = req.body?.orderNotes || "";
     const paymentMethod = req.body?.paymentType || "";
     const selectedCardId = req.body?.selectedCard || "";
+    const cartId = req.body?.cartId || "";
     if (paymentMethod !== "cod" && paymentMethod !== "card") {
       return res.status(400).json({
         message:
@@ -69,7 +70,10 @@ exports.createOrder = async (req, res, next) => {
     };
 
     /** get the cart and the cartItems */
-    const CartResult = await PlaceOrderService.getCartAndCartItems(userId);
+    const CartResult = await PlaceOrderService.getCartAndCartItems(
+      userId,
+      cartId,
+    );
     if (CartResult === "No cart found") {
       return res.status(404).json({
         message: "Cart not found.something went wrong, Please try again",
@@ -84,6 +88,14 @@ exports.createOrder = async (req, res, next) => {
           "Cart is empty and cannot be ordered. Please add items to the cart",
         nextAction: "Cart_empty",
         header: "Cart is empty",
+        IconName: "cart",
+      });
+    }
+    if (CartResult === "Invalid cart id") {
+      return res.status(400).json({
+        message: "Invalid cart id",
+        nextAction: "Cart_invalid",
+        header: "Invalid Cart",
         IconName: "cart",
       });
     }
@@ -130,7 +142,7 @@ exports.createOrder = async (req, res, next) => {
     if (shippingCost === "Shipping location not supported") {
       return res.status(422).json({
         message: `Shipping location is out of service area. Please select another location within these locations: ${
-          await PlaceOrderService.getShippingLocations() || ""
+          (await PlaceOrderService.getShippingLocations()) || ""
         }`,
         nextAction: "Shipping_location_not_supported",
         header: "Shipping location not supported",
@@ -140,6 +152,9 @@ exports.createOrder = async (req, res, next) => {
     if (couponValidation.coupon?.discountType === "FREE_SHIPPING") {
       shippingCost = 0;
     }
+    console.log(" shippingCost: ", shippingCost);
+
+    // ***************** calculate the total price *****************
     const total = await checkoutService.updateFinalTotalPrice(
       shippingCost,
       cart,

@@ -21,7 +21,6 @@ export default function CartTotals({
   totalPrice = 0,
   promo = 0,
   promoCode,
-  VAT = 0,
   shipping = 0,
   format = (n) => n,
   rate = 1,

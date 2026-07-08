@@ -5,7 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import { placeOrder } from "@/APIs/checkoutService";
 import {queryClient} from "@/queryClient";
 
-export default function CheckoutPaymentSection({ orderNotes }) {
+export default function CheckoutPaymentSection({ orderNotes , cartId }) {
   const stripe = useStripe();
   const elements = useElements();
   const {
@@ -18,11 +18,12 @@ export default function CheckoutPaymentSection({ orderNotes }) {
   } = useCheckoutStore();
 
   const OrderMutation = useMutation({
-    mutationFn: ({ orderNotes, selectedCard, paymentType }) => {
+    mutationFn: ({ orderNotes, selectedCard, paymentType, cartId }) => {
       return placeOrder({
         orderNotes,
         selectedCard,
         paymentType,
+        cartId
       });
     },
     onMutate: () => {
@@ -70,6 +71,7 @@ export default function CheckoutPaymentSection({ orderNotes }) {
       orderNotes,
       selectedCard,
       paymentType,
+      cartId
     });
   }
 

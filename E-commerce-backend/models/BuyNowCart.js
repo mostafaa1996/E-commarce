@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
-const VAT = require("./VAT");
 
-const CartSchema = new mongoose.Schema({
+const BuyNowCartSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
@@ -42,29 +41,6 @@ const CartSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  promo: {
-    code : {
-      type: String,
-      default: null
-    },
-    appliedAt: {
-      type: Date,
-      default: null
-    },
-    discountInMoney: {
-      type: Number,
-      default: 0
-    },
-    discountType: {
-      type: String,
-      enum: ["PERCENTAGE", "FIXED", "FREE_SHIPPING"],
-      default: "PERCENTAGE"
-    },
-    discountValue: {
-      type: Number,
-      default: 0
-    }
-  },
   shippingCost: {
     type: Number,
     default: 0,
@@ -90,6 +66,6 @@ const CartSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-});
+}, { timestamps: true });
 
-module.exports = mongoose.model("Cart", CartSchema);
+module.exports = mongoose.model("BuyNowCart", BuyNowCartSchema);

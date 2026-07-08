@@ -98,7 +98,7 @@ export default function useProductDetails(id, preloadedProduct) {
         product: {
           productId: product._id,
           variantId: selectedVariant._id,
-          quantity: qty,
+          quantity: qty || 1,
         },
       },
     });

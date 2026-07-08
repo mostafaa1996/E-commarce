@@ -6,5 +6,6 @@ const {checkBlocked} = require("../MiddleWare/isUserBlocked");
 const getUser = require("../MiddleWare/getUser");
 
 router.get("/", isAuth , checkBlocked , getUser , checkoutController.getCartData);
+router.get("/BuyNow", isAuth , checkBlocked , getUser , checkoutController.prepareCartForBuyNow);
 
 module.exports = router;

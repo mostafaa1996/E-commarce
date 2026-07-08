@@ -11,6 +11,7 @@ const mongoose = require("mongoose");
 const getOrCreateCustomer = require("../services/StripeCustomer");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const { formatOrderId } = require("../services/formatOrderNumber");
+const BuyNowCart = require("../models/BuyNowCart");
 async function handleAddressPreparation(userId) {
   const addresses = await Address.find({ user: userId });
   if (Array.isArray(addresses) && addresses.length === 0) return [];
@@ -25,8 +26,16 @@ async function handleAddressPreparation(userId) {
   return null;
 }
 
-async function getCartAndCartItems(userId) {
-  const cart = await Cart.findOne({ userId });
+async function getCartAndCartItems(userId, cartId) {
+  if (!cartId || !mongoose.Types.ObjectId.isValid(cartId)) {
+    return "Invalid cart id";
+  }
+
+  let cart = null;
+  cart = await BuyNowCart.findOne({ _id: cartId, userId, cartType: "BUY_NOW" });
+  if (!cart) {
+    cart = await Cart.findOne({ _id: cartId, userId, cartType: "CART" });
+  }
   if (!cart) {
     return "No cart found";
   }
@@ -296,90 +305,15 @@ async function UpdateCouponAfterOrderPlacing(order = null, session = null) {
 
 async function UpdateCartAfterOrderPlacing(order, userId, session = null) {
   if (!order?.cartId || !userId || !session) return;
-
-  const cart = await Cart.findOne({
-    _id: order.cartId,
-    userId,
-  }).session(session);
-  if (!cart) {
-    await User.updateOne(
-      { _id: userId, cart: order.cartId },
-      { $set: { cart: null } },
+  await BuyNowCart.findOneAndDelete({ _id: order.cartId , userId }, { session });
+  const deletedCart = await Cart.findOneAndDelete({ _id: order.cartId , userId }, { session });
+  if(deletedCart) {
+    await User.findOneAndUpdate(
+      { _id: userId },
+      {$set: { cart: null }},
       { session },
-    );
-    return;
+    );    
   }
-
-  for (const orderedItem of order.orderItems) {
-    const itemIndex = cart.products.findIndex(
-      (item) =>
-        String(item.productId) === String(orderedItem.product) &&
-        String(item.variantId) === String(orderedItem.variant),
-    );
-    if (itemIndex === -1) continue;
-
-    const cartItem = cart.products[itemIndex];
-    const remainingQuantity = cartItem.quantity - orderedItem.quantity;
-
-    if (remainingQuantity > 0) {
-      cartItem.quantity = remainingQuantity;
-      cartItem.subtotal = cartItem.price * remainingQuantity;
-    } else {
-      cart.products.splice(itemIndex, 1);
-    }
-  }
-
-  if (cart.products.length === 0) {
-    await Cart.deleteOne({ _id: cart._id }, { session });
-    await User.updateOne(
-      { _id: userId, cart: order.cartId },
-      { $set: { cart: null } },
-      { session },
-    );
-    return;
-  }
-
-  cart.totalItems = cart.products.reduce(
-    (total, item) => total + item.quantity,
-    0,
-  );
-  cart.itemsPrice = cart.products.reduce(
-    (total, item) => total + item.subtotal,
-    0,
-  );
-
-  if (cart.promo?.code && cart.promo.code === order.promo?.code) {
-    cart.promo.code = null;
-    cart.promo.appliedAt = null;
-    cart.promo.discountInMoney = 0;
-    cart.promo.discountValue = 0;
-    cart.promo.discountType = "PERCENTAGE";
-  }
-
-  if (cart.promo?.discountType === "PERCENTAGE") {
-    cart.promo.discountInMoney =
-      cart.itemsPrice * (cart.promo.discountValue / 100);
-  } else if (cart.promo?.discountType === "FIXED") {
-    cart.promo.discountInMoney = Math.min(
-      cart.promo.discountValue,
-      cart.itemsPrice,
-    );
-  }
-
-  const taxConfig = await VAT_shipping.findOne({})
-    .select("vat")
-    .session(session)
-    .lean();
-  const vatRate = Number(taxConfig?.vat) || 0;
-  cart.TAX = cart.itemsPrice * vatRate;
-  const effectiveShippingCost =
-    cart.promo?.discountType === "FREE_SHIPPING" ? 0 : cart.shippingCost || 0;
-  cart.totalPrice =
-    Math.max(cart.itemsPrice - (cart.promo?.discountInMoney || 0), 0) +
-    cart.TAX +
-    effectiveShippingCost;
-  cart.updatedAt = new Date();
-  await cart.save({ session });
 }
 
 async function UpdateProductAfterOrderPlacing(orderItems = [], session = null) {

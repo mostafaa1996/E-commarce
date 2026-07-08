@@ -198,7 +198,7 @@ export default function CheckoutPage() {
           </div>
 
           <aside className="space-y-6 lg:sticky lg:top-24">
-            {checkoutData.message === "Cart found" && checkoutData.cart ? (
+            {checkoutData.message !== "Cart not found" && checkoutData.cart ? (
               <CheckoutPanel
                 title="Order summary"
                 description="Confirm your cart totals and payment method."
@@ -209,7 +209,7 @@ export default function CheckoutPage() {
                     open={orderState === "InProgress"}
                     getClientSecret={SetUpPaymentMethods}
                   >
-                    {() => <CheckoutPaymentSection orderNotes={orderNotes} />}
+                    {() => <CheckoutPaymentSection orderNotes={orderNotes} cartId={checkoutData?.cart?._id} />}
                   </StripeElementsWrapper>
                 </div>
               </CheckoutPanel>

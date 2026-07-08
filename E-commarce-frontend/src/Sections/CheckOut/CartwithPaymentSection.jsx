@@ -29,7 +29,6 @@ export default function CartwithPaymentSection({ cart }) {
         promo={cart.promo?.discountInMoney}
         promoCode={cart.promo?.code}
         className={"w-full"}
-        VAT={cart.TAX}
         shipping={cart.shippingCost}
         format={format}
         rate={rate}
