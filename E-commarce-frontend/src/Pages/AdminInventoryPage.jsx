@@ -7,19 +7,20 @@ import { AdminButton } from "@/components/adminUI/AdminButton";
 import InputField from "@/components/genericComponents/InputField";
 import { shortenText } from "@/utils/utils";
 import Loading from "@/components/genericComponents/Loading";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, ListMinus } from "lucide-react";
 import useAdminInventoryPage from "@/hooks/useAdminInventoryPage";
 
 const statusMap = {
   "In Stock": "success",
   Low: "warning",
   Critical: "danger",
-  "Out of Stock": "danger",
+  "Out Of Stock": "danger",
 };
 
 export default function AdminInventoryPage() {
   let content = null;
   const {
+    MainQuery,
     inventoryData,
     isLoading,
     isFetching,
@@ -148,10 +149,13 @@ export default function AdminInventoryPage() {
             variant="outline"
             size="sm"
             className={`h-8 ${
-              updatingKey === `${item.sku}-${item.lowStockThreshold}-lowStock` &&
+              updatingKey ===
+                `${item.sku}-${item.lowStockThreshold}-lowStock` &&
               "pointer-events-none"
             }`}
-            disabled={updatingKey === `${item.sku}-${item.lowStockThreshold}-lowStock`}
+            disabled={
+              updatingKey === `${item.sku}-${item.lowStockThreshold}-lowStock`
+            }
           >
             {updatingKey === `${item.sku}-${item.lowStockThreshold}-lowStock`
               ? "Updating..."
@@ -178,7 +182,9 @@ export default function AdminInventoryPage() {
           <AdminButton
             key={item._id}
             onClick={() => {
-              setUpdatingKey(`${item.sku}-${item.criticalStockThreshold}-criticalStock`);
+              setUpdatingKey(
+                `${item.sku}-${item.criticalStockThreshold}-criticalStock`,
+              );
               updateInventory({
                 id: item._id,
                 variantId: item.variantId,
@@ -194,10 +200,20 @@ export default function AdminInventoryPage() {
             }}
             variant="outline"
             size="sm"
-            className={`h-8 ${updatingKey === `${item.sku}-${item.criticalStockThreshold}-criticalStock` && "pointer-events-none"}`}
-            disabled={updatingKey === `${item.sku}-${item.criticalStockThreshold}-criticalStock`}
+            className={`h-8 ${
+              updatingKey ===
+                `${item.sku}-${item.criticalStockThreshold}-criticalStock` &&
+              "pointer-events-none"
+            }`}
+            disabled={
+              updatingKey ===
+              `${item.sku}-${item.criticalStockThreshold}-criticalStock`
+            }
           >
-            {updatingKey === `${item.sku}-${item.criticalStockThreshold}-criticalStock` ? "Updating..." : "Update"}
+            {updatingKey ===
+            `${item.sku}-${item.criticalStockThreshold}-criticalStock`
+              ? "Updating..."
+              : "Update"}
           </AdminButton>
         </div>
       ),
@@ -231,41 +247,96 @@ export default function AdminInventoryPage() {
         />
 
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
-          <StatCard
-            title="Total Products"
-            value={inventoryData?.productsCount || 0}
-            iconName={"package"}
-          />
-          <StatCard
-            title="In Stock"
-            value={inventoryData?.InStockCount || 0}
-            iconName={"package"}
-            iconBg="bg-success/10"
-          />
-          <StatCard
-            title="Low Stock"
-            value={inventoryData?.LowStockCount || 0}
-            change="Needs attention"
-            changeType="down"
-            iconName={"alertTriangle"}
-            iconBg="bg-warning/10"
-          />
-          <StatCard
-            title="Critical Stock"
-            value={inventoryData?.CriticalStockCount || 0}
-            change="Restock needed"
-            changeType="down"
-            iconName={"alertTriangle"}
-            iconBg="bg-destructive/10"
-          />
-          <StatCard
-            title="Out of Stock"
-            value={inventoryData?.OutOfStockCount || 0}
-            change="Restock needed"
-            changeType="down"
-            iconName={"alertTriangle"}
-            iconBg="bg-destructive/10"
-          />
+          <button
+            type="button"
+            onClick={() => {
+              updateUrlQuery({ status: "all" });
+            }}
+            className="bg-transparent hover:scale-102 active:scale-95"
+          >
+            <StatCard
+              title="Total Products"
+              value={inventoryData?.productsCount || 0}
+              iconName={"package"}
+              className={`w-full h-full ${
+                MainQuery.status === "all" ? "border-primary" : ""
+              }`}
+            />
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              updateUrlQuery({ status: "in_stock" });
+            }}
+            className="bg-transparent hover:scale-102 active:scale-95"
+          >
+            <StatCard
+              title="In Stock"
+              value={inventoryData?.InStockCount || 0}
+              iconName={"package"}
+              iconBg="bg-success/10"
+              className={`w-full h-full ${
+                MainQuery.status === "in_stock" ? "border-primary" : ""
+              }`}
+            />
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              updateUrlQuery({ status: "low" });
+            }}
+            className="bg-transparent hover:scale-102 active:scale-95"
+          >
+            <StatCard
+              title="Low Stock"
+              value={inventoryData?.LowStockCount || 0}
+              change="Needs attention"
+              changeType="down"
+              iconName={"alertTriangle"}
+              iconBg="bg-warning/10"
+              className={`w-full h-full ${
+                MainQuery.status === "low" ? "border-primary" : ""
+              }`}
+            />
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              updateUrlQuery({ status: "critical" });
+            }}
+            className="bg-transparent hover:scale-102 active:scale-95"
+          >
+            <StatCard
+              title="Critical Stock"
+              value={inventoryData?.CriticalStockCount || 0}
+              change="Restock needed"
+              changeType="down"
+              iconName={"alertTriangle"}
+              iconBg="bg-destructive/10"
+              className={`w-full h-full ${
+                MainQuery.status === "critical" ? "border-primary" : ""
+              }`}
+            />
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              updateUrlQuery({ status: "out_of_stock" });
+            }}
+            className="bg-transparent hover:scale-102 active:scale-95"
+          >
+            <StatCard
+              title="Out of Stock"
+              value={inventoryData?.OutOfStockCount || 0}
+              change="Restock needed"
+              changeType="down"
+              iconName={"alertTriangle"}
+              iconBg="bg-destructive/10"
+              className={`w-full h-full ${
+                MainQuery.status === "out_of_stock" ? "border-primary" : ""
+              }`}
+            />
+          </button>
         </div>
 
         <DataTable
@@ -273,7 +344,7 @@ export default function AdminInventoryPage() {
           data={inventoryData?.Inventory || []}
           page={inventoryData?.pagination?.page || 1}
           totalPages={inventoryData?.pagination?.totalPages || 1}
-          onPageChange={(page) => updateUrlQuery({ page })}
+          onPageChange={(page) => updateUrlQuery({ page , limit: 8})}
         />
       </AdminLayout>
     );
