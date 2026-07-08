@@ -64,13 +64,18 @@ export default function useAdminOrdersPage() {
   }, [searchInput]);
 
   useEffect(() => {
+    if (
+      selectedStatus !== MainQuery.status ||
+      selectedPaymentStatus !== MainQuery.paymentStatus ||
+      searchTerm !== MainQuery.search
+    )
     updateUrlQuery({
       search: searchTerm,
       status: selectedStatus,
       paymentStatus: selectedPaymentStatus,
       limit: 10,
     });
-  }, [selectedPaymentStatus, selectedStatus, searchTerm, updateUrlQuery]);
+  }, [selectedPaymentStatus, selectedStatus, searchTerm, MainQuery, updateUrlQuery]);
 
   function resetFilters() {
     resetUrlQuery(defaultQuery);

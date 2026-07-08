@@ -19,14 +19,15 @@ function normalizePositiveNumber(value, fallback) {
 }
 
 function getProductStock(product) {
-  if (typeof product?.inventory?.totalStock === "number") {
-    return product.inventory.totalStock;
-  }
 
   if (Array.isArray(product?.variants) && product.variants.length > 0) {
     return product.variants.reduce((sum, variant) => {
       return sum + (variant.stock || 0);
     }, 0);
+  }
+
+  if (typeof product?.inventory?.totalStock === "number") {
+    return product.inventory.totalStock;
   }
 
   return 0;

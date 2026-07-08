@@ -29,8 +29,8 @@ function getCustomerStatusVariant(status) {
   return status === "active"
     ? "success"
     : status === "inactive"
-      ? "pending"
-      : "danger";
+    ? "pending"
+    : "danger";
 }
 
 function updateCustomerInList(oldData, customerId, customerPatch) {
@@ -179,13 +179,19 @@ export default function useAdminCustomersPage() {
   }, [searchInput]);
 
   useEffect(() => {
-    updateUrlQuery({
-      search: searchTerm,
-      status: selectedStatus,
-      spent: spentarrangement,
-      limit: 10,
-    });
-  }, [selectedStatus, searchTerm, spentarrangement, updateUrlQuery]);
+    if (
+      MainQuery.search !== searchTerm ||
+      MainQuery.status !== selectedStatus ||
+      MainQuery.spent !== spentarrangement
+    ) {
+      updateUrlQuery({
+        search: searchTerm,
+        status: selectedStatus,
+        spent: spentarrangement,
+        limit: 10,
+      });
+    }
+  }, [selectedStatus, searchTerm, spentarrangement, MainQuery, updateUrlQuery]);
 
   const resetFilters = () => {
     resetUrlQuery(defaultQuery);
