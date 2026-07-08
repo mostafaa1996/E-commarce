@@ -16,6 +16,7 @@ function isValidObjectId(value) {
 }
 
 function UploadToCloudinary(fileBuffer, categoryId) {
+  if (!fileBuffer) return Promise.resolve(null);
   return new Promise((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
       {
@@ -34,12 +35,18 @@ function UploadToCloudinary(fileBuffer, categoryId) {
 }
 
 async function normalizeImage(req, catId, fallbackAlt) {
-  const result = await UploadToCloudinary(req.file.buffer, catId);
-  if (!result) return null;
-  return {
-    icon: result.secure_url,
-    alt: fallbackAlt,
-  };
+  const fileBuffer = req?.file?.buffer;
+  if (!fileBuffer) return null;
+  try {
+    const result = await UploadToCloudinary(fileBuffer, catId);
+    if (!result) return null;
+    return {
+      icon: result.secure_url,
+      alt: fallbackAlt,
+    };
+  } catch (error) {
+    return null;
+  }
 }
 
 async function getParentMeta(parentId, currentCategoryId = null) {
@@ -191,7 +198,12 @@ exports.addCategory = async (req, res, next) => {
       },
       keywords: String(body.keywords || "").trim(),
       attachedProducts: [],
-      isActive: body.isActive !== undefined ? Boolean(body.isActive) : true,
+      isActive:
+        body.isActive && body.isActive === "true"
+          ? true
+          : body.isActive && body.isActive === "false"
+            ? false
+            : true,
     });
 
     createdCategory = await category.save();
@@ -254,6 +266,7 @@ exports.updateCategory = async (req, res, next) => {
     }
 
     const body = req.body || {};
+    console.log(body);
     const nextName = String(body.name ?? category.name ?? "").trim();
     const nextSlug = slugify(body.slug ?? nextName);
 
@@ -301,7 +314,11 @@ exports.updateCategory = async (req, res, next) => {
         : category.icon;
     category.keywords = String(body.keywords ?? category.keywords ?? "").trim();
     category.isActive =
-      body.isActive !== undefined ? Boolean(body.isActive) : category.isActive;
+      body.isActive && body.isActive === "true"
+        ? true
+        : body.isActive && body.isActive === "false"
+          ? false
+          : category.isActive;
 
     updatedCategory = await category.save();
     await refreshDescendantAncestors(updatedCategory._id);
