@@ -10,8 +10,9 @@ import {
 import InputField from "@/components/genericComponents/InputField";
 import { Label } from "@/components/genericComponents/Label";
 import TextArea from "@/components/genericComponents/TextArea";
-import { Star, ShieldCheck, UserCircle2 } from "lucide-react";
+import { Star, ShieldCheck, UserX2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 const WriteReviewDialog = ({
   open,
@@ -22,6 +23,7 @@ const WriteReviewDialog = ({
   isSubmittingReview,
 }) => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
   const [comment, setComment] = useState("");
@@ -94,8 +96,19 @@ const WriteReviewDialog = ({
               Write a review
             </DialogTitle>
             <DialogDescription>
-              Share your experience to help other shoppers make confident
-              choices.
+              {isLoggedIn ? (
+                <span className="text-sm font-semibold text-foreground">
+                  Share your experience to help other shoppers make confident
+                  choices.
+                </span>
+              ) : (
+                <div className="flex flex-col items-center gap-2">
+                  <UserX2 className="h-10 w-10 fill-primary" />
+                  <span className="text-sm font-semibold text-foreground">
+                    Sign in to write a review
+                  </span>
+                </div>
+              )}
             </DialogDescription>
           </DialogHeader>
         </div>
@@ -103,57 +116,51 @@ const WriteReviewDialog = ({
         <form onSubmit={handleSubmit} className="px-6 pb-6 space-y-5">
           {/* Auth status pill */}
           {isLoggedIn ? (
-            <div className="inline-flex items-center gap-2 rounded-full bg-success/10 px-3 py-1.5 text-xs font-semibold text-success">
-              <ShieldCheck className="h-3.5 w-3.5" />
-              Signed in as {currentUser.email || "you"} · Verified buyer
-            </div>
-          ) : (
-            <div className="inline-flex items-center gap-2 rounded-full bg-secondary px-3 py-1.5 text-xs font-semibold text-muted-foreground">
-              <UserCircle2 className="h-3.5 w-3.5" />
-              Posting as a guest
-            </div>
-          )}
-
-          {/* Rating */}
-          <div className="space-y-2">
-            <Label className="text-sm font-semibold text-foreground">
-              Your rating
-            </Label>
-            <div className="flex items-center gap-3">
-              <div
-                className="flex items-center gap-1"
-                onMouseLeave={() => setHover(0)}
-              >
-                {[1, 2, 3, 4, 5].map((n) => {
-                  const active = (hover || rating) >= n;
-                  return (
-                    <button
-                      key={n}
-                      type="button"
-                      onMouseEnter={() => setHover(n)}
-                      onClick={() => setRating(n)}
-                      aria-label={`${n} star${n > 1 ? "s" : ""}`}
-                      className="rounded-md p-1 transition-smooth hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-                    >
-                      <Star
-                        className={`h-7 w-7 transition-smooth ${
-                          active
-                            ? "fill-primary text-primary"
-                            : "fill-transparent text-muted-foreground/40"
-                        }`}
-                      />
-                    </button>
-                  );
-                })}
+            <>
+              <div className="inline-flex items-center gap-2 rounded-full bg-success/10 px-3 py-1.5 text-xs font-semibold text-success">
+                <ShieldCheck className="h-3.5 w-3.5" />
+                Signed in as {currentUser.email || "you"} · Verified buyer
               </div>
-              <span className="text-sm font-medium text-muted-foreground">
-                {activeLabel}
-              </span>
-            </div>
-          </div>
+              {/* Rating */}
+              <div className="space-y-2">
+                <Label className="text-sm font-semibold text-foreground">
+                  Your rating
+                </Label>
+                <div className="flex items-center gap-3">
+                  <div
+                    className="flex items-center gap-1"
+                    onMouseLeave={() => setHover(0)}
+                  >
+                    {[1, 2, 3, 4, 5].map((n) => {
+                      const active = (hover || rating) >= n;
+                      return (
+                        <button
+                          key={n}
+                          type="button"
+                          onMouseEnter={() => setHover(n)}
+                          onClick={() => setRating(n)}
+                          aria-label={`${n} star${n > 1 ? "s" : ""}`}
+                          className="rounded-md p-1 transition-smooth hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                        >
+                          <Star
+                            className={`h-7 w-7 transition-smooth ${
+                              active
+                                ? "fill-primary text-primary"
+                                : "fill-transparent text-muted-foreground/40"
+                            }`}
+                          />
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <span className="text-sm font-medium text-muted-foreground">
+                    {activeLabel}
+                  </span>
+                </div>
+              </div>
 
-          {/* Guest fields */}
-          {!isLoggedIn && (
+              {/* Guest fields */}
+              {/* {!isLoggedIn && (
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="space-y-1.5">
                 <Label
@@ -189,48 +196,69 @@ const WriteReviewDialog = ({
                 />
               </div>
             </div>
-          )}
+          )} */}
 
-          {/* Comment */}
-          <div className="space-y-1.5">
-            <Label
-              htmlFor="rv-comment"
-              className="text-sm font-semibold text-foreground"
-            >
-              Your review
-            </Label>
-            <TextArea
-              id="rv-comment"
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              placeholder="What did you like or dislike? How was the quality?"
-              rows={4}
-              maxLength={1000}
-              className="rounded-xl resize-none"
-            />
-            <div className="flex justify-end">
-              <span className="text-[11px] text-muted-foreground">
-                {comment.length}/1000
-              </span>
+              {/* Comment */}
+              <div className="space-y-1.5">
+                <Label
+                  htmlFor="rv-comment"
+                  className="text-sm font-semibold text-foreground"
+                >
+                  Your review
+                </Label>
+                <TextArea
+                  id="rv-comment"
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  placeholder="What did you like or dislike? How was the quality?"
+                  rows={4}
+                  maxLength={1000}
+                  className="rounded-xl resize-none"
+                />
+                <div className="flex justify-end">
+                  <span className="text-[11px] text-muted-foreground">
+                    {comment.length}/1000
+                  </span>
+                </div>
+              </div>
+
+              <DialogFooter className="gap-2 sm:gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleClose(false)}
+                  className="rounded-xl border border-border bg-background px-4 py-2.5 text-sm font-semibold text-foreground transition-smooth hover:bg-secondary"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmittingReview}
+                  className="rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-glow transition-smooth hover:bg-primary-hover disabled:opacity-60"
+                >
+                  {isSubmittingReview ? "Submitting…" : "Submit review"}
+                </button>
+              </DialogFooter>
+            </>
+          ) : (
+            <div className="inline-flex items-center gap-2 rounded-full bg-secondary px-3 py-1.5 text-xs font-semibold text-muted-foreground">
+              <DialogFooter className="gap-2 sm:gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleClose(false)}
+                  className="rounded-xl border border-border bg-background px-4 py-2.5 text-sm font-semibold text-foreground transition-smooth hover:bg-secondary"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-glow transition-smooth hover:bg-primary-hover disabled:opacity-60"
+                  onClick={() => navigate("/login")}
+                >
+                  Sign in
+                </button>
+              </DialogFooter>
             </div>
-          </div>
-
-          <DialogFooter className="gap-2 sm:gap-2">
-            <button
-              type="button"
-              onClick={() => handleClose(false)}
-              className="rounded-xl border border-border bg-background px-4 py-2.5 text-sm font-semibold text-foreground transition-smooth hover:bg-secondary"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={isSubmittingReview}
-              className="rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-glow transition-smooth hover:bg-primary-hover disabled:opacity-60"
-            >
-              {isSubmittingReview ? "Submitting…" : "Submit review"}
-            </button>
-          </DialogFooter>
+          )}
         </form>
       </DialogContent>
     </Dialog>
