@@ -19,7 +19,6 @@ function normalizePositiveNumber(value, fallback) {
 }
 
 function getProductStock(product) {
-
   if (Array.isArray(product?.variants) && product.variants.length > 0) {
     return product.variants.reduce((sum, variant) => {
       return sum + (variant.stock || 0);
@@ -265,7 +264,7 @@ exports.addProduct = async (req, res, next) => {
       shortDescription: String(body.shortDescription || ""),
       brand: String(body.brand || ""),
       category:
-        (await Category.findOne({ name: String(body.category || "") }))._id ||
+        (await Category.findOne({ name: String(body.category || "") }))?._id ||
         null,
       sourceCategoryName: String(body.sourceCategoryName || ""),
       currency: String(body.currency || "USD"),
@@ -342,7 +341,7 @@ exports.addProduct = async (req, res, next) => {
 
     await Category.updateOne(
       { _id: product.category },
-      { $push: { attachedProducts: product._id } },
+      { $addToSet: { attachedProducts: product._id } },
     );
 
     return res.status(201).json({
@@ -370,6 +369,7 @@ exports.addProduct = async (req, res, next) => {
 
 exports.updateProduct = async (req, res, next) => {
   let updatedProduct;
+  let oldCategoryId;
   try {
     if (!req.user || req.user.role !== "admin") {
       return res.status(403).json({ message: "Access denied. Admins only." });
@@ -480,9 +480,11 @@ exports.updateProduct = async (req, res, next) => {
     );
     const matchedCategory = body.category
       ? await Category.findOne({ name: String(body.category || "") })
-          .select("_id")
+          .select("_id name")
           .lean()
       : null;
+
+    oldCategoryId = product.category;
 
     product.itemId = String(
       body.itemId || product.itemId || generateItemId(),
@@ -496,7 +498,10 @@ exports.updateProduct = async (req, res, next) => {
     product.brand = String(body.brand ?? product.brand ?? "");
     product.category = matchedCategory?._id || product.category || null;
     product.sourceCategoryName = String(
-      body.sourceCategoryName ?? product.sourceCategoryName ?? "",
+      matchedCategory?.name ||
+        body.sourceCategoryName ||
+        product.sourceCategoryName ||
+        "",
     );
     product.currency = String(body.currency || product.currency || "USD");
     product.price = Number(
@@ -575,6 +580,23 @@ exports.updateProduct = async (req, res, next) => {
       null;
 
     updatedProduct = await product.save();
+
+    if (
+      updatedProduct.category &&
+      String(oldCategoryId) !== String(updatedProduct.category)
+    ) {
+      if (oldCategoryId) {
+        await Category.updateOne(
+          { _id: oldCategoryId },
+          { $pull: { attachedProducts: updatedProduct._id } },
+        );
+      }
+
+      await Category.updateOne(
+        { _id: product.category },
+        { $addToSet: { attachedProducts: updatedProduct._id } },
+      );
+    }
 
     return res.status(200).json({
       message: "Product updated successfully",
