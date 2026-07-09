@@ -1,11 +1,11 @@
 import { getUserAddresses } from "@/APIs/UserProfileService";
-import useProfileRoutingStates from "@/zustand_ProfileRoutesStates/ProfileRoutesStates";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import {
   useActionData,
   useFetcher,
   useLoaderData,
+  useLocation,
   useNavigate,
 } from "react-router-dom";
 
@@ -13,8 +13,8 @@ export default function useUserAddressesPage(callBackFNAtChangeDefaultAddress) {
   const loaderData = useLoaderData();
   const fetcher = useFetcher();
   const actionData = useActionData();
+  const location = useLocation();
   const navigate = useNavigate();
-  const { currentRouteState, setCurrentRouteState } = useProfileRoutingStates();
 
   const loaderAddresses = loaderData?.addresses || [];
   const loaderDefaultAddressId = loaderAddresses.find(
@@ -89,18 +89,23 @@ export default function useUserAddressesPage(callBackFNAtChangeDefaultAddress) {
 
   const shouldShowEditForm = Boolean(editingAddressId);
   const shouldShowAddForm =
-    currentState === "add" ||
-    currentRouteState.previousAction === "Add address";
+    currentState === "add" || location.state?.openAddAddress;
 
   useEffect(() => {
     if (!actionData?.ok) return;
 
     const timeout = setTimeout(() => {
       setCurrentState("");
+      if (location.state?.openAddAddress) {
+        navigate(`${location.pathname}${location.search}`, {
+          replace: true,
+          state: null,
+        });
+      }
     }, 0);
 
     return () => clearTimeout(timeout);
-  }, [actionData]);
+  }, [actionData, location.pathname, location.search, location.state, navigate]);
 
   function handleEdit(addressId) {
     setCurrentState(`edit-${addressId}`);
@@ -111,10 +116,9 @@ export default function useUserAddressesPage(callBackFNAtChangeDefaultAddress) {
   }
 
   function handleGoToAddAddress() {
-    setCurrentRouteState({
-      previousAction: "Add address",
+    navigate("/profile/addresses", {
+      state: { openAddAddress: true },
     });
-    navigate("/profile/addresses");
   }
 
   function handleDelete(addressId) {
@@ -127,9 +131,12 @@ export default function useUserAddressesPage(callBackFNAtChangeDefaultAddress) {
 
   function handleCancel() {
     setCurrentState("");
-    setCurrentRouteState({
-      previousAction: "Cancel",
-    });
+    if (location.state?.openAddAddress) {
+      navigate(`${location.pathname}${location.search}`, {
+        replace: true,
+        state: null,
+      });
+    }
   }
 
   function setAsDefault(addressId) {

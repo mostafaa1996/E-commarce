@@ -2,19 +2,16 @@ import AddressCard from "@/components/genericComponents/AddressCard";
 import DashBoardTableHeader from "@/components/genericComponents/DashBoardTableHeader";
 import DashBoardTable from "@/components/genericComponents/DashBoardTable";
 import Icon from "@/system/icons/Icon";
-import useProfileRoutingStates from "@/zustand_ProfileRoutesStates/ProfileRoutesStates";
 import { useNavigate } from "react-router-dom";
 export default function AddressSection({ addresses }) {
   const navigate = useNavigate();
-  const { setCurrentRouteState } = useProfileRoutingStates();
   return (
     <DashBoardTable className={`w-full`}>
       <DashBoardTableHeader
         ButtonAction={() => {
-          setCurrentRouteState({
-            previousAction: "Add address",
+          navigate("/profile/addresses", {
+            state: { openAddAddress: true },
           });
-          navigate("/profile/addresses");
         }}
         HeaderText="Addresses"
         HeaderIcon={
