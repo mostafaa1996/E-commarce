@@ -16,7 +16,7 @@ async function updateFinalTotalPrice(shippingCost, cart) {
 
 async function calculateShippingCost(userId){
   const address = await Address.findOne({ user: userId , isDefault: true });
-  if (!address) return;
+  if (!address) return 0;
   const vatConfig = await VAT_shipping.findOne({}).select("delivery").lean();
   const normalizedDelivery = (vatConfig?.delivery || []).map((delivery) => ({
     ...delivery,
