@@ -112,7 +112,6 @@ export default function useUserAddressesPage(callBackFNAtChangeDefaultAddress) {
 
   function handleGoToAddAddress() {
     setCurrentRouteState({
-      currentRoute: "addresses",
       previousAction: "Add address",
     });
     navigate("/profile/addresses");
@@ -129,7 +128,6 @@ export default function useUserAddressesPage(callBackFNAtChangeDefaultAddress) {
   function handleCancel() {
     setCurrentState("");
     setCurrentRouteState({
-      ...currentRouteState,
       previousAction: "Cancel",
     });
   }

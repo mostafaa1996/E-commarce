@@ -12,7 +12,6 @@ export default function AddressSection({ addresses }) {
       <DashBoardTableHeader
         ButtonAction={() => {
           setCurrentRouteState({
-            currentRoute: "addresses",
             previousAction: "Add address",
           });
           navigate("/profile/addresses");

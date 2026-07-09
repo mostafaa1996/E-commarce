@@ -50,6 +50,7 @@ import AboutPage from "./Pages/AboutPage";
 import { shortenText } from "./utils/utils";
 import { useAuthStore } from "./zustand_auth/authStore";
 import ProtectedRouteLayout from "@/layouts/protectedRouteLayout";
+import BaseSection from "./Sections/UserProfile/BaseSectionForUserProfile";
 
 export const router = createBrowserRouter([
   {
@@ -127,64 +128,47 @@ export const router = createBrowserRouter([
             handle: { items: [{ label: "Checkout", href: "/checkout" }] },
           },
           {
-            path: "/profile",
-            element: <UserProfilePage />,
-            handle: { title: "Profile" },
-          },
-          {
-            path: "/profile/orders",
-            element: <UserOrdersPage />,
-            handle: { title: "profile > Orders" },
-          },
-          {
-            path: "/profile/wishlist",
-            element: <WishListPage />,
-            handle: { title: "profile > WishList" },
-          },
-          {
-            path: "/profile/addresses",
-            element: <UserAddressesPage />,
-            handle: { title: "profile > Addresses" },
-            loader: async () => {
-              return queryClient.ensureQueryData({
-                queryKey: ["profile-addresses"],
-                queryFn: getUserAddresses,
-              });
-            },
-            action: async ({ request }) => await updateUserAddresses(request),
-          },
-          {
-            path: "/profile/payments",
-            element: <UserPaymentPage />,
-            handle: { title: "profile > Payments" },
-          },
-          {
-            path: "/profile/settings",
-            element: <UserSettingsPage />,
-            handle: { title: "profile > Settings" },
-            loader: async () => {
-              return queryClient.ensureQueryData({
-                queryKey: ["profile-settings"],
-                queryFn: () => {
-                  return null;
-                },
-                staleTime: 1000 * 60 * 5,
-              });
-            },
-            action: async ({ request }) => await changePassword(request),
-          },
-          {
-            path: "/profile/edit-profile",
-            element: <EditUserProfilePage />,
-            handle: { title: "profile > Edit" },
-            loader: async () => {
-              return queryClient.ensureQueryData({
-                queryKey: ["profile-edit"],
-                queryFn: getPersonalInfo,
-                staleTime: 1000 * 60 * 5,
-              });
-            },
-            action: async ({ request }) => await UpdatePersonalInfo(request),
+            element: <BaseSection />,
+            children: [
+              {
+                path: "/profile",
+                element: <UserProfilePage />,
+                handle: { title: "Profile" },
+              },
+              {
+                path: "/profile/orders",
+                element: <UserOrdersPage />,
+                handle: { title: "profile > Orders" },
+              },
+              {
+                path: "/profile/wishlist",
+                element: <WishListPage />,
+                handle: { title: "profile > WishList" },
+              },
+              {
+                path: "/profile/addresses",
+                element: <UserAddressesPage />,
+                handle: { title: "profile > Addresses" },
+                action: async ({ request }) => await updateUserAddresses(request),
+              },
+              {
+                path: "/profile/payments",
+                element: <UserPaymentPage />,
+                handle: { title: "profile > Payments" },
+              },
+              {
+                path: "/profile/settings",
+                element: <UserSettingsPage />,
+                handle: { title: "profile > Settings" },
+                action: async ({ request }) => await changePassword(request),
+              },
+              {
+                path: "/profile/edit-profile",
+                element: <EditUserProfilePage />,
+                handle: { title: "profile > Edit" },
+                action: async ({ request }) => await UpdatePersonalInfo(request),
+              },
+            ],
           },
         ],
       },

@@ -1,4 +1,3 @@
-import BaseSection from "@/Sections/UserProfile/BaseSectionForUserProfile";
 import AddressCard from "@/components/genericComponents/AddressCard";
 import UserNestedRoutesHeader from "@/Sections/UserProfile/UserNestedRoutesHeader";
 import EditAddressForm from "@/Sections/UserProfile/EditAddressForm";
@@ -105,7 +104,7 @@ export default function UserAddressesPage() {
     );
   }
   return (
-    <BaseSection>
+    <>
       <UserNestedRoutesHeader
         iconName="location"
         title="My Addresses"
@@ -115,6 +114,6 @@ export default function UserAddressesPage() {
         onClick={handleAdd}
       />
       {content}
-    </BaseSection>
+    </>
   );
 }
