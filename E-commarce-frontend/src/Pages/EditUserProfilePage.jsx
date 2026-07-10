@@ -9,6 +9,7 @@ import ProfileForm from "@/Sections/UserProfile/EditProfileForm";
 import Icon from "@/system/icons/Icon";
 import ProfilePageState from "@/components/genericComponents/ProfilePageState";
 import useEditUserProfilePage from "@/hooks/useEditUserProfilePage";
+import { useActionData } from "react-router-dom";
 
 export default function EditUserProfilePage() {
   const {
@@ -22,6 +23,8 @@ export default function EditUserProfilePage() {
     handleAvatarChange,
     handleCancel,
   } = useEditUserProfilePage();
+
+  const actionData = useActionData();
 
   if (isLoading) {
     return <ProfilePageState type="loading" loadingMessage="Loading profile" />;
@@ -94,7 +97,7 @@ export default function EditUserProfilePage() {
           />
         </div>
       </ProfileCard>
-      <ProfileForm className="max-w-7xl" data={data} id="profile-form" />
+      <ProfileForm className="max-w-7xl" data={data} id="profile-form" AfterUpdatingData={actionData} />
       <div className="flex flex-col-reverse items-stretch gap-3 sm:flex-row sm:items-center sm:justify-end sm:gap-5">
         <Button
           className="w-full rounded-md py-2 text-sm sm:w-fit"

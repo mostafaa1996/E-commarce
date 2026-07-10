@@ -3,13 +3,8 @@ import { queryClient } from "./queryClient";
 import { getShopProducts, getProductById } from "./APIs/shopProductsService";
 import { loginAction, SignupAction } from "./APIs/AuthService";
 import { getCart } from "@/APIs/CartService";
-import { getCartData } from "./APIs/checkoutService";
 import {
-  getUserProfileData,
-  getPersonalInfo,
   UpdatePersonalInfo,
-  getUserWishlist,
-  getUserAddresses,
   updateUserAddresses,
   changePassword,
 } from "./APIs/UserProfileService";
