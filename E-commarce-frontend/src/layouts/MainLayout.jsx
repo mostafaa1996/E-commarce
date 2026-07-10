@@ -32,6 +32,7 @@ export default function MainLayout() {
   const { data: cart } = useQuery({
     queryKey: ["cart", { includeCouponEligibility: false }],
     queryFn: getCart,
+    enabled: isLoggedIn,
   });
   const CartTotal = cart?.totalItems ?? 0;
   return (

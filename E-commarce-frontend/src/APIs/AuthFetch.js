@@ -29,6 +29,8 @@ export async function authFetch(url, options = {}) {
     });
 
     if (!refreshRes.ok) {
+      setAccessToken(null);
+      useAuthStore.getState().logoutUser();
       throw new Error("Unauthorized");
     }
     
