@@ -1,6 +1,14 @@
 const mongoose = require("mongoose");
 const Product = require("../models/Product");
-const createActivityLog = require("../utils/CreateActivityLogs");
+const createActivityLog = require("../services/CreateActivityLogs");
+
+const statusMap = {
+  "in_stock": "In Stock",
+  "low": "Low",
+  "critical": "Critical",
+  "out_of_stock": "Out Of Stock",
+};
+
 function normalizePositiveNumber(value, fallback) {
   const parsed = Number(value);
 
@@ -45,9 +53,10 @@ exports.getAdminInventory = async (req, res, next) => {
       return res.status(403).json({ message: "Access denied. Admins only." });
     }
 
-    const page = normalizePositiveNumber(req.query.page, 1);
-    const limit = Math.min(normalizePositiveNumber(req.query.limit, 10), 100);
+    const page = normalizePositiveNumber(req.query?.page, 1);
+    const limit = Math.min(normalizePositiveNumber(req.query?.limit, 10), 100);
     const skip = (page - 1) * limit;
+    const status = String(req.query?.status || "").trim().toLowerCase();
 
     const statusExpression = {
       $let: {
@@ -113,9 +122,10 @@ exports.getAdminInventory = async (req, res, next) => {
       },
     ];
 
-    const [inventoryRows, summary] = await Promise.all([
+    const [inventoryRows, summary , filteredCount ] = await Promise.all([
       Product.aggregate([
         ...basePipeline,
+        ...(status && statusMap[status] ? [{ $match: { status : statusMap[status] } }] : []),
         { $sort: { _id: -1, variantId: -1 } },
         { $skip: skip },
         { $limit: limit },
@@ -141,6 +151,13 @@ exports.getAdminInventory = async (req, res, next) => {
           },
         },
       ]),
+      Product.aggregate([
+        ...basePipeline,
+        ...(status && statusMap[status] ? [{ $match: { status : statusMap[status] } }] : []),
+        {
+          $count: "productsCount",
+        }
+      ])
     ]);
 
     const counts = summary[0] || {
@@ -151,7 +168,8 @@ exports.getAdminInventory = async (req, res, next) => {
       CriticalStockCount: 0,
     };
 
-    const totalPages = Math.max(1, Math.ceil(counts.productsCount / limit));
+    const filteredProductsCount = filteredCount[0]?.productsCount || 0;
+    const totalPages = Math.max(1, Math.ceil(filteredProductsCount  / limit));
 
     return res.status(200).json({
       pagination: {
@@ -307,7 +325,7 @@ exports.updateInventory = async (req, res, next) => {
         title: "Product Inventory Updated",
         message: `Updated stock of ${product.title}`,
       });
-    }else{
+    } else {
       createActivityLog({
         type: "PRODUCT_UPDATED",
         title: "Product Inventory Update",

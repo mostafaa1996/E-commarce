@@ -10,6 +10,7 @@ import useUserAddressesPage from "@/hooks/useUserAddressesPage";
 import ProfilePageState from "@/components/genericComponents/ProfilePageState";
 import useCheckoutPage from "@/hooks/useCheckoutPage";
 import Icon from "@/system/icons/Icon";
+import { queryClient } from "@/queryClient";
 
 function CheckoutPanel({ title, description, children }) {
   return (
@@ -62,7 +63,9 @@ export default function CheckoutPage() {
     handleGoToAddAddress,
     handleDelete,
     setAsDefault,
-  } = useUserAddressesPage();
+  } = useUserAddressesPage(() => {
+    queryClient.invalidateQueries({ queryKey: ["checkout"] });
+  });
 
   function renderAddresses() {
     if (isLoadingAddresses) {
@@ -195,7 +198,7 @@ export default function CheckoutPage() {
           </div>
 
           <aside className="space-y-6 lg:sticky lg:top-24">
-            {checkoutData.message === "Cart found" && checkoutData.cart ? (
+            {checkoutData.message !== "Cart not found" && checkoutData.cart ? (
               <CheckoutPanel
                 title="Order summary"
                 description="Confirm your cart totals and payment method."
@@ -206,7 +209,7 @@ export default function CheckoutPage() {
                     open={orderState === "InProgress"}
                     getClientSecret={SetUpPaymentMethods}
                   >
-                    {() => <CheckoutPaymentSection orderNotes={orderNotes} />}
+                    {() => <CheckoutPaymentSection orderNotes={orderNotes} cartId={checkoutData?.cart?._id} />}
                   </StripeElementsWrapper>
                 </div>
               </CheckoutPanel>

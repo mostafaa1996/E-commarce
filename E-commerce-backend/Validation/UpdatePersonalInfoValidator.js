@@ -30,5 +30,12 @@ exports.ValidatePersonalInfo = [
     .notEmpty()
     .withMessage("Location is required")
     .isLength({ min: 2 })
-    .withMessage("Location must be at least 2 characters"),
+    .withMessage("Location must be at least 2 characters")
+    .custom((value) => {
+      const parts = value.split(",").map((part) => part.trim());
+      if (parts.length !== 2 || parts.some((part) => !part)) {
+        throw new Error("Location must be at that form: city, country");
+      }
+      return true;
+    }),
 ];

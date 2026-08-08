@@ -3,6 +3,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { getCart, syncCart } from "@/APIs/CartService";
 import { queryClient } from "@/queryClient";
 import { useMemo, useState } from "react";
+import {useToast} from "@/hooks/use-toast";
 
 function normalizeCouponInfo(cart) {
   const couponOffer = cart?.couponOffer || {};
@@ -41,17 +42,22 @@ function calculateDiscount(couponInfo, totalCost) {
 
 export default function useCart() {
   const navigate = useNavigate();
+  const toast = useToast();
   const [promo, setPromo] = useState("");
   const [appliedPromo, setAppliedPromo] = useState(false);
   const {
     //update cartStore from database
     data: cart,
     isLoading: isLoadingCart,
+    isFetching: cartFetching,
     error: cartError,
   } = useQuery({
     queryKey: ["cart", { includeCouponEligibility: true }],
     queryFn: () => getCart({ includeCouponEligibility: true }),
     placeholderData: (previousData) => previousData,
+    staleTime: 0,
+    refetchOnMount: "always",
+    gcTime: 0,
   });
 
   const syncCartMutation = useMutation({
@@ -69,9 +75,6 @@ export default function useCart() {
         cartQueryKeys.forEach((key) => {
           queryClient.setQueryData(key, (oldCart) => {
             if (!oldCart) return null;
-            const itemPrice = oldCart.items.find(
-              (item) => item._id === productId && item.variantId === variantId,
-            )?.price;
             const oldItemQuantity = oldCart.items.find(
               (item) => item._id === productId && item.variantId === variantId,
             )?.quantity;
@@ -88,10 +91,6 @@ export default function useCart() {
                 return item;
               }),
               totalItems: oldCart.totalItems - oldItemQuantity + quantity,
-              totalPrice:
-                oldCart.totalPrice -
-                itemPrice * oldItemQuantity +
-                itemPrice * quantity,
               updatedAt: new Date(),
             };
           });
@@ -101,9 +100,6 @@ export default function useCart() {
         cartQueryKeys.forEach((key) => {
           queryClient.setQueryData(key, (oldCart) => {
             if (!oldCart) return null;
-            const itemPrice = oldCart.items.find(
-              (item) => item._id === productId && item.variantId === variantId,
-            )?.price;
             const oldItemQuantity = oldCart.items.find(
               (item) => item._id === productId && item.variantId === variantId,
             )?.quantity;
@@ -113,10 +109,6 @@ export default function useCart() {
                 (item) => item._id !== productId && item.variantId !== variantId,
               ),
               totalItems: oldCart.totalItems - oldItemQuantity + quantity,
-              totalPrice:
-                oldCart.totalPrice -
-                itemPrice * oldItemQuantity +
-                itemPrice * quantity,
               updatedAt: new Date(),
             };
           });
@@ -138,9 +130,15 @@ export default function useCart() {
       }
       return { previousCarts };
     },
-    onError: (context) => {
+    onError: (context , _error) => {
       if (context.previousCart)
         queryClient.setQueryData(["cart"], context.previousCart);
+      if(_error.data?.message) toast({ 
+        title: "Failed to update cart",
+        description: _error.data.message,
+        variant: "destructive",
+        duration: 5000
+       });
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["cart"] });
@@ -211,7 +209,7 @@ export default function useCart() {
     [couponInfo, cart?.totalPrice],
   );
 
-  console.log(couponInfo, "couponInfo", discountInMoney, "discountInMoney");
+  console.log(couponInfo, "couponInfo", discountInMoney, "discountInMoney" , cart , "cart");
 
   return {
     cart,
@@ -228,5 +226,7 @@ export default function useCart() {
     savings,
     discountInMoney,
     couponInfo,
+    cartLoading : syncCartMutation.isPending,
+    cartFetching
   };
 }

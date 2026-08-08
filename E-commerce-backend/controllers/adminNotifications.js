@@ -1,5 +1,5 @@
 const Notification = require("../models/Notification");
-const formatRelativeTime = require("../utils/formatRelativeTime");
+const formatRelativeTime = require("../services/formatRelativeTime");
 
 const typeColors = {
   order: "bg-info/10 text-info",
@@ -13,7 +13,9 @@ exports.getAdminNotifications = async (req, res, next) => {
     const userId = req.user?.id;
     if (!userId) return res.status(401).json({ message: "user not found" });
 
-    const notifications = await Notification.find({ userId }).sort({ createdAt: -1 });
+    const notifications = await Notification.find({ userId }).sort({
+      createdAt: -1,
+    });
     const formattedNotifications = notifications.map((notification) => ({
       ...notification.toObject(),
       typeColor: typeColors[notification?.entityType?.toLowerCase()],
@@ -33,15 +35,22 @@ exports.updateNotificationStatus = async (req, res, next) => {
     if (!userId) return res.status(401).json({ message: "user not found" });
 
     const notificationId = req.params.id;
-    if (!notificationId) return res.status(400).json({ message: "notification id is required" });
+    if (!notificationId)
+      return res.status(400).json({ message: "notification id is required" });
 
-    const notification = await Notification.findOne({ userId, _id: notificationId });
-    if (!notification) return res.status(404).json({ message: "notification not found" });
+    const notification = await Notification.findOne({
+      userId,
+      _id: notificationId,
+    });
+    if (!notification)
+      return res.status(404).json({ message: "notification not found" });
 
     notification.isRead = true;
     await notification.save();
 
-    res.status(200).json({ message: "notification marked as read", notification });
+    res
+      .status(200)
+      .json({ message: "notification marked as read", notification });
   } catch (err) {
     console.log(err);
     next(err);

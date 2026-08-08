@@ -2,11 +2,16 @@ const Product = require("../models/Product");
 const categories = require("../getBaseProductsByRapidAPI/categories");
 const Review = require("../models/Review");
 const User = require("../models/User");
-const {createNotifications} = require("../utils/createNotifications");
+const { createNotifications } = require("../services/createNotifications");
 
 const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-const createReviewNotification = async (userName, rating, isUpdated , Review) => {
+const createReviewNotification = async (
+  userName,
+  rating,
+  isUpdated,
+  Review,
+) => {
   try {
     if (!userName) {
       if (rating < 3) {
@@ -289,7 +294,10 @@ exports.getProduct = async (req, res, next) => {
       return res
         .status(404)
         .json({ message: "Product not found", product: {} });
-    const reviews = await Review.find({ product: req.params.id , status: "approved" });
+    const reviews = await Review.find({
+      product: req.params.id,
+      status: "approved",
+    });
     if (!reviews)
       return res
         .status(404)
@@ -308,7 +316,8 @@ exports.postReview = async (req, res, next) => {
     const userId = req.user?.id;
     const productId = req.params?.id;
     const review = req.body;
-    if(!productId) return res.status(400).json({ message: "Product id is required" });
+    if (!productId)
+      return res.status(400).json({ message: "Product id is required" });
     const user = await User.findById(userId);
     if (!user) {
       //anonymous user
@@ -337,13 +346,21 @@ exports.postReview = async (req, res, next) => {
         return res
           .status(500)
           .json({ message: "Failed to add review to product" });
-      await createReviewNotification(undefined, newReview.rating, false , newReview);
+      await createReviewNotification(
+        undefined,
+        newReview.rating,
+        false,
+        newReview,
+      );
       return res
         .status(200)
         .json({ message: "Review created successfully", status: "pending" });
     }
-    
-    if(user.status === "blocked") return res.status(403).json({ message: "Your account has been blocked by the admin." });
+
+    if (user.status === "blocked")
+      return res
+        .status(403)
+        .json({ message: "Your account has been blocked by the admin." });
     if (!review.rating || !review.comment)
       return res.status(400).json({ message: "Missing required fields" });
     const existedReview = await Review.findOne({
@@ -363,7 +380,12 @@ exports.postReview = async (req, res, next) => {
       );
       if (!updatedReview)
         return res.status(500).json({ message: "Failed to update review" });
-      await createReviewNotification(user.name, existedReview.rating, true , existedReview);
+      await createReviewNotification(
+        user.name,
+        existedReview.rating,
+        true,
+        existedReview,
+      );
       return res
         .status(200)
         .json({ message: "Review updated successfully", status: "pending" });
@@ -394,8 +416,15 @@ exports.postReview = async (req, res, next) => {
     const updatedUser = await user.save();
     if (!updatedUser)
       return res.status(500).json({ message: "Failed to add review to user" });
-    await createReviewNotification(user.name, newReview.rating, false , newReview);
-    res.status(200).json({ message: "Review added successfully", status: "pending" });
+    await createReviewNotification(
+      user.name,
+      newReview.rating,
+      false,
+      newReview,
+    );
+    res
+      .status(200)
+      .json({ message: "Review added successfully", status: "pending" });
   } catch (err) {
     next(err);
   }

@@ -2,17 +2,17 @@ import { getCartData } from "@/APIs/checkoutService";
 import useCheckoutStore from "@/zustand_checkout/checkoutStore";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { useLoaderData } from "react-router-dom";
+import {useLocation} from "react-router-dom";
 
 export default function useCheckoutPage() {
-  const initialData = useLoaderData();
   const [orderNotes, setOrderNotes] = useState("");
   const { orderState } = useCheckoutStore();
+  const {state} = useLocation(); //hold the info of buy now button
 
   const checkoutQuery = useQuery({
     queryKey: ["checkout"],
     queryFn: async () => {
-      const response = await getCartData();
+      const response = await getCartData(state);
       console.log(response);
       return {
         cart: response.cart,
@@ -20,7 +20,9 @@ export default function useCheckoutPage() {
         blocked: response.blocked,
       };
     },
-    initialData,
+    staleTime: 0,
+    refetchOnMount: "always",
+    gcTime: 0,
   });
 
   function setNotes(event) {

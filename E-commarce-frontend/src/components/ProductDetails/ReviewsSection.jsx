@@ -27,7 +27,7 @@ const ReviewsSection = ({
   const reviewsPerPage = 3;
   const sortedReviews = [...reviews].sort((a, b) => {
     if (sort === "oldest") {
-      return new Date(a.updatedAt) - new Date(b.updatedAt);
+      return new Date(a.date) - new Date(b.date);
     }
 
     if (sort === "rating-high") {
@@ -38,7 +38,7 @@ const ReviewsSection = ({
       return a.rating - b.rating;
     }
 
-    return new Date(b.updatedAt) - new Date(a.updatedAt);
+    return new Date(b.date) - new Date(a.date);
   });
   const totalPages = Math.max(
     1,

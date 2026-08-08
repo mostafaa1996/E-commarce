@@ -1,11 +1,12 @@
 import { useEffect } from "react";
 import { setAccessToken } from "@/APIs/AuthFetch";
 import { useAuthStore } from "@/zustand_auth/authStore";
+import Loading from "@/components/genericComponents/Loading";
 
 const URL = import.meta.env.VITE_API_URL;
 
 export default function AuthInitializer({ children }) {
-  const { setUser, logoutUser } = useAuthStore();
+  const { isAuthReady, setUser, logoutUser } = useAuthStore();
 
   useEffect(() => {
     async function checkAuth() {
@@ -34,6 +35,10 @@ export default function AuthInitializer({ children }) {
 
     checkAuth();
   }, [setUser, logoutUser]);
+
+  if (!isAuthReady) {
+    return <Loading message="Checking session" fullPage />;
+  }
 
   return children;
 }

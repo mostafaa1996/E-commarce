@@ -4,12 +4,14 @@
 // getDataByZenRows.run();
 
 require("dotenv").config();
-require("./utils/exchangeRateRequest");
+require("./services/exchangeRateRequest");
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const { startStockNotificationsTask }  = require ("./utils/stockNotificationsTask.js");
+const {
+  startStockNotificationsTask,
+} = require("./services/stockNotificationsTask.js");
 
 const shopRoutes = require("./routes/shop");
 const authRoutes = require("./routes/auth");
@@ -112,7 +114,7 @@ app.use(
   UserProfileSettingsRoutes,
 );
 app.use("/exchangeRate", exchangeRateRoutes);
-app.use("/admin/dashboard", adminDashboardRoute );
+app.use("/admin/dashboard", adminDashboardRoute);
 app.use("/admin/products", adminProductsRoute);
 app.use("/admin/categories", adminCategoriesRoute);
 app.use("/admin/orders", adminOrdersRoute);

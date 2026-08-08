@@ -33,7 +33,7 @@ export async function getPersonalInfo() {
     throw new Error("Failed to fetch user personal data");
   }
   const data = await res.json();
-  // console.log(data);
+  console.log(data);
   return data;
 }
 
@@ -53,10 +53,14 @@ export async function UpdatePersonalInfo(request) {
     body: formData,
   });
   if (!res.ok) {
-    throw new Error("Failed to update user personal info");
+    const data = await res.json();
+    if(data.errors && Array.isArray(data.errors)) {
+      return data;
+    }
+    throw new Error(data.message || "Updating personal info failed");
   }
   const data = await res.json();
-  // console.log(data);
+  console.log(data);
   return data;
 }
 
@@ -155,14 +159,14 @@ export async function updateUserAddresses(request) {
     phone: formData?.get("phone"),
     email: formData?.get("email"),
     street: formData?.get("street"),
-    city: formData?.get("city")?.split(",")[0],
-    state: formData?.get("city")?.split(",")[1],
+    city: formData?.get("city")?.split(",")[1],
+    state: formData?.get("city")?.split(",")[0],
     country: formData?.get("country"),
     zipCode: formData?.get("zip"),
   };
   const intent = formData.get("intent");
   const id = formData.get("id");
-  // console.log(address, intent);
+  console.log(address, intent);
   let res = null;
   switch (intent) {
     case "Add":
@@ -174,7 +178,11 @@ export async function updateUserAddresses(request) {
         body: JSON.stringify(address),
       });
       if (!res.ok) {
-        throw new Error("Failed to add user address");
+        const data = await res.json();
+        if(data.errors && Array.isArray(data.errors)) {
+          return data.errors;
+        }
+        throw new Error(data.message || "adding addressRequest failed");
       }
       break;
     case "Save":
@@ -186,7 +194,11 @@ export async function updateUserAddresses(request) {
         body: JSON.stringify(address),
       });
       if (!res.ok) {
-        throw new Error("Failed to update user address");
+        const data = await res.json();
+        if(data.errors && Array.isArray(data.errors)) {
+          return data.errors;
+        }
+        throw new Error(data.message || "edit address Request failed");
       }
       break;
     case "delete":

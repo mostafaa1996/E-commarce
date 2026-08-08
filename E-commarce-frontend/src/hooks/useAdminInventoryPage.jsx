@@ -9,7 +9,8 @@ import { useState } from "react";
 
 const defaultQuery = {
   page: 1,
-  limit: 10,
+  limit: 8,
+  status: "all",
 };
 
 export default function useAdminInventoryPage() {
@@ -52,6 +53,7 @@ export default function useAdminInventoryPage() {
   }
 
   return {
+    MainQuery,
     inventoryData: inventoryQuery.data,
     isLoading: inventoryQuery.isLoading,
     isFetching: inventoryQuery.isFetching,

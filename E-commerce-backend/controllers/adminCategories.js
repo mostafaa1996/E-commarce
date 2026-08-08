@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Category = require("../models/Category");
 const cloudinary = require("../config/cloudinary");
-const createActivityLog = require("../utils/CreateActivityLogs");
+const createActivityLog = require("../services/CreateActivityLogs");
 
 function slugify(value = "") {
   return String(value)
@@ -16,6 +16,7 @@ function isValidObjectId(value) {
 }
 
 function UploadToCloudinary(fileBuffer, categoryId) {
+  if (!fileBuffer) return Promise.resolve(null);
   return new Promise((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
       {
@@ -33,13 +34,19 @@ function UploadToCloudinary(fileBuffer, categoryId) {
   });
 }
 
-async  function normalizeImage(req , catId , fallbackAlt) {
-  const result = await UploadToCloudinary(req.file.buffer, catId);
-  if (!result) return null;
-  return {
-    icon: result.secure_url,
-    alt: fallbackAlt,
-  };
+async function normalizeImage(req, catId, fallbackAlt) {
+  const fileBuffer = req?.file?.buffer;
+  if (!fileBuffer) return null;
+  try {
+    const result = await UploadToCloudinary(fileBuffer, catId);
+    if (!result) return null;
+    return {
+      icon: result.secure_url,
+      alt: fallbackAlt,
+    };
+  } catch (error) {
+    return null;
+  }
 }
 
 async function getParentMeta(parentId, currentCategoryId = null) {
@@ -135,7 +142,9 @@ exports.getAdminCategories = async (req, res, next) => {
       .sort({ createdAt: -1 })
       .populate("parent", "name")
       .populate("ancestors", "name")
-      .select("name parent ancestors icon keywords attachedProducts isActive createdAt updatedAt")
+      .select(
+        "name parent ancestors icon keywords attachedProducts isActive createdAt updatedAt",
+      )
       .lean();
 
     return res.status(200).json({
@@ -155,7 +164,7 @@ exports.addCategory = async (req, res, next) => {
     }
 
     console.log(req.body);
-    
+
     const body = req.body || {};
     const name = String(body.name || "").trim();
     const slug = slugify(body.name || "");
@@ -183,18 +192,27 @@ exports.addCategory = async (req, res, next) => {
       slug,
       parent: parentMeta.parent,
       ancestors: parentMeta.ancestors,
-      icon:{
+      icon: {
         icon: String("").trim(),
         alt: String("").trim(),
       },
       keywords: String(body.keywords || "").trim(),
       attachedProducts: [],
-      isActive: body.isActive !== undefined ? Boolean(body.isActive) : true,
+      isActive:
+        body.isActive && body.isActive === "true"
+          ? true
+          : body.isActive && body.isActive === "false"
+            ? false
+            : true,
     });
 
     createdCategory = await category.save();
 
-    const icon = await normalizeImage(req , createdCategory._id , "Category Icon");
+    const icon = await normalizeImage(
+      req,
+      createdCategory._id,
+      "Category Icon",
+    );
 
     if (icon) {
       await Category.updateOne(
@@ -213,15 +231,14 @@ exports.addCategory = async (req, res, next) => {
     }
 
     next(err);
-  }finally {
-    if(createdCategory.name){
+  } finally {
+    if (createdCategory.name) {
       createActivityLog({
-      type: "Category_CREATED",
-      title: "Category Created",
-      message: `new category ${createdCategory.name} created`,
-    });
-    }
-    else{
+        type: "Category_CREATED",
+        title: "Category Created",
+        message: `new category ${createdCategory.name} created`,
+      });
+    } else {
       createActivityLog({
         type: "Category_CREATED",
         title: "Category Creation",
@@ -249,6 +266,7 @@ exports.updateCategory = async (req, res, next) => {
     }
 
     const body = req.body || {};
+    console.log(body);
     const nextName = String(body.name ?? category.name ?? "").trim();
     const nextSlug = slugify(body.slug ?? nextName);
 
@@ -292,11 +310,15 @@ exports.updateCategory = async (req, res, next) => {
     category.ancestors = parentMeta.ancestors;
     category.icon =
       req.file !== undefined
-        ? await normalizeImage(req , category._id , nextName)
+        ? await normalizeImage(req, category._id, nextName)
         : category.icon;
     category.keywords = String(body.keywords ?? category.keywords ?? "").trim();
     category.isActive =
-      body.isActive !== undefined ? Boolean(body.isActive) : category.isActive;
+      body.isActive && body.isActive === "true"
+        ? true
+        : body.isActive && body.isActive === "false"
+          ? false
+          : category.isActive;
 
     updatedCategory = await category.save();
     await refreshDescendantAncestors(updatedCategory._id);
@@ -304,7 +326,9 @@ exports.updateCategory = async (req, res, next) => {
     const populatedCategory = await Category.findById(updatedCategory._id)
       .populate("parent", "name slug")
       .populate("ancestors", "name slug")
-      .select("name slug parent ancestors icon keywords attachedProducts isActive createdAt updatedAt")
+      .select(
+        "name slug parent ancestors icon keywords attachedProducts isActive createdAt updatedAt",
+      )
       .lean();
 
     return res.status(200).json({
@@ -317,15 +341,14 @@ exports.updateCategory = async (req, res, next) => {
     }
 
     next(err);
-  }finally {
-    if(updatedCategory.name){
-    createActivityLog({
-      type: "Category_UPDATED",
-      title: "Category Updated",
-      message: `category ${updatedCategory.name} updated`,
-    });
-    }
-    else{
+  } finally {
+    if (updatedCategory.name) {
+      createActivityLog({
+        type: "Category_UPDATED",
+        title: "Category Updated",
+        message: `category ${updatedCategory.name} updated`,
+      });
+    } else {
       createActivityLog({
         type: "Category_UPDATED",
         title: "Category Update",
@@ -364,7 +387,10 @@ exports.deleteCategory = async (req, res, next) => {
       });
     }
 
-    if (Array.isArray(category.attachedProducts) && category.attachedProducts.length > 0) {
+    if (
+      Array.isArray(category.attachedProducts) &&
+      category.attachedProducts.length > 0
+    ) {
       return res.status(400).json({
         message: "Cannot delete category with attached products",
       });
@@ -377,7 +403,7 @@ exports.deleteCategory = async (req, res, next) => {
     });
   } catch (err) {
     next(err);
-  }finally {
+  } finally {
     createActivityLog({
       type: "Category_DELETED",
       title: "Category Deleted",

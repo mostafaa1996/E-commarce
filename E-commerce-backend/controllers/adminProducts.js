@@ -2,7 +2,7 @@ const { on } = require("../models/ExchangeRate");
 const Product = require("../models/Product");
 const Category = require("../models/Category");
 const mongoose = require("mongoose");
-const createActivityLog = require("../utils/CreateActivityLogs");
+const createActivityLog = require("../services/CreateActivityLogs");
 
 function escapeRegex(value = "") {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -19,14 +19,14 @@ function normalizePositiveNumber(value, fallback) {
 }
 
 function getProductStock(product) {
-  if (typeof product?.inventory?.totalStock === "number") {
-    return product.inventory.totalStock;
-  }
-
   if (Array.isArray(product?.variants) && product.variants.length > 0) {
     return product.variants.reduce((sum, variant) => {
       return sum + (variant.stock || 0);
     }, 0);
+  }
+
+  if (typeof product?.inventory?.totalStock === "number") {
+    return product.inventory.totalStock;
   }
 
   return 0;
@@ -176,7 +176,7 @@ exports.addProduct = async (req, res, next) => {
     if (!req.user || req.user.role !== "admin") {
       return res.status(403).json({ message: "Access denied. Admins only." });
     }
-    
+
     const body = req.body || {};
     const title = String(body.title || body.name || "").trim();
     const slug =
@@ -264,7 +264,7 @@ exports.addProduct = async (req, res, next) => {
       shortDescription: String(body.shortDescription || ""),
       brand: String(body.brand || ""),
       category:
-        (await Category.findOne({ name: String(body.category || "") }))._id ||
+        (await Category.findOne({ name: String(body.category || "") }))?._id ||
         null,
       sourceCategoryName: String(body.sourceCategoryName || ""),
       currency: String(body.currency || "USD"),
@@ -300,12 +300,13 @@ exports.addProduct = async (req, res, next) => {
           body.shipping.estimatedDeliveryMaxDate || "",
         ),
         shipsFrom: String(body.shipping.shipsFrom || ""),
-        costs: body?.shipping?.costs?.map((cost) => {
+        costs:
+          body?.shipping?.costs?.map((cost) => {
             return {
-                shipsTo: String(cost.shipsTo || ""),
-                cost: Number(cost.cost || 0),
-            }
-        }) || [],
+              shipsTo: String(cost.shipsTo || ""),
+              cost: Number(cost.cost || 0),
+            };
+          }) || [],
       },
       returnPolicy: {
         isReturnAccepted: String(body.returnPolicy.isReturnAccepted || ""),
@@ -316,13 +317,13 @@ exports.addProduct = async (req, res, next) => {
       reviewSummary: {
         averageRating: 5,
         reviewsCount: 0,
-        ratingBreakdown:{
-            one: 0,
-            two: 0,
-            three: 0,
-            four: 0,
-            five: 0,
-          },
+        ratingBreakdown: {
+          one: 0,
+          two: 0,
+          three: 0,
+          four: 0,
+          five: 0,
+        },
       },
       soldCount: 0,
       viewsCount: 0,
@@ -339,8 +340,8 @@ exports.addProduct = async (req, res, next) => {
     await createdProduct.save();
 
     await Category.updateOne(
-        { _id: product.category },
-        { $push: { attachedProducts: product._id } },
+      { _id: product.category },
+      { $addToSet: { attachedProducts: product._id } },
     );
 
     return res.status(201).json({
@@ -349,14 +350,14 @@ exports.addProduct = async (req, res, next) => {
     });
   } catch (err) {
     next(err);
-  }finally {
-    if(createdProduct.title){
+  } finally {
+    if (createdProduct.title) {
       createActivityLog({
         type: "PRODUCT_CREATED",
         title: "Product created",
         message: `Product ${createdProduct.title} added to catalog`,
       });
-    }else{
+    } else {
       createActivityLog({
         type: "PRODUCT_CREATED",
         title: "Product creation",
@@ -368,6 +369,7 @@ exports.addProduct = async (req, res, next) => {
 
 exports.updateProduct = async (req, res, next) => {
   let updatedProduct;
+  let oldCategoryId;
   try {
     if (!req.user || req.user.role !== "admin") {
       return res.status(403).json({ message: "Access denied. Admins only." });
@@ -375,7 +377,7 @@ exports.updateProduct = async (req, res, next) => {
 
     const product = await Product.findById(req.params.id);
     console.log(product);
-    
+
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
@@ -478,9 +480,11 @@ exports.updateProduct = async (req, res, next) => {
     );
     const matchedCategory = body.category
       ? await Category.findOne({ name: String(body.category || "") })
-          .select("_id")
+          .select("_id name")
           .lean()
       : null;
+
+    oldCategoryId = product.category;
 
     product.itemId = String(
       body.itemId || product.itemId || generateItemId(),
@@ -494,7 +498,10 @@ exports.updateProduct = async (req, res, next) => {
     product.brand = String(body.brand ?? product.brand ?? "");
     product.category = matchedCategory?._id || product.category || null;
     product.sourceCategoryName = String(
-      body.sourceCategoryName ?? product.sourceCategoryName ?? "",
+      matchedCategory?.name ||
+        body.sourceCategoryName ||
+        product.sourceCategoryName ||
+        "",
     );
     product.currency = String(body.currency || product.currency || "USD");
     product.price = Number(
@@ -526,7 +533,9 @@ exports.updateProduct = async (req, res, next) => {
         ? product.tags
         : [];
     product.seo = {
-      metaTitle: String(body.seo?.metaTitle || product?.seo?.metaTitle || title),
+      metaTitle: String(
+        body.seo?.metaTitle || product?.seo?.metaTitle || title,
+      ),
       metaDescription: String(
         body.seo?.metaDescription || product?.seo?.metaDescription || "",
       ),
@@ -572,20 +581,37 @@ exports.updateProduct = async (req, res, next) => {
 
     updatedProduct = await product.save();
 
+    if (
+      updatedProduct.category &&
+      String(oldCategoryId) !== String(updatedProduct.category)
+    ) {
+      if (oldCategoryId) {
+        await Category.updateOne(
+          { _id: oldCategoryId },
+          { $pull: { attachedProducts: updatedProduct._id } },
+        );
+      }
+
+      await Category.updateOne(
+        { _id: product.category },
+        { $addToSet: { attachedProducts: updatedProduct._id } },
+      );
+    }
+
     return res.status(200).json({
       message: "Product updated successfully",
       product: updatedProduct,
     });
   } catch (err) {
     next(err);
-  }finally {
-    if (updatedProduct.title){
+  } finally {
+    if (updatedProduct.title) {
       createActivityLog({
         type: "PRODUCT_UPDATED",
         title: "Product updated",
         message: `Product ${updatedProduct.title} was updated`,
       });
-    }else{
+    } else {
       createActivityLog({
         type: "PRODUCT_UPDATED",
         title: "Product update",
@@ -602,9 +628,7 @@ exports.deleteProduct = async (req, res, next) => {
       return res.status(403).json({ message: "Access denied. Admins only." });
     }
 
-    product = await Product.findById(req.params.id).select(
-      "_id category",
-    );
+    product = await Product.findById(req.params.id).select("_id category");
 
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
@@ -624,14 +648,14 @@ exports.deleteProduct = async (req, res, next) => {
     });
   } catch (err) {
     next(err);
-  }finally {
-    if(product.title){
+  } finally {
+    if (product.title) {
       createActivityLog({
         type: "PRODUCT_DELETED",
         title: "Product deleted",
         message: `Product ${product.title} was deleted`,
       });
-    }else{
+    } else {
       createActivityLog({
         type: "PRODUCT_DELETED",
         title: "Product deletion ",

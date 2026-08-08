@@ -1,4 +1,4 @@
-const {Coupon} = require("../models/Coupons");
+const { Coupon } = require("../models/Coupons");
 const User = require("../models/User");
 const Cart = require("../models/Cart");
 
@@ -121,7 +121,10 @@ async function evaluateCouponEligibility(user, cart) {
     status: "ACTIVE",
     startDate: { $lte: now },
     expireDate: { $gt: now },
-    $or: [{ usageLimit: 0 }, { $expr: { $lt: ["$usageCount", "$usageLimit"] } }],
+    $or: [
+      { usageLimit: 0 },
+      { $expr: { $lt: ["$usageCount", "$usageLimit"] } },
+    ],
   }).lean();
 
   if (!activeCoupons.length) {
@@ -138,7 +141,6 @@ async function evaluateCouponEligibility(user, cart) {
     totalSpent: Number(user.totalSpent || 0),
   };
   const availableCoupons = activeCoupons.filter(
-
     (coupon) => !unavailableCouponIds.has(String(coupon._id)),
   );
   const eligibleCoupons = availableCoupons.filter((coupon) => {
@@ -169,7 +171,9 @@ async function evaluateCouponEligibility(user, cart) {
 
   if (eligibleCoupons.length) {
     const coupon = eligibleCoupons.sort(
-      (a, b) => getCouponBenefitScore(b, cartTotal) - getCouponBenefitScore(a, cartTotal),
+      (a, b) =>
+        getCouponBenefitScore(b, cartTotal) -
+        getCouponBenefitScore(a, cartTotal),
     )[0];
 
     return {
@@ -268,22 +272,23 @@ async function recordCouponSuggestion(user, couponOffer) {
   );
 }
 
-exports.generateCouponOffer = async(req, res, next) => {
-  try{
+exports.generateCouponOffer = async (req, res, next) => {
+  try {
     const userId = req.user.id;
-    if(!userId) return res.status(401).json({message: "Unauthorized"});
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
     const user = await User.findById(userId);
-    if(!user) return res.status(401).json({message: "User not found"});
-    const cart = await Cart.findOne({userId});
-    if(!cart) return res.status(404).json({message: "Cart not found"});
-    const coupon = await evaluateCouponEligibility(user , cart);
-    if(!coupon) return res.status(404).json({message: "Coupon not found"});
-    await recordCouponSuggestion(user, coupon);
-    console.log("coupon .............. ", coupon);
-    req.coupon = coupon;
+    if (!user) return res.status(401).json({ message: "User not found" });
+    const cart = await Cart.findOne({ userId });
+    if (cart) {
+      const coupon = await evaluateCouponEligibility(user, cart);
+      if (!coupon) return res.status(404).json({ message: "Coupon not found" });
+      await recordCouponSuggestion(user, coupon);
+      console.log("coupon .............. ", coupon);
+      req.coupon = coupon;
+    }
     next();
-  } catch(err){
-      console.log(err);
-      next(err)
-  } 
-}
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};

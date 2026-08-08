@@ -1,4 +1,3 @@
-import BaseSection from "@/Sections/UserProfile/BaseSectionForUserProfile";
 import AddressCard from "@/components/genericComponents/AddressCard";
 import UserNestedRoutesHeader from "@/Sections/UserProfile/UserNestedRoutesHeader";
 import EditAddressForm from "@/Sections/UserProfile/EditAddressForm";
@@ -17,6 +16,7 @@ export default function UserAddressesPage() {
     editingAddress,
     shouldShowEditForm,
     shouldShowAddForm,
+    addressErrorForm,
     handleEdit,
     handleAdd,
     handleDelete,
@@ -56,6 +56,7 @@ export default function UserAddressesPage() {
             buttonIconName="save"
             onCancel={handleCancel}
             InitialFormData={editingAddress}
+            errorForm={addressErrorForm}
           />
         )}
         {shouldShowAddForm && (
@@ -64,6 +65,7 @@ export default function UserAddressesPage() {
             buttonText="Add"
             buttonIconName="plus"
             onCancel={handleCancel}
+            errorForm={addressErrorForm}
           />
         )}
         {addresses.length > 0 ? (
@@ -102,7 +104,7 @@ export default function UserAddressesPage() {
     );
   }
   return (
-    <BaseSection>
+    <>
       <UserNestedRoutesHeader
         iconName="location"
         title="My Addresses"
@@ -112,6 +114,6 @@ export default function UserAddressesPage() {
         onClick={handleAdd}
       />
       {content}
-    </BaseSection>
+    </>
   );
 }
