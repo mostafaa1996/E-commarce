@@ -2,7 +2,7 @@ const Review = require("../models/Review");
 const Product = require("../models/Product");
 const User = require("../models/User");
 const mongoose = require("mongoose");
-const createActivityLog = require("../utils/CreateActivityLogs");
+const createActivityLog = require("../services/CreateActivityLogs");
 
 const escapeRegex = (text) => {
   return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
@@ -342,13 +342,13 @@ exports.updateReviewStatus = async (req, res, next) => {
     console.log(err);
     next(err);
   } finally {
-    if (status){
+    if (status) {
       createActivityLog({
         type: "REVIEW_UPDATED",
         title: "Review status updated",
         message: `Review was ${status}`,
       });
-    }else{
+    } else {
       createActivityLog({
         type: "REVIEW_UPDATED",
         title: "Review status update",
@@ -419,14 +419,14 @@ exports.deleteReview = async (req, res, next) => {
   } catch (err) {
     console.log(err);
     next(err);
-  }finally {
-    if (deletedReview){
+  } finally {
+    if (deletedReview) {
       createActivityLog({
         type: "REVIEW_DELETED",
         title: "Review status updated",
         message: `Review with id ${deletedReview._id} was deleted`,
       });
-    }else{
+    } else {
       createActivityLog({
         type: "REVIEW_DELETED",
         title: "Review status update",

@@ -87,12 +87,12 @@ const RelatedProducts = ({ items, loading, error , formatCurrency = (price) => p
             Hand-picked just for you
           </p>
         </div>
-        <a
+        {/* <a
           href="#"
           className="hidden text-sm font-semibold text-primary hover:underline md:block"
         >
           View all →
-        </a>
+        </a> */}
       </div>
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
         {items.map((item) => (

@@ -1,9 +1,10 @@
 import { cn } from "@/utils/utils";
 import Icon from "@/system/icons/Icon";
+import clsx from "clsx";
 
-export function StatCard({ title, value, change, changeType = "neutral", iconName , iconBg }) {
+export function StatCard({ title, value, change, changeType = "neutral", iconName , iconBg , className }) {
   return (
-    <div className="stat-card animate-fade-in">
+    <div className={clsx("stat-card animate-fade-in", className)}>
       <div className="flex items-start justify-between">
         <div className="space-y-2">
           <p className="text-sm font-medium text-muted-foreground">{title}</p>

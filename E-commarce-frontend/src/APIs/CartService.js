@@ -57,7 +57,10 @@ export async function syncCart({
     });
 
     if (!res.ok) {
-      throw new Error("Failed to update cart");
+      const data = await res.json();
+      const error = new Error(data.message || "Failed to update cart");
+      error.data = data;
+      throw error;
     }
   }
 
@@ -87,7 +90,10 @@ export async function syncCart({
     );
 
     if (!res.ok) {
-      throw new Error("Failed to delete cart");
+      const data = await res.json();
+      const error = new Error(data.message || "Failed to update cart");
+      error.data = data;
+      throw error;
     }
   }
 

@@ -2,9 +2,19 @@ require("dotenv").config();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Token = require("../models/token");
-const { generateAccessToken, generateRefreshToken } = require("../utils/token");
+const {
+  generateAccessToken,
+  generateRefreshToken,
+} = require("../services/token");
 const User = require("../models/User");
-const {createNotifications} = require("../utils/createNotifications");
+const { createNotifications } = require("../services/createNotifications");
+
+const isProduction = process.env.NODE_ENV === "production";
+const refreshCookieOptions = {
+  httpOnly: true,
+  secure: isProduction,
+  sameSite: isProduction ? "none" : "lax",
+};
 
 exports.postSignup = async (req, res, next) => {
   try {
@@ -77,14 +87,17 @@ exports.postLogin = async (req, res) => {
   res
     .status(200)
     .cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      ...refreshCookieOptions,
       maxAge: 7 * 24 * 60 * 60 * 1000,
     })
     .json({
       accessToken,
-      user: { id: user._id, email: user.email, role: user.role , status: user.status},
+      user: {
+        id: user._id,
+        email: user.email,
+        role: user.role,
+        status: user.status,
+      },
     });
 };
 
@@ -103,9 +116,7 @@ exports.logout = async (req, res, next) => {
     await Token.deleteMany({ userId });
 
     res.clearCookie("refreshToken", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      ...refreshCookieOptions,
     });
 
     res.status(200).json({ message: "Logout successful" });
@@ -129,6 +140,11 @@ exports.refresh = async (req, res) => {
 
   res.status(200).json({
     accessToken,
-    user: { id: user._id, email: user.email, role: user.role , status: user.status},
+    user: {
+      id: user._id,
+      email: user.email,
+      role: user.role,
+      status: user.status,
+    },
   });
 };

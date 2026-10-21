@@ -1,4 +1,3 @@
-import BaseSection from "@/Sections/UserProfile/BaseSectionForUserProfile";
 import PaymentCard from "@/Sections/UserProfile/PaymentCard";
 import UserNestedRoutesHeader from "@/Sections/UserProfile/UserNestedRoutesHeader";
 import EditPaymentForm from "@/Sections/UserProfile/EditPaymentForm";
@@ -68,7 +67,7 @@ export default function UserPaymentPage() {
   }
 
   return (
-    <BaseSection>
+    <>
       <UserNestedRoutesHeader
         iconName="payment"
         title="My Payments"
@@ -98,6 +97,6 @@ export default function UserPaymentPage() {
       >
         {content}
       </div>
-    </BaseSection>
+    </>
   );
 }

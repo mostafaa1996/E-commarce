@@ -1,6 +1,6 @@
 const Store = require("../models/storeInfo");
 const ContactMessage = require("../models/contactMessage");
-const {createNotifications} = require("../utils/createNotifications");
+const { createNotifications } = require("../services/createNotifications");
 
 const issuesPriority = [
   { type: "ORDER_ISSUE", priority: "HIGH" },
@@ -61,7 +61,7 @@ exports.createSupportTicket = async (req, res, next) => {
       priority,
       status: "NEW",
     });
-    
+
     try {
       await createNotifications({
         type: "NEW_CONTACT_MESSAGE",

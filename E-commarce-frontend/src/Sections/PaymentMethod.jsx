@@ -2,7 +2,7 @@ import {
   RadioGroup,
   RadioGroupItem,
 } from "@/components/genericComponents/RadioGroup";
-import { Label } from "@/components/genericComponents/label";
+import { Label } from "@/components/genericComponents/Label";
 import Icon from "@/system/icons/Icon";
 import { useQuery } from "@tanstack/react-query";
 import { getUserPaymentMethods } from "@/APIs/UserProfileService";
@@ -39,11 +39,18 @@ const PaymentMethod = () => {
   const cards = useMemo(() => loadedCards || [], [loadedCards]);
 
   useEffect(() => {
+    if(paymentType === "card" && !cards?.length) setUseNewCard(true);
     if (paymentType !== "card" || selectedCard || !cards?.length) return;
 
     const defaultCard = cards.find((card) => card.isDefault);
     setSelectedCard(defaultCard?.id || cards[0].id);
-  }, [paymentType, cards, selectedCard, setSelectedCard]);
+  }, [
+    paymentType,
+    cards,
+    selectedCard,
+    setSelectedCard,
+    setUseNewCard,
+  ]);
 
   return (
     <div className="space-y-5">

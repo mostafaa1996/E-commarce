@@ -1,4 +1,4 @@
-const getOrCreateCustomer = require("../utils/StripeCustomer.js");
+const getOrCreateCustomer = require("../services/StripeCustomer.js");
 const Stripe = require("stripe");
 require("dotenv").config();
 

@@ -29,8 +29,8 @@ function direction(current, previous) {
 function extractLastMonthData(data = []) {
   if (data.length < 3) return null;
 
-  const lastMonthData = data[data.length - 2];
-  const beforeLastMonthData = data[data.length - 3];
+  const lastMonthData = data[data.length - 1];
+  const beforeLastMonthData = data[data.length - 2];
 
   return {
     totalRevenue: {

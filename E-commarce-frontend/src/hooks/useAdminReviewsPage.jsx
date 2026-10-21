@@ -88,12 +88,17 @@ export default function useAdminReviewsPage() {
   }, [searchInput]);
 
   useEffect(() => {
+    if (
+      selectedRating !== MainQuery.rating ||
+      selectedStatus !== MainQuery.status ||
+      searchTerm !== MainQuery.search
+    )
     updateUrlQuery({
       rating: selectedRating,
       status: selectedStatus,
       search: searchTerm,
     });
-  }, [selectedRating, selectedStatus, searchTerm, updateUrlQuery]);
+  }, [selectedRating, selectedStatus, searchTerm, MainQuery, updateUrlQuery]);
 
   function resetFilters() {
     resetUrlQuery(defaultQuery);

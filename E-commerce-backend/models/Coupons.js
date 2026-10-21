@@ -129,7 +129,6 @@ const discountSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-couponsSchema.index({ code: 1 });
 discountSchema.index({ productId: 1 });
 
 const Coupon = mongoose.model("Coupon", couponsSchema);

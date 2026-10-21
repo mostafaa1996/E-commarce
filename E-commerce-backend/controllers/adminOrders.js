@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Order = require("../models/Order");
-const createActivityLog = require("../utils/CreateActivityLogs");
-const {formatOrderId} = require("../utils/formatOrderNumber");
+const createActivityLog = require("../services/CreateActivityLogs");
+const { formatOrderId } = require("../services/formatOrderNumber");
 
 function escapeRegex(value = "") {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -225,14 +225,14 @@ exports.updateOrderStatus = async (req, res, next) => {
     });
   } catch (err) {
     next(err);
-  }finally {
-    if(order.status){
+  } finally {
+    if (order.status) {
       createActivityLog({
         type: "ORDER_STATUS_CHANGED",
         title: "Order Status Changed",
         message: `Order status for order ${formatOrderId(order)} has been changed to ${order.status}.`,
       });
-    }else{
+    } else {
       createActivityLog({
         type: "ORDER_STATUS_CHANGED",
         title: "Order Status change",

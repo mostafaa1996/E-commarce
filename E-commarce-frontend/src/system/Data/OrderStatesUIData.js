@@ -77,6 +77,22 @@ export const OrderStatesUIData = [
     message:
       "Please provide a valid address to complete your order.",
   },
+  //user didn`t provide specific address
+  {
+    state: "Missing_Default_address",
+    header: "select address",
+    IconName: "userX",
+    message:
+      "Can`t determine which address to use. Please select a default address to complete your order.",
+  },
+  // user provide address outside of delivery range
+  {
+    state: "Shipping_location_not_supported",
+    header: "Shipping Location Not Supported",
+    IconName: "userX",
+    message:
+      "The shipping address you provided is outside of our delivery range. Please select a different address to complete your order.",
+  },
   // cart is empty 
   {
     state: "Cart_empty",

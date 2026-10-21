@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const User = require("../models/User");
-const createActivityLog = require("../utils/CreateActivityLogs");
+const createActivityLog = require("../services/CreateActivityLogs");
 
 function escapeRegex(value = "") {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -260,7 +260,7 @@ exports.updateAdminCustomerStatus = async (req, res, next) => {
           message: `Customer ${customer.name} was unblocked `,
         });
       }
-    }else{
+    } else {
       createActivityLog({
         type: "CUSTOMER_STATUS_UPDATED",
         title: `Customer status update`,

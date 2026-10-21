@@ -2,11 +2,16 @@ export default function Loading({
   message = "Loading...",
   className = "",
   fullPage = false,
+  overlay = false,
 }) {
   return (
     <div
       className={`flex items-center justify-center ${
         fullPage ? "min-h-[60vh]" : ""
+      } ${
+        overlay
+          ? "fixed inset-0 z-50 bg-black/30 backdrop-blur-[5px]"
+          : ""
       } ${className}`}
       role="status"
       aria-live="polite"

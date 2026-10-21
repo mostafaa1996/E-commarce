@@ -21,6 +21,7 @@ const statusMap = {
 };
 
 function UploadToCloudinary(fileBuffer, userId) {
+  if (!fileBuffer) return Promise.resolve(null);
   return new Promise((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
       {
@@ -230,32 +231,44 @@ exports.UpdatePersonalInfo = async (req, res, next) => {
       lastName,
       email,
       phone,
-      DateOfBirth,
+      dateOfBirth,
       gender,
       location,
-      Bio,
+      bio,
     } = req.body;
 
     const avatar = req.file;
-    const result = await UploadToCloudinary(avatar.buffer, req.user.id);
+    let result = null;
 
-    await User.findByIdAndUpdate(userId, {
-      $set: {
-        "PersonalInfo.firstName": firstName,
-        "PersonalInfo.lastName": lastName,
-        "PersonalInfo.email": email,
-        "PersonalInfo.phone": phone,
-        "PersonalInfo.dateOfBirth": DateOfBirth,
-        "PersonalInfo.gender": gender,
-        "PersonalInfo.location": location,
-        "PersonalInfo.Bio": Bio,
-        "PersonalInfo.avatar.url": result.secure_url,
-        "PersonalInfo.avatar.publicId": result.public_id,
-        "PersonalInfo.updatedAt": new Date(),
-      },
-    });
-    await user.save();
-    res.status(200).json({ message: "Personal info updated successfully" });
+    if (avatar?.buffer) {
+      result = await UploadToCloudinary(avatar.buffer, req.user.id);
+    }
+
+    console.log(dateOfBirth);
+
+    const updateFields = {
+      "PersonalInfo.firstName": firstName,
+      "PersonalInfo.lastName": lastName,
+      "PersonalInfo.email": email,
+      "PersonalInfo.phone": phone,
+      "PersonalInfo.DateOfBirth": dateOfBirth,
+      "PersonalInfo.gender": gender,
+      "PersonalInfo.location": location,
+      "PersonalInfo.Bio": bio,
+      "PersonalInfo.updatedAt": new Date(),
+    };
+
+    if (result) {
+      updateFields["PersonalInfo.avatar.url"] = result?.url || user?.PersonalInfo?.avatar?.url || "";
+      updateFields["PersonalInfo.avatar.publicId"] = result?.public_id || user?.PersonalInfo?.avatar?.public_id || "";
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $set: updateFields },
+      { new: true }
+    );
+    res.status(200).json({ message: "Personal info updated successfully" , updatedUser });
   } catch (err) {
     console.log(err);
     next(err);

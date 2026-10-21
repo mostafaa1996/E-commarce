@@ -3,24 +3,27 @@ import Button from "@/components/genericComponents/Button";
 import useCheckoutStore from "@/zustand_checkout/checkoutStore";
 import { useMutation } from "@tanstack/react-query";
 import { placeOrder } from "@/APIs/checkoutService";
+import {queryClient} from "@/queryClient";
 
-export default function CheckoutPaymentSection({ orderNotes }) {
+export default function CheckoutPaymentSection({ orderNotes , cartId }) {
   const stripe = useStripe();
   const elements = useElements();
   const {
     PaymentMethodState,
     setOrderState,
+    setOrderResults,
     selectedCard,
     paymentType,
     setOrderId,
   } = useCheckoutStore();
 
   const OrderMutation = useMutation({
-    mutationFn: ({ orderNotes, selectedCard, paymentType }) => {
+    mutationFn: ({ orderNotes, selectedCard, paymentType, cartId }) => {
       return placeOrder({
         orderNotes,
         selectedCard,
         paymentType,
+        cartId
       });
     },
     onMutate: () => {
@@ -40,13 +43,26 @@ export default function CheckoutPaymentSection({ orderNotes }) {
       }
       setOrderId(data.orderNumber);
       setOrderState(data.nextAction);
+      setOrderResults({
+        message: data?.message || undefined,
+        header: data?.header || undefined,
+        IconName: data?.IconName || undefined,
+      });
     },
     onError: (error) => {
       if (error.data?.blocked) {
         setOrderState("userBlocked");
       } else {
         setOrderState(error.data?.nextAction || "Error");
+        setOrderResults({
+          message: error.data?.message,
+          header: error.data?.header,
+          IconName: error.data?.IconName,
+        });
       }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(["cart"]);
     },
   });
 
@@ -55,6 +71,7 @@ export default function CheckoutPaymentSection({ orderNotes }) {
       orderNotes,
       selectedCard,
       paymentType,
+      cartId
     });
   }
 

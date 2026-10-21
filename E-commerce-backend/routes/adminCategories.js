@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const adminCategoriesController = require("../controllers/adminCategories");
 const isAuth = require("../MiddleWare/isauth");
-const upload = require("../middleware/upload");
+const upload = require("../MiddleWare/upload");
 
 router.get("/", isAuth, adminCategoriesController.getAdminCategories);
 router.post("/", isAuth, upload.single("icon"), adminCategoriesController.addCategory);

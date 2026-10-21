@@ -1,9 +1,9 @@
 import UserSidebar from "./UserSideBar";
 import { UserSideBarItems } from "@/system/Data/UserSideBarData";
 import useLogoutAction from "@/hooks/useLogoutAction";
+import { Outlet } from "react-router-dom";
 
-
-export default function BaseSection({ children }) {
+export default function BaseSection() {
   const { Logout } = useLogoutAction();
   return (
     <div className="m-4 grid grid-cols-1 gap-4 sm:m-6 lg:m-10 lg:grid-cols-6">
@@ -13,7 +13,7 @@ export default function BaseSection({ children }) {
         onLogout={Logout}
       />
       <div className="flex flex-col gap-5 lg:col-span-3 justify-start">
-        {children}
+        <Outlet />
       </div>
     </div>
   );

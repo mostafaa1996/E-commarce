@@ -4,7 +4,7 @@ import SortingSection from "../SortingSection";
 import { useQuery } from "@tanstack/react-query";
 import { getShopProducts } from "@/APIs/shopProductsService";
 import Button from "@/components/genericComponents/Button";
-import { defaultShopQuery } from "@/Data/ShopQuery";
+import { defaultShopQuery } from "@/Data/shopQuery";
 import useURLQuery from "@/hooks/UrlQuery";
 import Loading from "@/components/genericComponents/Loading";
 import { Outlet, useNavigation } from "react-router-dom";

@@ -11,8 +11,17 @@ exports.ValidateUserAddress = [
     .trim()
     .notEmpty()
     .withMessage("Street is required")
+    .custom(
+      (value) => {
+        const parts = value.split(",").map((part) => part.trim());
+        if (parts.length !== 3 || parts.some((part) => !part)) {
+          throw new Error("Street must be at that form: Apt, building, street");
+        }
+        return true;
+      }
+    )
     .isLength({ min: 10 })
-    .withMessage("First name must be at least 10 characters"),
+    .withMessage("Street must be at least 10 characters"),
 
   body("label")
     .trim()
@@ -28,16 +37,16 @@ exports.ValidateUserAddress = [
   body("city")
     .trim()
     .notEmpty()
-    .withMessage("city and state is required")
-    .isLength({ min: 3 })
-    .withMessage("First name must be at least 3 characters"),
+    .withMessage("city is required")
+    .isLength({ min: 2 })
+    .withMessage("city must be at least 2 characters"),
 
   body("state")
     .trim()
     .notEmpty()
-    .withMessage("city and state is required")
-    .isLength({ min: 3 })
-    .withMessage("First name must be at least 3 characters"),
+    .withMessage("district is required")
+    .isLength({ min: 2 })
+    .withMessage("city must be at least 2 characters"),
 
   body("country")
     .trim()

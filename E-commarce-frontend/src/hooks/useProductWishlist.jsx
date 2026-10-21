@@ -37,6 +37,11 @@ export default function useProductWishlist(productId, variantId) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["profile-wishlist"] });
     },
+    onError: () => {
+      toast({
+        title: "Failed to update wishlist",
+      });
+    },
   });
 
   function toggleWishlist() {

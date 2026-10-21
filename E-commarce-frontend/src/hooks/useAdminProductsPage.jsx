@@ -29,7 +29,9 @@ function isQueryChangedFromDefault(query) {
 
 function getDefaultVariant(product) {
   if (!product?.hasVariants) return product?.variants?.[0];
-  return product?.variants?.find((variant) => variant._id === product?.defaultVariantId);
+  return product?.variants?.find(
+    (variant) => variant._id === product?.defaultVariantId,
+  );
 }
 
 export function toDialogProductData(product) {
@@ -210,12 +212,20 @@ export default function useAdminProductsPage() {
   }, [searchInput]);
 
   useEffect(() => {
-    updateUrlQuery({
-      category: selectedCategory,
-      status: selectedStatus,
-      search: searchTerm,
-    });
-  }, [selectedCategory, selectedStatus, searchTerm, updateUrlQuery]);
+    //useEffect should only update url query if there is a change in filter or search not pages
+    //if condition is here to prevent rollback on page change
+    if (
+      MainQuery.category !== selectedCategory ||
+      MainQuery.status !== selectedStatus ||
+      MainQuery.search !== searchTerm
+    ) {
+      updateUrlQuery({
+        category: selectedCategory,
+        status: selectedStatus,
+        search: searchTerm,
+      });
+    }
+  }, [selectedCategory, selectedStatus, searchTerm, MainQuery, updateUrlQuery]);
 
   function closeProductFlow() {
     setPendingDialogMode(null);

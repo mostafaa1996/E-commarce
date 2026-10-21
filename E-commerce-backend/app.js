@@ -4,12 +4,14 @@
 // getDataByZenRows.run();
 
 require("dotenv").config();
-require("./utils/exchangeRateRequest");
+require("./services/exchangeRateRequest");
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const { startStockNotificationsTask }  = require ("./utils/stockNotificationsTask.js");
+const {
+  startStockNotificationsTask,
+} = require("./services/stockNotificationsTask.js");
 
 const shopRoutes = require("./routes/shop");
 const authRoutes = require("./routes/auth");
@@ -37,13 +39,63 @@ const ContactsRoute = require("./routes/contacts");
 const adminNotificationsRoute = require("./routes/adminNotifications");
 
 const app = express();
+const port = process.env.PORT || 3000;
+const normalizeOrigin = (origin) => {
+  if (!origin) return null;
+
+  try {
+    return new URL(origin.trim()).origin;
+  } catch (error) {
+    return origin.trim().replace(/\/$/, "");
+  }
+};
+
+const allowedOrigins = [
+  ...(process.env.CLIENT_URL || "").split(","),
+  "http://localhost:5173",
+]
+  .map(normalizeOrigin)
+  .filter(Boolean);
+
+const isAllowedVercelPreviewOrigin = (origin) => {
+  if (!origin) return false;
+
+  try {
+    const { protocol, hostname } = new URL(origin);
+    return (
+      protocol === "https:" &&
+      hostname.endsWith(".vercel.app") &&
+      hostname.startsWith("shoplite-")
+    );
+  } catch (error) {
+    return false;
+  }
+};
+
+if (!process.env.MONGO_URI) {
+  console.error("MONGO_URI is required");
+  process.exit(1);
+}
+
 app.use("/api", stripeWebhookRoute);
 app.use(express.json()); // for parsing application/json
 app.use(cookieParser());
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin(origin, callback) {
+      const requestOrigin = normalizeOrigin(origin);
+
+      if (
+        !requestOrigin ||
+        allowedOrigins.includes(requestOrigin) ||
+        isAllowedVercelPreviewOrigin(requestOrigin)
+      ) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -62,7 +114,7 @@ app.use(
   UserProfileSettingsRoutes,
 );
 app.use("/exchangeRate", exchangeRateRoutes);
-app.use("/admin/dashboard", adminDashboardRoute );
+app.use("/admin/dashboard", adminDashboardRoute);
 app.use("/admin/products", adminProductsRoute);
 app.use("/admin/categories", adminCategoriesRoute);
 app.use("/admin/orders", adminOrdersRoute);
@@ -84,13 +136,13 @@ app.use((error, req, res, next) => {
 });
 
 mongoose
-  .connect(
-    "mongodb+srv://mostafahamdy:2201996220Mos@shoplite.ojxtkdz.mongodb.net/shoplite?",
-  )
+  .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("Connected to database!");
-    app.listen(3000, () => {
-      // startStockNotificationsTask();
+    app.listen(port, "0.0.0.0", () => {
+      console.log(`Server is running on port ${port}`);
+      console.log("Allowed CORS origins:", allowedOrigins);
+      startStockNotificationsTask();
     });
   })
   .catch((err) => {

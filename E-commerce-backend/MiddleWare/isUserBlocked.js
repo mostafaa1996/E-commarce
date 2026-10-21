@@ -1,4 +1,4 @@
-const User = require("../models/user");
+const User = require("../models/User");
 exports.checkBlocked = async (req, res, next) => {
   try {
     const userId = req.user.id;

@@ -75,8 +75,8 @@ export default function HomePage() {
           badgeOverride="Fevorite"
         />
         <BenefitsSection />
-        <TestimonialsSection testimonials={data?.testimonials} />
-        <NewsletterSection />
+        {/* <TestimonialsSection testimonials={data?.testimonials} />
+        <NewsletterSection /> */}
       </div>
     );
   }
