@@ -14,7 +14,7 @@ export default function CategoriesSection({ categories , icons}) {
           return (
             <a
               key={category.name}
-              href={`/shop/products?category=${category.name}&page=1&limit=12`}
+              href={`/shop?category=${category.name}&page=1&limit=12`}
               className="group rounded-2xl border border-border bg-card p-5 transition-all hover:-translate-y-1 hover:border-primary/50 hover:shadow-lg"
             >
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
